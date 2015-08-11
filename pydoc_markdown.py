@@ -105,20 +105,12 @@ def write_function(md, func, name, prefix=None):
     else:
         name = name + argspec_format(func)
 
-    md.header_level.append(5)
-    md.header()
-    md.pop_header()
-    if prefix:
-        md.code(prefix, italic=True)
-    md.code(name)
-    md.newline()
-    md.newline()
-
+    write_member(md, name, prefix)
     write_docstring(md, doc)
 
 
 def write_class(md, cls, name=None):
-    name = cls.__module__ + (name or cls.__name__)
+    name = cls.__module__ + '.' + (name or cls.__name__)
     md.header('{0} Objects\n'.format(name))
     md.newline()
     md.push_header(2)
@@ -150,19 +142,22 @@ def write_class_member(md, value, name):
     if hasattr(value, '__isabstractmethod__'):
         prefix = ('abstract ' + prefix).strip()
 
-    if isinstance(value, types.MethodType):
+    if isinstance(value, function_types + method_types):
         write_function(md, value, name, prefix)
+    elif value is None:
+        write_member(md, name + ' = None', prefix)
     else:
-        if prefix:
-            md.code(prefix)
-        md.code(name, bold=True)
-        md.newline()
+        write_member(md, name, prefix)
 
 
 def write_member(md, member, prefix=None):
+    md.header_level.append(5)
+    md.header()
+    md.pop_header()
     if prefix:
-        md.code(prefix)
-    md.code(member, bold=True)
+        md.code(prefix, italic=True)
+    md.code(member)
+    md.newline()
     md.newline()
 
 
@@ -186,7 +181,7 @@ def write_module(md, module, recursive=True):
     classes = []
 
     for attr in dir(module):
-        if attr.startswith('__'):
+        if attr.startswith('_'):
             continue
         value = getattr(module, attr)
         from_module = getattr(value, '__module__', None)
