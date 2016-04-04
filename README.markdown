@@ -37,7 +37,7 @@ or for the latest development version
 
 __EXAMPLES__
 
-    $ pydoc-markdown
+    $ pydoc-markdown glob
 
     # glob Module
     > Filename globbing utility.
