@@ -1,10 +1,10 @@
 __NAME__ 
+
 <a href="https://gitter.im/NiklasRosenstein/pydoc-markdown">
-  <img href="https://badges.gitter.im/Join%20Chat.svg"></img>
+  <img src="https://badges.gitter.im/Join%20Chat.svg"></img>
 </a>
 
 `pydoc_markdown` - simple generator for Markdown formatted Python docs
-
 
 __SYNOPSIS__
 
