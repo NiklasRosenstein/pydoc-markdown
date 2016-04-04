@@ -1,4 +1,4 @@
-# Copyright (C) 2015 Niklas Rosenstein
+# Copyright (C) 2016  Niklas Rosenstein
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -17,33 +17,29 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-"""
-Simple script to get a Markdown formatted documentation for a Python
-module or package.
-"""
 
-import sys
-import os
+import os, sys
 import argparse
+import textwrap
 
-from .pydoc_markdown import write_module, import_module
-from .markdown_writer import MarkdownWriter
+from . import write_module, import_module
+from .markdown import MarkdownWriter
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('module')
+    parser = argparse.ArgumentParser(
+        prog='pydoc-markdown',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=textwrap.dedent('''
+            Simple (ie. quick and dirty) script to generate a Markdown
+            formatted help on a Python module. Contributions are welcome.
+
+            Project Homepage:  https://github.com/NiklasRosenstein/pydoc-markdown
+            ''')
+    )
+    parser.add_argument('module', help='name of the module to generate docs for')
     args = parser.parse_args()
-    module = None
 
-    try:
-        # Add current working dir to module search path
-        sys.path.append(os.getcwd())
-
-        module = import_module(args.module)
-    except ImportError as exc:
-        print(exc, file=sys.stderr)
-        return
-
+    module = import_module(args.module)
     writer = MarkdownWriter(sys.stdout)
     write_module(writer, module)
 

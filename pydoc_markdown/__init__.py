@@ -1,4 +1,4 @@
-# Copyright (C) 2015 Niklas Rosenstein
+# Copyright (C) 2016  Niklas Rosenstein
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -17,12 +17,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-"""
-Simple script to get a Markdown formatted documentation for a Python
-module or package.
-"""
 
 from __future__ import print_function
+
+__version__ = '0.1.0'
+__author__ = 'Niklas Rosenstein <rosensteinniklas(at)gmail.com>'
+
 
 import inspect
 import sys
@@ -39,8 +39,8 @@ function_types = (types.FunctionType, types.LambdaType, types.BuiltinFunctionTyp
 method_types = (types.MethodType, types.BuiltinMethodType)
 
 special_member_types = (property, staticmethod, classmethod)
-special_names = frozenset(('__name__', '__doc__', '__dict__', '__module__',
-    '__weakref__'))
+special_names = frozenset([
+    '__name__', '__doc__', '__dict__', '__module__', '__weakref__'])
 
 
 def argspec_format(func):
