@@ -57,7 +57,11 @@ def argspec_format(func):
     if not isinstance(func, function_types + method_types):
         raise TypeError('func is not a function', type(func))
     try:
-        return inspect.formatargspec(*inspect.getargspec(func))
+        if hasattr(inspect, 'getfullargspec'):
+            spec = inspect.getfullargspec(func)
+        else:
+            spec = inspect.getargspec(func)
+        return inspect.formatargspec(*spec)
     except TypeError:
         return '(...)'
 
