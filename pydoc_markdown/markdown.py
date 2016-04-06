@@ -20,6 +20,7 @@
 
 import re
 
+
 class MarkdownWriter(object):
     '''
     Simple helper to write markdown text.
@@ -85,7 +86,7 @@ class MarkdownWriter(object):
         Writes *code* as a code-block to the code. If *language* is
         not specified, the code will be written as an indented code
         block, otherwise the triple code block formatting is used.
-        You should make sure the code block is preceeded by a newline.
+        You should make sure the code block is preceded by a newline.
         '''
 
         code = textwrap.dedent(code).strip()
@@ -106,7 +107,7 @@ class MarkdownWriter(object):
 
         # To escape backticks in *text*, we need more initial backticks
         # than contained in the text.
-        # todo: this can probably be solved more efficent.
+        # todo: this can probably be solved more efficient.
         matches = re.findall(r'(?<!\\)`+', text)
         if matches:
             backticks = max(len(x) for x in matches) + 1

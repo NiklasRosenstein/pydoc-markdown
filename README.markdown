@@ -1,4 +1,4 @@
-__NAME__ 
+__NAME__
 
 <a href="https://gitter.im/NiklasRosenstein/pydoc-markdown">
   <img src="https://badges.gitter.im/Join%20Chat.svg"></img>
