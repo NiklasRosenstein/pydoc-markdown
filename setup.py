@@ -33,7 +33,7 @@ setup(
     long_description=long_description,
     url='https://github.com/NiklasRosenstein/pydoc-markdown',
     author='Niklas Rosenstein',
-    author_email='rosensteinniklas@gmail.com>',
+    author_email='rosensteinniklas@gmail.com',
     license='MIT',
     classifiers=[
         'Development Status :: 3 - Alpha',
