@@ -4,7 +4,7 @@ __NAME__
   <img src="https://badges.gitter.im/Join%20Chat.svg"></img>
 </a>
 
-`pydoc_markdown` - simple generator for Markdown formatted Python docs
+[`pydoc_markdown`](https://pypi.python.org/pypi/pydoc-markdown) - simple generator for Markdown formatted Python docs
 
 __SYNOPSIS__
 
