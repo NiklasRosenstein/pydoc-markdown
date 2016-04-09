@@ -1,0 +1,7 @@
+v0.2.0 (unreleased)
+
+* #8 fix trailing whitespace
+
+v0.1.0
+
+* initial release

@@ -21,16 +21,58 @@
 import re
 
 
-class MarkdownWriter(object):
-    '''
-    Simple helper to write markdown text.
-    '''
+class StripTrailingWhitespaceWriter(object):
+    """
+    Strips whitespace at the end of a line. Can only be used with
+    non-binary file objects.
+    """
 
     def __init__(self, fp):
-        super(MarkdownWriter, self).__init__()
+        super(StripTrailingWhitespaceWriter, self).__init__()
         self.fp = fp
+        self.buffer = ''
+
+    def write(self, text):
+        while text:
+            # Consume until the next newline and append it to the buffer.
+            idx = text.find('\n')
+            if idx > 0:
+                consume, text = text[idx+1:], text[:idx+1]
+            else:
+                consume, text = text, ''
+            self.buffer += consume
+
+            # Flush the buffer if it ends with a newline.
+            if self.buffer.endswith('\n'):
+                self.fp.write(self.buffer.rstrip() + '\n')
+                self.buffer = ''
+
+    def flush(self):
+        self.fp.write(self.buffer)
+        self.buffer = ''
+
+    def close(self):
+        self.flush()
+        self.fp.close()
+
+
+class MarkdownWriter(object):
+    """
+    Helper class to generate a Markdown formatted text file.
+    """
+
+    def __init__(self, fp, at_line_start = True):
+        super(MarkdownWriter, self).__init__()
+        self.fp = StripTrailingWhitespaceWriter(fp)
         self.header_level = []
         self.links = {}
+        self.at_line_start = at_line_start
+
+    def flush(self):
+        self.fp.flush()
+
+    def close(self):
+        self.fp.close()
 
     def push_header(self, level_increase=1):
         if self.header_level:

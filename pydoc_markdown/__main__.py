@@ -42,6 +42,7 @@ def main():
     module = import_module(args.module)
     writer = MarkdownWriter(sys.stdout)
     write_module(writer, module)
+    writer.close()
 
 
 if __name__ == '__main__':
