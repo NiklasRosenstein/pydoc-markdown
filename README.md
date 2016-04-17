@@ -1,10 +1,10 @@
 __NAME__
 
-<a href="https://gitter.im/NiklasRosenstein/pydoc-markdown">
-  <img src="https://badges.gitter.im/Join%20Chat.svg"></img>
-</a>
+[![Gitter Join Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NiklasRosenstein/pydoc-markdown)
+[![PyPI Downloads](http://img.shields.io/pypi/dm/pydoc-markdown.svg)](https://pypi.python.org/pypi/pydoc-markdown)
+[![PyPI Version](https://img.shields.io/pypi/v/pydoc-markdown.svg)](https://pypi.python.org/pypi/pydoc-markdown)
 
-[`pydoc_markdown`](https://pypi.python.org/pypi/pydoc-markdown) - simple generator for Markdown formatted Python docs
+`pydoc-markdown` - simple generator for Markdown formatted Python docs
 
 __SYNOPSIS__
 
