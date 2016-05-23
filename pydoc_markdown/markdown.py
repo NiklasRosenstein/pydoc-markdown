@@ -37,7 +37,7 @@ class StripTrailingWhitespaceWriter(object):
             # Consume until the next newline and append it to the buffer.
             idx = text.find('\n')
             if idx > 0:
-                consume, text = text[idx+1:], text[:idx+1]
+                consume, text = text[:idx+1], text[idx+1:]
             else:
                 consume, text = text, ''
             self.buffer += consume
