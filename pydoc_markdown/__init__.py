@@ -136,7 +136,7 @@ def write_class_member(md, value, name):
     prefix = ''
     for tpe in special_member_types:
         if isinstance(value, tpe):
-            prefix = type_.__name__
+            prefix = tpe.__name__
             break
     if hasattr(value, '__isabstractmethod__'):
         prefix = ('abstract ' + prefix).strip()
