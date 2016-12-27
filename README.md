@@ -1,10 +1,36 @@
-__pydoc-markdown__ uses [MkDocs] and extended [Markdown] syntax to generate
+**pydoc-markdown** uses [MkDocs] and extended [Markdown] syntax to generate
 beautiful Python API documentation. It is highly configurable and can be
 extended to work with arbitrary programming languages, see the [Extension API].
 
   [MkDocs]: www.mkdocs.org/
   [Markdown]: https://pythonhosted.org/Markdown/
   [Extension API]: docs/templates/extensions.md
+
+## Configuration
+
+**pydoc-markdown** only takes over the task of generating the Markdown
+documentation that can then be processed with [MkDocs]. However, it can still
+combine both parts of the build process in a single command. You can put all
+configuration for [MkDocs] into the `pydocmd.yml` configuration, or have
+it in a separate `mkdocs.yml` file.
+
+__pydocmd.yml__
+
+```yaml
+site_name: "foobar Documentation"
+generate:
+- baz/cool-stuff.md:
+  - foobar.baz                # Module docstring
+  - foobar.baz.CoolClass      # Class docstring
+  - foobar.baz.some_function  # Function docstring
+pages:
+- Home: index.md
+- foobar.baz:
+  - Cool Stuff: baz/cool-stuff.md
+
+mkdocs:
+  # Additional config for mkdocs
+```
 
 ## Syntax
 
@@ -57,6 +83,14 @@ GitHub-style Markdown code-blocks with language annotations can be used.
     >>> for i in range(100):
     ...
     ```
+
+---
+
+## Changes
+
+### v2.0.0 (devtip)
+
+- Complete overhaul of **pydoc-markdown** employing MkDocs and the Markdown module.
 
 ---
 
