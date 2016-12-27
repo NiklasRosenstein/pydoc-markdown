@@ -1,89 +1,63 @@
-__NAME__
+__pydoc-markdown__ uses [MkDocs] and extended [Markdown] syntax to generate
+beautiful Python API documentation. It is highly configurable and can be
+extended to work with arbitrary programming languages, see the [Extension API].
 
-[![Gitter Join Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NiklasRosenstein/pydoc-markdown)
-[![PyPI Downloads](http://img.shields.io/pypi/dm/pydoc-markdown.svg)](https://pypi.python.org/pypi/pydoc-markdown)
-[![PyPI Version](https://img.shields.io/pypi/v/pydoc-markdown.svg)](https://pypi.python.org/pypi/pydoc-markdown)
+  [MkDocs]: www.mkdocs.org/
+  [Markdown]: https://pythonhosted.org/Markdown/
+  [Extension API]: docs/templates/extensions.md
 
-`pydoc-markdown` - simple generator for Markdown formatted Python docs
+## Syntax
 
-__SYNOPSIS__
+### Cross-references
 
-    pydoc-markdown [-h] module
+Symbols in the same namespace may be referenced by using a hash-symbol (`#`)
+directly followed by the symbols' name, including relative references. Note that
+using parentheses for function names is encouraged and will be ignored and
+automatically added when converting docstrings. Examples: `#ClassName.member` or
+`#mod.function()`.
 
-__DESCRIPTION__
+For absolute references for modules or members in names that are not available
+in the current global namespace, `#::mod.member` must be used (note the two
+preceeding two double-colons).
 
-Simple (ie. quick and dirty) script to generate a Markdown
-formatted help on a Python module. Contributions are welcome.
+**pydoc-markdown** can be extended to find other cross-references using the
+[Extension API].
 
-Project Homepage:  https://github.com/NiklasRosenstein/pydoc-markdown
+### Sections
 
-```
-positional arguments:
-  module      name of the module to generate docs for
+Sections can be generated with the Markdown `# <Title>` syntax. It is important
+to add a whitespace after the hash-symbol (`#`), as otherwise it would represent
+a cross-reference. Some special sections alter the rendered result of their
+content, including
 
-optional arguments:
-  -h, --help  show this help message and exit
-```
+- Arguments (1)
+- Parameters (1)
+- Attributes (1)
+- Members (1)
+- Raises (2)
+- Returns (2)
 
-__INSTALLATION__
+(1): Lines beginning with `<ident> [(<type>[, ...])]:` are treated as
+argument/parameter or attribute/member declarations. Types listed inside the
+parenthesis (optional) are cross-linked, if possible. For attribute/member
+declarations, the identifier is typed in a monospace font.
 
-    $ pip install pydoc-markdown
+(2): Lines beginning with `<type>[, ...]:` are treated as raise/return type
+declarations and the type names are cross-linked, if possible.
 
-or for the latest development version
+Lines following a name's description are considered part of the most recent
+documentation unless separated by another declaration or an empty line. `<type>`
+placeholders can also be tuples in the form `(<type>[, ...])`.
 
-    $ git clone https://github.com/NiklasRosenstein/pydoc-markdown
-    $ cd pydoc-markdown
-    $ pip install -e .
+### Code Blocks
 
-__EXAMPLES__
+GitHub-style Markdown code-blocks with language annotations can be used.
 
-    $ pydoc-markdown glob
+    ```python
+    >>> for i in range(100):
+    ...
+    ```
 
-    # glob Module
-    > Filename globbing utility.
+---
 
-
-
-    ## Data
-    - `magic_check = re.compile('([*?[])')`
-    - `magic_check_bytes = re.compile(b'([*?[])')`
-
-    ## Functions
-
-    ##### `escape(pathname)`
-
-    > Escape all special characters.
-
-
-
-    ##### `glob(pathname)`
-
-    > Return a list of paths matching a pathname pattern.
-    >
-    >     The pattern may contain simple shell-style wildcards a la
-    >     fnmatch. However, unlike fnmatch, filenames starting with a
-    >     dot are special cases that are not matched by '*' and '?'
-    >     patterns.
-
-
-
-    ##### `glob0(dirname, basename)`
-
-
-
-    ##### `glob1(dirname, pattern)`
-
-
-
-    ##### `has_magic(s)`
-
-
-
-    ##### `iglob(pathname)`
-
-    > Return an iterator which yields the paths matching a pathname pattern.
-    >
-    >     The pattern may contain simple shell-style wildcards a la
-    >     fnmatch. However, unlike fnmatch, filenames starting with a
-    >     dot are special cases that are not matched by '*' and '?'
-    >     patterns.
+<p align="center">Copyright &copy; 2017  Niklas Rosenstein</p>
