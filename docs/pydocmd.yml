@@ -1,0 +1,15 @@
+site_name: pyodoc-markdown Documentation
+generate:
+- document.md:
+  - pydocmd.document
+  - pydocmd.document.Section
+  - pydocmd.document.Document
+- imp.md:
+  - pydocmd.imp
+  - pydocmd.imp.import_module
+  - pydocmd.imp.import_object
+pages:
+- Home: index.md
+- API Documentation:
+  - Document: document.md
+  - Import Utils: imp.md

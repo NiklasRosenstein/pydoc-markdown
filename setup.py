@@ -28,7 +28,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as fp:
 
 setup(
     name='pydoc-markdown',
-    version='0.1.0',
+    version='2.0.0.dev0',
     description='Create Python API documentation in Markdown format',
     long_description=long_description,
     url='https://github.com/NiklasRosenstein/pydoc-markdown',
@@ -37,14 +37,11 @@ setup(
     license='MIT',
     classifiers=[
         'Development Status :: 3 - Alpha',
-
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
         'Topic :: Software Development :: Code Generators',
         'Topic :: Utilities',
-
         'License :: OSI Approved :: MIT License',
-
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
@@ -53,10 +50,11 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     keywords='markdown pydoc generator docs documentation',
-    packages=['pydoc_markdown'],
+    packages=['pydocmd'],
+    install_requires=['PyYAML', 'MkDocs', 'Markdown'],
     entry_points={
         'console_scripts': [
-            'pydoc-markdown=pydoc_markdown.__main__:main',
+            'pydocmd=pydocmd.__main__:main',
         ],
     },
 )

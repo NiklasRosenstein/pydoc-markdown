@@ -1,10 +1,12 @@
 **pydoc-markdown** uses [MkDocs] and extended [Markdown] syntax to generate
 beautiful Python API documentation. It is highly configurable and can be
 extended to work with arbitrary programming languages, see the [Extension API].
+Highly insipired by the [Keras] Documentation.
 
   [MkDocs]: www.mkdocs.org/
   [Markdown]: https://pythonhosted.org/Markdown/
   [Extension API]: docs/templates/extensions.md
+  [Keras]: https://keras.io/
 
 ## Configuration
 
