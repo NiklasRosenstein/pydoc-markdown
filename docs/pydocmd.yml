@@ -1,15 +1,28 @@
 site_name: pyodoc-markdown Documentation
 generate:
 - document.md:
-  - pydocmd.document
-  - pydocmd.document.Section
-  - pydocmd.document.Document
+  - pydocmd.document:
+    - pydocmd.document.Section
+    - pydocmd.document.Document
+    - pydocmd.document.Index
 - imp.md:
-  - pydocmd.imp
-  - pydocmd.imp.import_module
-  - pydocmd.imp.import_object
+  - pydocmd.imp:
+    - pydocmd.imp.import_module
+    - pydocmd.imp.import_object
+    - pydocmd.imp.import_object_with_scope
+- extensions/loader.md:
+  - pydocmd.loader:
+    - pydocmd.loader.PythonLoader:
+      - pydocmd.loader.PythonLoader.load_section
+- extensions/preprocessor.md:
+  - pydocmd.preprocessor:
+    - pydocmd.preprocessor.Preprocessor:
+      - pydocmd.preprocessor.Preprocessor.preprocess_section
 pages:
 - Home: index.md
 - API Documentation:
   - Document: document.md
   - Import Utils: imp.md
+  - Extension API:
+    - Loader: extensions/loader.md
+    - Preprocessor: extensions/preprocessor.md

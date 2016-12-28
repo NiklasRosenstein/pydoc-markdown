@@ -24,90 +24,128 @@ from this structured representation.
 """
 
 from __future__ import print_function
+import os
 
 
 class Section(object):
   """
-  A section represents an entry in a #Document that will be rendered into a
-  #Document as-is. Every section may, but not necessarily, be associated with a
-  symbolic name that can be cross-linked to.
+  A section represents a part of a #Document. It contains Markdown-formatted
+  content that will be rendered into a file at some point.
+
+  # Attributes
+  doc (Document): The document that the section belongs to.
+  identifier (str, None): The globally unique identifier of the section. This
+    identifier usually matches the name of the element that the section
+    describes (eg. a class or function) and will be used for cross-referencing.
+  title (str, None): The title of the section. If specified, it will be
+    rendered before `section.content` and the header-size will depend on
+    the `section.depth`.
+  depth (int): The depth of the section, defaults to 1. Currently only affects
+    the header-size that is rendered for the `section.title`.
+  content (str): The Markdown-formatted content of the section.
   """
 
-  def __init__(self, symbolic_name=None, content='*Empty section*'):
-    self.content = content
-    self.symbolic_name = symbolic_name
-    self.document = None
-    self.link_targets = {}
+  def __init__(self, doc, identifier=None, title=None, depth=1, content=None):
+    self.doc = doc
+    self.identifier = identifier
+    self.title = title
+    self.depth = depth
+    self.content = content if content is not None else '*Nothing to see here.*'
 
-  def add_link_target(self, url):
+  def render(self, stream):
     """
-    Add a link target to the section. Note that the section must be contained
-    in a #Document before this method can be used, otherwise a #RuntimeError
-    will be raised.
-
-    # Arguments
-      url (str): The URL to link to.
-
-    # Returns
-      str: The name of the link target that will be added to the bottom
-        of the section.
-
-    # Raises
-      RuntimeError: If the #Section is not contained in a #Document.
+    Render the section into *stream*.
     """
 
-    if not self.document:
-      raise RuntimeError('Section is not in a Document')
+    if self.identifier:
+      print('<a name="{}"></a>\n'.format(self.identifier), file=stream)
+    if self.title:
+      print('#' * self.depth, self.title, file=stream)
+    print(self.content, file=stream)
 
-    name = self.document.next_link_target()
-    self.link_targets[name] = url
-    return name
+  @property
+  def index(self):
+    """
+    Returns the #Index that this section is associated with, accessed via
+    `section.document`.
+    """
 
-  def render(self, fp):
-    if self.symbolic_name:
-      print('<a name="{}"></a>\n'.format(self.symbolic_name), file=fp)
-    print(self.content, file=fp)
-    for name, url in self.link_targets:
-      print('[{}]: {}'.format(name, url), file=fp)
+    return self.document.index
 
 
 class Document(object):
   """
   Represents a single document that may contain several #Section#s. Every
-  document *must* have a name associated with it. This name will be used
-  to construct URLs to cross-link between different documents, thus they
-  must reflect the URL structure.
+  document *must* have a relative URL associated with it.
+
+  # Attributes
+  index (Index): The index that the document belongs to.
+  url (str): The relative URL of the document.
   """
 
-  def __init__(self, name):
-    self.name = name
+  def __init__(self, index, url):
+    self.index = index
+    self.url = url
     self.sections = []
-    self.allocated_link_targets = 0
 
-  def next_link_target(self):
+
+class Index(object):
+  """
+  The index manages all documents and sections globally. It keeps track of
+  the symbolic names allocated for the sections to be able to link to them
+  from other sections.
+
+  # Attributes
+  documents (dict):
+  sections (dict):
+  """
+
+  def __init__(self):
+    self.documents = {}
+    self.sections = {}
+
+  def new_document(self, filename, url=None):
     """
-    Get the name of the next link target that is unique in this document.
+    Create a new document.
+
+    # Arguments
+    filename (str): The filename of the document. Must end with `.md`.
+    url (str): The relative URL of the document. If omitted, will be
+      automatically deduced from *filename* (same without the `.md` suffix).
+
+    # Raises
+    ValueError: If *filename* does not end with `.md`.
+    ValueError: If *filename* is not a relative path.
+    ValueError: If a document with the specified *filename* already exists.
     """
 
-    try:
-      return str(self.allocated_link_target)
-    finally:
-      self.allocated_link_target += 1
+    if not filename.endswith('.md'):
+      raise ValueError('filename must end with `.md`')
+    if os.path.isabs(filename):
+      raise ValueError('filename must be relative')
+    if filename in self.documents:
+      raise ValueError('document filename {!r} already used'.format(filename))
+    if not url:
+      url = filename[:-3]
 
-  def add(self, symbolic_name=None):
+    doc = Document(self, url)
+    self.documents[filename] = doc
+    return doc
+
+  def new_section(self, doc, *args, **kwargs):
     """
-    Create a new #Section with the specified *symbolic_name* and add it to the
-    document.
+    Create a new section in the specified document. The arguments for this
+    method match the parameters for the #Section constructor.
 
-    # Returns
-      Section: The section that was created and added to the document.
+    # Raises
+    ValueError: If the section identifier is already used.
     """
 
-    section = Section(symbolic_name)
-    section.document = self
-    self.sections.append(section)
+    section = Section(doc, *args, **kwargs)
+    if section.identifier:
+      if section.identifier in self.sections:
+        raise ValueError('section identifier {!r} already used'
+          .format(section.identifier))
+      self.sections[section.identifier] = section
+    doc.sections.append(section)
     return section
-
-  def render(self, fp):
-    for section in self.sections:
-      section.render(fp)

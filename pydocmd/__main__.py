@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .document import Section, Document
+from .document import Index
 from .imp import import_object
 from argparse import ArgumentParser
 
@@ -48,6 +48,8 @@ def read_config():
   config.setdefault('gens_dir', '_build/pydocmd')
   config.setdefault('site_dir', '_build/site')
   config.setdefault('theme', 'readthedocs')
+  config.setdefault('loader', 'pydocmd.loader.PythonLoader')
+  config.setdefault('preprocessor', 'pydocmd.preprocessor.Preprocessor')
   return config
 
 
@@ -83,6 +85,8 @@ def makedirs(path):
 def main():
   args = parser.parse_args()
   config = read_config()
+  loader = import_object(config['loader'])(config)
+  preproc = import_object(config['preprocessor'])(config)
 
   # Generate MkDocs configuration if it doesn't exist.
   if not os.path.isfile('mkdocs.yml'):
@@ -98,32 +102,39 @@ def main():
       makedirs(os.path.dirname(dest_fname))
       shutil.copyfile(os.path.join(root, fname), dest_fname)
 
-  print('Building documentation index...')
-  index = collections.OrderedDict()
-  documents = {}
-  for item in config.get('generate', []):
-    for fname, object_names in item.items():
-      doc = Document(fname.rstrip('.md'))
-      documents[os.path.join(config['gens_dir'], fname)] = doc
-      index.update({x: doc for x in object_names})
+  # Build the index and document structure first, we load the actual
+  # docstrings at a later point.
+  print('Building index...')
+  index = Index()
+  def add_sections(doc, object_names, depth=1):
+    if isinstance(object_names, list):
+      [add_sections(doc, x, depth) for x in object_names]
+    elif isinstance(object_names, dict):
+      for key, subsections in object_names.items():
+        add_sections(doc, key, depth)
+        add_sections(doc, subsections, depth + 1)
+    elif isinstance(object_names, str):
+      index.new_section(doc, object_names, depth=depth)
+    else: raise RuntimeError(object_names)
+  for pages in config.get('generate', []):
+    for fname, object_names in pages.items():
+      doc = index.new_document(fname)
+      add_sections(doc, object_names)
 
+  # Load the docstrings and fill the sections.
   print('Started generating documentation...')
-  for name, doc in index.items():
-    # TODO: Process docstrings, establish cross-links etc.
-    obj = import_object(name)
-    section = doc.add(name)
-    name = obj.__name__
-    if isinstance(obj, (types.FunctionType, types.LambdaType)):
-      name += '()'
-    docstring = getattr(obj, '__doc__', None) or ''
-    docstring = '# {}\n'.format(name) + docstring
-    section.content = docstring
+  for doc in index.documents.values():
+    for section in filter(lambda s: s.identifier, doc.sections):
+      loader.load_section(section)
+      preproc.preprocess_section(section)
 
   # Write out all the generated documents.
-  for fname, doc in documents.items():
+  for fname, doc in index.documents.items():
+    fname = os.path.join(config['gens_dir'], fname)
     makedirs(os.path.dirname(fname))
     with open(fname, 'w') as fp:
-      doc.render(fp)
+      for section in doc.sections:
+        section.render(fp)
 
   if args.command == 'generate':
     return 0

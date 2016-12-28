@@ -34,14 +34,37 @@ def import_module(name):
 
 
 def import_object(name):
-  module, symbol = name.rpartition('.')[::2]
-  module = import_module(module)
-  if not hasattr(module, symbol):
+  """
+  Like #import_object_with_scope() but returns only the object.
+  """
+
+  return import_object_with_scope(name)[0]
+
+
+def import_object_with_scope(name):
+  """
+  Imports a Python object by an absolute identifier.
+
+  # Arguments
+  name (str): The name of the Python object to import.
+
+  # Returns
+  (any, Module): The object and the module that contains it. Note that
+    for plain modules loaded with this function, both elements of the
+    tuple may be the same object.
+  """
+
+  # Import modules until we can no longer import them. Prefer existing
+  # attributes over importing modules at each step.
+  parts = name.split('.')
+  current_name = parts[0]
+  obj = import_module(current_name)
+  scope = None
+  for part in parts[1:]:
     try:
-      return import_module(name)
-    except ImportError as exc:
-      raise ImportError(name)
-  try:
-    return getattr(module, symbol)
-  except AttributeError:
-    raise ImportError(name)
+      sub_obj = getattr(obj, part)
+      scope, obj = obj, sub_obj
+    except AttributeError:
+      current_name += '.' + part
+      obj = scope = import_module(current_name)
+  return obj, scope

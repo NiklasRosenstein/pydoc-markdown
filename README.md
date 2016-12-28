@@ -48,6 +48,14 @@ For absolute references for modules or members in names that are not available
 in the current global namespace, `#::mod.member` must be used (note the two
 preceeding two double-colons).
 
+For long reference names where only some part of the name should be displayed,
+the syntax `#X~some.reference.name` can be used, where `X` is the number of
+elements to keep. If `X` is omitted, it will be assumed 1. Example:
+`#~some.reference.name` results in only `name` being displayed.
+
+In order to append additional characters that are not included in the actual
+reference name, another hash-symbol can be used, like `#Signal#s`.
+
 **pydoc-markdown** can be extended to find other cross-references using the
 [Extension API].
 
