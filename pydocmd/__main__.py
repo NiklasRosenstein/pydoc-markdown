@@ -26,13 +26,15 @@ import atexit
 import collections
 import os
 import shutil
+import signal
 import subprocess
+import sys
 import types
 import yaml
 
 PYDOCMD_CONFIG = 'pydocmd.yml'
 parser = ArgumentParser()
-parser.add_argument('command', choices=['build', 'gh-deploy', 'json', 'new', 'serve'])
+parser.add_argument('command', choices=['generate', 'build', 'gh-deploy', 'json', 'new', 'serve'])
 
 
 def read_config():
@@ -65,6 +67,7 @@ def write_mkdocs_config(inconf):
 
   with open('mkdocs.yml', 'w') as fp:
     yaml.dump(config, fp)
+
   atexit.register(lambda: os.remove('mkdocs.yml'))
 
 
@@ -83,6 +86,7 @@ def main():
 
   # Generate MkDocs configuration if it doesn't exist.
   if not os.path.isfile('mkdocs.yml'):
+    print('Generating temporary MkDocs config...')
     write_mkdocs_config(config)
 
   # Copy all template files from the source directory into our
@@ -121,5 +125,12 @@ def main():
     with open(fname, 'w') as fp:
       doc.render(fp)
 
+  if args.command == 'generate':
+    return 0
+
   print("Running 'mkdocs {}'".format(args.command))
-  return subprocess.call(['mkdocs', args.command])
+  sys.stdout.flush()
+  try:
+    return os.system('mkdocs {}'.format(args.command))
+  except KeyboardInterrupt:
+    return signal.SIGINT
