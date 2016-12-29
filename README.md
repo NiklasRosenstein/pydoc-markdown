@@ -14,6 +14,24 @@ __Todo__
 - [ ] Expand and link cross-references (eg. `#SomeClass`)
 - [ ] Parse, format and link types listed in parameter/member/raise/return type
       docstrings (eg. `someattr (int): This is...`)
+- [ ] `pydocmd new` should not start a new MkDocs project, but a pydoc-markdown
+      project :)
+
+## Building
+
+The `pydocmd` command is a wrapper around `mkdocs` and supports the same
+commands. It will simply autogenerate the documentation files and then invoke
+MkDocs. If you only want to run the auto-generation, simply use the `generate`
+subcommand.
+
+    $ pydocmd --help
+    usage: pydocmd [-h] {generate,build,gh-deploy,json,new,serve}
+
+    positional arguments:
+    {generate,build,gh-deploy,json,new,serve}
+
+    optional arguments:
+    -h, --help            show this help message and exit
 
 ## Configuration
 
