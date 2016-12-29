@@ -5,7 +5,7 @@ Highly insipired by the [Keras] Documentation.
 
   [MkDocs]: www.mkdocs.org/
   [Markdown]: https://pythonhosted.org/Markdown/
-  [Extension API]: docs/templates/extensions.md
+  [Extension API]: https://niklasrosenstein.github.io/pydoc-markdown/extensions/loader/
   [Keras]: https://keras.io/
 
 __Todo__

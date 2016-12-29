@@ -24,6 +24,6 @@ pages:
 - API Documentation:
   - Document: document.md
   - Import Utils: imp.md
-  - Extension API:
-    - Loader: extensions/loader.md
-    - Preprocessor: extensions/preprocessor.md
+- Extension API:
+  - Loader: extensions/loader.md
+  - Preprocessor: extensions/preprocessor.md
