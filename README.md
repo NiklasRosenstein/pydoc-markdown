@@ -35,9 +35,9 @@ generate:
     - foobar.baz.CoolClass+     # Class docstring (+ to include members)
     - foobar.baz.some_function  # Function docstring
 
-# MkDocs pages configuration
+# MkDocs pages configuration, with some sugar.
 pages:
-- Home: index.md
+- Home: index.md << ../README.md
 - foobar.baz:
   - Cool Stuff: baz/cool-stuff.md
 

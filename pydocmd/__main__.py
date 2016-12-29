@@ -66,6 +66,8 @@ def write_mkdocs_config(inconf):
   config['theme'] = inconf['theme']
   if 'pages' in inconf:
     config['pages'] = inconf['pages']
+  if 'repo_url' in inconf:
+    config['repo_url'] = inconf['repo_url']
 
   with open('mkdocs.yml', 'w') as fp:
     yaml.dump(config, fp)
@@ -88,11 +90,6 @@ def main():
   loader = import_object(config['loader'])(config)
   preproc = import_object(config['preprocessor'])(config)
 
-  # Generate MkDocs configuration if it doesn't exist.
-  if not os.path.isfile('mkdocs.yml'):
-    print('Generating temporary MkDocs config...')
-    write_mkdocs_config(config)
-
   # Copy all template files from the source directory into our
   # generated files directory.
   print('Started copying source files...')
@@ -101,6 +98,30 @@ def main():
       dest_fname = os.path.join(config['gens_dir'], fname)
       makedirs(os.path.dirname(dest_fname))
       shutil.copyfile(os.path.join(root, fname), dest_fname)
+
+  # Also process all pages to copy files outside of the docs_dir
+  # to the gens_dir.
+  def process_pages(data):
+    for key in data:
+      filename = data[key]
+      if isinstance(filename, str) and '<<' in filename:
+        filename, source = filename.split('<<')
+        filename, source = filename.rstrip(), source.lstrip()
+        outfile = os.path.join(config['gens_dir'], filename)
+        makedirs(os.path.dirname(outfile))
+        shutil.copyfile(source, outfile)
+        data[key] = filename
+      elif isinstance(filename, dict):
+        process_pages(filename)
+      elif isinstance(filename, list):
+        [process_pages(x) for x in filename]
+  for page in config['pages']:
+    process_pages(page)
+
+  # Generate MkDocs configuration if it doesn't exist.
+  if not os.path.isfile('mkdocs.yml'):
+    print('Generating temporary MkDocs config...')
+    write_mkdocs_config(config)
 
   # Build the index and document structure first, we load the actual
   # docstrings at a later point.

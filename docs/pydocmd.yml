@@ -1,4 +1,5 @@
 site_name: pyodoc-markdown Documentation
+repo_url: https://github.com/NiklasRosenstein/pydoc-markdown
 generate:
 - document.md:
   - pydocmd.document:
@@ -19,7 +20,7 @@ generate:
     - pydocmd.preprocessor.Preprocessor:
       - pydocmd.preprocessor.Preprocessor.preprocess_section
 pages:
-- Home: index.md
+- Home: index.md << ../README.md
 - API Documentation:
   - Document: document.md
   - Import Utils: imp.md
