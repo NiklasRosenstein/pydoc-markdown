@@ -8,6 +8,13 @@ Highly insipired by the [Keras] Documentation.
   [Extension API]: docs/templates/extensions.md
   [Keras]: https://keras.io/
 
+__Todo__
+
+- [ ] Support `+` suffix to include documented members of a module/class
+- [ ] Expand and link cross-references (eg. `#SomeClass`)
+- [ ] Parse, format and link types listed in parameter/member/raise/return type
+      docstrings (eg. `someattr (int): This is...`)
+
 ## Configuration
 
 **pydoc-markdown** only takes over the task of generating the Markdown
@@ -20,18 +27,26 @@ __pydocmd.yml__
 
 ```yaml
 site_name: "foobar Documentation"
+
 generate:
 - baz/cool-stuff.md:
-  - foobar.baz                # Module docstring
-  - foobar.baz.CoolClass      # Class docstring
-  - foobar.baz.some_function  # Function docstring
+  - foobar.baz:                 # Module docstring
+    # Indenting the following items to give them a smaller header size
+    - foobar.baz.CoolClass+     # Class docstring (+ to include members)
+    - foobar.baz.some_function  # Function docstring
+
+# MkDocs pages configuration
 pages:
 - Home: index.md
 - foobar.baz:
   - Cool Stuff: baz/cool-stuff.md
 
-mkdocs:
-  # Additional config for mkdocs
+docs_dir: sources                                 # default
+gens_dir: _build/pydocmd                          # default (-> MkDocs docs_dir)
+site_dir: _build/site                             # default
+theme:    readthedocs                             # default
+loader:   pydocmd.loader.PythonLoader             # default
+preprocessor: pydocmd.preprocessor.Preprocessor   # default
 ```
 
 ## Syntax

@@ -40,8 +40,13 @@ class PythonLoader(object):
 
   def load_section(self, section):
     """
-    Loads the contents of a #Section. The #Section.identifier is the name
+    Loads the contents of a #Section. The `section.identifier` is the name
     of the object that we need to load.
+
+    # Arguments
+      section (Section): The section to load. Fill the `section.title` and
+        `section.content` values. Optionally, `section.loader_context` can
+        be filled with custom arbitrary data to reference at a later point.
     """
 
     assert section.identifier is not None
