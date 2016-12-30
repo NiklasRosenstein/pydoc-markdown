@@ -147,7 +147,7 @@ def main():
     elif isinstance(object_names, str):
       index.new_section(doc, object_names, depth=depth)
     else: raise RuntimeError(object_names)
-  for pages in config.get('generate', []):
+  for pages in config.get('generate') or []:
     for fname, object_names in pages.items():
       doc = index.new_document(fname)
       add_sections(doc, object_names)
