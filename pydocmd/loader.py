@@ -66,10 +66,17 @@ def get_function_signature(function, owner_class=None, show_module=False):
   Mostly from https://github.com/fchollet/keras/blob/master/docs/autogen.py
   """
 
-  signature = inspect.getargspec(function)
+  if inspect.isclass(function):
+    if not inspect.ismethod(function.__init__):
+      # eg. __slot__ classes without explicit constructor
+      signature = inspect.getargspec(lambda: None)
+    else:
+      signature = inspect.getargspec(function.__init__)
+  else:
+    signature = inspect.getargspec(function)
   defaults = signature.defaults
   args = signature.args
-  if args[0] == 'self' and (owner_class or inspect.isclass(function)):
+  if args and args[0] == 'self' and (owner_class or inspect.isclass(function)):
     args = args[1:]
   if defaults:
     kwargs = zip(args[-len(defaults):], defaults)
