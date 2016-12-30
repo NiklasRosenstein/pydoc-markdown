@@ -47,7 +47,7 @@ class Preprocessor(object):
       if not codeblock_opened:
         line, current_section = self._preprocess_line(line, current_section)
       lines.append(line)
-    section.content = '\n'.join(lines)
+    section.content = self._preprocess_refs('\n'.join(lines))
 
   def _preprocess_line(self, line, current_section):
     match = re.match('\s*# (.*)$', line)
@@ -69,3 +69,18 @@ class Preprocessor(object):
       line = re.sub(r'\s*([^\\]+)(\s*\(.+\))?:(.*)$', style, line)
 
     return line, current_section
+
+  def _preprocess_refs(self, content):
+    # TODO: Generate links to the referenced symbols.
+    def handler(match):
+      ref = match.group(1)
+      parens = match.group(2) or ''
+      has_trailing_dot = False
+      if not parens and ref.endswith('.'):
+        ref = ref[:-1]
+        has_trailing_dot = True
+      result = '`{}`'.format(ref + parens)
+      if has_trailing_dot:
+        result += '.'
+      return result
+    return re.sub('#([\w\d\._]+)(\(\))?', handler, content)
