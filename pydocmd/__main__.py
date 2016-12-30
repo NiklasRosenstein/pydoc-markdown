@@ -84,8 +84,18 @@ def makedirs(path):
     os.makedirs(path)
 
 
+def new_project():
+  with open('pydocmd.yml', 'w') as fp:
+    fp.write('site_name: Welcome to pydoc-markdown\ngenerate:\npages:\n- Home: index.md << ../README.md\n')
+
+
 def main():
   args = parser.parse_args()
+  if args.command == 'new':
+    new_project()
+    return
+
+
   config = read_config()
   loader = import_object(config['loader'])(config)
   preproc = import_object(config['preprocessor'])(config)
