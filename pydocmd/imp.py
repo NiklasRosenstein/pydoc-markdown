@@ -68,6 +68,8 @@ def import_object_with_scope(name):
     except AttributeError:
       try:
         obj = scope = import_module(current_name)
-      except ImportError:
-        raise ImportError(current_name)
+      except ImportError as exc:
+        if 'named {}'.format(part) in str(exc):
+          raise ImportError(current_name)
+        raise
   return obj, scope
