@@ -61,10 +61,13 @@ def import_object_with_scope(name):
   obj = import_module(current_name)
   scope = None
   for part in parts[1:]:
+    current_name += '.' + part
     try:
       sub_obj = getattr(obj, part)
       scope, obj = obj, sub_obj
     except AttributeError:
-      current_name += '.' + part
-      obj = scope = import_module(current_name)
+      try:
+        obj = scope = import_module(current_name)
+      except ImportError:
+        raise ImportError(current_name)
   return obj, scope
