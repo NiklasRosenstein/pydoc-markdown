@@ -14,8 +14,6 @@ __Todo__
 - [ ] Expand and link cross-references (eg. `#SomeClass`)
 - [ ] Parse, format and link types listed in parameter/member/raise/return type
       docstrings (eg. `someattr (int): This is...`)
-- [ ] `pydocmd new` should not start a new MkDocs project, but a pydoc-markdown
-      project :)
 
 ## Building
 
