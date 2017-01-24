@@ -64,6 +64,8 @@ def write_mkdocs_config(inconf):
   config['docs_dir'] = inconf['gens_dir']
   config['site_dir'] = inconf['site_dir']
   config['theme'] = inconf['theme']
+  if 'markdown_extensions' in inconf:
+    config['markdown_extensions'] = inconf['markdown_extensions']
   if 'pages' in inconf:
     config['pages'] = inconf['pages']
   if 'repo_url' in inconf:
@@ -104,8 +106,9 @@ def main():
   # generated files directory.
   print('Started copying source files...')
   for root, dirs, files in os.walk(config['docs_dir']):
+    rel_root = os.path.relpath(root, config['docs_dir'])
     for fname in filter(lambda f: f.endswith('.md'), files):
-      dest_fname = os.path.join(config['gens_dir'], fname)
+      dest_fname = os.path.join(config['gens_dir'], rel_root, fname)
       makedirs(os.path.dirname(dest_fname))
       shutil.copyfile(os.path.join(root, fname), dest_fname)
 
