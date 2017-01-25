@@ -51,7 +51,13 @@ class PythonLoader(object):
 
     assert section.identifier is not None
     obj, scope = import_object_with_scope(section.identifier)
-    section.title = getattr(obj, '__name__', section.identifier.rsplit('.', 1)[1])
+
+    if '.' in section.identifier:
+        default_title = section.identifier.rsplit('.', 1)[1]
+    else:
+        default_title = section.identifier
+
+    section.title = getattr(obj, '__name__', default_title)
     section.content = dedent(getattr(obj, '__doc__', None) or '')
     section.loader_context = {'obj': obj, 'scope': scope}
 
