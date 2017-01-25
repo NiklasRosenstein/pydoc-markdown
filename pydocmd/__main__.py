@@ -159,7 +159,16 @@ def main():
   print('Started generating documentation...')
   for doc in index.documents.values():
     for section in filter(lambda s: s.identifier, doc.sections):
-      loader.load_section(section)
+      sub_object_names = loader.load_section(section)
+      # Extract sub sections
+      if sub_object_names:
+        add_sections(doc, sub_object_names)
+    # Load added sections
+    for section in filter(lambda s: s.identifier, doc.sections):
+      if not section.title:
+        loader.load_section(section)
+
+    for section in filter(lambda s: s.identifier, doc.sections):
       preproc.preprocess_section(section)
 
   # Write out all the generated documents.

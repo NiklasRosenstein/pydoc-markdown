@@ -50,6 +50,11 @@ class PythonLoader(object):
     """
 
     assert section.identifier is not None
+    load_members = False
+    if section.identifier.endswith('+'):
+        section.identifier = section.identifier[:-1]
+        load_members = True
+
     obj, scope = import_object_with_scope(section.identifier)
 
     if '.' in section.identifier:
@@ -65,6 +70,12 @@ class PythonLoader(object):
     if callable(obj):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
       section.content = '```python\n{}\n```\n'.format(sig) + section.content
+
+    if load_members:
+      return ['.'.join((section.identifier, key))
+        for key in dir(obj) if not key.startswith('_') and
+        getattr(getattr(obj, key), '__doc__', '')]
+    return []
 
 
 def get_function_signature(function, owner_class=None, show_module=False):
