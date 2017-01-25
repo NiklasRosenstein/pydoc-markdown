@@ -73,11 +73,10 @@ def get_function_signature(function, owner_class=None, show_module=False):
   """
 
   if inspect.isclass(function):
-    if not inspect.ismethod(function.__init__):
-      # eg. __slot__ classes without explicit constructor
-      signature = inspect.getargspec(lambda: None)
-    else:
+    try:
       signature = inspect.getargspec(function.__init__)
+    except Exception:
+      signature = inspect.getargspec(lambda: None)
   else:
     signature = inspect.getargspec(function)
   defaults = signature.defaults
