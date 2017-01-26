@@ -71,10 +71,11 @@ class PythonLoader(object):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
       section.content = '```python\n{}\n```\n'.format(sig) + section.content
 
-    if load_members:
+    if load_members and hasattr(obj, '__dict__'):
       return ['.'.join((section.identifier, key))
-        for key in dir(obj) if not key.startswith('_') and
-        getattr(getattr(obj, key), '__doc__', '')]
+        for key, value in obj.__dict__.items()
+        if not key.startswith('_') and
+        getattr(value, '__doc__', '')]
     return []
 
 
