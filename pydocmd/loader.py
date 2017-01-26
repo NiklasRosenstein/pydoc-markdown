@@ -53,9 +53,9 @@ class PythonLoader(object):
     obj, scope = import_object_with_scope(section.identifier)
 
     if '.' in section.identifier:
-        default_title = section.identifier.rsplit('.', 1)[1]
+      default_title = section.identifier.rsplit('.', 1)[1]
     else:
-        default_title = section.identifier
+      default_title = section.identifier
 
     section.title = getattr(obj, '__name__', default_title)
     section.content = dedent(getattr(obj, '__doc__', None) or '')
