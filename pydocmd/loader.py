@@ -50,11 +50,6 @@ class PythonLoader(object):
     """
 
     assert section.identifier is not None
-    load_members = False
-    if section.identifier.endswith('+'):
-        section.identifier = section.identifier[:-1]
-        load_members = True
-
     obj, scope = import_object_with_scope(section.identifier)
 
     if '.' in section.identifier:
@@ -71,49 +66,29 @@ class PythonLoader(object):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
       section.content = '```python\n{}\n```\n'.format(sig) + section.content
 
-    if load_members and hasattr(obj, '__dict__'):
-      return ['.'.join((section.identifier, key))
-        for key, value in obj.__dict__.items()
-        if not key.startswith('_') and
-        getattr(value, '__doc__', '')]
-    return []
-
 
 def get_function_signature(function, owner_class=None, show_module=False):
-  """
-  Mostly from https://github.com/fchollet/keras/blob/master/docs/autogen.py
-  """
-
-  if inspect.isclass(function):
-    try:
-      signature = inspect.getargspec(function.__init__)
-    except Exception:
-      signature = inspect.getargspec(lambda: None)
-  else:
-    signature = inspect.getargspec(function)
-  defaults = signature.defaults
-  args = signature.args
-  if args and args[0] == 'self' and (owner_class or inspect.isclass(function)):
-    args = args[1:]
-  if defaults:
-    kwargs = zip(args[-len(defaults):], defaults)
-    args = args[:-len(defaults)]
-  else:
-    kwargs = []
+  # Get base name
   name_parts = []
   if show_module:
     name_parts.append(function.__module__)
   if owner_class:
     name_parts.append(owner_class.__name__)
   name_parts.append(function.__name__)
-  st = '%s(' % '.'.join(name_parts)
-  for a in args:
-    st += str(a) + ', '
-  for a, v in kwargs:
-    if type(v) == str:
-      v = '\'' + v + '\''
-    st += str(a) + '=' + str(v) + ', '
-  if kwargs or args:
-    return st[:-2] + ')'
+  name = '.'.join(name_parts)
+
+  isclass = inspect.isclass(function)
+  if isclass:
+    try:
+      signature = inspect.signature(function.__init__)
+    except Exception:
+      return name + '()'
   else:
-    return st + ')'
+    signature = inspect.signature(function)
+
+  # Remove self
+  if (isclass or owner_class) and list(signature.parameters.keys())[0] == 'self':
+    signature = signature.replace(parameters=[
+      p for i, p in enumerate(signature.parameters.values()) if i != 0])
+
+  return name + str(signature)

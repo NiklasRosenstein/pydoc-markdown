@@ -19,7 +19,7 @@
 # THE SOFTWARE.
 
 from .document import Index
-from .imp import import_object
+from .imp import import_object, dir_object
 from argparse import ArgumentParser
 
 import atexit
@@ -148,7 +148,15 @@ def main():
         add_sections(doc, key, depth)
         add_sections(doc, subsections, depth + 1)
     elif isinstance(object_names, str):
-      index.new_section(doc, object_names, depth=depth)
+      if object_names.endswith('+'):
+        object_names = object_names[:-1]
+        index.new_section(doc, object_names, depth=depth)
+
+        for sub in dir_object(object_names):
+          index.new_section(
+            doc, '.'.join((object_names, sub)), depth=depth + 1)
+      else:
+        index.new_section(doc, object_names, depth=depth)
     else: raise RuntimeError(object_names)
   for pages in config.get('generate') or []:
     for fname, object_names in pages.items():
@@ -159,14 +167,7 @@ def main():
   print('Started generating documentation...')
   for doc in index.documents.values():
     for section in filter(lambda s: s.identifier, doc.sections):
-      sub_object_names = loader.load_section(section)
-      # Extract sub sections
-      if sub_object_names:
-        add_sections(doc, sub_object_names)
-    # Load added sections
-    for section in filter(lambda s: s.identifier, doc.sections):
-      if not section.title:
-        loader.load_section(section)
+      loader.load_section(section)
 
     for section in filter(lambda s: s.identifier, doc.sections):
       preproc.preprocess_section(section)

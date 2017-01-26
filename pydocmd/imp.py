@@ -73,3 +73,14 @@ def import_object_with_scope(name):
           raise ImportError(current_name)
         raise
   return obj, scope
+
+
+def dir_object(name):
+  obj, scope = import_object_with_scope(name)
+  if hasattr(obj, '__dict__'):
+    return [key
+        for key, value in obj.__dict__.items()
+        if not key.startswith('_') and
+        getattr(value, '__doc__', '')]
+    return []
+  return []
