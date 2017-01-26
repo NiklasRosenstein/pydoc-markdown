@@ -168,8 +168,6 @@ def main():
   for doc in index.documents.values():
     for section in filter(lambda s: s.identifier, doc.sections):
       loader.load_section(section)
-
-    for section in filter(lambda s: s.identifier, doc.sections):
       preproc.preprocess_section(section)
 
   # Write out all the generated documents.
