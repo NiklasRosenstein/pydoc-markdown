@@ -21,6 +21,8 @@
 This module provides utilities for importing Python objects by name.
 """
 
+import types
+
 
 def import_module(name):
   """
@@ -76,11 +78,18 @@ def import_object_with_scope(name):
 
 
 def dir_object(name):
-  obj, scope = import_object_with_scope(name)
-  if hasattr(obj, '__dict__'):
-    return [key
-        for key, value in obj.__dict__.items()
-        if not key.startswith('_') and
-        getattr(value, '__doc__', '')]
-    return []
-  return []
+  prefix = None
+  obj = import_object(name)
+  if isinstance(obj, types.ModuleType):
+    prefix = obj.__name__
+  all = getattr(obj, '__all__', None)
+
+  result = []
+  for key, value in getattr(obj, '__dict__', {}).items():
+    if key.startswith('_'): continue
+    if not getattr(value, '__doc__'): continue
+    if all is not None and key not in all: continue
+    if prefix is not None and getattr(value, '__module__', None) != prefix:
+      continue
+    result.append(key)
+  return result

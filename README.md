@@ -10,7 +10,7 @@ Highly insipired by the [Keras] Documentation.
 
 __Todo__
 
-- [ ] Support `+` suffix to include documented members of a module/class
+- [x] Support `+` suffix to include documented members of a module/class
 - [ ] Expand and link cross-references (eg. `#SomeClass`)
 - [ ] Parse, format and link types listed in parameter/member/raise/return type
       docstrings (eg. `someattr (int): This is...`)
@@ -50,6 +50,9 @@ generate:
     # Indenting the following items to give them a smaller header size
     - foobar.baz.CoolClass+     # Class docstring (+ to include members)
     - foobar.baz.some_function  # Function docstring
+- baz/more-stuff.md:
+  - foobar.more++               # foobar.more module, plus 2 more levels (eg.
+                                # classes and their members)
 
 # MkDocs pages configuration, with some sugar.
 pages:

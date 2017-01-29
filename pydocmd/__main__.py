@@ -148,16 +148,22 @@ def main():
         add_sections(doc, key, depth)
         add_sections(doc, subsections, depth + 1)
     elif isinstance(object_names, str):
-      if object_names.endswith('+'):
-        object_names = object_names[:-1]
-        index.new_section(doc, object_names, depth=depth)
+      # Check how many levels of recursion we should be going.
+      expand_depth = len(object_names)
+      object_names = object_names.rstrip('+')
+      expand_depth -= len(object_names)
 
-        for sub in dir_object(object_names):
-          index.new_section(
-            doc, '.'.join((object_names, sub)), depth=depth + 1)
-      else:
-        index.new_section(doc, object_names, depth=depth)
-    else: raise RuntimeError(object_names)
+      def create_sections(name, level):
+        if level > expand_depth: return
+        index.new_section(doc, name, depth=depth + level)
+        for sub in dir_object(name):
+          sub = name + '.' + sub
+          create_sections(sub, level + 1)
+
+      create_sections(object_names, 0)
+    else:
+      raise RuntimeError(object_names)
+
   for pages in config.get('generate') or []:
     for fname, object_names in pages.items():
       doc = index.new_document(fname)

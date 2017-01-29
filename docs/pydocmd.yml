@@ -2,23 +2,13 @@ site_name: pyodoc-markdown Documentation
 repo_url: https://github.com/NiklasRosenstein/pydoc-markdown
 generate:
 - document.md:
-  - pydocmd.document:
-    - pydocmd.document.Section
-    - pydocmd.document.Document
-    - pydocmd.document.Index
+  - pydocmd.document++
 - imp.md:
-  - pydocmd.imp:
-    - pydocmd.imp.import_module
-    - pydocmd.imp.import_object
-    - pydocmd.imp.import_object_with_scope
+  - pydocmd.imp+
 - extensions/loader.md:
-  - pydocmd.loader:
-    - pydocmd.loader.PythonLoader:
-      - pydocmd.loader.PythonLoader.load_section
+  - pydocmd.loader++
 - extensions/preprocessor.md:
-  - pydocmd.preprocessor:
-    - pydocmd.preprocessor.Preprocessor:
-      - pydocmd.preprocessor.Preprocessor.preprocess_section
+  - pydocmd.preprocessor++
 pages:
 - Home: index.md << ../README.md
 - API Documentation:
