@@ -23,18 +23,19 @@ from .imp import import_object, dir_object
 from argparse import ArgumentParser
 
 import atexit
-import collections
+# import collections
 import os
 import shutil
 import signal
-import subprocess
+# import subprocess
 import sys
-import types
+# import types
 import yaml
 
 PYDOCMD_CONFIG = 'pydocmd.yml'
 parser = ArgumentParser()
-parser.add_argument('command', choices=['generate', 'build', 'gh-deploy', 'json', 'new', 'serve'])
+parser.add_argument('command', choices=['generate', 'build', 'gh-deploy',
+                    'json', 'new', 'serve'])
 
 
 def read_config():
@@ -59,17 +60,11 @@ def write_mkdocs_config(inconf):
   configuration and makes sure it gets removed when this program exists.
   """
 
-  config = {}
-  config['site_name'] = inconf['site_name']
+  config = {key: inconf[key] for key in ('site_name', 'site_dir', 'theme')}
   config['docs_dir'] = inconf['gens_dir']
-  config['site_dir'] = inconf['site_dir']
-  config['theme'] = inconf['theme']
-  if 'markdown_extensions' in inconf:
-    config['markdown_extensions'] = inconf['markdown_extensions']
-  if 'pages' in inconf:
-    config['pages'] = inconf['pages']
-  if 'repo_url' in inconf:
-    config['repo_url'] = inconf['repo_url']
+  for key in ('markdown_extensions', 'pages', 'repo_url'):
+    if key in inconf:
+      config[key] = inconf[key]
 
   with open('mkdocs.yml', 'w') as fp:
     yaml.dump(config, fp)
@@ -96,7 +91,6 @@ def main():
   if args.command == 'new':
     new_project()
     return
-
 
   config = read_config()
   loader = import_object(config['loader'])(config)
@@ -140,6 +134,7 @@ def main():
   # docstrings at a later point.
   print('Building index...')
   index = Index()
+
   def add_sections(doc, object_names, depth=1):
     if isinstance(object_names, list):
       [add_sections(doc, x, depth) for x in object_names]
@@ -154,7 +149,8 @@ def main():
       expand_depth -= len(object_names)
 
       def create_sections(name, level):
-        if level > expand_depth: return
+        if level > expand_depth:
+          return
         index.new_section(doc, name, depth=depth + level)
         for sub in dir_object(name):
           sub = name + '.' + sub
