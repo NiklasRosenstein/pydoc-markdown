@@ -23,13 +23,10 @@ from .imp import import_object, dir_object
 from argparse import ArgumentParser
 
 import atexit
-# import collections
 import os
 import shutil
 import signal
-# import subprocess
 import sys
-# import types
 import yaml
 
 PYDOCMD_CONFIG = 'pydocmd.yml'
