@@ -32,7 +32,7 @@ import yaml
 PYDOCMD_CONFIG = 'pydocmd.yml'
 parser = ArgumentParser()
 parser.add_argument('command', choices=['generate', 'build', 'gh-deploy',
-                    'json', 'new', 'serve'])
+                                        'json', 'new', 'serve'])
 
 
 def read_config():
