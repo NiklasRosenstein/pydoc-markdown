@@ -32,7 +32,8 @@ import yaml
 PYDOCMD_CONFIG = 'pydocmd.yml'
 parser = ArgumentParser()
 parser.add_argument('command', choices=['generate', 'build', 'gh-deploy',
-                                        'json', 'new', 'serve'])
+                                        'json', 'new', 'serve', 'simple'])
+parser.add_argument('subargs', nargs='...')
 
 
 def read_config():
@@ -42,6 +43,10 @@ def read_config():
 
   with open(PYDOCMD_CONFIG) as fp:
     config = yaml.load(fp)
+  return default_config(config)
+
+
+def default_config(config):
   config.setdefault('docs_dir', 'sources')
   config.setdefault('gens_dir', '_build/pydocmd')
   config.setdefault('site_dir', '_build/site')
@@ -51,7 +56,7 @@ def read_config():
   return config
 
 
-def write_mkdocs_config(inconf):
+def write_temp_mkdocs_config(inconf):
   """
   Generates a configuration for MkDocs on-the-fly from the pydoc-markdown
   configuration and makes sure it gets removed when this program exists.
@@ -78,24 +83,17 @@ def makedirs(path):
     os.makedirs(path)
 
 
-def new_project():
-  with open('pydocmd.yml', 'w') as fp:
-    fp.write('site_name: Welcome to pydoc-markdown\ngenerate:\npages:\n- Home: index.md << ../README.md\n')
-
-
-def main():
-  args = parser.parse_args()
-  if args.command == 'new':
-    new_project()
-    return
-
-  config = read_config()
-  loader = import_object(config['loader'])(config)
-  preproc = import_object(config['preprocessor'])(config)
+def copy_source_files(config):
+  """
+  Copies all files from the `docs_dir` to the `gens_dir` defined in the
+  *config*. It also takes the MkDocs `pages` configuration into account
+  and converts the special `<< INFILE` syntax by copying them to the
+  `gens_dir` as well.
+  """
 
   # Copy all template files from the source directory into our
   # generated files directory.
-  print('Started copying source files...')
+  log('Started copying source files...')
   for root, dirs, files in os.walk(config['docs_dir']):
     rel_root = os.path.relpath(root, config['docs_dir'])
     for fname in filter(lambda f: f.endswith('.md'), files):
@@ -122,14 +120,43 @@ def main():
   for page in config['pages']:
     process_pages(page)
 
-  # Generate MkDocs configuration if it doesn't exist.
-  if not os.path.isfile('mkdocs.yml'):
-    print('Generating temporary MkDocs config...')
-    write_mkdocs_config(config)
+
+def new_project():
+  with open('pydocmd.yml', 'w') as fp:
+    fp.write('site_name: Welcome to pydoc-markdown\ngenerate:\npages:\n- Home: index.md << ../README.md\n')
+
+
+def log(*args, **kwargs):
+  kwargs.setdefault('file', sys.stderr)
+  print(*args, **kwargs)
+
+
+def main():
+  args = parser.parse_args()
+  if args.command == 'new':
+    new_project()
+    return
+  if args.command == 'simple' and not args.subargs:
+    parser.error('need at least one argument')
+  elif args.command != 'simple' and args.subargs:
+    # TODO: Pass arguments to MkDocs subcommand
+    parser.error('expected no arguments')
+
+  config = read_config() if args.command != 'simple' else default_config({})
+  loader = import_object(config['loader'])(config)
+  preproc = import_object(config['preprocessor'])(config)
+
+  if args.command != 'simple':
+    copy_source_files(config)
+
+    # Generate MkDocs configuration if it doesn't exist.
+    if not os.path.isfile('mkdocs.yml'):
+      log('Generating temporary MkDocs config...')
+      write_temp_mkdocs_config(config)
 
   # Build the index and document structure first, we load the actual
   # docstrings at a later point.
-  print('Building index...')
+  log('Building index...')
   index = Index()
 
   def add_sections(doc, object_names, depth=1):
@@ -151,23 +178,34 @@ def main():
         index.new_section(doc, name, depth=depth + level)
         for sub in dir_object(name):
           sub = name + '.' + sub
-          create_sections(sub, level + 1)
+          sec = create_sections(sub, level + 1)
 
       create_sections(object_names, 0)
     else:
       raise RuntimeError(object_names)
 
-  for pages in config.get('generate') or []:
-    for fname, object_names in pages.items():
-      doc = index.new_document(fname)
-      add_sections(doc, object_names)
+  if args.command == 'simple':
+    # In simple mode, we generate a single document from the import
+    # names specified on the command-line.
+    doc = index.new_document('main.md')
+    add_sections(doc, args.subargs)
+  else:
+    for pages in config.get('generate') or []:
+      for fname, object_names in pages.items():
+        doc = index.new_document(fname)
+        add_sections(doc, object_names)
 
   # Load the docstrings and fill the sections.
-  print('Started generating documentation...')
+  log('Started generating documentation...')
   for doc in index.documents.values():
     for section in filter(lambda s: s.identifier, doc.sections):
       loader.load_section(section)
       preproc.preprocess_section(section)
+
+  if args.command == 'simple':
+    for section in doc.sections:
+      section.render(sys.stdout)
+    return 0
 
   # Write out all the generated documents.
   for fname, doc in index.documents.items():
@@ -180,7 +218,7 @@ def main():
   if args.command == 'generate':
     return 0
 
-  print("Running 'mkdocs {}'".format(args.command))
+  log("Running 'mkdocs {}'".format(args.command))
   sys.stdout.flush()
   try:
     return os.system('mkdocs {}'.format(args.command))

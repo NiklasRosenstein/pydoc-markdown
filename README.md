@@ -15,6 +15,23 @@ __Todo__
 - [ ] Parse, format and link types listed in parameter/member/raise/return type
       docstrings (eg. `someattr (int): This is...`)
 
+__Synopsis__
+
+    pydocmd simple <module>[.<member>][+] [...]
+        Output Python markdown documentation to stdout for the specified
+        module or module member. Add one or more `+` characters for every
+        additional level to include in the documentation. Multiple such
+        arguments can be specified.
+    pydocmd generate
+        Build Markdown files from the `generate` configuration in the
+        `pydocmd.yml` file.
+    pydocmd new
+        Start a new PydocMd project. Generates a default `pydocmd.yml`
+        file in the current directory.
+    pydocmd {build,serve,gh-deploy,json}
+        Wrapper around the MkDocs command-line. Runs `pydocmd generate`
+        before invoking MkDocs with the specified subcommand.
+
 ## Building
 
 The `pydocmd` command is a wrapper around `mkdocs` and supports the same
@@ -23,10 +40,10 @@ MkDocs. If you only want to run the auto-generation, simply use the `generate`
 subcommand.
 
     $ pydocmd --help
-    usage: pydocmd [-h] {generate,build,gh-deploy,json,new,serve}
+    usage: pydocmd [-h] {generate,build,gh-deploy,json,new,serve, simple} [subargs...]
 
     positional arguments:
-    {generate,build,gh-deploy,json,new,serve}
+    {generate,build,gh-deploy,json,new,serve, simple}
 
     optional arguments:
     -h, --help            show this help message and exit
