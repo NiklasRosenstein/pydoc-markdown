@@ -21,6 +21,7 @@
 from .document import Index
 from .imp import import_object, dir_object
 from argparse import ArgumentParser
+from __future__ import print_function
 
 import atexit
 import os
