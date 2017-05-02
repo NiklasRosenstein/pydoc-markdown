@@ -18,10 +18,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from __future__ import print_function
 from .document import Index
 from .imp import import_object, dir_object
 from argparse import ArgumentParser
-from __future__ import print_function
 
 import atexit
 import os
