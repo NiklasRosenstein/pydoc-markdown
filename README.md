@@ -1,7 +1,9 @@
-**pydoc-markdown** uses [MkDocs] and extended [Markdown] syntax to generate
-beautiful Python API documentation. It is highly configurable and can be
-extended to work with arbitrary programming languages, see the [Extension API].
-Highly insipired by the [Keras] Documentation.
+## pydocmd
+
+&ndash; *insipired by the [Keras] Documentation*
+
+Pydocmd uses [MkDocs] and extended [Markdown] syntax to generate beautiful
+Python API documentation.
 
   [MkDocs]: www.mkdocs.org/
   [Markdown]: https://pythonhosted.org/Markdown/
@@ -15,74 +17,59 @@ __Todo__
 - [ ] Parse, format and link types listed in parameter/member/raise/return type
       docstrings (eg. `someattr (int): This is...`)
 
-__Synopsis__
+## Installation
 
-    pydocmd simple <module>[.<member>][+] [...]
-        Output Python markdown documentation to stdout for the specified
-        module or module member. Add one or more `+` characters for every
-        additional level to include in the documentation. Multiple such
-        arguments can be specified.
-    pydocmd generate
-        Build Markdown files from the `generate` configuration in the
-        `pydocmd.yml` file.
-    pydocmd new
-        Start a new PydocMd project. Generates a default `pydocmd.yml`
-        file in the current directory.
-    pydocmd {build,serve,gh-deploy,json}
-        Wrapper around the MkDocs command-line. Runs `pydocmd generate`
-        before invoking MkDocs with the specified subcommand.
+    pip install pydoc-markdown
+    pip install git+https://github.com/NiklasRosenstein/pydoc-markdown.git  # latest development version
 
-## Building
+## Usage
 
-The `pydocmd` command is a wrapper around `mkdocs` and supports the same
-commands. It will simply autogenerate the documentation files and then invoke
-MkDocs. If you only want to run the auto-generation, simply use the `generate`
-subcommand.
+Pydocmd can generate plain Markdown files from Python modules using the
+`pydocmd simple` command. Specify one or more module names on the command-line.
+Supports the `+` syntax to include members of the module (or `++` to include
+members of the members, etc.)
 
-    $ pydocmd --help
-    usage: pydocmd [-h] {generate,build,gh-deploy,json,new,serve, simple} [subargs...]
+    pydocmd simple mypackage+ mypackage.mymodule+ > docs.md
 
-    positional arguments:
-    {generate,build,gh-deploy,json,new,serve, simple}
+Alternatively, pydocmd wraps the MkDocs command-line interface and generates
+the markdown pages beforehand. Simply use `pydocmd build` to build the
+documentation, or `pydocmd serve` to serve the documentation on a local HTTP
+server. The `pydocmd gh-deploy` from MkDocs is also supported.
 
-    optional arguments:
-    -h, --help            show this help message and exit
-
-## Configuration
-
-**pydoc-markdown** only takes over the task of generating the Markdown
-documentation that can then be processed with [MkDocs]. However, it can still
-combine both parts of the build process in a single command. You can put all
-configuration for [MkDocs] into the `pydocmd.yml` configuration, or have
-it in a separate `mkdocs.yml` file.
-
-__pydocmd.yml__
+A configuration file `pydocmd.yml` is required to use pydocmd in this mode.
+Below is an example configuration:
 
 ```yaml
-site_name: "foobar Documentation"
+site_name: "My Documentation"
 
+# This tells pydocmd which pages to generate from which Python modules,
+# functions and classes. At the first level is the page name, below that
+# is a tree of Python member names (modules, classes, etc.) that should be
+# documented. Higher indentation leads to smaller header size.
 generate:
 - baz/cool-stuff.md:
-  - foobar.baz:                 # Module docstring
-    # Indenting the following items to give them a smaller header size
-    - foobar.baz.CoolClass+     # Class docstring (+ to include members)
-    - foobar.baz.some_function  # Function docstring
+  - foobar.baz:
+    - foobar.baz.CoolClass+     # (+ to include members)
+    - foobar.baz.some_function
 - baz/more-stuff.md:
-  - foobar.more++               # foobar.more module, plus 2 more levels (eg.
-                                # classes and their members)
+  - foobar.more++               # (++ to include members, and their members)
 
-# MkDocs pages configuration, with some sugar.
+# MkDocs pages configuration. The `<<` operator is sugar added by pydocmd
+# that allows you to use an external Markdown file (eg. your project's README)
+# in the documentation. The path must be relative to current working directory.
 pages:
 - Home: index.md << ../README.md
 - foobar.baz:
   - Cool Stuff: baz/cool-stuff.md
 
-docs_dir: sources                                 # default
-gens_dir: _build/pydocmd                          # default (-> MkDocs docs_dir)
-site_dir: _build/site                             # default
-theme:    readthedocs                             # default
-loader:   pydocmd.loader.PythonLoader             # default
-preprocessor: pydocmd.preprocessor.Preprocessor   # default
+# These options all show off their default values. You don't have to add
+# them to your configuration if you're fine with the default.
+docs_dir: sources
+gens_dir: _build/pydocmd     # This will end up as the MkDocs 'docs_dir'
+site_dir: _build/site
+theme:    readthedocs
+loader:   pydocmd.loader.PythonLoader
+preprocessor: pydocmd.preprocessor.Preprocessor
 ```
 
 ## Syntax
