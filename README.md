@@ -149,7 +149,13 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
-### v2.0.0 (devtip)
+### v2.0.1
+
+- Support `additional_search_path` key in configuration
+- Render headers as HTML `<hX>` tags rather than Markdown tags, so we
+  assign a proper ID to them
+
+### v2.0.0
 
 - Complete overhaul of **pydoc-markdown** employing MkDocs and the Markdown module.
 
