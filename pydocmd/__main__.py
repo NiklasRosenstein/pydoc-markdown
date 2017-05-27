@@ -54,6 +54,7 @@ def default_config(config):
   config.setdefault('theme', 'readthedocs')
   config.setdefault('loader', 'pydocmd.loader.PythonLoader')
   config.setdefault('preprocessor', 'pydocmd.preprocessor.Preprocessor')
+  config.setdefault('additional_search_paths', [])
   return config
 
 
@@ -91,6 +92,10 @@ def copy_source_files(config):
   and converts the special `<< INFILE` syntax by copying them to the
   `gens_dir` as well.
   """
+
+  for path in config['additional_search_paths']:
+    path = os.path.abspath(path)
+    sys.path.append(path)
 
   # Copy all template files from the source directory into our
   # generated files directory.
