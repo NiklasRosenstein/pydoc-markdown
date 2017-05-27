@@ -37,7 +37,9 @@ documentation, or `pydocmd serve` to serve the documentation on a local HTTP
 server. The `pydocmd gh-deploy` from MkDocs is also supported.
 
 A configuration file `pydocmd.yml` is required to use pydocmd in this mode.
-Below is an example configuration.
+Below is an example configuration. To get started, create `docs/` directory
+and a file `pydocmd.yml` inside of it. Copy the configuration below and
+adjust it to your needs, then run `pydocmd build` from the `docs/` directory.
 
 ```yaml
 site_name: "My Documentation"
