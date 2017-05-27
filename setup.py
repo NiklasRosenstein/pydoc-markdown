@@ -65,7 +65,7 @@ setup(
     ],
     keywords='markdown pydoc generator docs documentation',
     packages=['pydocmd'],
-    install_requires=['PyYAML', 'MkDocs', 'Markdown'],
+    install_requires=['PyYAML', 'MkDocs', 'Markdown', 'six'],
     entry_points={
         'console_scripts': [
             'pydocmd=pydocmd.__main__:main',

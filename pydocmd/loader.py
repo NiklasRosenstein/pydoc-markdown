@@ -27,6 +27,7 @@ that name, but is not supposed to apply preprocessing.
 from .document import Section
 from .imp import import_object_with_scope
 from textwrap import dedent
+from six.moves import range
 import inspect
 
 
@@ -68,7 +69,9 @@ class PythonLoader(object):
 
 
 def get_function_signature(function, owner_class=None, show_module=False):
-  # Get base name
+  isclass = inspect.isclass(function)
+
+  # Get base name.
   name_parts = []
   if show_module:
     name_parts.append(function.__module__)
@@ -77,18 +80,22 @@ def get_function_signature(function, owner_class=None, show_module=False):
   name_parts.append(function.__name__)
   name = '.'.join(name_parts)
 
-  isclass = inspect.isclass(function)
   if isclass:
-    try:
-      signature = inspect.signature(function.__init__)
-    except Exception:
-      return name + '()'
+    function = function.__init__
+  if hasattr(inspect, 'signature'):
+    sig = str(inspect.signature(function))
   else:
-    signature = inspect.signature(function)
+    argspec = inspect.getargspec(function)
+    # Generate the argument list that is separated by colons.
+    args = argspec.args[:]
+    if argspec.defaults:
+      offset = len(args) - len(argspec.defaults)
+      for i, default in enumerate(argspec.defaults):
+        args[i + offset] = '{}={!r}'.format(args[i + offset], argspec.defaults[i])
+    if argspec.varargs:
+      args.append('*' + argspec.varargs)
+    if argspec.keywords:
+      args.append('**' + argspec.keywords)
+    sig = '(' + ', '.join(args) + ')'
 
-  # Remove self
-  if (isclass or owner_class) and list(signature.parameters.keys())[0] == 'self':
-    signature = signature.replace(parameters=[
-      p for i, p in enumerate(signature.parameters.values()) if i != 0])
-
-  return name + str(signature)
+  return name + sig

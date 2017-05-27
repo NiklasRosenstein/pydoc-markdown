@@ -154,6 +154,7 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 - Support `additional_search_path` key in configuration
 - Render headers as HTML `<hX>` tags rather than Markdown tags, so we
   assign a proper ID to them
+- Fix #21 -- AttributeError: 'module' object has no attribute 'signature'
 
 ### v2.0.0
 
