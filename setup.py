@@ -42,7 +42,7 @@ def readme():
 
 setup(
     name='pydoc-markdown',
-    version='2.0.0',
+    version='2.0.1',
     description='Create Python API documentation in Markdown format',
     long_description=readme(),
     url='https://github.com/NiklasRosenstein/pydoc-markdown',
