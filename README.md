@@ -156,6 +156,7 @@ GitHub-style Markdown code-blocks with language annotations can be used.
   assign a proper ID to them
 - Fix #21 -- AttributeError: 'module' object has no attribute 'signature'
 - Now requires the `six` module
+- FIx #22 -- No blank space after header does not render codeblocks
 
 ### v2.0.0
 
