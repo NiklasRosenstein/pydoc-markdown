@@ -3,4 +3,7 @@
 *.egg-info
 build/
 .DS_Store
-.env/
+venv[23]/
+test.md
+dist/
+README.rst
