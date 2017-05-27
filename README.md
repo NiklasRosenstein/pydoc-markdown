@@ -37,7 +37,7 @@ documentation, or `pydocmd serve` to serve the documentation on a local HTTP
 server. The `pydocmd gh-deploy` from MkDocs is also supported.
 
 A configuration file `pydocmd.yml` is required to use pydocmd in this mode.
-Below is an example configuration:
+Below is an example configuration.
 
 ```yaml
 site_name: "My Documentation"
@@ -70,6 +70,12 @@ site_dir: _build/site
 theme:    readthedocs
 loader:   pydocmd.loader.PythonLoader
 preprocessor: pydocmd.preprocessor.Preprocessor
+
+# Additional search path for your Python module. If you use Pydocmd from a
+# subdirectory of your project (eg. docs/), you may want to add the parent
+# directory here.
+additional_search_paths:
+- ..
 ```
 
 ## Syntax
