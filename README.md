@@ -5,7 +5,7 @@
 Pydocmd uses [MkDocs] and extended [Markdown] syntax to generate beautiful
 Python API documentation.
 
-  [MkDocs]: www.mkdocs.org/
+  [MkDocs]: http://www.mkdocs.org/
   [Markdown]: https://pythonhosted.org/Markdown/
   [Extension API]: https://niklasrosenstein.github.io/pydoc-markdown/extensions/loader/
   [Keras]: https://keras.io/
