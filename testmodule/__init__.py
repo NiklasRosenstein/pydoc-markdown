@@ -53,3 +53,27 @@ def add(a, b):
   """
 
   return a + b
+
+
+class Breakfast(object):
+  """
+  This is a very simple class.
+
+  # Arguments
+
+  spam (Spam): 200g of spam
+  eggs (Egg): 3 eggs
+  ham (Ham): As much ham as you like.
+  """
+
+  def __init__(self, spam, eggs, ham=None):
+    pass
+
+  def cook(self):
+    """
+    Cooks the spam.
+
+    # Raises
+
+    OvercookError: If it cooked for too long and burned.
+    """
