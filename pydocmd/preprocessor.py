@@ -83,4 +83,4 @@ class Preprocessor(object):
       if has_trailing_dot:
         result += '.'
       return result
-    return re.sub('#([\w\d\._]+)(\(\))?', handler, content)
+    return re.sub('\B#([\w\d\._]+)(\(\))?', handler, content)
