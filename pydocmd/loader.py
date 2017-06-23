@@ -27,10 +27,7 @@ that name, but is not supposed to apply preprocessing.
 from __future__ import print_function
 from .document import Section
 from .imp import import_object_with_scope
-from textwrap import dedent
-from six.moves import range
 import inspect
-import sys
 
 
 def trim(docstring):
