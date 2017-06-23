@@ -144,6 +144,10 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
+### v2.0.2 (tip)
+
+- Fix #25 -- Text is incorrectly rendered as code
+
 ### v2.0.1
 
 - Support `additional_search_path` key in configuration

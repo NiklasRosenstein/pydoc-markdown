@@ -24,11 +24,33 @@ key. A loader basically takes care of loading the documentation content for
 that name, but is not supposed to apply preprocessing.
 """
 
+from __future__ import print_function
 from .document import Section
 from .imp import import_object_with_scope
 from textwrap import dedent
 from six.moves import range
 import inspect
+import sys
+
+
+def trim(docstring):
+  if not docstring:
+    return ''
+  lines = [x.rstrip() for x in docstring.split('\n')]
+  lines[0] = lines[0].lstrip()
+
+  indent = None
+  for i, line in enumerate(lines):
+    if i == 0 or not line: continue
+    new_line = line.lstrip()
+    delta = len(line) - len(new_line)
+    if indent is None:
+      indent = delta
+    elif delta > indent:
+      new_line = ' ' * (delta - indent) + new_line
+    lines[i] = new_line
+
+  return '\n'.join(lines)
 
 
 class PythonLoader(object):
@@ -59,7 +81,7 @@ class PythonLoader(object):
       default_title = section.identifier
 
     section.title = getattr(obj, '__name__', default_title)
-    section.content = dedent(getattr(obj, '__doc__', None) or '')
+    section.content = trim(getattr(obj, '__doc__', None) or '')
     section.loader_context = {'obj': obj, 'scope': scope}
 
     # Add the function signature in a code-block.

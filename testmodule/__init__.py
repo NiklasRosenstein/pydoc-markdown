@@ -26,3 +26,19 @@ def myothercoolfunction(prettycool):
   """
 
   pass
+
+def add(a, b):
+  """ Add two numbers.
+
+  # Arguments
+
+  a (int): First number
+  b (int): Second number
+
+  # Example
+
+      assert add(2, 3) == 5
+
+  Simple as that.
+  """
+  return a + b
