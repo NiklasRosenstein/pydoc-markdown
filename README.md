@@ -147,6 +147,8 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 ### v2.0.2 (tip)
 
 - Fix #25 -- Text is incorrectly rendered as code
+- No longer transforms titles in a docstring that are indented (eg. to
+  avoid an indented code block with a `#` comment to be corrupted)
 
 ### v2.0.1
 

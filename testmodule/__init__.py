@@ -23,6 +23,14 @@ def mycoolfunction(samplesize, width=32, **options):
 def myothercoolfunction(prettycool):
   """
   Don't you think?
+
+      # This is part of a code block and will not be transformed.
+      Code here
+
+  ```
+  # This is also part of a code block and will not be transformed.
+  More code here
+  ```
   """
 
   pass
@@ -40,5 +48,8 @@ def add(a, b):
       assert add(2, 3) == 5
 
   Simple as that.
+
+  Worth checking out: https://en.wikipedia.org/wiki/Addition#Properties
   """
+
   return a + b

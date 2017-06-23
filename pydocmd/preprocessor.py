@@ -50,10 +50,10 @@ class Preprocessor(object):
     section.content = self._preprocess_refs('\n'.join(lines))
 
   def _preprocess_line(self, line, current_section):
-    match = re.match('\s*# (.*)$', line)
+    match = re.match(r'# (.*)$', line)
     if match:
       current_section = match.group(1).strip().lower()
-      line = re.sub(r'\s*# (.*)$', r'__\1__\n', line)
+      line = re.sub(r'# (.*)$', r'__\1__\n', line)
 
     # TODO: Parse type names in parentheses after the argument/attribute name.
     if current_section in ('arguments', 'parameters'):
