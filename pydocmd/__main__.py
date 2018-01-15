@@ -27,6 +27,7 @@ import atexit
 import os
 import shutil
 import signal
+import subprocess
 import sys
 import yaml
 
@@ -144,9 +145,6 @@ def main():
     return
   if args.command == 'simple' and not args.subargs:
     parser.error('need at least one argument')
-  elif args.command != 'simple' and args.subargs:
-    # TODO: Pass arguments to MkDocs subcommand
-    parser.error('expected no arguments')
 
   config = read_config() if args.command != 'simple' else default_config({})
   loader = import_object(config['loader'])(config)
@@ -230,7 +228,9 @@ def main():
 
   log("Running 'mkdocs {}'".format(args.command))
   sys.stdout.flush()
+
+  args = ['mkdocs', args.command] + args.subargs
   try:
-    return os.system('mkdocs {}'.format(args.command))
+    return subprocess.call(args)
   except KeyboardInterrupt:
     return signal.SIGINT
