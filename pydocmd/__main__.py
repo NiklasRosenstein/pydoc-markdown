@@ -190,6 +190,10 @@ def main():
     else:
       raise RuntimeError(object_names)
 
+  # Make sure that we can find modules from the current working directory,
+  # and have them take precedence over installed modules.
+  sys.path.insert(0, '.')
+
   if args.command == 'simple':
     # In simple mode, we generate a single document from the import
     # names specified on the command-line.
