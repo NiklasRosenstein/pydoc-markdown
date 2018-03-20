@@ -1,3 +1,6 @@
+# https://github.com/NiklasRosenstein/py-nr
+# $ nr versionupgrade {VERSION}
+
 tag v{VERSION}
 upgrade pydocmd/__init__.py:__version__ = '{VERSION}'
 upgrade setup.py:  version='{VERSION}',
