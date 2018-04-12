@@ -22,6 +22,7 @@ This module provides utilities for importing Python objects by name.
 """
 
 import types
+import inspect
 
 
 def import_module(name):
@@ -77,19 +78,30 @@ def import_object_with_scope(name):
   return obj, scope
 
 
-def dir_object(name):
+def dir_object(name, sort_order):
   prefix = None
   obj = import_object(name)
   if isinstance(obj, types.ModuleType):
     prefix = obj.__name__
   all = getattr(obj, '__all__', None)
 
-  result = []
+  by_name = []
+  by_lineno = []
   for key, value in getattr(obj, '__dict__', {}).items():
     if key.startswith('_'): continue
     if not getattr(value, '__doc__'): continue
     if all is not None and key not in all: continue
     if prefix is not None and getattr(value, '__module__', None) != prefix:
       continue
-    result.append(key)
-  return result
+    if sort_order == 'line':
+      try:
+        by_lineno.append((key, inspect.getsourcelines(value)[1]))
+      except Exception:
+        # some members don't have (retrievable) line numbers (e.g., properties)
+        # so fall back to sorting those first, and by name
+        by_name.append(key)
+    else:
+      by_name.append(key)
+  by_name = sorted(by_name, key=lambda s: s.lower())
+  by_lineno = [key for key, lineno in sorted(by_lineno, key=lambda r: r[1])]
+  return by_name + by_lineno

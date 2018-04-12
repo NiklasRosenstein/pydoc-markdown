@@ -180,7 +180,10 @@ def main():
         if level > expand_depth:
           return
         index.new_section(doc, name, depth=depth + level)
-        for sub in dir_object(name):
+        sort_order = config.get('sort')
+        if sort_order not in ('line', 'name'):
+          sort_order = 'line'
+        for sub in dir_object(name, sort_order):
           sub = name + '.' + sub
           sec = create_sections(sub, level + 1)
 
