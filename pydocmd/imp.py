@@ -102,6 +102,6 @@ def dir_object(name, sort_order):
         by_name.append(key)
     else:
       by_name.append(key)
-  by_name = sorted(by_name)
+  by_name = sorted(by_name, key=lambda s: s.lower())
   by_lineno = [key for key, lineno in sorted(by_lineno, key=lambda r: r[1])]
   return by_name + by_lineno
