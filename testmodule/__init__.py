@@ -20,7 +20,7 @@ def mycoolfunction(samplesize, width=32, **options):
   pass
 
 
-def myothercoolfunction(prettycool):
+def myothercoolfunction(prettycool, url):
   """
   Don't you think?
 
@@ -31,6 +31,10 @@ def myothercoolfunction(prettycool):
   # This is also part of a code block and will not be transformed.
   More code here
   ```
+
+  # Parameters
+  prettycool (any): Some parameter.
+  url (string): the url for this thing (default: 'http://localhost')
   """
 
   pass

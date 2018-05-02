@@ -66,7 +66,7 @@ class Preprocessor(object):
       style = None
     if style:
       #                  | ident  | types     | doc
-      line = re.sub(r'\s*([^\\]+)(\s*\(.+\))?:(.*)$', style, line)
+      line = re.sub(r'\s*([^\\:]+)(\s*\(.+\))?:(.*)$', style, line)
 
     return line, current_section
 
