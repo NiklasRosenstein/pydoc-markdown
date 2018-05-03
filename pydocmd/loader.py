@@ -28,6 +28,10 @@ from __future__ import print_function
 from .document import Section
 from .imp import import_object_with_scope
 import inspect
+import types
+
+function_types = (types.FunctionType, types.LambdaType, types.MethodType,
+  types.UnboundMethodType, types.BuiltinFunctionType, types.BuiltinMethodType)
 
 
 def trim(docstring):
@@ -78,13 +82,20 @@ class PythonLoader(object):
       default_title = section.identifier
 
     section.title = getattr(obj, '__name__', default_title)
-    section.content = trim(getattr(obj, '__doc__', None) or '')
+    section.content = trim(get_docstring(obj))
     section.loader_context = {'obj': obj, 'scope': scope}
 
     # Add the function signature in a code-block.
     if callable(obj):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
       section.content = '```python\n{}\n```\n'.format(sig) + section.content
+
+
+def get_docstring(function):
+  if hasattr(function, '__name__'):
+    return function.__doc__ or ''
+  else:
+    return function.__call__.__doc__ or ''
 
 
 def get_function_signature(function, owner_class=None, show_module=False):
@@ -101,6 +112,7 @@ def get_function_signature(function, owner_class=None, show_module=False):
   else:
     name_parts.append(type(function).__name__)
     name_parts.append('__call__')
+    function = function.__call__
   name = '.'.join(name_parts)
 
   if isclass:
