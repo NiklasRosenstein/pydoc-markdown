@@ -73,6 +73,11 @@ class Breakfast(object):
   def __init__(self, spam, eggs, ham=None):
     pass
 
+  def __call__(self):
+    """
+    This is #Breakfast.__call__().
+    """
+
   def cook(self):
     """
     Cooks the spam.
@@ -81,3 +86,6 @@ class Breakfast(object):
 
     OvercookError: If it cooked for too long and burned.
     """
+
+
+b = Breakfast(True, False)

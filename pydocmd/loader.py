@@ -96,7 +96,11 @@ def get_function_signature(function, owner_class=None, show_module=False):
     name_parts.append(function.__module__)
   if owner_class:
     name_parts.append(owner_class.__name__)
-  name_parts.append(function.__name__)
+  if hasattr(function, '__name__'):
+    name_parts.append(function.__name__)
+  else:
+    name_parts.append(type(function).__name__)
+    name_parts.append('__call__')
   name = '.'.join(name_parts)
 
   if isclass:
