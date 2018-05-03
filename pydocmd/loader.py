@@ -31,7 +31,9 @@ import inspect
 import types
 
 function_types = (types.FunctionType, types.LambdaType, types.MethodType,
-  types.UnboundMethodType, types.BuiltinFunctionType, types.BuiltinMethodType)
+  types.BuiltinFunctionType, types.BuiltinMethodType)
+if hasattr(types, 'UnboundMethodType'):
+  function_types += (types.UnboundMethodType,)
 
 
 def trim(docstring):
