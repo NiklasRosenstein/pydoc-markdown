@@ -144,7 +144,17 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
-### v2.0.2 (tip)
+### v2.0.4 (tip)
+
+- Add `-c key=value` argument for `generate` and `simple` command
+- Add `filter=["docstring"]` option (#43)
+
+### v2.0.3
+
+- Fix #41, #36, #31
+- Merged #39
+
+### v2.0.2 
 
 - Fix #25 -- Text is incorrectly rendered as code
 - Fix #26 -- Broken links for URLs with fragment identifiers
