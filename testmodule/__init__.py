@@ -1,4 +1,8 @@
 
+def function_without_docstrings(foo):
+  pass
+
+
 def mycoolfunction(samplesize, width=32, **options):
   """
   This is a pretty cool function.

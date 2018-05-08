@@ -147,6 +147,27 @@ def main():
     parser.error('need at least one argument')
 
   config = read_config() if args.command != 'simple' else default_config({})
+
+  # Parse options.
+  if args.command in ('generate', 'simple'):
+    modspecs = []
+    it = iter(args.subargs)
+    while True:
+      try: value = next(it)
+      except StopIteration: break
+      if value == '-c':
+        try: value = next(it)
+        except StopIteration: parser.error('missing value to option -c')
+        key, value = value.partition('=')[::2]
+        if value.startswith('['):
+          if not value.endswith(']'):
+            parser.error('invalid option value: {!r}'.format(value))
+            value = value[1:-1].split(',')
+        config[key] = value
+      else:
+        modspecs.append(value)
+    args.subargs = modspecs
+
   loader = import_object(config['loader'])(config)
   preproc = import_object(config['preprocessor'])(config)
 
