@@ -183,7 +183,8 @@ def main():
         sort_order = config.get('sort')
         if sort_order not in ('line', 'name'):
           sort_order = 'line'
-        for sub in dir_object(name, sort_order):
+        need_docstrings = 'docstring' in config.get('filter', ['docstring'])
+        for sub in dir_object(name, sort_order, need_docstrings):
           sub = name + '.' + sub
           sec = create_sections(sub, level + 1)
 

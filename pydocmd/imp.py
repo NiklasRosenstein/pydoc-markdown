@@ -78,7 +78,7 @@ def import_object_with_scope(name):
   return obj, scope
 
 
-def dir_object(name, sort_order):
+def dir_object(name, sort_order, need_docstrings=True):
   prefix = None
   obj = import_object(name)
   if isinstance(obj, types.ModuleType):
@@ -89,7 +89,8 @@ def dir_object(name, sort_order):
   by_lineno = []
   for key, value in getattr(obj, '__dict__', {}).items():
     if key.startswith('_'): continue
-    if not getattr(value, '__doc__'): continue
+    if not hasattr(value, '__doc__'): continue
+    if need_docstrings and not value.__doc__: continue
     if all is not None and key not in all: continue
     if prefix is not None and getattr(value, '__module__', None) != prefix:
       continue
