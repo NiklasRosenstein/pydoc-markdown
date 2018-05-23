@@ -30,9 +30,6 @@ class Preprocessor(object):
   This class implements the basic preprocessing.
   """
 
-  def __init__(self, config):
-    self.config = config
-
   def preprocess_section(self, section):
     """
     Preprocess the contents of *section*.
