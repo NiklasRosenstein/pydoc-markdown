@@ -29,8 +29,6 @@ class Preprocessor(object):
   """
   This class implements the preprocessor for restructured text.
   """
-  _SECTION_MAP = {'param': 'Arguments', 'return': 'Returns', 'raises': 'Raises'}
-
   def preprocess_section(self, section):
     """
     Preprocessors a given section into it's components.
@@ -49,11 +47,11 @@ class Preprocessor(object):
         lines.append(line)
         continue
 
-      match = re.match(r':(param)\s+(\w+):(.*)$', line)
+      match = re.match(r':(?:param|parameter)\s+(\w+):(.*)$', line)
       if match:
-        keyword = match.group(1)
-        param = match.group(2)
-        text = match.group(3)
+        keyword = 'Arguments'
+        param = match.group(1)
+        text = match.group(2)
         text = text.strip()
 
         component = components.get(keyword, [])
@@ -61,10 +59,10 @@ class Preprocessor(object):
         components[keyword] = component
         continue
 
-      match = re.match(r':(return):\s+(.*)$', line)
+      match = re.match(r':(?:return|returns):\s+(.*)$', line)
       if match:
-        keyword = match.group(1)
-        text = match.group(2)
+        keyword = 'Returns'
+        text = match.group(1)
         text = text.strip()
 
         component = components.get(keyword, [])
@@ -72,15 +70,15 @@ class Preprocessor(object):
         components[keyword] = component
         continue
 
-      match = re.match(':(raises)\s+(\w+):(.*)$', line)
+      match = re.match(':(?:raises|raise)\s+(\w+):(.*)$', line)
       if match:
-        keyword = match.group(1)
-        param = match.group(2)
-        text = match.group(3)
+        keyword = 'Raises'
+        exception = match.group(1)
+        text = match.group(2)
         text = text.strip()
 
         component = components.get(keyword, [])
-        component.append('- `{}`: {}'.format(param, text))
+        component.append('- `{}`: {}'.format(exception, text))
         components[keyword] = component
         continue
 
@@ -89,12 +87,13 @@ class Preprocessor(object):
       else:
         lines.append(line)
 
-    for component in ['param', 'return', 'raises']:
-      self._append_section(lines, component, components)
+    for key in components:
+      self._append_section(lines, key, components)
 
     section.content = '\n'.join(lines)
 
-  def _append_section(self, lines, key, sections):
+  @staticmethod
+  def _append_section(lines, key, sections):
     section = sections.get(key)
     if not section:
       return
@@ -102,5 +101,5 @@ class Preprocessor(object):
     if lines and lines[-1]:
       lines.append('')
 
-    lines.extend(['**{}**:'.format(self._SECTION_MAP[key]), ''])  # add an extra line because of markdown syntax
+    lines.extend(['**{}**:'.format(key), ''])  # add an extra line because of markdown syntax
     lines.extend(section)
