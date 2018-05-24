@@ -59,9 +59,10 @@ class PythonLoader(object):
   """
   Expects absolute identifiers to import with #import_object_with_scope().
   """
+  def __init__(self, config):
+    self.config = config
 
-  @staticmethod
-  def load_section(section):
+  def load_section(self, section):
     """
     Loads the contents of a #Section. The `section.identifier` is the name
     of the object that we need to load.

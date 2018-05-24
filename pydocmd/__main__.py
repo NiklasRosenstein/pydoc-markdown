@@ -19,8 +19,8 @@
 # THE SOFTWARE.
 
 from __future__ import print_function
-from pydocmd.document import Index
-from pydocmd.imp import import_object, dir_object
+from .document import Index
+from .imp import import_object, dir_object
 from argparse import ArgumentParser
 
 import atexit
@@ -168,8 +168,8 @@ def main():
         modspecs.append(value)
     args.subargs = modspecs
 
-  loader = import_object(config['loader'])()
-  preproc = import_object(config['preprocessor'])()
+  loader = import_object(config['loader'])(config)
+  preproc = import_object(config['preprocessor'])(config)
 
   if args.command != 'simple':
     copy_source_files(config)
