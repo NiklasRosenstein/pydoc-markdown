@@ -16,6 +16,8 @@ def function_with_docstring_on_same_line():
   ```
 
   See also: #function_without_docstrings().
+  See also: [this page](https://keras.io/layers/convolutional/#conv2d) for
+    the list of possible arguments.
   """
 
 
@@ -54,7 +56,7 @@ def myothercoolfunction(prettycool, url):
 
   # Parameters
   prettycool (any): Some parameter.
-  url (string): the url for this thing (default: 'http://localhost')
+  url (string): the url for this thing (default: 'http://localhost#foobar')
   """
 
   pass
