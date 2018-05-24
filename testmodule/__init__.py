@@ -3,6 +3,22 @@ def function_without_docstrings(foo):
   pass
 
 
+def function_with_docstring_on_same_line():
+  """This is a pretty cool function.
+
+  # Arguments
+  None actually.
+
+  # Example
+  ```python
+  # This is a very simple example.
+  mycoolfunction(samplesize, width, **options)
+  ```
+
+  See also: #function_without_docstrings().
+  """
+
+
 def mycoolfunction(samplesize, width=32, **options):
   """
   This is a pretty cool function.
