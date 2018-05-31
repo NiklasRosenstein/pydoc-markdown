@@ -118,21 +118,25 @@ def get_function_signature(function, owner_class=None, show_module=False):
   name = '.'.join(name_parts)
 
   if isclass:
-    function = function.__init__
+    function = getattr(function, '__init__', None)
   if hasattr(inspect, 'signature'):
     sig = str(inspect.signature(function))
   else:
-    argspec = inspect.getargspec(function)
-    # Generate the argument list that is separated by colons.
-    args = argspec.args[:]
-    if argspec.defaults:
-      offset = len(args) - len(argspec.defaults)
-      for i, default in enumerate(argspec.defaults):
-        args[i + offset] = '{}={!r}'.format(args[i + offset], argspec.defaults[i])
-    if argspec.varargs:
-      args.append('*' + argspec.varargs)
-    if argspec.keywords:
-      args.append('**' + argspec.keywords)
+    try:
+      argspec = inspect.getargspec(function)
+      # Generate the argument list that is separated by colons.
+      args = argspec.args[:]
+      if argspec.defaults:
+        offset = len(args) - len(argspec.defaults)
+        for i, default in enumerate(argspec.defaults):
+          args[i + offset] = '{}={!r}'.format(args[i + offset], argspec.defaults[i])
+      if argspec.varargs:
+        args.append('*' + argspec.varargs)
+      if argspec.keywords:
+        args.append('**' + argspec.keywords)
+    except TypeError:
+      # handle Py2 classes that don't define __init__
+      args = ['self', '/', '*args', '**kwargs']
     sig = '(' + ', '.join(args) + ')'
 
   return name + sig
