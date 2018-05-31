@@ -96,8 +96,10 @@ class PythonLoader(object):
 def get_docstring(function):
   if hasattr(function, '__name__'):
     return function.__doc__ or ''
-  else:
+  elif hasattr(function, '__call__'):
     return function.__call__.__doc__ or ''
+  else:
+    return function.__doc__ or ''
 
 
 def get_function_signature(function, owner_class=None, show_module=False):
