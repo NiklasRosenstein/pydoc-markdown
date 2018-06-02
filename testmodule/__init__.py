@@ -109,5 +109,10 @@ class Breakfast(object):
     OvercookError: If it cooked for too long and burned.
     """
 
+  @property
+  def price(self):
+    " The price is hot. "
+    return 33
+
 
 b = Breakfast(True, False)
