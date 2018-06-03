@@ -32,7 +32,7 @@ class Preprocessor(object):
 
   def __init__(self, config):
     self.config = config
-    
+
   def preprocess_section(self, section):
     """
     Preprocess the contents of *section*.
@@ -72,8 +72,8 @@ class Preprocessor(object):
   def _preprocess_refs(self, content):
     # TODO: Generate links to the referenced symbols.
     def handler(match):
-      ref = match.group(1)
-      parens = match.group(2) or ''
+      ref = match.group('ref')
+      parens = match.group('parens') or ''
       has_trailing_dot = False
       if not parens and ref.endswith('.'):
         ref = ref[:-1]
@@ -81,5 +81,5 @@ class Preprocessor(object):
       result = '`{}`'.format(ref + parens)
       if has_trailing_dot:
         result += '.'
-      return result
-    return re.sub('\B#([\w\d\._]+)(\(\))?', handler, content)
+      return (match.group('prefix') or '') + result
+    return re.sub('(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?', handler, content)
