@@ -132,9 +132,6 @@ def rest_function(a, b, c):
 
 class ClassWithoutDocs(object):
 
-  def __init__(self):
-    pass
-
   def dosomething(self):
     " Abc. "
 

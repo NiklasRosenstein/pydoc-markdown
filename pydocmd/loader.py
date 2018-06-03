@@ -124,6 +124,10 @@ def get_function_signature(function, owner_class=None, show_module=False):
   else:
     try:
       argspec = inspect.getargspec(function)
+    except TypeError:
+      # handle Py2 classes that don't define __init__
+      args = ['self']
+    else:
       # Generate the argument list that is separated by colons.
       args = argspec.args[:]
       if argspec.defaults:
@@ -134,9 +138,6 @@ def get_function_signature(function, owner_class=None, show_module=False):
         args.append('*' + argspec.varargs)
       if argspec.keywords:
         args.append('**' + argspec.keywords)
-    except TypeError:
-      # handle Py2 classes that don't define __init__
-      args = ['self', '/', '*args', '**kwargs']
     sig = '(' + ', '.join(args) + ')'
 
   return name + sig
