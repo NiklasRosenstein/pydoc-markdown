@@ -128,3 +128,24 @@ def rest_function(a, b, c):
   :raise RuntimeError: Maybe sometimes.
   :return: Not much, really.
   """
+
+
+class ClassWithoutDocs(object):
+
+  def __init__(self):
+    pass
+
+  def dosomething(self):
+    " Abc. "
+
+  @property
+  def someprop(self):
+    " Some property. "
+
+  @classmethod
+  def a_classmethod(self):
+    " Test. "
+
+  @staticmethod
+  def a_staticmethod():
+    pass
