@@ -88,10 +88,17 @@ def dir_object(name, sort_order, need_docstrings=True):
   by_name = []
   by_lineno = []
   for key, value in getattr(obj, '__dict__', {}).items():
+    if isinstance(value, (staticmethod, classmethod)):
+      value = value.__func__
     if key.startswith('_'): continue
     if not hasattr(value, '__doc__'): continue
-    if need_docstrings and not value.__doc__: continue
-    if all is not None and key not in all: continue
+
+    # If we have a type, we only want to skip it if it doesn't have
+    # any documented members.
+    if not (isinstance(value, type) and dir_object(name + '.' + key, sort_order, True)):
+      if need_docstrings and not value.__doc__: continue
+      if all is not None and key not in all: continue
+
     if prefix is not None and getattr(value, '__module__', None) != prefix:
       continue
     if sort_order == 'line':
@@ -105,4 +112,5 @@ def dir_object(name, sort_order, need_docstrings=True):
       by_name.append(key)
   by_name = sorted(by_name, key=lambda s: s.lower())
   by_lineno = [key for key, lineno in sorted(by_lineno, key=lambda r: r[1])]
+
   return by_name + by_lineno

@@ -10,3 +10,5 @@ dist/
 README.rst
 Pipfile
 Pipfile.lock
+.idea
+.pytest_cache/

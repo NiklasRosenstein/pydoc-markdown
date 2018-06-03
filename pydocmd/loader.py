@@ -25,7 +25,6 @@ that name, but is not supposed to apply preprocessing.
 """
 
 from __future__ import print_function
-from .document import Section
 from .imp import import_object_with_scope
 import inspect
 import types
@@ -60,7 +59,6 @@ class PythonLoader(object):
   """
   Expects absolute identifiers to import with #import_object_with_scope().
   """
-
   def __init__(self, config):
     self.config = config
 
@@ -94,10 +92,12 @@ class PythonLoader(object):
 
 
 def get_docstring(function):
-  if hasattr(function, '__name__'):
+  if hasattr(function, '__name__') or isinstance(function, property):
     return function.__doc__ or ''
-  else:
+  elif hasattr(function, '__call__'):
     return function.__call__.__doc__ or ''
+  else:
+    return function.__doc__ or ''
 
 
 def get_function_signature(function, owner_class=None, show_module=False):

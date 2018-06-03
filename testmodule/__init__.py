@@ -109,5 +109,43 @@ class Breakfast(object):
     OvercookError: If it cooked for too long and burned.
     """
 
+  @property
+  def price(self):
+    " The price is hot. "
+    return 33
+
 
 b = Breakfast(True, False)
+
+
+def rest_function(a, b, c):
+  """
+  This function is documented using ReST Syntax.
+
+  :param a: The first parameter.
+  :param b: The second parameter.
+  :param c: The third parameter.
+  :raise RuntimeError: Maybe sometimes.
+  :return: Not much, really.
+  """
+
+
+class ClassWithoutDocs(object):
+
+  def __init__(self):
+    pass
+
+  def dosomething(self):
+    " Abc. "
+
+  @property
+  def someprop(self):
+    " Some property. "
+
+  @classmethod
+  def a_classmethod(self):
+    " Test. "
+
+  @staticmethod
+  def a_staticmethod():
+    pass
