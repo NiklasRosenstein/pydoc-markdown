@@ -32,12 +32,11 @@ class Preprocessor(object):
 
   def __init__(self, config):
     self.config = config
-
+    
   def preprocess_section(self, section):
     """
     Preprocess the contents of *section*.
     """
-
     lines = []
     codeblock_opened = False
     current_section = None

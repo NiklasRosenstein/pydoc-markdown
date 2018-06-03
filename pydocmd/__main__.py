@@ -259,3 +259,7 @@ def main():
     return subprocess.call(args)
   except KeyboardInterrupt:
     return signal.SIGINT
+
+
+if __name__ == '__main__':
+  main()

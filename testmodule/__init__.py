@@ -116,3 +116,15 @@ class Breakfast(object):
 
 
 b = Breakfast(True, False)
+
+
+def rest_function(a, b, c):
+  """
+  This function is documented using ReST Syntax.
+
+  :param a: The first parameter.
+  :param b: The second parameter.
+  :param c: The third parameter.
+  :raise RuntimeError: Maybe sometimes.
+  :return: Not much, really.
+  """
