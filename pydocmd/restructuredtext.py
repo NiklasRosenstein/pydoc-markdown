@@ -25,11 +25,11 @@ it to fully markdown compatible markup.
 import re
 
 
-class Preprocessor:
+class Preprocessor(object):
   """
   This class implements the preprocessor for restructured text.
   """
-  def __init__(self, config):
+  def __init__(self, config=None):
     self.config = config
 
   def preprocess_section(self, section):
