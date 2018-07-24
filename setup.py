@@ -18,38 +18,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from setuptools import setup, find_packages
-from codecs import open
-import os, sys
+import setuptools
+import io
 
+with io.open('README.md', encoding='utf8') as fp:
+    readme = fp.read()
 
-def readme():
-  if os.path.isfile('README.md') and any('dist' in x for x in sys.argv[1:]):
-    if os.system('pandoc -s README.md -o README.rst') != 0:
-      print('-----------------------------------------------------------------')
-      print('WARNING: README.rst could not be generated, pandoc command failed')
-      print('-----------------------------------------------------------------')
-      if sys.stdout.isatty():
-        input("Enter to continue... ")
-    else:
-      print("Generated README.rst with Pandoc")
+with io.open('requirements.txt') as fp:
+    requirements = fp.readlines()
 
-  if os.path.isfile('README.rst'):
-    with open('README.rst') as fp:
-      return fp.read()
-  return ''
-
-
-setup(
-    name='pydoc-markdown',
-    version='2.0.3',
-    description='Create Python API documentation in Markdown format',
-    long_description=readme(),
-    url='https://github.com/NiklasRosenstein/pydoc-markdown',
-    author='Niklas Rosenstein',
-    author_email='rosensteinniklas@gmail.com',
-    license='MIT',
-    classifiers=[
+setuptools.setup(
+    name = 'pydoc-markdown',
+    version = '2.0.4',
+    description = 'Create Python API documentation in Markdown format',
+    long_description = readme,
+    long_description_content_type = 'text/markdown',
+    url = 'https://github.com/NiklasRosenstein/pydoc-markdown',
+    author = 'Niklas Rosenstein',
+    author_email = 'rosensteinniklas@gmail.com',
+    license = 'MIT',
+    classifiers = [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
@@ -63,12 +51,12 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    keywords='markdown pydoc generator docs documentation',
-    packages=['pydocmd'],
-    install_requires=['PyYAML', 'MkDocs', 'Markdown', 'six'],
-    entry_points={
-        'console_scripts': [
+    keywords = 'markdown pydoc generator docs documentation',
+    packages = ['pydocmd'],
+    install_requires = requirements,
+    entry_points = dict(
+        console_scripts = [
             'pydocmd=pydocmd.__main__:main',
         ],
-    },
+    )
 )

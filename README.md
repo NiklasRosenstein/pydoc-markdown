@@ -144,10 +144,14 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
-### v2.0.4 (tip)
+### v2.0.4 (2018-07-24)
 
 - Add `-c key=value` argument for `generate` and `simple` command
 - Add `filter=["docstring"]` option (#43)
+- Fix regex for detecting cross-references (#44)
+- Handle classes that don't define `__init__()` (PR#51)
+- Add support for reStructuredText Markup (eg. ``:class:`MyClass` ``) (PR#46, #1)
+- Handle `@property` functions (PR#50)
 
 ### v2.0.3
 
@@ -176,4 +180,4 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ---
 
-<p align="center">Copyright &copy; 2017  Niklas Rosenstein</p>
+<p align="center">Copyright &copy; 2017-2018  Niklas Rosenstein</p>

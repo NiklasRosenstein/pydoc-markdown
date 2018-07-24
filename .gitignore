@@ -4,7 +4,7 @@
 build/
 .DS_Store
 venv[23]/
-.venv/
+.venv*/
 test.md
 dist/
 README.rst
