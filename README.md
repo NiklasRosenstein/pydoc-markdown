@@ -73,6 +73,12 @@ theme:    readthedocs
 loader:   pydocmd.loader.PythonLoader
 preprocessor: pydocmd.preprocessor.Preprocessor
 
+# Whether to output headers as markdown or HTML.  Used to workaround
+# https://github.com/NiklasRosenstein/pydoc-markdown/issues/11.  The default is
+# to generate HTML with unique and meaningful id tags, which can't be done with
+# markdown.
+headers: html
+
 # Additional search path for your Python module. If you use Pydocmd from a
 # subdirectory of your project (eg. docs/), you may want to add the parent
 # directory here.
