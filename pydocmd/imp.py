@@ -78,12 +78,28 @@ def import_object_with_scope(name):
   return obj, scope
 
 
+def force_lazy_import(name):
+  """
+  Import any modules off of "name" by iterating a new list rather than a generator so that this
+  library works with lazy imports.
+  """
+  obj = import_object(name)
+  module_items = list(getattr(obj, '__dict__', {}).items())
+  for key, value in module_items:
+    if getattr(value, '__module__', None):
+        import_object(name + '.' + key)
+
+
 def dir_object(name, sort_order, need_docstrings=True):
   prefix = None
   obj = import_object(name)
   if isinstance(obj, types.ModuleType):
     prefix = obj.__name__
   all = getattr(obj, '__all__', None)
+
+  # Import any modules attached to this object so that this will work with lazy imports.  Otherwise
+  # the block below will fail because the object will change while it's being iterated.
+  force_lazy_import(name)
 
   by_name = []
   by_lineno = []
