@@ -45,21 +45,27 @@ class Section(object):
   content (str): The Markdown-formatted content of the section.
   """
 
-  def __init__(self, doc, identifier=None, title=None, depth=1, content=None):
+  def __init__(self, doc, identifier=None, title=None, depth=1, content=None, header_type='html'):
     self.doc = doc
     self.identifier = identifier
     self.title = title
     self.depth = depth
     self.content = content if content is not None else '*Nothing to see here.*'
+    self.header_type = header_type
 
   def render(self, stream):
     """
     Render the section into *stream*.
     """
 
-    print('<h{depth} id="{id}">{title}</h{depth}>\n'
-      .format(depth = self.depth, id = self.identifier, title = self.title),
-      file = stream)
+    if self.header_type == 'html':
+      print('<h{depth} id="{id}">{title}</h{depth}>\n'
+        .format(depth = self.depth, id = self.identifier, title = self.title),
+        file = stream)
+    elif self.header_type == 'markdown':
+      print('#' * self.depth, self.title, file = stream)
+    else:
+      raise ValueError('Invalid header type: %s' % self.header_type)
     print(self.content, file=stream)
 
   @property

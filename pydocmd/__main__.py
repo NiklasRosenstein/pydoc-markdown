@@ -52,6 +52,7 @@ def default_config(config):
   config.setdefault('docs_dir', 'sources')
   config.setdefault('gens_dir', '_build/pydocmd')
   config.setdefault('site_dir', '_build/site')
+  config.setdefault('headers', 'html')
   config.setdefault('theme', 'readthedocs')
   config.setdefault('loader', 'pydocmd.loader.PythonLoader')
   config.setdefault('preprocessor', 'pydocmd.preprocessor.Preprocessor')
@@ -200,7 +201,7 @@ def main():
       def create_sections(name, level):
         if level > expand_depth:
           return
-        index.new_section(doc, name, depth=depth + level)
+        index.new_section(doc, name, depth=depth + level, header_type=config.get('headers', 'html'))
         sort_order = config.get('sort')
         if sort_order not in ('line', 'name'):
           sort_order = 'line'
