@@ -52,7 +52,7 @@ def default_config(config):
   config.setdefault('docs_dir', 'sources')
   config.setdefault('gens_dir', '_build/pydocmd')
   config.setdefault('site_dir', '_build/site')
-  config.setdefault('headers', 'html')
+  config.setdefault('headers', 'markdown')
   config.setdefault('theme', 'readthedocs')
   config.setdefault('loader', 'pydocmd.loader.PythonLoader')
   config.setdefault('preprocessor', 'pydocmd.preprocessor.Preprocessor')
