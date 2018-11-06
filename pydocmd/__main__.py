@@ -49,10 +49,14 @@ def read_config():
 
 
 def default_config(config):
+  args = parser.parse_args()
   config.setdefault('docs_dir', 'sources')
   config.setdefault('gens_dir', '_build/pydocmd')
   config.setdefault('site_dir', '_build/site')
-  config.setdefault('headers', 'markdown')
+  if args.command == 'simple':
+      config.setdefault('headers', 'markdown')
+  else:
+      config.setdefault('headers', 'html')
   config.setdefault('theme', 'readthedocs')
   config.setdefault('loader', 'pydocmd.loader.PythonLoader')
   config.setdefault('preprocessor', 'pydocmd.preprocessor.Preprocessor')
