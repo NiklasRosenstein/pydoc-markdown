@@ -108,7 +108,7 @@ def copy_source_files(config):
   log('Started copying source files...')
   for root, dirs, files in os.walk(config['docs_dir']):
     rel_root = os.path.relpath(root, config['docs_dir'])
-    for fname in filter(lambda f: f.endswith('.md'), files):
+    for fname in files:
       dest_fname = os.path.join(config['gens_dir'], rel_root, fname)
       makedirs(os.path.dirname(dest_fname))
       shutil.copyfile(os.path.join(root, fname), dest_fname)
