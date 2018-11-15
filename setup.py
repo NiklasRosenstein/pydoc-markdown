@@ -24,12 +24,9 @@ import io
 with io.open('README.md', encoding='utf8') as fp:
     readme = fp.read()
 
-with io.open('requirements.txt') as fp:
-    requirements = fp.readlines()
-
 setuptools.setup(
     name = 'pydoc-markdown',
-    version = '2.0.4',
+    version = '2.0.5',
     description = 'Create Python API documentation in Markdown format',
     long_description = readme,
     long_description_content_type = 'text/markdown',
@@ -53,7 +50,12 @@ setuptools.setup(
     ],
     keywords = 'markdown pydoc generator docs documentation',
     packages = ['pydocmd'],
-    install_requires = requirements,
+    install_requires = [
+        'MkDocs>=0.16.0',
+        'Markdown>=2.6.11',
+        'PyYAML>=3.12',
+        'six>=0.11.0',
+    ],
     entry_points = dict(
         console_scripts = [
             'pydocmd=pydocmd.__main__:main',

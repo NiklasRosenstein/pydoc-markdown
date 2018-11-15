@@ -7,7 +7,6 @@ Python API documentation.
 
   [MkDocs]: http://www.mkdocs.org/
   [Markdown]: https://python-markdown.github.io/
-  [Extension API]: https://niklasrosenstein.github.io/pydoc-markdown/extensions/loader/
   [Keras]: https://keras.io/
 
 __Todo__
@@ -77,6 +76,9 @@ preprocessor: pydocmd.preprocessor.Preprocessor
 # https://github.com/NiklasRosenstein/pydoc-markdown/issues/11.  The default is
 # to generate HTML with unique and meaningful id tags, which can't be done with
 # markdown.
+#
+# Note: if using the simple generator mode, this will default to 'markdown'
+# instead of 'html'.
 headers: html
 
 # Additional search path for your Python module. If you use Pydocmd from a
@@ -107,9 +109,6 @@ elements to keep. If `X` is omitted, it will be assumed 1. Example:
 
 In order to append additional characters that are not included in the actual
 reference name, another hash-symbol can be used, like `#Signal#s`.
-
-**pydoc-markdown** can be extended to find other cross-references using the
-[Extension API].
 
 ### Sections
 
@@ -149,6 +148,13 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 ---
 
 ## Changes
+
+### v2.0.5 (2018-11-15)
+
+- Now copies all files from the docs_dir (to include images etc.) (see #56)
+- Fix error with delayed imports changing dictionary size during iteration (see #57)
+- Add `headers` option which can be of value `'html'` or `'markdown'` (see #55)
+- Default `headers` option to `'markdown'` in `simple` mode (see #59)
 
 ### v2.0.4 (2018-07-24)
 
