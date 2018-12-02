@@ -87,7 +87,7 @@ class Argument(named.Named):
   POS = 'pos'
   POS_REMAINDER = 'pos_remainder'
   KW = 'kw'
-  KWONLY = 'kwonly'
+  KW_ONLY = 'kw_only'
   KW_REMAINDER = 'kw_remainder'
 
 

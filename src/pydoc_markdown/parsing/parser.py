@@ -89,11 +89,13 @@ class Parser(object):
       else:
         expression.append(child)
     if is_assignment:
-      # TODO @NiklasRosenstein handle multiple assignments.
       docstring = self.get_statement_docstring(stmt)
       expr = Expression(self.nodes_to_string(expression))
-      name = self.nodes_to_string(names[0])
-      return Data(self.location_from(stmt), parent, name, docstring, expr=expr)
+      assert names
+      for name in names:
+        name = self.nodes_to_string(name)
+        data = Data(self.location_from(stmt), parent, name, docstring, expr=expr)
+      return data
     return None
 
   def parse_decorator(self, node):
@@ -103,24 +105,76 @@ class Parser(object):
     return Decorator(name, Expression(call_expr) if call_expr else None)
 
   def parse_funcdef(self, parent, node, is_async, decorators):
-    parameters = next(x for x in node.children if x.type == syms.parameters)
-    suite = next(x for x in node.children if x.type == syms.suite)
+    parameters = find(lambda x: x.type == syms.parameters, node.children)
+    suite = find(lambda x: x.type == syms.suite, node.children)
 
     name = node.children[1].value
     docstring = self.get_docstring_from_first_node(suite)
-    args = []  # TODO @NiklasRosenstein parse function parameters
-    return_ = None  # TODO @NiklasRosenstein parse function return annotation
+    args = self.parse_parameters(parameters)
+    return_ = self.get_return_annotation(node)
     decorators = decorators or []
 
     return Function(self.location_from(node), parent, name, docstring,
       is_async=is_async, decorators=decorators, args=args, return_=return_)
+
+  def parse_parameters(self, parameters):
+    assert parameters.type == syms.parameters, parameters.type
+    result = []
+
+    arglist = find(lambda x: x.type == syms.typedargslist, parameters.children)
+    if not arglist:
+      assert len(parameters.children) in (2, 3), parameters.children
+      if len(parameters.children) == 3:
+        result.append(Argument(parameters.children[1].value, None, None, Argument.POS))
+      return result
+
+    def consume_arg(node, argtype):
+      if node.type == syms.tname:
+        node = node.children[0]
+      name = node.value
+      node = node.next_sibling
+      annotation = None
+      if node and node.type == token.COLON:
+        node = node.next_sibling
+        annotation = Expression(self.nodes_to_string([node]))
+        node = node.next_sibling
+      default = None
+      if node and node.type == token.EQUAL:
+        node = node.next_sibling
+        default = Expression(self.nodes_to_string([node]))
+        node = node.next_sibling
+      return Argument(name, annotation, default, argtype)
+
+    argtype = Argument.POS
+
+    index = 0
+    while index < len(arglist.children):
+      leaf = arglist.children[index]
+      if leaf.type == token.STAR:
+        node = arglist.children[index+1]
+        if node.type != token.COMMA:
+          result.append(consume_arg(node, Argument.POS_REMAINDER))
+          index += 3
+        else:
+          index += 2
+        argtype = Argument.KW_ONLY
+        continue
+      elif leaf.type == token.DOUBLESTAR:
+        node = arglist.children[index+1]
+        result.append(consume_arg(node, Argument.KW_REMAINDER))
+        index += 2
+        continue
+      result.append(consume_arg(leaf, argtype))
+      index += 2
+
+    return result
 
   def parse_classdef(self, parent, node, decorators):
     name = node.children[1].value
     bases = []
     metaclass = None
 
-    classargs = next((x for x in node.children if x.type == syms.arglist), None)
+    classargs = find(lambda x: x.type == syms.arglist, node.children)
     if classargs:
       for child in classargs.children[::2]:
         if child.type == syms.argument:
@@ -133,7 +187,7 @@ class Parser(object):
         else:
           bases.append(Expression(str(child)))
 
-    suite = next(x for x in node.children if x.type == syms.suite)
+    suite = find(lambda x: x.type == syms.suite, node.children)
     docstring = self.get_docstring_from_first_node(suite)
     class_ = Class(self.location_from(node), parent, name, docstring,
       bases=bases, metaclass=metaclass, decorators=decorators)
@@ -151,8 +205,15 @@ class Parser(object):
   def location_from(self, node):
     return Location(self.filename, node.get_lineno())
 
+  def get_return_annotation(self, node):
+    rarrow = find(lambda x: x.type == token.RARROW, node.children)
+    if rarrow:
+      node = rarrow.next_sibling
+      return Expression(self.nodes_to_string([node]))
+    return None
+
   def get_docstring_from_first_node(self, parent):
-    node = next((x for x in parent.children if isinstance(x, Node)), None)
+    node = find(lambda x: isinstance(x, Node), parent.children)
     if not node:
       return None
     if node.type == syms.simple_stmt:
@@ -188,16 +249,15 @@ class Parser(object):
       return dedent_docstring(s[1:-1]).strip()
 
   def nodes_to_string(self, nodes):
-    def generator():
+    def generator(nodes, skip_prefix=True):
       for i, node in enumerate(nodes):
-        if i == 0:
-          #yield node.prefix.rpartition('\n')[-1]
-          pass
-        else:
+        if not skip_prefix or i != 0:
           yield node.prefix
-        # TODO @NiklasRosenstein this might not work as expected if *node* is not a Leaf
-        yield node.value
-    return ''.join(generator())
+        if isinstance(node, Node):
+          for _ in generator(node.children, i == 0): yield _
+        else:
+          yield node.value
+    return ''.join(generator(nodes))
 
   def name_to_string(self, node):
     if node.type == syms.dotted_name:
@@ -211,3 +271,10 @@ def dedent_docstring(s):
   lines[0] = lines[0].strip()
   lines[1:] = textwrap.dedent('\n'.join(lines[1:])).split('\n')
   return '\n'.join(lines)
+
+
+def find(predicate, iterable):
+  for item in iterable:
+    if predicate(item):
+      return item
+  return None
