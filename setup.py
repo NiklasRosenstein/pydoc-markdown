@@ -29,7 +29,7 @@ setuptools.setup(
   ],
   entry_points = {
     'console_scripts': [
-      'pydoc-markdown = pydoc_markdown.main:main',
+      'pydoc-markdown = pydoc_markdown.main:_entry_point',
     ]
   }
 )

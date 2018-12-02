@@ -33,11 +33,11 @@ class Parser(object):
 
     if module_name is None:
       module_name = os.path.basename(filename)
-      module_name = os.path.splitext(filename)[0]
+      module_name = os.path.splitext(module_name)[0]
 
     docstring = None
     if ast.children:
-      docstring = self.get_docstring_from_first_node(ast)
+      docstring = self.get_docstring_from_first_node(ast, module_level=True)
 
     module = Module(self.location_from(ast), None, module_name, docstring)
 
@@ -212,7 +212,7 @@ class Parser(object):
       return Expression(self.nodes_to_string([node]))
     return None
 
-  def get_docstring_from_first_node(self, parent):
+  def get_docstring_from_first_node(self, parent, module_level=False):
     node = find(lambda x: isinstance(x, Node), parent.children)
     if not node:
       return None
@@ -232,7 +232,8 @@ class Parser(object):
     for line in reversed(node.prefix.split('\n')):
       line = line.strip()
       if lines and not line.startswith('#'): break
-      lines.append(line)
+      if lines or line:
+        lines.append(line)
     return self.prepare_docstring('\n'.join(reversed(lines)))
 
   def prepare_docstring(self, s):
