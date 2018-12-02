@@ -74,7 +74,11 @@ def write_temp_mkdocs_config(inconf):
   config['docs_dir'] = inconf['gens_dir']
   for key in ('markdown_extensions', 'pages', 'repo_url'):
     if key in inconf:
-      config[key] = inconf[key]
+
+      if key == 'pages':
+        config['nav'] = inconf[key]
+      else:
+        config[key] = inconf[key]
 
   with open('mkdocs.yml', 'w') as fp:
     yaml.dump(config, fp)
