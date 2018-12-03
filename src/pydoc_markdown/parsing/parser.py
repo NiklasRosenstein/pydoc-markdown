@@ -128,44 +128,42 @@ class Parser(object):
         result.append(Argument(parameters.children[1].value, None, None, Argument.POS))
       return result
 
-    def consume_arg(node, argtype):
+    def consume_arg(node, argtype, index):
       if node.type == syms.tname:
-        node = node.children[0]
+        index = ListScanner(node.children)
       name = node.value
-      node = node.next_sibling
+      node = index.next()
       annotation = None
       if node and node.type == token.COLON:
-        node = node.next_sibling
+        node = index.next()
         annotation = Expression(self.nodes_to_string([node]))
-        node = node.next_sibling
+        node = index.next()
       default = None
       if node and node.type == token.EQUAL:
-        node = node.next_sibling
+        node = index.next()
         default = Expression(self.nodes_to_string([node]))
-        node = node.next_sibling
+        node = index.next()
       return Argument(name, annotation, default, argtype)
 
     argtype = Argument.POS
 
-    index = 0
-    while index < len(arglist.children):
-      leaf = arglist.children[index]
-      if leaf.type == token.STAR:
-        node = arglist.children[index+1]
+    index = ListScanner(arglist.children)
+    for node in index.safe_iter():
+      node = index.current
+      if node.type == token.STAR:
+        node = index.next()
         if node.type != token.COMMA:
-          result.append(consume_arg(node, Argument.POS_REMAINDER))
-          index += 3
+          result.append(consume_arg(node, Argument.POS_REMAINDER, index))
         else:
-          index += 2
+          index.next()
         argtype = Argument.KW_ONLY
         continue
-      elif leaf.type == token.DOUBLESTAR:
-        node = arglist.children[index+1]
-        result.append(consume_arg(node, Argument.KW_REMAINDER))
-        index += 2
+      elif node.type == token.DOUBLESTAR:
+        node = index.next()
+        result.append(consume_arg(node, Argument.KW_REMAINDER, index))
         continue
-      result.append(consume_arg(leaf, argtype))
-      index += 2
+      result.append(consume_arg(node, argtype, index))
+      index.next()
 
     return result
 
@@ -212,6 +210,18 @@ class Parser(object):
       return Expression(self.nodes_to_string([node]))
     return None
 
+  def get_most_recent_prefix(self, node):
+    if node.prefix:
+      return node.prefix
+    while not node.prev_sibling and not node.prefix:
+      node = node.parent
+    if node.prefix:
+      return node.prefix
+    node = node.prev_sibling
+    while isinstance(node, Node) and node.children:
+      node = node.children[-1]
+    return node.prefix
+
   def get_docstring_from_first_node(self, parent, module_level=False):
     node = find(lambda x: isinstance(x, Node), parent.children)
     if not node:
@@ -222,14 +232,16 @@ class Parser(object):
     return self.get_hashtag_docstring_from_prefix(node)
 
   def get_statement_docstring(self, node):
-    ws = re.match('\s*', node.prefix[::-1]).group(0)
+    prefix = self.get_most_recent_prefix(node)
+    ws = re.match('\s*', prefix[::-1]).group(0)
     if ws.count('\n') == 1:
       return self.get_hashtag_docstring_from_prefix(node)
     return None
 
   def get_hashtag_docstring_from_prefix(self, node):
+    prefix = self.get_most_recent_prefix(node)
     lines = []
-    for line in reversed(node.prefix.split('\n')):
+    for line in reversed(prefix.split('\n')):
       line = line.strip()
       if lines and not line.startswith('#'): break
       if lines or line:
@@ -271,7 +283,7 @@ def dedent_docstring(s):
   lines = s.split('\n')
   lines[0] = lines[0].strip()
   lines[1:] = textwrap.dedent('\n'.join(lines[1:])).split('\n')
-  return '\n'.join(lines)
+  return '\n'.join(lines).strip()
 
 
 def find(predicate, iterable):
@@ -279,3 +291,34 @@ def find(predicate, iterable):
     if predicate(item):
       return item
   return None
+
+
+class ListScanner(object):
+
+  def __init__(self, lst, index=0):
+    self._list = lst
+    self._index = index
+
+  def __bool__(self):
+    return self._index < len(self._list)
+
+  __nonzero__ = __bool__
+
+  @property
+  def current(self):
+    return self._list[self._index]
+
+  def next(self, expect=False):
+    self._index += 1
+    try:
+      return self.current
+    except IndexError:
+      if expect: raise
+      return None
+
+  def safe_iter(self):
+    index = self._index
+    while self:
+      yield self.current
+      if self._index == index:
+        raise RuntimeError('next() has not been called on the ListScanner')

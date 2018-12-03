@@ -18,7 +18,7 @@ def main(argv=None, prog=None):
   with open(args.filename) as fp:
     module = parse_file(fp.read(), args.filename)
 
-  renderer = MarkdownRenderer(code_headings=False)
+  renderer = MarkdownRenderer()
   renderer.render_recursive(sys.stdout, 1, module)
 
 
