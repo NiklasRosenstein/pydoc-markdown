@@ -12,3 +12,7 @@ Pipfile
 Pipfile.lock
 .idea
 .pytest_cache/
+
+# Direnv config
+.direnv
+.envrc

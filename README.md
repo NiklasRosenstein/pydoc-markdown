@@ -58,6 +58,7 @@ generate:
 # MkDocs pages configuration. The `<<` operator is sugar added by pydocmd
 # that allows you to use an external Markdown file (eg. your project's README)
 # in the documentation. The path must be relative to current working directory.
+# This configuration is not mandatory if you have your own mkdocs.yml config file.
 pages:
 - Home: index.md << ../README.md
 - foobar.baz:

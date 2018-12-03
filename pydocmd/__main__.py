@@ -54,9 +54,9 @@ def default_config(config):
   config.setdefault('gens_dir', '_build/pydocmd')
   config.setdefault('site_dir', '_build/site')
   if args.command == 'simple':
-      config.setdefault('headers', 'markdown')
+    config.setdefault('headers', 'markdown')
   else:
-      config.setdefault('headers', 'html')
+    config.setdefault('headers', 'html')
   config.setdefault('theme', 'readthedocs')
   config.setdefault('loader', 'pydocmd.loader.PythonLoader')
   config.setdefault('preprocessor', 'pydocmd.preprocessor.Preprocessor')
@@ -74,7 +74,11 @@ def write_temp_mkdocs_config(inconf):
   config['docs_dir'] = inconf['gens_dir']
   for key in ('markdown_extensions', 'pages', 'repo_url'):
     if key in inconf:
-      config[key] = inconf[key]
+
+      if key == 'pages':
+        config['nav'] = inconf[key]
+      else:
+        config[key] = inconf[key]
 
   with open('mkdocs.yml', 'w') as fp:
     yaml.dump(config, fp)
@@ -91,7 +95,24 @@ def makedirs(path):
     os.makedirs(path)
 
 
-def copy_source_files(config):
+# Also process all pages to copy files outside of the docs_dir to the gens_dir.
+def process_pages(data, gens_dir):
+  for key in data:
+    filename = data[key]
+    if isinstance(filename, str) and '<<' in filename:
+      filename, source = filename.split('<<')
+      filename, source = filename.rstrip(), source.lstrip()
+      outfile = os.path.join(gens_dir, filename)
+      makedirs(os.path.dirname(outfile))
+      shutil.copyfile(source, outfile)
+      data[key] = filename
+    elif isinstance(filename, dict):
+      process_pages(filename, gens_dir)
+    elif isinstance(filename, list):
+      [process_pages(x, gens_dir) for x in filename]
+
+
+def copy_source_files(config, pages_required=True):
   """
   Copies all files from the `docs_dir` to the `gens_dir` defined in the
   *config*. It also takes the MkDocs `pages` configuration into account
@@ -113,24 +134,14 @@ def copy_source_files(config):
       makedirs(os.path.dirname(dest_fname))
       shutil.copyfile(os.path.join(root, fname), dest_fname)
 
-  # Also process all pages to copy files outside of the docs_dir
-  # to the gens_dir.
-  def process_pages(data):
-    for key in data:
-      filename = data[key]
-      if isinstance(filename, str) and '<<' in filename:
-        filename, source = filename.split('<<')
-        filename, source = filename.rstrip(), source.lstrip()
-        outfile = os.path.join(config['gens_dir'], filename)
-        makedirs(os.path.dirname(outfile))
-        shutil.copyfile(source, outfile)
-        data[key] = filename
-      elif isinstance(filename, dict):
-        process_pages(filename)
-      elif isinstance(filename, list):
-        [process_pages(x) for x in filename]
+  if 'pages' not in config:
+    if pages_required:
+      raise RuntimeError('pydocmd.yml does not have defined pages!')
+
+    return
+
   for page in config['pages']:
-    process_pages(page)
+    process_pages(page, config['gens_dir'])
 
 
 def new_project():
@@ -177,10 +188,10 @@ def main():
   preproc = import_object(config['preprocessor'])(config)
 
   if args.command != 'simple':
-    copy_source_files(config)
+    mkdocs_exist = os.path.isfile('mkdocs.yml')
+    copy_source_files(config, pages_required=not mkdocs_exist)
 
-    # Generate MkDocs configuration if it doesn't exist.
-    if not os.path.isfile('mkdocs.yml'):
+    if not mkdocs_exist:
       log('Generating temporary MkDocs config...')
       write_temp_mkdocs_config(config)
 

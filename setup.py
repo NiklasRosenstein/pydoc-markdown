@@ -51,7 +51,7 @@ setuptools.setup(
     keywords = 'markdown pydoc generator docs documentation',
     packages = ['pydocmd'],
     install_requires = [
-        'MkDocs>=0.16.0',
+        'MkDocs>=1.0.0',
         'Markdown>=2.6.11',
         'PyYAML>=3.12',
         'six>=0.11.0',

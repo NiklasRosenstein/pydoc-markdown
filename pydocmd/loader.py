@@ -92,7 +92,9 @@ class PythonLoader(object):
 
 
 def get_docstring(function):
-  if hasattr(function, '__name__') or isinstance(function, property):
+  if isinstance(function, (staticmethod, classmethod)):
+    return function.__func__.__doc__ or ''
+  elif hasattr(function, '__name__') or isinstance(function, property):
     return function.__doc__ or ''
   elif hasattr(function, '__call__'):
     return function.__call__.__doc__ or ''
