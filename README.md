@@ -1,20 +1,23 @@
 ## Pydoc-Markdown
 
-Generate markdown API documentation from Python code.
+_Pydoc-Markdown_ generates API documentation for Python code in Markdown format.
 
-### How it works.
+### Current State
 
-1. Your code is parsed by Pydoc-Markdown using `lib2to3` to generate an
-    intermediate representation of all the information necessary to
-    generate documentation files.
-2. One of Pydoc-Markdown's renderers will then convert the intermediate
-    representation to markdown files (or to a single file).
-3. (Optional) The generated markdown can then be converted to HTML with MkDocs.
+* Alpha development phase
+* Basic parsing with `lib2to3` is implemented
+* Very basic CLI that can render Markdown from a Python source file
 
-### Synopsis.
+### Upcoming Features
 
-    usage: pydoc-markdown command [args ...]
+* Usable command-line interface
+* Ability to parse whole packages and not just single files
+* Parse docstrings to produce proper markdown (and also support basic Sphinx syntax)
+* Configurable Markdown renderer that outputs in a format suitable for MkDocs
 
-    available commands:
-        parse   Parse Python code and generate a .pdmir file.
-        render  Render a .pdmir file to markdown.
+### Far-future
+
+* Actually linking between sections (which use the cross-reference syntax)
+* Take hints for documentation in Python comments (eg. ignore a member)
+* Capture TODO and NOTE comments in classes and function and (optionally)
+  include them in the documentation
