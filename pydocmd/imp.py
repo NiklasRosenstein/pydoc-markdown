@@ -66,9 +66,15 @@ def import_object_with_scope(name):
   for part in parts[1:]:
     current_name += '.' + part
     try:
-      sub_obj = getattr(obj, part)
+      if '__dict__' in obj:
+        # Using directly __dict__ for descriptors, where we want to get the descriptor's instance
+        # and not calling the descriptor's __get__ method.
+        sub_obj = obj.__dict__[part]
+      else:
+        sub_obj = getattr(obj, part)
+
       scope, obj = obj, sub_obj
-    except AttributeError:
+    except (AttributeError, KeyError):
       try:
         obj = scope = import_module(current_name)
       except ImportError as exc:
