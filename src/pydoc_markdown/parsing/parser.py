@@ -82,7 +82,7 @@ class Parser(object):
     names = []
     expression = []
     for child in stmt.children:
-      if child.value == '=':
+      if not isinstance(child, Node) and child.value == '=':
         is_assignment = True
         names.append(expression)
         expression = []

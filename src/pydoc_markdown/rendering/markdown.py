@@ -17,7 +17,8 @@ class MarkdownRenderer(nr.types.named.Named):
     ('add_method_class_prefix', bool, True),
     ('add_full_prefix', bool, False),
     ('sub_prefix', bool, False),
-    ('signature_below_heading', bool, True)
+    ('signature_below_heading', bool, True),
+    ('signature_in_heading', bool, False)
   ]
 
   def render_object(self, fp, level, obj):
@@ -36,6 +37,11 @@ class MarkdownRenderer(nr.types.named.Named):
         func = obj
       if func:
         fp.write('```python\n')
+        for dec in func.decorators:
+          fp.write('@{}{}\n'.format(dec.name, dec.args or ''))
+        if func.is_async:
+          fp.write('async ')
+        fp.write('def ')
         fp.write(func.signature)
         fp.write('\n```\n\n')
     if self.signature_below_heading and obj.is_data():
@@ -60,7 +66,10 @@ class MarkdownRenderer(nr.types.named.Named):
       title = obj.path()
 
     if obj.is_function():
-      title += '(' + ', '.join(map(str, obj.args)) + ')'
+      if self.signature_in_heading:
+        title += '(' + obj.signature_args + ')'
+      else:
+        title += '()'
 
     if self.code_headings:
       if self.html_headings or self.sub_prefix:

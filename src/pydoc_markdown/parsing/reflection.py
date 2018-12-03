@@ -81,10 +81,11 @@ class Function(Object):
 
   @property
   def signature(self):
-    prefix = self.name
-    if self.is_method():
-      prefix = self.parent.name + '.' + prefix
-    return '{}({})'.format(prefix, Argument.format_arglist(self.args))
+    return '{}({})'.format(self.name, Argument.format_arglist(self.args))
+
+  @property
+  def signature_args(self):
+    return Argument.format_arglist(self.args)
 
 
 class Data(Object):
@@ -141,7 +142,7 @@ class Argument(named.Named):
         found_kw_only = True
         parts.append('*,')
       parts.append(str(arg))
-    return ' '.join(parts)
+    return ', '.join(parts)
 
 
 class Expression(named.Named):
