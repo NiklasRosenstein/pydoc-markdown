@@ -58,6 +58,11 @@ class Object(named.Named):
       return False
     return isinstance(self, Function) and isinstance(self.parent, Class)
 
+  def visit(self, func):
+    for child in self.members.values():
+      child.visit(func)
+    func(self)
+
 
 class Module(Object):
   pass

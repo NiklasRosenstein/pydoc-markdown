@@ -3,13 +3,11 @@
 Implements a renderer that produces Markdown output.
 """
 
-from __future__ import print_function
-from ..parsing.reflection import *
-
-import nr.types.named
+from ..parse.reflection import *
+from nr.types.named import Named
 
 
-class MarkdownRenderer(nr.types.named.Named):
+class MarkdownRenderer(Named):
   __annotations__ = [
     ('html_headings', bool, False),
     ('code_headings', bool, True),
