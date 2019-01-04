@@ -63,7 +63,7 @@ class Section(object):
         .format(depth = self.depth, id = self.identifier, title = self.title),
         file = stream)
     elif self.header_type == 'markdown':
-      print('#' * self.depth, self.title, file = stream)
+      print('\n' + ('#' * self.depth), self.title, file = stream)
     else:
       raise ValueError('Invalid header type: %s' % self.header_type)
     print(self.content, file=stream)
