@@ -1,6 +1,27 @@
 ## Pydoc-Markdown
 
-_Pydoc-Markdown_ generates API documentation for Python code in Markdown format.
+_Pydoc-Markdown_ generates API documentation from Python code in Markdown
+format as a single file or a directory structure suitable for MkDocs. It
+uses `lib2to3` to parse the the Python code for declarations, their comments
+and docstrings.
+
+> Note that Pydoc-Markdown inherits the quirks of lib2to3. For example, while
+> `def test(print=builtins.print):` is valid Python 3 code, lib2to3 does not
+> accept it (state Python 3.7).
+
+### Usage
+
+To generate a single Markdown file for a Python module or package, specify
+the path to it on the command-line. This will output the full API
+documentation as Markdown.
+
+    pydoc-markdown mymodule.py
+
+Use the MkDocs renderer to produce a suitable directory structure:
+
+    pydoc-markdown mymodule.py --renderer=mkdocs --mkdocs-source-directory=./out
+    cd out
+    mkdocs serve
 
 ### Current State
 
