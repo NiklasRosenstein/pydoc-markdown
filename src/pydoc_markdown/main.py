@@ -4,7 +4,7 @@ Implements the pydoc-markdown CLI.
 """
 
 from pydoc_markdown.parse import parse_file
-from pydoc_markdown.render.markdown import MarkdownRenderer
+from pydoc_markdown.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.preprocessors.pydoc_md import PydocMdPreprocessor
 from pydoc_markdown.preprocessors.sphinx import SphinxPreprocessor
 
