@@ -43,7 +43,9 @@ class Preprocessor(object):
     for line in section.content.split('\n'):
       if line.startswith("```"):
         codeblock_opened = (not codeblock_opened)
-      if not codeblock_opened:
+      if not line:
+        current_section = None
+      elif not codeblock_opened:
         line, current_section = self._preprocess_line(line, current_section)
       lines.append(line)
     section.content = self._preprocess_refs('\n'.join(lines))
