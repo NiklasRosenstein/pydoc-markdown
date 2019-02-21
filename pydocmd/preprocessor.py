@@ -37,10 +37,11 @@ class Preprocessor(object):
     """
     Preprocess the contents of *section*.
     """
-    lines = []
     codeblock_opened = False
     current_section = None
-    for line in section.content.split('\n'):
+    content = self._preprocess_refs(section.content)
+    lines = []
+    for line in content.split('\n'):
       if line.startswith("```"):
         codeblock_opened = (not codeblock_opened)
       if not line:
@@ -48,7 +49,7 @@ class Preprocessor(object):
       elif not codeblock_opened:
         line, current_section = self._preprocess_line(line, current_section)
       lines.append(line)
-    section.content = self._preprocess_refs('\n'.join(lines))
+    section.content = '\n'.join(lines)
 
   def _preprocess_line(self, line, current_section):
     match = re.match(r'# (.*)$', line)
