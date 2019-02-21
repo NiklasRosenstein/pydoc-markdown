@@ -80,7 +80,7 @@ class Preprocessor(object):
         `#::mod[.submod][#item][+n]` where
             `mod.submod` is the module, `item` is the module member and n is
             the number of duplicates in case of headers: markdown conflicts.
-            You can also references class members: or `#::mod.submod.cls#method`
+            You can also references class members: `#::mod.submod.cls#method`
     """
     def handler(match):
       mod = match.group('mod')
