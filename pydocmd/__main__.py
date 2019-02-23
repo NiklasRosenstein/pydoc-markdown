@@ -244,6 +244,10 @@ def main():
         doc = index.new_document(fname)
         add_sections(doc, object_names)
 
+  preproc.link_lookup = {}
+  for file, doc in index.documents.items():
+    for section in doc.sections:
+      preproc.link_lookup[section.identifier] = file
   # Load the docstrings and fill the sections.
   log('Started generating documentation...')
   for doc in index.documents.values():
