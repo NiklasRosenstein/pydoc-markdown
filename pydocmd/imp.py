@@ -66,7 +66,7 @@ def import_object_with_scope(name):
   for part in parts[1:]:
     current_name += '.' + part
     try:
-      if '__dict__' in obj:
+      if hasattr(obj, '__dict__'):
         # Using directly __dict__ for descriptors, where we want to get the descriptor's instance
         # and not calling the descriptor's __get__ method.
         sub_obj = obj.__dict__[part]
