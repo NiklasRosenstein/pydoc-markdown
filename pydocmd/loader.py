@@ -103,8 +103,6 @@ def get_docstring(function):
 
 
 def get_function_signature(function, owner_class=None, show_module=False):
-  isclass = inspect.isclass(function)
-
   # Get base name.
   name_parts = []
   if show_module:
@@ -119,16 +117,16 @@ def get_function_signature(function, owner_class=None, show_module=False):
     function = function.__call__
   name = '.'.join(name_parts)
 
-  if isclass:
-    function = getattr(function, '__init__', None)
   if hasattr(inspect, 'signature'):
     sig = str(inspect.signature(function))
+    if owner_class:
+      sig = sig.replace('(self)', '()', 1).replace('(self, ', '(', 1)
   else:
     try:
       argspec = inspect.getargspec(function)
     except TypeError:
       # handle Py2 classes that don't define __init__
-      args = ['self']
+      args = []
     else:
       # Generate the argument list that is separated by colons.
       args = argspec.args[:]
@@ -140,6 +138,8 @@ def get_function_signature(function, owner_class=None, show_module=False):
         args.append('*' + argspec.varargs)
       if argspec.keywords:
         args.append('**' + argspec.keywords)
+      if owner_class:
+        args.remove('self')
     sig = '(' + ', '.join(args) + ')'
 
   return name + sig
