@@ -28,6 +28,7 @@ from __future__ import print_function
 from .imp import import_object_with_scope
 import inspect
 import types
+from yapf.yapflib.yapf_api import FormatCode
 
 function_types = (types.FunctionType, types.LambdaType, types.MethodType,
   types.BuiltinFunctionType, types.BuiltinMethodType)
@@ -88,7 +89,8 @@ class PythonLoader(object):
     # Add the function signature in a code-block.
     if callable(obj):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
-      section.content = '```python\n{}\n```\n'.format(sig) + section.content
+      sig, _ = FormatCode(sig, style_config='pep8')
+      section.content = '```python\n{}\n```\n'.format(sig.strip()) + section.content
 
 
 def get_docstring(function):

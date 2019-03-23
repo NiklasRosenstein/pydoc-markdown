@@ -55,6 +55,7 @@ setuptools.setup(
         'Markdown>=2.6.11',
         'PyYAML>=3.12',
         'six>=0.11.0',
+        'yapf>=0.26.0',
     ],
     entry_points = dict(
         console_scripts = [
