@@ -69,16 +69,13 @@ def write_temp_mkdocs_config(inconf):
   Generates a configuration for MkDocs on-the-fly from the pydoc-markdown
   configuration and makes sure it gets removed when this program exists.
   """
+  ignored_keys = ('gens_dir', 'pages', 'headers', 'generate', 'loader',
+                  'preprocessor', 'additional_search_paths')
 
-  config = {key: inconf[key] for key in ('site_name', 'site_dir', 'theme')}
+  config = {key: value for key, value in inconf.items() if key not in ignored_keys}
   config['docs_dir'] = inconf['gens_dir']
-  for key in ('markdown_extensions', 'pages', 'repo_url'):
-    if key in inconf:
-
-      if key == 'pages':
-        config['nav'] = inconf[key]
-      else:
-        config[key] = inconf[key]
+  if 'pages' in inconf:
+      config['nav'] = inconf['pages']
 
   with open('mkdocs.yml', 'w') as fp:
     yaml.dump(config, fp)
