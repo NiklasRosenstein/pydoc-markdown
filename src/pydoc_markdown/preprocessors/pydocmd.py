@@ -4,14 +4,21 @@ Provides the #PydocMdPreprocessor class which converts the Pydoc-Markdown
 highlighting syntax into Markdown.
 """
 
-from . import Preprocessor
+import nr.config
 import re
+
+from . import Preprocessor
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other
 #     objects so that they can be properly handled by the renderer.
 
+class PydocMdPreprocessorConfig(nr.config.Partial):
+  pass
+
 
 class PydocMdPreprocessor(Preprocessor):
+
+  config_class = PydocMdPreprocessorConfig
 
   def preprocess(self, root, node):
     if not node.docstring:
@@ -62,3 +69,6 @@ class PydocMdPreprocessor(Preprocessor):
         result += '.'
       return (match.group('prefix') or '') + result
     return re.sub('(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?', handler, content)
+
+
+preprocessor_class = PydocMdPreprocessor

@@ -1,0 +1,4 @@
+files:
+  - src/pydoc_markdown/__init__.py
+  - src/pydoc_markdown/main.py
+  - src/pydoc_markdown/utils.py

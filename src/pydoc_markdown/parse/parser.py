@@ -76,6 +76,7 @@ class Parser(object):
         assert child.type == syms.decorator, child.type
         decorators.append(self.parse_decorator(child))
       return self.parse_declaration(parent, node.children[1], decorators)
+    return None
 
   def parse_statement(self, parent, stmt):
     is_assignment = False
@@ -243,7 +244,8 @@ class Parser(object):
     lines = []
     for line in reversed(prefix.split('\n')):
       line = line.strip()
-      if lines and not line.startswith('#'): break
+      if lines and not line.startswith('#'):
+        break
       if lines or line:
         lines.append(line)
     return self.prepare_docstring('\n'.join(reversed(lines)))
@@ -256,10 +258,11 @@ class Parser(object):
       for line in s.split('\n'):
         lines.append(line.strip()[1:].lstrip())
       return '\n'.join(lines).strip()
-    elif s.startswith('"""') or s.startswith("'''"):
+    if s.startswith('"""') or s.startswith("'''"):
       return dedent_docstring(s[3:-3]).strip()
-    elif s.startswith('"') or s.startswith("'"):
+    if s.startswith('"') or s.startswith("'"):
       return dedent_docstring(s[1:-1]).strip()
+    return None
 
   def nodes_to_string(self, nodes):
     def generator(nodes, skip_prefix=True):
@@ -267,7 +270,8 @@ class Parser(object):
         if not skip_prefix or i != 0:
           yield node.prefix
         if isinstance(node, Node):
-          for _ in generator(node.children, i == 0): yield _
+          for _ in generator(node.children, i == 0):
+            yield _
         else:
           yield node.value
     return ''.join(generator(nodes))

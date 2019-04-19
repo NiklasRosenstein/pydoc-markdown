@@ -1,6 +1,10 @@
 
 import io
+import re
 import setuptools
+
+with io.open('src/pydoc_markdown/__init__.py', encoding='utf8') as fp:
+  version = re.search(r"__version__\s*=\s*'(.*)'", fp.read()).group(1)
 
 with io.open('README.md', encoding='utf8') as fp:
   readme = fp.read()
@@ -10,7 +14,7 @@ with io.open('.config/classifiers.txt', encoding='utf8') as fp:
 
 setuptools.setup(
   name = 'pydoc-markdown',
-  version = '3.0.0',
+  version = version,
   author = 'Niklas Rosenstein',
   author_email = 'rosensteinniklas@gmail.com',
   license = 'MIT',
@@ -22,14 +26,18 @@ setuptools.setup(
   keywords = 'markdown pydoc generator docs documentation',
   packages = setuptools.find_packages('src'),
   package_dir = {'': 'src'},
-  install_requires = [
-    'nr.types>=1.1.1',
-    'PyYAML>=3.12',
-    'six>=0.11.0',
-  ],
+  install_requires = ['nr.config>=1.2.0', 'nr.types>=2.1.0', 'pyyaml>=3.12', 'six>=0.11.0'],
   entry_points = {
     'console_scripts': [
       'pydoc-markdown = pydoc_markdown.main:_entry_point',
+    ],
+    'pydoc_markdown.preprocessors': [
+      'pydocmd = pydoc_markdown.preprocessors.pydocmd:PydocMdPreprocessor',
+      'sphinx = pydoc_markdown.preprocessors.pydocmd:SphinxPreprocessor',
+    ],
+    'pydoc_markdown.renderers': [
+      'markdown = pydoc_markdown.renderers.markdown:MarkdownRenderer',
+      'mkdocs = pydoc_markdown.renderers.mkdocs:MkDocsRenderer',
     ]
   }
 )

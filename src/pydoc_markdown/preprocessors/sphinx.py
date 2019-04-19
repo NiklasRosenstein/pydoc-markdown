@@ -4,11 +4,19 @@ Provides the #SphinxPreprocessor that converts reST/Sphinx syntax to
 markdown compatible syntax.
 """
 
-from . import Preprocessor
+import nr.config
 import re
+
+from . import Preprocessor
+
+
+class SphinxPreprocessorConfig(nr.config.Partial):
+  pass
 
 
 class SphinxPreprocessor(Preprocessor):
+
+  config_class = SphinxPreprocessorConfig
 
   def __init__(self, config=None):
     self.config = config
@@ -84,3 +92,6 @@ class SphinxPreprocessor(Preprocessor):
 
     lines.extend(['**{}**:'.format(key), ''])  # add an extra line because of markdown syntax
     lines.extend(section)
+
+
+preprocessor_class = SphinxPreprocessor

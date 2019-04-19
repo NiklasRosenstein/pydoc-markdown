@@ -1,15 +1,15 @@
 
-import nr.types.named as named
+from nr.types.record import Record
 
 
-class Location(named.Named):
+class Location(Record):
   __annotations__ = [
     ('filename', str),
     ('lineno', int)
   ]
 
 
-class Object(named.Named):
+class Object(Record):
   __annotations__ = [
     ('location', str),
     ('parent', 'Object'),
@@ -99,14 +99,14 @@ class Data(Object):
   ]
 
 
-class Decorator(named.Named):
+class Decorator(Record):
   __annotations__ = [
     ('name', str),
     ('args', 'Expression')
   ]
 
 
-class Argument(named.Named):
+class Argument(Record):
   __annotations__ = [
     ('name', str),
     ('annotation', 'Expression'),
@@ -150,7 +150,7 @@ class Argument(named.Named):
     return ', '.join(parts)
 
 
-class Expression(named.Named):
+class Expression(Record):
   __annotations__ = [
     ('text', str)
   ]
@@ -159,5 +159,13 @@ class Expression(named.Named):
     return self.text
 
 
-__all__ = ['Location', 'Module', 'Class', 'Function', 'Data', 'Decorator',
-  'Argument', 'Expression']
+__all__ = [
+  'Location',
+  'Module',
+  'Class',
+  'Function',
+  'Data',
+  'Decorator',
+  'Argument',
+  'Expression'
+]
