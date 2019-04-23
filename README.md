@@ -1,4 +1,9 @@
-## pydocmd
+## Announcements
+
+> [April 23, 2019] The current version of Pydoc-Markdown (2.x) will not be developed further and will only receive bugfixes.
+> All new development happens on the 3.x version of Pydoc-Markdown (check out the `develop` branch).
+
+# pydocmd
 
 &ndash; *insipired by the [Keras] Documentation*
 
