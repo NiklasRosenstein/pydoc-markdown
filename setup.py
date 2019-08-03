@@ -32,15 +32,15 @@ setuptools.setup(
       'pydoc-markdown = pydoc_markdown.main:_entry_point',
     ],
     'pydoc_markdown.interfaces.Loader': [
-      'python = pydoc_markdown.contrib.python_loader:PythonLoader',
+      'python = pydoc_markdown.contrib.loaders.python:PythonLoader',
     ],
     'pydoc_markdown.interfaces.Processor': [
-      'pydocmd = pydoc_markdown.contrib.pydocmd_processor:PydocmdProcessor',
-      'sphinx = pydoc_markdown.contrib.pydocmd_processor:SphinxProcessor',
+      'pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor',
+      'sphinx = pydoc_markdown.contrib.processors.pydocmd:SphinxProcessor',
     ],
     'pydoc_markdown.interfaces.Renderer': [
-      'markdown = pydoc_markdown.contrib.markdown_renderer:MarkdownRenderer',
-      'mkdocs = pydoc_markdown.contrib.mkdocs_renderer:MkDocsRenderer',
+      'markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer',
+      'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkDocsRenderer',
     ]
   }
 )

@@ -2,5 +2,7 @@ loaders:
   - type: python
     modules: [pydoc_markdown]
     search_path: [src]
+processors:
+  - type: pydocmd
 renderer:
   type: markdown
