@@ -35,15 +35,22 @@ class PydocMarkdown(object):
   """
 
   def __init__(self):
-    self.config = None
+    self.config = PydocMarkdownConfig()
     self.loaders = []
     self.processors = []
     self.renderer = None
     self.graph = ModuleGraph()
 
-  def load_config(self, filename):
-    with open(filename) as fp:
-      self.config = extract(yaml.safe_load(fp), PydocMarkdownConfig)
+  def load_config(self, data):
+    """
+    Loads the configuration. *data* be a string pointing to a YAML file or
+    a dictionary.
+    """
+
+    if isinstance(data, str):
+      with open(filename) as fp:
+        data = yaml.safe_load(fp)
+    self.config = extract(data, PydocMarkdownConfig)
     self.loaders = [x.load(Loader) for x in self.config.loaders]
     self.processors = [x.load(Processor) for x in self.config.processors]
     self.renderer = self.config.renderer.load(Renderer)
