@@ -4,32 +4,34 @@ Implements a renderer that produces Markdown output.
 """
 
 import io
-import nr.config
 import sys
 
-from ..parse.reflection import *
-from . import Renderer
+from nr.types.structured import Field, Object
+from nr.types.interface import implements
+from pydoc_markdown.interfaces import Renderer
+from pydoc_markdown.reflection import *
 
 
-@nr.config.underscores_to_dashes
-class MarkdownRendererConfig(nr.config.Partial):
-  __fields__ = [
-    ('filename', str, None),
-    ('encoding', str, 'utf8'),
-    ('html_headings', bool, False),
-    ('code_headings', bool, True),
-    ('descriptive_class_title', bool, True),
-    ('add_method_class_prefix', bool, True),
-    ('add_full_prefix', bool, False),
-    ('sub_prefix', bool, False),
-    ('signature_below_heading', bool, True),
-    ('signature_in_heading', bool, False)
-  ]
+class MarkdownRendererConfig(Object):
+  filename = Field(str, default=None)
+  encoding = Field(str, default='utf8')
+  html_headings = Field(bool, default=False)
+  code_headings = Field(bool, default=True)
+  descriptive_class_title = Field(bool, default=True)
+  add_method_class_prefix = Field(bool, default=True)
+  add_full_prefix = Field(bool, default=False)
+  sub_prefix = Field(bool, default=False)
+  signature_below_heading = Field(bool, default=True)
+  signature_in_heading = Field(bool, default=False)
+
+  # TODO(nrosenstein): render_toc option
 
 
-class MarkdownRenderer(Renderer):
+@implements(Renderer)
+class MarkdownRenderer(object):
 
-  config_class = MarkdownRendererConfig
+  def get_config_class(self):
+    return MarkdownRendererConfig
 
   def render_object(self, fp, level, obj):
     if self.config.html_headings:
@@ -97,13 +99,11 @@ class MarkdownRenderer(Renderer):
 
   # Renderer
 
-  def render(self, modules):
+  def render(self, config, graph):
     if self.config.filename is None:
-      for m in modules:
+      for m in graph.modules:
         self.render_recursive(sys.stdout, 1, m)
     else:
       with io.open(self.config.filename, 'w', encoding=self.config.encoding) as fp:
-        self.render_recursive(fp, 1, m)
-
-
-renderer_class = MarkdownRenderer
+        for m in graph.modules:
+          self.render_recursive(fp, 1, m)

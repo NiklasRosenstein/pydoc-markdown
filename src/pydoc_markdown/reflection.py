@@ -1,4 +1,9 @@
 
+"""
+This module provides the abstract representation of a code library. It is
+generalised and intended to be usable for any language.
+"""
+
 from nr.types.record import Record
 
 
@@ -157,6 +162,23 @@ class Expression(Record):
 
   def __str__(self):
     return self.text
+
+
+class ModuleGraph(object):
+  """
+  Represents a collection of #Module objects.
+  """
+
+  def __init__(self):
+    self.modules = []
+
+  def add_module(self, module):
+    self.modules.append(module)
+
+  def visit(self, func):
+    for module in self.modules:
+      module.visit(func)
+    func(self)
 
 
 __all__ = [

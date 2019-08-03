@@ -1,5 +1,4 @@
 
-import nr.config
 import pkg_resources
 
 
@@ -31,20 +30,3 @@ def load_entry_point(group, name):
   if result is None:
     raise ValueError('no entry point registered to {}:{}'.format(group, name))
   return result
-
-
-class Configurable(object):
-
-  config_class = None
-
-  def __init__(self, config):
-    assert self.config_class is not None, type(self)
-    self.config = nr.config.extract(self.config_class, config)
-
-  def iter_options(self):
-    for option in self.options:
-      if len(option) == 2:
-        name, type_, default = option[0], option[1], NotImplemented
-      else:
-        name, type_, default = option
-      yield (name, type_, default)

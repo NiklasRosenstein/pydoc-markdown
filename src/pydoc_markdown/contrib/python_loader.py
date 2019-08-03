@@ -1,13 +1,32 @@
 
+import imp
 import os
 import re
 import textwrap
+import sys
 
-from .reflection import *
 from lib2to3.refactor import RefactoringTool
 from lib2to3.pgen2 import token
 from lib2to3.pygram import python_symbols as syms
 from lib2to3.pytree import Node
+from nr.types.structured import Field, Object
+from nr.types.interface import implements
+from pydoc_markdown.interfaces import Loader, LoaderError
+from pydoc_markdown.reflection import *
+
+
+def dedent_docstring(s):
+  lines = s.split('\n')
+  lines[0] = lines[0].strip()
+  lines[1:] = textwrap.dedent('\n'.join(lines[1:])).split('\n')
+  return '\n'.join(lines).strip()
+
+
+def find(predicate, iterable):
+  for item in iterable:
+    if predicate(item):
+      return item
+  return None
 
 
 def parse_to_ast(code, filename):
@@ -23,10 +42,19 @@ def parse_file(code, filename, module_name=None):
   Creates a reflection of the Python source in the string *code*.
   """
 
+  if code is None:
+    with open(filename, 'r') as fp:
+      code = fp.read()
+
   return Parser().parse(parse_to_ast(code, filename), filename, module_name)
 
 
 class Parser(object):
+  """
+  A helper class that parses a Python AST to turn it into objects of the
+  [[pydoc_markdown.reflection]] module. Extracts docstrings from functions
+  and single-line comments.
+  """
 
   def parse(self, ast, filename, module_name=None):
     self.filename = filename
@@ -133,17 +161,17 @@ class Parser(object):
       if node.type == syms.tname:
         index = ListScanner(node.children)
       name = node.value
-      node = index.next()
+      node = index.advance()
       annotation = None
       if node and node.type == token.COLON:
-        node = index.next()
+        node = index.advance()
         annotation = Expression(self.nodes_to_string([node]))
-        node = index.next()
+        node = index.advance()
       default = None
       if node and node.type == token.EQUAL:
-        node = index.next()
+        node = index.advance()
         default = Expression(self.nodes_to_string([node]))
-        node = index.next()
+        node = index.advance()
       return Argument(name, annotation, default, argtype)
 
     argtype = Argument.POS
@@ -152,19 +180,19 @@ class Parser(object):
     for node in index.safe_iter():
       node = index.current
       if node.type == token.STAR:
-        node = index.next()
+        node = index.advance()
         if node.type != token.COMMA:
           result.append(consume_arg(node, Argument.POS_REMAINDER, index))
         else:
-          index.next()
+          index.advance()
         argtype = Argument.KW_ONLY
         continue
       elif node.type == token.DOUBLESTAR:
-        node = index.next()
+        node = index.advance()
         result.append(consume_arg(node, Argument.KW_REMAINDER, index))
         continue
       result.append(consume_arg(node, argtype, index))
-      index.next()
+      index.advance()
 
     return result
 
@@ -215,6 +243,8 @@ class Parser(object):
     if node.prefix:
       return node.prefix
     while not node.prev_sibling and not node.prefix:
+      if not node.parent:
+        return ''
       node = node.parent
     if node.prefix:
       return node.prefix
@@ -283,21 +313,21 @@ class Parser(object):
       return node.value
 
 
-def dedent_docstring(s):
-  lines = s.split('\n')
-  lines[0] = lines[0].strip()
-  lines[1:] = textwrap.dedent('\n'.join(lines[1:])).split('\n')
-  return '\n'.join(lines).strip()
-
-
-def find(predicate, iterable):
-  for item in iterable:
-    if predicate(item):
-      return item
-  return None
-
-
 class ListScanner(object):
+  """
+  A helper class to navigate through a list. This is useful if you would
+  usually iterate over the list by index to be able to acces the next
+  element during the iteration.
+
+  Example:
+
+  ```py
+  scanner = ListScanner(lst)
+  for value in scanner.safe_iter():
+    if some_condition(value):
+      value = scanner.advance()
+  ```
+  """
 
   def __init__(self, lst, index=0):
     self._list = lst
@@ -310,9 +340,26 @@ class ListScanner(object):
 
   @property
   def current(self):
+    """
+    Returns the current list element.
+    """
+
     return self._list[self._index]
 
-  def next(self, expect=False):
+  def can_advance(self):
+    """
+    Returns `True` if there is a next element in the list.
+    """
+
+    return self._index < (len(self._list) - 1)
+
+  def advance(self, expect=False):
+    """
+    Advances the scanner to the next element in the list. If *expect* is set
+    to `True`, an [[IndexError]] will be raised when there is no next element.
+    Otherwise, `None` will be returned.
+    """
+
     self._index += 1
     try:
       return self.current
@@ -320,9 +367,84 @@ class ListScanner(object):
       if expect: raise
       return None
 
-  def safe_iter(self):
+  def safe_iter(self, auto_advance=True):
+    """
+    A useful generator function that iterates over every element in the list.
+    You may call [[advance()]] during the iteration to retrieve the next
+    element in the list within a single iteration.
+
+    If *auto_advance* is `True` (default), the function generator will
+    always advance to the next element automatically. If it is set to `False`,
+    [[advance()]] must be called manually in every iteration to ensure that
+    the scanner has advanced at least to the next element, or a
+    [[RuntimeError]] will be raised.
+    """
+
     index = self._index
     while self:
       yield self.current
-      if self._index == index:
+      if auto_advance:
+        self.advance()
+      elif self._index == index:
         raise RuntimeError('next() has not been called on the ListScanner')
+
+
+class PythonLoaderConfig(Object):
+  #: A list of module or package names that this loader will search for and
+  #: then parse. The modules are searched using the [[sys.path]] of the current
+  #: Python interpreter, unless the [[search_path]] option is specified.
+  modules = Field([str])
+
+  #: The module search path. If not specified, the current [[sys.path]] is
+  #: used instead. If any of the elements contain a `*` (star) symbol, it
+  #: will be expanded with [[sys.path]].
+  search_path = Field([str], default=None)
+
+
+@implements(Loader)
+class PythonLoader(object):
+  """
+  This implementation of the [[Loader]] interface parses Python modules and
+  packages. Which files are parsed depends on the configuration (see
+  [[PythonLoaderConfig]]).
+  """
+
+  def get_config_class(self):
+    return PythonLoaderConfig
+
+  def load(self, config, graph):
+    path = config.search_path
+    if path is None:
+      path = sys.path
+    elif '*' in path:
+      index = path.index('*')
+      path[index:index+1] = sys.path
+
+    for module in config.modules:
+      try:
+        path = imp.find_module(module, path)[1]
+      except ImportError as exc:
+        raise LoaderError(exc)
+      for module_name, filename in self._iter_module_files(module, path):
+        module = parse_file(None, filename, module_name)
+        graph.add_module(module)
+
+  def _iter_module_files(self, module_name, path):
+    if os.path.isfile(path):
+      yield module_name, path
+      return
+    elif os.path.isdir(path):
+      yield next(self._iter_module_files(module_name, os.path.join(path, '__init__.py')))
+      for item in os.listdir(path):
+        if item == '__init__.py':
+          continue
+        item_abs = os.path.join(path, item)
+        name = module_name + '.' + item.rstrip('.py')
+        if os.path.isdir(item_abs) and os.path.isfile(os.path.join(item_abs, '__init__.py')):
+          for x in self._iter_module_files(name, item_abs):
+            yield x
+        elif os.path.isfile(item_abs) and item_abs.endswith('.py'):
+          yield next(self._iter_module_files(name, item_abs))
+      return
+    else:
+      raise LoaderError('path "{}" does not exist'.format(path))

@@ -1,25 +1,24 @@
 
 """
-Provides the #SphinxPreprocessor that converts reST/Sphinx syntax to
+Provides the #SphinxProcessor that converts reST/Sphinx syntax to
 markdown compatible syntax.
 """
 
-import nr.config
 import re
 
-from . import Preprocessor
+from nr.types.structured import Field, Object
+from nr.types.interface import implements
+from pydoc_markdown.interfaces import Processor
 
 
-class SphinxPreprocessorConfig(nr.config.Partial):
+class SphinxProcessorConfig(Object):
   pass
 
 
-class SphinxPreprocessor(Preprocessor):
+class SphinxProcessor(Preprocessor):
 
-  config_class = SphinxPreprocessorConfig
-
-  def __init__(self, config=None):
-    self.config = config
+  def get_config_class(self):
+    return SphinxProcessorConfig
 
   def preprocess(self, root, node):
     if not node.docstring:
@@ -93,5 +92,3 @@ class SphinxPreprocessor(Preprocessor):
     lines.extend(['**{}**:'.format(key), ''])  # add an extra line because of markdown syntax
     lines.extend(section)
 
-
-preprocessor_class = SphinxPreprocessor
