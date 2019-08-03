@@ -1,6 +1,6 @@
 loaders:
   - type: python
-    modules:
-      - pydoc_markdown
+    modules: [pydoc_markdown]
+    search_path: [src]
 renderer:
   type: markdown
