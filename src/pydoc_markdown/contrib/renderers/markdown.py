@@ -59,7 +59,7 @@ class MarkdownRenderer(object):
     if self.config.signature_below_heading and obj.is_data():
       fp.write('```python\n')
       fp.write(obj.name + ' = ' + str(obj.expr))
-      fp.write('\n````\n\n')
+      fp.write('\n```\n\n')
     if obj.docstring:
       fp.write(obj.docstring)
       fp.write('\n')

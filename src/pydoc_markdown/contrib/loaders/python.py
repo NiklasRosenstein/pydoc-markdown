@@ -177,7 +177,7 @@ class Parser(object):
     argtype = Argument.POS
 
     index = ListScanner(arglist.children)
-    for node in index.safe_iter():
+    for node in index.safe_iter(auto_advance=False):
       node = index.current
       if node.type == token.STAR:
         node = index.advance()
@@ -295,15 +295,21 @@ class Parser(object):
     return None
 
   def nodes_to_string(self, nodes):
+    """
+    Converts a list of AST nodes to a string.
+    """
+
     def generator(nodes, skip_prefix=True):
+      # type: (List[Node], Bool) -> Iterable[Tuple[str, str]]
       for i, node in enumerate(nodes):
         if not skip_prefix or i != 0:
           yield node.prefix
         if isinstance(node, Node):
-          for _ in generator(node.children, i == 0):
+          for _ in generator(node.children, True):
             yield _
         else:
           yield node.value
+
     return ''.join(generator(nodes))
 
   def name_to_string(self, node):
