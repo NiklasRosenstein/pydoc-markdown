@@ -30,7 +30,9 @@ from pydoc_markdown.interfaces import Processor
 
 class FilterProcessorConfiguration(Object):
   expression = Field(str, default=None)
-  documented_only = Field(bool, default=True)
+  documented_only = Field(bool, default=False)
+  exclude_private = Field(bool, default=True)
+  exclude_special = Field(bool, default=True)
 
 
 @implements(Processor)
@@ -42,9 +44,18 @@ class FilterProcessor(object):
     graph.visit(lambda x: self._process_member(config, x), allow_mutation=True)
 
   def _process_member(self, config, node):
-    if config.expression and not eval(config.expression, {'name': node.name}):
+    def default_check():
+      if config.documented_only and not node.docstring:
+        return False
+      if config.exclude_private and node.name.startswith('_') and not node.name.endswith('_'):
+        return False
+      if config.exclude_special and node.name in ('__path__', '__annotations__', '__name__', '__all__'):
+        return False
+      return True
+
+    if config.expression:
+      scope = {'name': node.name, 'default': default_check}
+      if not eval(config.expression, scope):
+        node.remove()
+    if node.parent and not default_check():
       node.remove()
-    if config.documented_only and not node.docstring:
-      node.remove()
-    if not node.parent:
-      print('removed:', node.name)
