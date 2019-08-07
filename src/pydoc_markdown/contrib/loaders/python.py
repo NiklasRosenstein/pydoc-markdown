@@ -7,6 +7,7 @@ import sys
 
 from lib2to3.refactor import RefactoringTool
 from lib2to3.pgen2 import token
+from lib2to3.pgen2.parse import ParseError
 from lib2to3.pygram import python_symbols as syms
 from lib2to3.pytree import Node
 from nr.types.structured import Field, Object
@@ -34,7 +35,10 @@ def parse_to_ast(code, filename):
   Parses the string *code* to an AST with #lib2to3.
   """
 
-  return RefactoringTool([]).refactor_string(code, filename)
+  try:
+    return RefactoringTool([]).refactor_string(code, filename)
+  except ParseError as exc:
+    raise ParseError(exc.msg, exc.type, exc.value, exc.context + (filename,))
 
 
 def parse_file(code, filename, module_name=None):
@@ -415,8 +419,7 @@ class PythonLoader(object):
   [[PythonLoaderConfig]]).
   """
 
-  def get_config_class(self):
-    return PythonLoaderConfig
+  CONFIG_CLASS = PythonLoaderConfig
 
   def load(self, config, graph):
     path = config.search_path

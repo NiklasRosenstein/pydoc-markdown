@@ -17,8 +17,7 @@ class SphinxProcessorConfig(Object):
 
 class SphinxProcessor(Preprocessor):
 
-  def get_config_class(self):
-    return SphinxProcessorConfig
+  CONFIG_CLASS = SphinxProcessorConfig
 
   def preprocess(self, root, node):
     if not node.docstring:

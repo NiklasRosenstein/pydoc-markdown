@@ -35,6 +35,7 @@ setuptools.setup(
       'python = pydoc_markdown.contrib.loaders.python:PythonLoader',
     ],
     'pydoc_markdown.interfaces.Processor': [
+      'filter = pydoc_markdown.contrib.processors.filter:FilterProcessor',
       'pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor',
       'sphinx = pydoc_markdown.contrib.processors.pydocmd:SphinxProcessor',
     ],

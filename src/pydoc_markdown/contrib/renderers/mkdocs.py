@@ -17,8 +17,7 @@ class MkDocsRendererConfig(Object):
 @implements(Renderer)
 class MkDocsRenderer(object):
 
-  def get_config_class(self):
-    return MkDocsRendererConfig
+  CONFIG_CLASS = MkDocsRendererConfig
 
   def render(self, modules):
     for m in modules:

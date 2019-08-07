@@ -63,9 +63,12 @@ class Object(Record):
       return False
     return isinstance(self, Function) and isinstance(self.parent, Class)
 
-  def visit(self, func):
-    for child in self.members.values():
-      child.visit(func)
+  def visit(self, func, allow_mutation=False):
+    members = self.members.values()
+    if allow_mutation:
+      members = list(members)
+    for child in members:
+      child.visit(func, allow_mutation)
     func(self)
 
 
@@ -175,10 +178,9 @@ class ModuleGraph(object):
   def add_module(self, module):
     self.modules.append(module)
 
-  def visit(self, func):
+  def visit(self, func, allow_mutation=False):
     for module in self.modules:
-      module.visit(func)
-    func(self)
+      module.visit(func, allow_mutation)
 
 
 __all__ = [

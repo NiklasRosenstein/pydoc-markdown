@@ -21,8 +21,7 @@ class PydocmdProcessorConfig(Object):
 @implements(Processor)
 class PydocmdProcessor(object):
 
-  def get_config_class(self):
-    return PydocmdProcessorConfig
+  CONFIG_CLASS = PydocmdProcessorConfig
 
   def process(self, config, graph):
     graph.visit(self._process_node)

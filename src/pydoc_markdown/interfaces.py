@@ -8,8 +8,8 @@ Pydoc-Markdown to implement custom loaders for documentation data,
 processors or renderers.
 """
 
-from nr.types.structured import Object
-from nr.types.interface import Interface, default
+from nr.types.structured import Object, extract
+from nr.types.interface import Interface, attr, default, staticattr
 from .reflection import Module, ModuleGraph
 from .utils import load_entry_point
 
@@ -17,25 +17,30 @@ from .utils import load_entry_point
 class Configurable(Interface):
   """
   This interface represents an object that provides information on how it can
-  be configured via a YAML configuration file. This description is provided
-  by returning a [[nr.types.structured.Object]] object from the #get_config_class()
-  method.
+  be configured via a YAML configuration file.
+
+  Implementations of this class can usually be loaded using the
+  [[load_implementation()]] function via the entrypoint specified on the
+  implementation class
   """
 
-  def get_config_class(self):  # type: () -> Type[Object]
-    """
-    Return a configuration object class that describes how this interface
-    can be configured.
-    """
+  ENTRYPOINT_NAME = None  # type: str
+  CONFIG_CLASS = None  # type: Type[Object]
+  config = attr(default=None)  # type: Optional[Object]
 
-    pass
+  @staticattr
+  @classmethod
+  def make_instance(cls, impl_name, config):  # type: (str, Any) -> Configurable
+    instance = load_implementation(cls, impl_name)()
+    instance.config = extract(config, instance.CONFIG_CLASS)
+    return instance
 
 
 class Loader(Configurable):
   """
   This interface describes an object that is capable of loading documentation
   data. The location from which the documentation is loaded must be defined
-  with the configuration class returned by #get_config_class().
+  with the configuration class.
   """
 
   ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Loader'

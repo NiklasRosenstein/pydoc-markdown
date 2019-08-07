@@ -4,5 +4,6 @@ loaders:
     search_path: [src]
 processors:
   - type: pydocmd
+  - type: filter
 renderer:
   type: markdown

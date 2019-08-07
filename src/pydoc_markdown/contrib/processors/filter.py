@@ -19,5 +19,32 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE
 
-__author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
-__version__ = '3.0.0'
+"""
+Provides a processor that implements various filter capabilities.
+"""
+
+from nr.types.interface import implements
+from nr.types.structured import Field, Object
+from pydoc_markdown.interfaces import Processor
+
+
+class FilterProcessorConfiguration(Object):
+  expression = Field(str, default=None)
+  documented_only = Field(bool, default=True)
+
+
+@implements(Processor)
+class FilterProcessor(object):
+
+  CONFIG_CLASS = FilterProcessorConfiguration
+
+  def process(self, config, graph):
+    graph.visit(lambda x: self._process_member(config, x), allow_mutation=True)
+
+  def _process_member(self, config, node):
+    if config.expression and not eval(config.expression, {'name': node.name}):
+      node.remove()
+    if config.documented_only and not node.docstring:
+      node.remove()
+    if not node.parent:
+      print('removed:', node.name)

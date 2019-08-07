@@ -30,8 +30,7 @@ class MarkdownRendererConfig(Object):
 @implements(Renderer)
 class MarkdownRenderer(object):
 
-  def get_config_class(self):
-    return MarkdownRendererConfig
+  CONFIG_CLASS = MarkdownRendererConfig
 
   def render_object(self, fp, level, obj):
     if self.config.html_headings:

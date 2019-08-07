@@ -17,11 +17,6 @@ class _ExtensionConfig(Object):
   type = Field(str)
   options = WildcardField(object)
 
-  def load(self, interface):
-    instance = load_implementation(interface, self.type)()
-    instance.config = extract(self.options, instance.get_config_class())
-    return instance
-
 
 class PydocMarkdownConfig(Object):
   loaders = Field([_ExtensionConfig], default=list)
@@ -48,12 +43,12 @@ class PydocMarkdown(object):
     """
 
     if isinstance(data, str):
-      with open(filename) as fp:
+      with open(data) as fp:
         data = yaml.safe_load(fp)
     self.config = extract(data, PydocMarkdownConfig)
-    self.loaders = [x.load(Loader) for x in self.config.loaders]
-    self.processors = [x.load(Processor) for x in self.config.processors]
-    self.renderer = self.config.renderer.load(Renderer)
+    self.loaders = [Loader.make_instance(x.type, x.options) for x in self.config.loaders]
+    self.processors = [Processor.make_instance(x.type, x.options) for x in self.config.processors]
+    self.renderer = Renderer.make_instance(self.config.renderer.type, self.config.renderer.options)
 
   def load_module_graph(self):
     for loader in self.loaders:
