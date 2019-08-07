@@ -17,7 +17,7 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-# IN THE SOFTWARE
+# IN THE SOFTWARE.
 
 """
 Provides a processor that implements various filter capabilities.
@@ -37,6 +37,17 @@ class FilterProcessorConfiguration(Object):
 
 @implements(Processor)
 class FilterProcessor(object):
+  """
+  The `filter` processor removes module and class members based on certain
+  criteria.
+
+  # Example
+
+  ```py
+  - type: filter
+    expression: not name.startswith('_') and default()
+  ```
+  """
 
   CONFIG_CLASS = FilterProcessorConfiguration
 
@@ -54,7 +65,7 @@ class FilterProcessor(object):
       return True
 
     if config.expression:
-      scope = {'name': node.name, 'default': default_check}
+      scope = {'name': node.name, 'node': node, 'default': default_check}
       if not eval(config.expression, scope):
         node.remove()
     if node.parent and not default_check():
