@@ -1,44 +1,56 @@
-## Pydoc-Markdown
+# pydoc-markdown
 
-_Pydoc-Markdown_ generates API documentation from Python code in Markdown
-format as a single file or a directory structure suitable for MkDocs. It
-uses `lib2to3` to parse the the Python code for declarations, their comments
-and docstrings.
+Pydoc-markdown produces Markdown API documentation from Python code.
+
+    $ pydoc-markdown --modules mymodule
+
+### Project state
+
+* Basic parsing with `lib2to3` is implemented
+* Basic CLI implemented
+* Planned features
+    * Proper parsing of Markdown additions (eg. references)
+    * MkDocs renderer
+    * Take hints in Python docs (eg. `# doc: ignore`)
+    * Capture `TODO` and `NOTE` comments in classes and functions
 
 > Note that Pydoc-Markdown inherits the quirks of lib2to3. For example, while
 > `def test(print=builtins.print):` is valid Python 3 code, lib2to3 does not
 > accept it (state Python 3.7).
 
-### Usage
+## Get started
 
-To generate a single Markdown file for a Python module or package, specify
-the path to it on the command-line. This will output the full API
-documentation as Markdown.
+Create a `pydoc-markdown.yml` configuration file:
 
-    pydoc-markdown mymodule.py
+```yml
+loaders:
+  - type: python
+    modules: [my_python_module]
+```
 
-Use the MkDocs renderer to produce a suitable directory structure:
+Install Pydoc-markdown from GitHub:
 
-    pydoc-markdown mymodule.py --renderer=mkdocs --mkdocs-source-directory=./out
-    cd out
-    mkdocs serve
+```
+$ pip install git+https://github.com/NiklasRosenstein/pydoc-markdown.git@develop
+```
 
-### Current State
+Then run:
 
-* Alpha development phase
-* Basic parsing with `lib2to3` is implemented
-* Very basic CLI that can render Markdown from a Python source file
+```
+$ pydoc-markdown > my_python_module.md
+```
 
-### Upcoming Features
+Alternatively, you can do the same in a single command:
 
-* Usable command-line interface
-* Ability to parse whole packages and not just single files
-* Parse docstrings to produce proper markdown (and also support basic Sphinx syntax)
-* Configurable Markdown renderer that outputs in a format suitable for MkDocs
+```
+$ pydoc-markdown --loader python --python-modules
+```
 
-### Far-future
+## Syntax
 
-* Actually linking between sections (which use the cross-reference syntax)
-* Take hints for documentation in Python comments (eg. ignore a member)
-* Capture TODO and NOTE comments in classes and function and (optionally)
-  include them in the documentation
+Just use Markdown syntax in your docstrings. There are some special treatments
+applied by the `pydocmd` processor though.
+
+* `[[my_function()]]` is a reference to a function (resolved in the current
+  static scope of the docstring)
+* `# Parameters` in a docstring will be converted to just bold text
