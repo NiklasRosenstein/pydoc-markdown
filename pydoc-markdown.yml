@@ -10,5 +10,5 @@ renderer:
   filename: docs/README.md
   html_headings: true
   code_lang: false
-  signature_with_def: false
-  signature_class_prefix: true
+  signature_in_header: true
+  signature_code_block: false
