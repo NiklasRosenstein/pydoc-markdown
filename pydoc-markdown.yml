@@ -7,3 +7,8 @@ processors:
   - type: filter
 renderer:
   type: markdown
+  filename: out.md
+  html_headings: true
+  code_lang: false
+  signature_with_def: false
+  signature_class_prefix: true
