@@ -167,12 +167,23 @@ and single-line comments.
 
 <h3 id="pydoc_markdown.contrib.loaders.python.Parser.get_docstring_from_first_node"><code>Parser.get_docstring_from_first_node(self, parent, module_level=False)</code></h3>
 
+This method retrieves the docstring for the block node *parent*. The
+node either declares a class or function.
 
 <h3 id="pydoc_markdown.contrib.loaders.python.Parser.get_statement_docstring"><code>Parser.get_statement_docstring(self, node)</code></h3>
 
 
 <h3 id="pydoc_markdown.contrib.loaders.python.Parser.get_hashtag_docstring_from_prefix"><code>Parser.get_hashtag_docstring_from_prefix(self, node)</code></h3>
 
+Given a node in the AST, this method retrieves the docstring from the
+closest prefix of this node (ie. any block of single-line comments that
+precede this node).
+
+The function will also return the type of docstring: A docstring that
+begins with `#:` is a statement docstring, otherwise it is a block
+docstring (and only used for classes/methods).
+
+return: (docstring, doc_type)
 
 <h3 id="pydoc_markdown.contrib.loaders.python.Parser.prepare_docstring"><code>Parser.prepare_docstring(self, s)</code></h3>
 
@@ -237,21 +248,18 @@ the scanner has advanced at least to the next element, or a
 
 <h2 id="pydoc_markdown.contrib.loaders.python.PythonLoaderConfig"><code>PythonLoaderConfig</code> Objects</h2>
 
-: A list of module or package names that this loader will search for and
-: then parse. The modules are searched using the [[sys.path]] of the current
-: Python interpreter, unless the [[search_path]] option is specified.
 
 <h3 id="pydoc_markdown.contrib.loaders.python.PythonLoaderConfig.modules"><code>modules</code></h3>
 
-: A list of module or package names that this loader will search for and
-: then parse. The modules are searched using the [[sys.path]] of the current
-: Python interpreter, unless the [[search_path]] option is specified.
+A list of module or package names that this loader will search for and
+then parse. The modules are searched using the [[sys.path]] of the current
+Python interpreter, unless the [[search_path]] option is specified.
 
 <h3 id="pydoc_markdown.contrib.loaders.python.PythonLoaderConfig.search_path"><code>search_path</code></h3>
 
-: The module search path. If not specified, the current [[sys.path]] is
-: used instead. If any of the elements contain a `*` (star) symbol, it
-: will be expanded with [[sys.path]].
+The module search path. If not specified, the current [[sys.path]] is
+used instead. If any of the elements contain a `*` (star) symbol, it
+will be expanded with [[sys.path]].
 
 <h2 id="pydoc_markdown.contrib.loaders.python.PythonLoader"><code>PythonLoader</code> Objects</h2>
 
