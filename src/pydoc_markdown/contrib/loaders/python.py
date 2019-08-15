@@ -278,31 +278,59 @@ class Parser(object):
     return node.prefix
 
   def get_docstring_from_first_node(self, parent, module_level=False):
+    """
+    This method retrieves the docstring for the block node *parent*. The
+    node either declares a class or function.
+    """
+
     node = find(lambda x: isinstance(x, Node), parent.children)
     if not node:
       return None
     if node.type == syms.simple_stmt:
       if node.children[0].type == token.STRING:
         return self.prepare_docstring(node.children[0].value)
-    return self.get_hashtag_docstring_from_prefix(node)
+    docstring, doc_type = self.get_hashtag_docstring_from_prefix(node)
+    if doc_type == 'block':
+      return docstring
+    return None
 
   def get_statement_docstring(self, node):
     prefix = self.get_most_recent_prefix(node)
     ws = re.match('\s*', prefix[::-1]).group(0)
     if ws.count('\n') == 1:
-      return self.get_hashtag_docstring_from_prefix(node)
+      docstring, doc_type = self.get_hashtag_docstring_from_prefix(node)
+      if doc_type == 'statement':
+        return docstring
     return None
 
   def get_hashtag_docstring_from_prefix(self, node):
+    # type: (Node) -> (Optional[str], Optional[str])
+    """
+    Given a node in the AST, this method retrieves the docstring from the
+    closest prefix of this node (ie. any block of single-line comments that
+    precede this node).
+
+    The function will also return the type of docstring: A docstring that
+    begins with `#:` is a statement docstring, otherwise it is a block
+    docstring (and only used for classes/methods).
+
+    return: (docstring, doc_type)
+    """
+
     prefix = self.get_most_recent_prefix(node)
     lines = []
+    doc_type = None
     for line in reversed(prefix.split('\n')):
       line = line.strip()
       if lines and not line.startswith('#'):
         break
+      if doc_type is None and line.strip().startswith('#:'):
+        doc_type = 'statement'
+      elif doc_type is None and line.strip().startswith('#'):
+        doc_type = 'block'
       if lines or line:
         lines.append(line)
-    return self.prepare_docstring('\n'.join(reversed(lines)))
+    return self.prepare_docstring('\n'.join(reversed(lines))), doc_type
 
   def prepare_docstring(self, s):
     # TODO @NiklasRosenstein handle u/f prefixes of string literal?
@@ -310,7 +338,12 @@ class Parser(object):
     if s.startswith('#'):
       lines = []
       for line in s.split('\n'):
-        lines.append(line.strip()[1:].lstrip())
+        line = line.strip()
+        if line.startswith('#:'):
+          line = line[2:]
+        else:
+          line = line[1:]
+        lines.append(line.lstrip())
       return '\n'.join(lines).strip()
     if s.startswith('"""') or s.startswith("'''"):
       return dedent_docstring(s[3:-3]).strip()
