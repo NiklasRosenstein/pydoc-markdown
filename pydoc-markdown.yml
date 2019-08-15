@@ -7,7 +7,7 @@ processors:
   - type: filter
 renderer:
   type: markdown
-  filename: out.md
+  filename: docs/README.md
   html_headings: true
   code_lang: false
   signature_with_def: false
