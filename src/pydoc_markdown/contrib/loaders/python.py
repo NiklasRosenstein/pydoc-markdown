@@ -19,6 +19,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""
+Loads Python source code into the Pydoc-markdown reflection format.
+"""
+
 import imp
 import os
 import re

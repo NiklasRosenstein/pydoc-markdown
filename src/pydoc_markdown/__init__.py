@@ -19,5 +19,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+"""
+Pydoc-markdown is an extensible framework for generating API documentation,
+with a focus on Python source code and the Markdown output format.
+"""
+
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
 __version__ = '3.0.0'
