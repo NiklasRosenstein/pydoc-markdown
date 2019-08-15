@@ -1,7 +1,7 @@
 import pytest
 
 from pydocmd.document import Section
-from pydocmd.restructuredtext import Preprocessor
+from pydocmd.preprocessors.rst import Preprocessor
 
 
 @pytest.fixture

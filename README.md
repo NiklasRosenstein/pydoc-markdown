@@ -76,7 +76,7 @@ gens_dir: _build/pydocmd     # This will end up as the MkDocs 'docs_dir'
 site_dir: _build/site
 theme:    readthedocs
 loader:   pydocmd.loader.PythonLoader
-preprocessor: pydocmd.preprocessor.Preprocessor
+preprocessor: pydocmd.preprocessors.simple.Preprocessor
 
 # Whether to output headers as markdown or HTML.  Used to workaround
 # https://github.com/NiklasRosenstein/pydoc-markdown/issues/11.  The default is
