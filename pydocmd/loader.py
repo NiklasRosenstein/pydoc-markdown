@@ -31,117 +31,122 @@ import types
 from yapf.yapflib.yapf_api import FormatCode
 
 function_types = (types.FunctionType, types.LambdaType, types.MethodType,
-  types.BuiltinFunctionType, types.BuiltinMethodType)
+                  types.BuiltinFunctionType, types.BuiltinMethodType)
 if hasattr(types, 'UnboundMethodType'):
-  function_types += (types.UnboundMethodType,)
+    function_types += (types.UnboundMethodType,)
 
 
 def trim(docstring):
-  if not docstring:
-    return ''
-  lines = [x.rstrip() for x in docstring.split('\n')]
-  lines[0] = lines[0].lstrip()
+    if not docstring:
+        return ''
+    lines = [x.rstrip() for x in docstring.split('\n')]
+    lines[0] = lines[0].lstrip()
 
-  indent = None
-  for i, line in enumerate(lines):
-    if i == 0 or not line: continue
-    new_line = line.lstrip()
-    delta = len(line) - len(new_line)
-    if indent is None:
-      indent = delta
-    elif delta > indent:
-      new_line = ' ' * (delta - indent) + new_line
-    lines[i] = new_line
+    indent = None
+    for i, line in enumerate(lines):
+        if i == 0 or not line:
+            continue
+        new_line = line.lstrip()
+        delta = len(line) - len(new_line)
+        if indent is None:
+            indent = delta
+        elif delta > indent:
+            new_line = ' ' * (delta - indent) + new_line
+        lines[i] = new_line
 
-  return '\n'.join(lines)
+    return '\n'.join(lines)
 
 
 class PythonLoader(object):
-  """
-  Expects absolute identifiers to import with #import_object_with_scope().
-  """
-  def __init__(self, config):
-    self.config = config
-
-  def load_section(self, section):
     """
-    Loads the contents of a #Section. The `section.identifier` is the name
-    of the object that we need to load.
-
-    # Arguments
-      section (Section): The section to load. Fill the `section.title` and
-        `section.content` values. Optionally, `section.loader_context` can
-        be filled with custom arbitrary data to reference at a later point.
+    Expects absolute identifiers to import with #import_object_with_scope().
     """
 
-    assert section.identifier is not None
-    obj, scope = import_object_with_scope(section.identifier)
+    def __init__(self, config):
+        self.config = config
 
-    if '.' in section.identifier:
-      default_title = section.identifier.rsplit('.', 1)[1]
-    else:
-      default_title = section.identifier
+    def load_section(self, section):
+        """
+        Loads the contents of a #Section. The `section.identifier` is the name
+        of the object that we need to load.
 
-    section.title = getattr(obj, '__name__', default_title)
-    section.content = trim(get_docstring(obj))
-    section.loader_context = {'obj': obj, 'scope': scope}
+        # Arguments
+          section (Section): The section to load. Fill the `section.title` and
+            `section.content` values. Optionally, `section.loader_context` can
+            be filled with custom arbitrary data to reference at a later point.
+        """
 
-    # Add the function signature in a code-block.
-    if callable(obj):
-      sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
-      sig, _ = FormatCode(sig, style_config='pep8')
-      section.content = '```python\n{}\n```\n'.format(sig.strip()) + section.content
+        assert section.identifier is not None
+        obj, scope = import_object_with_scope(section.identifier)
+
+        if '.' in section.identifier:
+            default_title = section.identifier.rsplit('.', 1)[1]
+        else:
+            default_title = section.identifier
+
+        section.title = getattr(obj, '__name__', default_title)
+        section.content = trim(get_docstring(obj))
+        section.loader_context = {'obj': obj, 'scope': scope}
+
+        # Add the function signature in a code-block.
+        if callable(obj):
+            sig = get_function_signature(
+                obj, scope if inspect.isclass(scope) else None)
+            sig, _ = FormatCode(sig, style_config='pep8')
+            section.content = '```python\n{}\n```\n'.format(
+                sig.strip()) + section.content
 
 
 def get_docstring(function):
-  if isinstance(function, (staticmethod, classmethod)):
-    return function.__func__.__doc__ or ''
-  elif hasattr(function, '__name__') or isinstance(function, property):
-    return function.__doc__ or ''
-  elif hasattr(function, '__call__'):
-    return function.__call__.__doc__ or ''
-  else:
-    return function.__doc__ or ''
+    if isinstance(function, (staticmethod, classmethod)):
+        return function.__func__.__doc__ or ''
+    elif hasattr(function, '__name__') or isinstance(function, property):
+        return function.__doc__ or ''
+    elif hasattr(function, '__call__'):
+        return function.__call__.__doc__ or ''
+    else:
+        return function.__doc__ or ''
 
 
 def get_function_signature(function, owner_class=None, show_module=False):
-  # Get base name.
-  name_parts = []
-  if show_module:
-    name_parts.append(function.__module__)
-  if owner_class:
-    name_parts.append(owner_class.__name__)
-  if hasattr(function, '__name__'):
-    name_parts.append(function.__name__)
-  else:
-    name_parts.append(type(function).__name__)
-    name_parts.append('__call__')
-    function = function.__call__
-  name = '.'.join(name_parts)
-
-  if hasattr(inspect, 'signature'):
-    sig = str(inspect.signature(function))
+    # Get base name.
+    name_parts = []
+    if show_module:
+        name_parts.append(function.__module__)
     if owner_class:
-      sig = sig.replace('(self)', '()', 1).replace('(self, ', '(', 1)
-  else:
-    try:
-      argspec = inspect.getargspec(function)
-    except TypeError:
-      # handle Py2 classes that don't define __init__
-      args = []
+        name_parts.append(owner_class.__name__)
+    if hasattr(function, '__name__'):
+        name_parts.append(function.__name__)
     else:
-      # Generate the argument list that is separated by colons.
-      args = argspec.args[:]
-      if argspec.defaults:
-        offset = len(args) - len(argspec.defaults)
-        for i, default in enumerate(argspec.defaults):
-          args[i + offset] = '{}={!r}'.format(args[i + offset], argspec.defaults[i])
-      if argspec.varargs:
-        args.append('*' + argspec.varargs)
-      if argspec.keywords:
-        args.append('**' + argspec.keywords)
-      if owner_class:
-        args.remove('self')
-    sig = '(' + ', '.join(args) + ')'
+        name_parts.append(type(function).__name__)
+        name_parts.append('__call__')
+        function = function.__call__
+    name = '.'.join(name_parts)
 
-  return name + sig
+    if hasattr(inspect, 'signature'):
+        sig = str(inspect.signature(function))
+        if owner_class:
+            sig = sig.replace('(self)', '()', 1).replace('(self, ', '(', 1)
+    else:
+        try:
+            argspec = inspect.getargspec(function)
+        except TypeError:
+            # handle Py2 classes that don't define __init__
+            args = []
+        else:
+            # Generate the argument list that is separated by colons.
+            args = argspec.args[:]
+            if argspec.defaults:
+                offset = len(args) - len(argspec.defaults)
+                for i, default in enumerate(argspec.defaults):
+                    args[i + offset] = '{}={!r}'.format(
+                        args[i + offset], argspec.defaults[i])
+            if argspec.varargs:
+                args.append('*' + argspec.varargs)
+            if argspec.keywords:
+                args.append('**' + argspec.keywords)
+            if owner_class:
+                args.remove('self')
+        sig = '(' + ', '.join(args) + ')'
+
+    return name + sig
