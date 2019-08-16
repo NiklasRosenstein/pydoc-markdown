@@ -33,8 +33,8 @@ class GooglePreprocessorTest(PreprocessorTest):
 
     **Arguments**:
 
-    - `a` _(int)_ - The integer A.
-    - `b` _(int)_ - The integer B.
+    - `a` _int_ - The integer A.
+    - `b` _int_ - The integer B.
 
 
     **Returns**:

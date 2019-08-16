@@ -3,7 +3,7 @@ import textwrap
 from .utils import PreprocessorTest
 from .test_rst_preprocessor import RSTPreprocessorTest
 from .test_google_preprocessor import GooglePreprocessorTest
-from pydocmd.preprocessors.rst import Preprocessor
+from pydocmd.preprocessors.smart import Preprocessor
 
 
 class SmartRSTPreprocessorTest(RSTPreprocessorTest):
