@@ -75,7 +75,7 @@ class Preprocessor(object):
           components[keyword] = component
           continue
 
-        match = re.match('\s*:(?:raises|raise)\s+(\w+)\s*:(.*)?$', line)
+        match = re.match('\\s*:(?:raises|raise)\\s+(\\w+)\\s*:(.*)?$', line)
         if match:
           keyword = 'Raises'
           exception = match.group(1)
