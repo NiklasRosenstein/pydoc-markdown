@@ -29,21 +29,8 @@ class Preprocessor(object):
         """
         Preprocessors a given section into it's components.
         """
-        
+
         if self.is_google_format(section.content):
             return self._google_preprocessor.preprocess_section(section)
 
         return self._rst_preprocessor.preprocess_section(section)
-
-    @staticmethod
-    def _append_section(lines, key, sections):
-        section = sections.get(key)
-        if not section:
-            return
-
-        if lines and lines[-1]:
-            lines.append('')
-
-        # add an extra line because of markdown syntax
-        lines.extend(['**{}**:'.format(key), ''])
-        lines.extend(section)
