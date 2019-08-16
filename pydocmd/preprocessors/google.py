@@ -7,7 +7,7 @@ class Preprocessor:
     """
     _param_res = [
         re.compile(r'^(?P<param>\S+): (?P<desc>.+)$'),
-        re.compile(r'^(?P<param>\S+)\s(?P<type>\S+): (?P<desc>.+)$'),
+        re.compile(r'^(?P<param>\S+)\s+\((?P<type>\S+)\): (?P<desc>.+)$'),
         re.compile(r'^(?P<param>\S+)\s+-- (?P<desc>.+)$'),
         re.compile(
             r'^(?P<param>\S+)\s+\{\[(?P<type>\S+)\]\}\s+-- (?P<desc>.+)$'),
