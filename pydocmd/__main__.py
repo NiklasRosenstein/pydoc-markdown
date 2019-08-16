@@ -126,7 +126,7 @@ def copy_source_files(config, pages_required=True):
     # Copy all template files from the source directory into our
     # generated files directory.
     log('Started copying source files...')
-    for root, _dirs, files in os.walk(config['docs_dir']):
+    for root, dirs, files in os.walk(config['docs_dir']):
         rel_root = os.path.relpath(root, config['docs_dir'])
         for fname in files:
             dest_fname = os.path.join(config['gens_dir'], rel_root, fname)
@@ -230,7 +230,7 @@ def main():
                     'filter', ['docstring'])
                 for sub in dir_object(name, sort_order, need_docstrings):
                     sub = name + '.' + sub
-                    create_sections(sub, level + 1)
+                    sec = create_sections(sub, level + 1)
 
             create_sections(object_names, 0)
         else:
