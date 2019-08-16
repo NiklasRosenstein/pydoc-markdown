@@ -6,16 +6,16 @@ class Preprocessor:
     This class implements the preprocessor for Google style.
     """
     _param_res = [
-        re.compile(r'^(?P<param>\S+): (?P<desc>.+)$'),
-        re.compile(r'^(?P<param>\S+)\s+\((?P<type>\S+)\): (?P<desc>.+)$'),
-        re.compile(r'^(?P<param>\S+)\s+-- (?P<desc>.+)$'),
+        re.compile(r'^(?P<param>\S+):\s+(?P<desc>.+)$'),
+        re.compile(r'^(?P<param>\S+)\s+\((?P<type>[^)]+)\):\s+(?P<desc>.+)$'),
+        re.compile(r'^(?P<param>\S+)\s+--\s+(?P<desc>.+)$'),
         re.compile(
-            r'^(?P<param>\S+)\s+\{\[(?P<type>\S+)\]\}\s+-- (?P<desc>.+)$'),
+            r'^(?P<param>\S+)\s+\{\[(?P<type>\S+)\]\}\s+--\s+(?P<desc>.+)$'),
         re.compile(
-            r'^(?P<param>\S+)\s+\{(?P<type>\S+)\}\s+-- (?P<desc>.+)$'),
+            r'^(?P<param>\S+)\s+\{(?P<type>\S+)\}\s+--\s+(?P<desc>.+)$'),
     ]
 
-    keywords_map = {
+    _keywords_map = {
         'Args:': 'Arguments',
         'Arguments:': 'Arguments',
         'Keyword Arguments:': 'Arguments',
@@ -45,8 +45,8 @@ class Preprocessor:
                 lines.append(line)
                 continue
 
-            if line in self.keywords_map:
-                keyword = self.keywords_map[line]
+            if line in self._keywords_map:
+                keyword = self._keywords_map[line]
                 continue
 
             if keyword is None:
