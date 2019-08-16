@@ -6,8 +6,8 @@ __Table of Contents__
 
 * [Get started](#get-started)
 * [Syntax](#syntax)
-* [State of Pydoc-markdown 3.x](#state-of-pydoc-markdown-3.x)
-* [Migrating from Pydoc-markdown 2.x](#migrating-from-pydoc-markdown-2.x)
+* [State of Pydoc-markdown 3.x](#state-of-pydoc-markdown-3x)
+* [Migrating from Pydoc-markdown 2.x](#migrating-from-pydoc-markdown-2x)
 
 ## Get started
 
