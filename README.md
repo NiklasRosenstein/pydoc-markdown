@@ -1,7 +1,5 @@
-## Announcements
-
-> [April 23, 2019] The current version of Pydoc-Markdown (2.x) will not be developed further and will only receive bugfixes.
-> All new development happens on the 3.x version of Pydoc-Markdown (check out the `develop` branch).
+> [April 23, 2019] The current version of Pydoc-Markdown (2.x) is not actively developed.
+> Efforts are focused on Pydoc-markdown 3.x which can be found on the [develop](https://github.com/NiklasRosenstein/pydoc-markdown/tree/develop).
 
 # pydocmd
 

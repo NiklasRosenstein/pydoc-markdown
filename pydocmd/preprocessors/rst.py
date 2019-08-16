@@ -23,86 +23,88 @@ it to fully markdown compatible markup.
 """
 
 import re
-
+import textwrap
 
 class Preprocessor(object):
+  """
+  This class implements the preprocessor for restructured text.
+  """
+  def __init__(self, config=None):
+    self.config = config
+
+  def preprocess_section(self, section):
     """
-    This class implements the preprocessor for restructured text.
+    Preprocessors a given section into it's components.
     """
+    lines = []
+    in_codeblock = False
+    keyword = None
+    components = {}
 
-    def __init__(self, config=None):
-        self.config = config
+    line = textwrap.dedent(section.content)
 
-    def preprocess_section(self, section):
-        """
-        Preprocessors a given section into it's components.
-        """
-        lines = []
-        in_codeblock = False
-        keyword = None
-        components = {}
-        for line in section.content.split('\n'):
-            line = line.strip()
+    for line in section.content.splitlines():
+      line = line.rstrip()
 
-            if line.startswith("```"):
-                in_codeblock = not in_codeblock
+      if line.startswith("```"):
+        in_codeblock = not in_codeblock
 
-            if not in_codeblock:
-                match = re.match(
-                    r':(?:param|parameter)\s+(\w+)\s*:(.*)?$', line)
-                if match:
-                    keyword = 'Arguments'
-                    param = match.group(1)
-                    text = match.group(2)
-                    text = text.strip()
+      line_codeblock = line.startswith('    ')
 
-                    component = components.get(keyword, [])
-                    component.append('- `{}`: {}'.format(param, text))
-                    components[keyword] = component
-                    continue
+      if not in_codeblock and not line_codeblock:
+        match = re.match(r'\s*:(?:param|parameter)\s+(\w+)\s*:(.*)?$', line)
+        if match:
+          keyword = 'Arguments'
+          param = match.group(1)
+          text = match.group(2)
+          text = text.strip()
 
-                match = re.match(r':(?:return|returns)\s*:(.*)?$', line)
-                if match:
-                    keyword = 'Returns'
-                    text = match.group(1)
-                    text = text.strip()
+          component = components.get(keyword, [])
+          component.append('- `{}`: {}'.format(param, text))
+          components[keyword] = component
+          continue
 
-                    component = components.get(keyword, [])
-                    component.append(text)
-                    components[keyword] = component
-                    continue
+        match = re.match(r'\s*:(?:return|returns)\s*:(.*)?$', line)
+        if match:
+          keyword = 'Returns'
+          text = match.group(1)
+          text = text.strip()
 
-                match = re.match(':(?:raises|raise)\s+(\w+)\s*:(.*)?$', line)
-                if match:
-                    keyword = 'Raises'
-                    exception = match.group(1)
-                    text = match.group(2)
-                    text = text.strip()
+          component = components.get(keyword, [])
+          component.append(text)
+          components[keyword] = component
+          continue
 
-                    component = components.get(keyword, [])
-                    component.append('- `{}`: {}'.format(exception, text))
-                    components[keyword] = component
-                    continue
+        match = re.match('\s*:(?:raises|raise)\s+(\w+)\s*:(.*)?$', line)
+        if match:
+          keyword = 'Raises'
+          exception = match.group(1)
+          text = match.group(2)
+          text = text.strip()
 
-            if keyword is not None:
-                components[keyword].append(line)
-            else:
-                lines.append(line)
+          component = components.get(keyword, [])
+          component.append('- `{}`: {}'.format(exception, text))
+          components[keyword] = component
+          continue
 
-        for key in components:
-            self._append_section(lines, key, components)
+      if keyword is not None:
+        components[keyword].append(line)
+      else:
+        lines.append(line)
 
-        section.content = '\n'.join(lines)
+    for key in components:
+      self._append_section(lines, key, components)
 
-    @staticmethod
-    def _append_section(lines, key, sections):
-        section = sections.get(key)
-        if not section:
-            return
+    section.content = '\n'.join(lines)
 
-        if lines and lines[-1]:
-            lines.append('')
+  @staticmethod
+  def _append_section(lines, key, sections):
+    section = sections.get(key)
+    if not section:
+      return
 
-        # add an extra line because of markdown syntax
-        lines.extend(['**{}**:'.format(key), ''])
-        lines.extend(section)
+    if lines and lines[-1]:
+      lines.append('')
+
+    lines.extend(['**{}**:'.format(key), ''])  # add an extra line because of markdown syntax
+    lines.extend(section)
