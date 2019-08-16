@@ -3,7 +3,10 @@ import re
 
 class Preprocessor:
     """
-    This class implements the preprocessor for Google style.
+    This class implements the preprocessor for Google and PEP 257 docstrings.
+
+    https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
+    https://www.python.org/dev/peps/pep-0257/
     """
     _param_res = [
         re.compile(r'^(?P<param>\S+):\s+(?P<desc>.+)$'),
@@ -20,11 +23,16 @@ class Preprocessor:
         'Arguments:': 'Arguments',
         'Keyword Arguments:': 'Arguments',
         'Returns:': 'Returns',
+        'Yields:': 'Yields',
+        'Examples:': 'Examples',
         'Raises:': 'Raises',
     }
 
     def __init__(self, config=None):
         self.config = config
+
+    def get_section_names(self):
+        return list(self._keywords_map.keys())
 
     def preprocess_section(self, section):
         """

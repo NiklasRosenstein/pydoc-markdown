@@ -6,10 +6,6 @@ class Preprocessor(object):
     """
     This class implements the preprocessor for restructured text and google.
     """
-
-    # Section names to detect 
-    _google_sections = ['Args:', 'Arguments:', 'Keyword Arguments:', 'Returns:', 'Raises:']
-
     def __init__(self, config=None):
         self.config = config
         self._google_preprocessor = GooglePreprocessor(config)
@@ -22,8 +18,9 @@ class Preprocessor(object):
         https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
         """
         lines = [line.strip() for line in docstring.split('\n')]
-        for google_section in self._google_sections:
-            if google_section in lines:
+        google_section_names = self._google_preprocessor.get_section_names()
+        for section_name in google_section_names:
+            if section_name in lines:
                 return True
 
         return False
