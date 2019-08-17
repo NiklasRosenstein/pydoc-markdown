@@ -17,12 +17,11 @@ class Preprocessor(object):
 
     https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
     """
-    lines = [line.strip() for line in docstring.split('\n')]
+
     google_section_names = self._google_preprocessor.get_section_names()
     for section_name in google_section_names:
-      if section_name in lines:
+      if section_name in docstring:
         return True
-
     return False
 
   def preprocess_section(self, section):
