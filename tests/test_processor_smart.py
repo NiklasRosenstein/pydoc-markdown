@@ -1,8 +1,8 @@
 
 import textwrap
 from .utils import PreprocessorTest
-from .test_rst_preprocessor import RSTPreprocessorTest
-from .test_google_preprocessor import GooglePreprocessorTest
+from .test_processor_rst import RSTPreprocessorTest
+from .test_processor_google import GooglePreprocessorTest
 from pydocmd.preprocessors.smart import Preprocessor
 
 

@@ -3,11 +3,9 @@ import io
 
 from pydocmd.document import Section
 
-@pytest.fixture
-def section():
-  return Section(None)
 
-def test_preprocess_section(section):
+def test_preprocess_section():
+  section = Section(None)
   section.depth = 1
   section.title = 'My Header'
   section.content = 'content'
