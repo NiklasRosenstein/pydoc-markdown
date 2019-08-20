@@ -59,7 +59,7 @@ def default_config(config):
     config.setdefault('headers', 'html')
   config.setdefault('theme', 'readthedocs')
   config.setdefault('loader', 'pydocmd.loader.PythonLoader')
-  config.setdefault('preprocessor', 'pydocmd.preprocessor.Preprocessor')
+  config.setdefault('preprocessor', 'pydocmd.preprocessors.simple.Preprocessor')
   config.setdefault('additional_search_paths', [])
   return config
 
