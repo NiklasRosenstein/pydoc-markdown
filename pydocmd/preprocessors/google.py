@@ -92,7 +92,7 @@ class Preprocessor:
           break
 
       if not param_match:
-        components[keyword].append(f'  {line}')
+        components[keyword].append('  {line}'.format(line=line))
 
     for key in components:
       self._append_section(lines, key, components)
