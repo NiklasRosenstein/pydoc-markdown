@@ -28,7 +28,7 @@ jobs:
             $INSTALL_PYTHON_ENV2
             $INSTALL_PYTHON_ENV3
             . venv/bin/activate
-            pip install -e .[test]
+            pip install -e .[test] pytest pytest-cov
 
       #- save_cache:
       #    paths:
