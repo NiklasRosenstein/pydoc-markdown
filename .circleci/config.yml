@@ -39,7 +39,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest --cov=./src/nr
+            pytest --cov=./src
             coverage html
 
       - store_artifacts:
