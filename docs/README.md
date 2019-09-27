@@ -3,34 +3,6 @@
   * [pydoc\_markdown](#pydoc_markdown)
     * [\_\_author\_\_](#pydoc_markdown.__author__)
     * [\_\_version\_\_](#pydoc_markdown.__version__)
-  * [pydoc\_markdown.contrib](#pydoc_markdown.contrib)
-  * [pydoc\_markdown.contrib.loaders](#pydoc_markdown.contrib.loaders)
-  * [pydoc\_markdown.contrib.loaders.python](#pydoc_markdown.contrib.loaders.python)
-    * [dedent\_docstring](#pydoc_markdown.contrib.loaders.python.dedent_docstring)
-    * [find](#pydoc_markdown.contrib.loaders.python.find)
-    * [parse\_to\_ast](#pydoc_markdown.contrib.loaders.python.parse_to_ast)
-    * [parse\_file](#pydoc_markdown.contrib.loaders.python.parse_file)
-    * [Parser](#pydoc_markdown.contrib.loaders.python.Parser)
-    * [ListScanner](#pydoc_markdown.contrib.loaders.python.ListScanner)
-    * [PythonLoaderConfig](#pydoc_markdown.contrib.loaders.python.PythonLoaderConfig)
-    * [PythonLoader](#pydoc_markdown.contrib.loaders.python.PythonLoader)
-  * [pydoc\_markdown.contrib.processors](#pydoc_markdown.contrib.processors)
-  * [pydoc\_markdown.contrib.processors.filter](#pydoc_markdown.contrib.processors.filter)
-    * [FilterProcessorConfiguration](#pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration)
-    * [FilterProcessor](#pydoc_markdown.contrib.processors.filter.FilterProcessor)
-  * [pydoc\_markdown.contrib.processors.pydocmd](#pydoc_markdown.contrib.processors.pydocmd)
-    * [PydocmdProcessorConfig](#pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessorConfig)
-    * [PydocmdProcessor](#pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor)
-  * [pydoc\_markdown.contrib.processors.sphinx](#pydoc_markdown.contrib.processors.sphinx)
-    * [SphinxProcessorConfig](#pydoc_markdown.contrib.processors.sphinx.SphinxProcessorConfig)
-    * [SphinxProcessor](#pydoc_markdown.contrib.processors.sphinx.SphinxProcessor)
-  * [pydoc\_markdown.contrib.renderers](#pydoc_markdown.contrib.renderers)
-  * [pydoc\_markdown.contrib.renderers.markdown](#pydoc_markdown.contrib.renderers.markdown)
-    * [MarkdownRendererConfig](#pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig)
-    * [MarkdownRenderer](#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer)
-  * [pydoc\_markdown.contrib.renderers.mkdocs](#pydoc_markdown.contrib.renderers.mkdocs)
-    * [MkDocsRendererConfig](#pydoc_markdown.contrib.renderers.mkdocs.MkDocsRendererConfig)
-    * [MkDocsRenderer](#pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer)
   * [pydoc\_markdown.interfaces](#pydoc_markdown.interfaces)
     * [Configurable](#pydoc_markdown.interfaces.Configurable)
     * [Loader](#pydoc_markdown.interfaces.Loader)
@@ -38,10 +10,6 @@
     * [Processor](#pydoc_markdown.interfaces.Processor)
     * [Renderer](#pydoc_markdown.interfaces.Renderer)
     * [load\_implementation](#pydoc_markdown.interfaces.load_implementation)
-  * [pydoc\_markdown.main](#pydoc_markdown.main)
-    * [PydocMarkdownConfig](#pydoc_markdown.main.PydocMarkdownConfig)
-    * [PydocMarkdown](#pydoc_markdown.main.PydocMarkdown)
-    * [main](#pydoc_markdown.main.main)
   * [pydoc\_markdown.reflection](#pydoc_markdown.reflection)
     * [Location](#pydoc_markdown.reflection.Location)
     * [Object](#pydoc_markdown.reflection.Object)
@@ -53,9 +21,45 @@
     * [Argument](#pydoc_markdown.reflection.Argument)
     * [Expression](#pydoc_markdown.reflection.Expression)
     * [ModuleGraph](#pydoc_markdown.reflection.ModuleGraph)
+  * [pydoc\_markdown.textdom](#pydoc_markdown.textdom)
+    * [Node](#pydoc_markdown.textdom.Node)
+    * [Text](#pydoc_markdown.textdom.Text)
+    * [Reference](#pydoc_markdown.textdom.Reference)
+  * [pydoc\_markdown.contrib](#pydoc_markdown.contrib)
+  * [pydoc\_markdown.contrib.renderers](#pydoc_markdown.contrib.renderers)
+  * [pydoc\_markdown.contrib.renderers.markdown](#pydoc_markdown.contrib.renderers.markdown)
+    * [MarkdownRendererConfig](#pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig)
+    * [MarkdownRenderer](#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer)
+  * [pydoc\_markdown.contrib.renderers.mkdocs](#pydoc_markdown.contrib.renderers.mkdocs)
+    * [MkDocsRendererConfig](#pydoc_markdown.contrib.renderers.mkdocs.MkDocsRendererConfig)
+    * [MkDocsRenderer](#pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer)
+  * [pydoc\_markdown.contrib.processors](#pydoc_markdown.contrib.processors)
+  * [pydoc\_markdown.contrib.processors.sphinx](#pydoc_markdown.contrib.processors.sphinx)
+    * [SphinxProcessorConfig](#pydoc_markdown.contrib.processors.sphinx.SphinxProcessorConfig)
+    * [SphinxProcessor](#pydoc_markdown.contrib.processors.sphinx.SphinxProcessor)
+  * [pydoc\_markdown.contrib.processors.pydocmd](#pydoc_markdown.contrib.processors.pydocmd)
+    * [PydocmdProcessorConfig](#pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessorConfig)
+    * [PydocmdProcessor](#pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor)
+  * [pydoc\_markdown.contrib.processors.filter](#pydoc_markdown.contrib.processors.filter)
+    * [FilterProcessorConfiguration](#pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration)
+    * [FilterProcessor](#pydoc_markdown.contrib.processors.filter.FilterProcessor)
+  * [pydoc\_markdown.contrib.loaders](#pydoc_markdown.contrib.loaders)
+  * [pydoc\_markdown.contrib.loaders.python](#pydoc_markdown.contrib.loaders.python)
+    * [dedent\_docstring](#pydoc_markdown.contrib.loaders.python.dedent_docstring)
+    * [find](#pydoc_markdown.contrib.loaders.python.find)
+    * [parse\_to\_ast](#pydoc_markdown.contrib.loaders.python.parse_to_ast)
+    * [parse\_file](#pydoc_markdown.contrib.loaders.python.parse_file)
+    * [Parser](#pydoc_markdown.contrib.loaders.python.Parser)
+    * [ListScanner](#pydoc_markdown.contrib.loaders.python.ListScanner)
+    * [PythonLoaderConfig](#pydoc_markdown.contrib.loaders.python.PythonLoaderConfig)
+    * [PythonLoader](#pydoc_markdown.contrib.loaders.python.PythonLoader)
   * [pydoc\_markdown.utils](#pydoc_markdown.utils)
     * [import\_object](#pydoc_markdown.utils.import_object)
     * [load\_entry\_point](#pydoc_markdown.utils.load_entry_point)
+  * [pydoc\_markdown.main](#pydoc_markdown.main)
+    * [PydocMarkdownConfig](#pydoc_markdown.main.PydocMarkdownConfig)
+    * [PydocMarkdown](#pydoc_markdown.main.PydocMarkdown)
+    * [main](#pydoc_markdown.main.main)
 
 <h1 id="pydoc_markdown"><code>pydoc_markdown</code></h1>
 
@@ -68,7 +72,438 @@ with a focus on Python source code and the Markdown output format.
 <h2 id="pydoc_markdown.__version__"><code>__version__</code></h2>
 
 
+<h1 id="pydoc_markdown.interfaces"><code>pydoc_markdown.interfaces</code></h1>
+
+`pydoc_markdown.interfaces`
+===========================
+
+This module defines the interfaces that can to be implemented for
+Pydoc-Markdown to implement custom loaders for documentation data,
+processors or renderers.
+
+<h2 id="pydoc_markdown.interfaces.Configurable"><code>Configurable</code> Objects</h2>
+
+This interface represents an object that provides information on how it can
+be configured via a YAML configuration file.
+
+Implementations of this class can usually be loaded using the
+[[load_implementation()]] function via the entrypoint specified on the
+implementation class
+
+<h3 id="pydoc_markdown.interfaces.Configurable.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
+
+
+<h3 id="pydoc_markdown.interfaces.Configurable.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
+
+
+<h3 id="pydoc_markdown.interfaces.Configurable.config"><code>config</code></h3>
+
+
+<h3 id="pydoc_markdown.interfaces.Configurable.make_instance"><code>Configurable.make_instance(cls, impl_name, config)</code></h3>
+
+
+<h2 id="pydoc_markdown.interfaces.Loader"><code>Loader</code> Objects</h2>
+
+This interface describes an object that is capable of loading documentation
+data. The location from which the documentation is loaded must be defined
+with the configuration class.
+
+<h3 id="pydoc_markdown.interfaces.Loader.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
+
+
+<h3 id="pydoc_markdown.interfaces.Loader.load"><code>Loader.load(self, config, graph)</code></h3>
+
+Fill the [[ModuleGraph]].
+
+<h2 id="pydoc_markdown.interfaces.LoaderError"><code>LoaderError</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.interfaces.Processor"><code>Processor</code> Objects</h2>
+
+A processor is an object that takes a `ModuleGraph` object as an input and
+transforms it in an arbitrary way. This usually processes docstrings to
+convert from various documentation syntaxes to plain Markdown.
+
+<h3 id="pydoc_markdown.interfaces.Processor.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
+
+
+<h3 id="pydoc_markdown.interfaces.Processor.process"><code>Processor.process(self, config, graph)</code></h3>
+
+
+<h2 id="pydoc_markdown.interfaces.Renderer"><code>Renderer</code> Objects</h2>
+
+A renderer is an object that takes a `ModuleGraph` as an input and produces
+output files or writes to stdout. It may also expose additional command-line
+arguments. There can only be one renderer at the end of the processor chain.
+
+Note that sometimes a renderer may need to perform some processing before
+the render step. To keep the possibility open that a renderer may implement
+generic processing that could be used without the actual renderering
+functionality, `Renderer` is a subclass of `Processor`.
+
+<h3 id="pydoc_markdown.interfaces.Renderer.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
+
+
+<h3 id="pydoc_markdown.interfaces.Renderer.process"><code>Renderer.process(self, config, graph)</code></h3>
+
+
+<h3 id="pydoc_markdown.interfaces.Renderer.render"><code>Renderer.render(self, config, graph)</code></h3>
+
+
+<h2 id="pydoc_markdown.interfaces.load_implementation"><code>load_implementation(interface, impl_name)</code></h2>
+
+Loads an implementation of the specified *interface* (which must be a class
+that provides an `ENTRYPOINT_NAME` attribute) that has the name *impl_name*.
+The loaded class must implement *interface* or else a `RuntimeError` is
+raised.
+
+<h1 id="pydoc_markdown.reflection"><code>pydoc_markdown.reflection</code></h1>
+
+This module provides the abstract representation of a code library. It is
+generalised and intended to be usable for any language.
+
+<h2 id="pydoc_markdown.reflection.Location"><code>Location</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.reflection.Object"><code>Object</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.reflection.Object.__init__"><code>Object.__init__(self, args, *,, ,, kwargs)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.__repr__"><code>Object.__repr__(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.path"><code>Object.path(self, separator='.')</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.remove"><code>Object.remove(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.is_module"><code>Object.is_module(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.is_class"><code>Object.is_class(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.is_data"><code>Object.is_data(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.is_function"><code>Object.is_function(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.is_method"><code>Object.is_method(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Object.visit"><code>Object.visit(self, func, allow_mutation=False)</code></h3>
+
+
+<h2 id="pydoc_markdown.reflection.Module"><code>Module</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.reflection.Class"><code>Class</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.reflection.Function"><code>Function</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.reflection.Function.signature"><code>Function.signature(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Function.signature_args"><code>Function.signature_args(self)</code></h3>
+
+
+<h2 id="pydoc_markdown.reflection.Data"><code>Data</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.reflection.Decorator"><code>Decorator</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.reflection.Argument"><code>Argument</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.reflection.Argument.POS"><code>POS</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Argument.POS_REMAINDER"><code>POS_REMAINDER</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Argument.KW"><code>KW</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Argument.KW_ONLY"><code>KW_ONLY</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Argument.KW_REMAINDER"><code>KW_REMAINDER</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Argument.__str__"><code>Argument.__str__(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.Argument.format_arglist"><code>Argument.format_arglist(arglist)</code></h3>
+
+
+<h2 id="pydoc_markdown.reflection.Expression"><code>Expression</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.reflection.Expression.__str__"><code>Expression.__str__(self)</code></h3>
+
+
+<h2 id="pydoc_markdown.reflection.ModuleGraph"><code>ModuleGraph</code> Objects</h2>
+
+Represents a collection of `Module` objects.
+
+<h3 id="pydoc_markdown.reflection.ModuleGraph.__init__"><code>ModuleGraph.__init__(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.ModuleGraph.add_module"><code>ModuleGraph.add_module(self, module)</code></h3>
+
+
+<h3 id="pydoc_markdown.reflection.ModuleGraph.visit"><code>ModuleGraph.visit(self, func, allow_mutation=False)</code></h3>
+
+
+<h1 id="pydoc_markdown.textdom"><code>pydoc_markdown.textdom</code></h1>
+
+Represent text as a tree-structured composed of groups, text and text
+formatting containers (eg. links or code blocks).
+
+<h2 id="pydoc_markdown.textdom.Node"><code>Node</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.textdom.Node.__init__"><code>Node.__init__(self, children=None)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Node.__repr__"><code>Node.__repr__(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Node.__getitem__"><code>Node.__getitem__(self, index)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Node.append"><code>Node.append(self, node)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Node.unpack"><code>Node.unpack(self)</code></h3>
+
+Returns the single child node if there is only one, otherwise returns
+*self*. Recursively unpacks.
+
+<h3 id="pydoc_markdown.textdom.Node.splittable"><code>Node.splittable(self)</code></h3>
+
+Returns `True` if [[#split()]] can be called on the node. The default
+implementation returns `True`.
+
+<h3 id="pydoc_markdown.textdom.Node.split"><code>Node.split(self, char)</code></h3>
+
+Splits the node by the specified character (usually used with line-feed)
+and yields a sequence of [[Node]] objects.
+
+<h3 id="pydoc_markdown.textdom.Node.default_render"><code>Node.default_render(self)</code></h3>
+
+
+<h2 id="pydoc_markdown.textdom.Text"><code>Text</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.textdom.Text.__init__"><code>Text.__init__(self, text)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Text.__repr__"><code>Text.__repr__(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Text.append"><code>Text.append(self, node)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Text.split"><code>Text.split(self, char)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Text.default_render"><code>Text.default_render(self)</code></h3>
+
+
+<h2 id="pydoc_markdown.textdom.Reference"><code>Reference</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.textdom.Reference.__init__"><code>Reference.__init__(self, name)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Reference.__repr__"><code>Reference.__repr__(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Reference.append"><code>Reference.append(self, node)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Reference.splittable"><code>Reference.splittable(self)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Reference.split"><code>Reference.split(self, char)</code></h3>
+
+
+<h3 id="pydoc_markdown.textdom.Reference.default_render"><code>Reference.default_render(self)</code></h3>
+
+
 <h1 id="pydoc_markdown.contrib"><code>pydoc_markdown.contrib</code></h1>
+
+
+<h1 id="pydoc_markdown.contrib.renderers"><code>pydoc_markdown.contrib.renderers</code></h1>
+
+
+<h1 id="pydoc_markdown.contrib.renderers.markdown"><code>pydoc_markdown.contrib.renderers.markdown</code></h1>
+
+Implements a renderer that produces Markdown output.
+
+<h2 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig"><code>MarkdownRendererConfig</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.filename"><code>filename</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.encoding"><code>encoding</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.html_headings"><code>html_headings</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.code_headings"><code>code_headings</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.code_lang"><code>code_lang</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.descriptive_class_title"><code>descriptive_class_title</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.add_method_class_prefix"><code>add_method_class_prefix</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.add_full_prefix"><code>add_full_prefix</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.sub_prefix"><code>sub_prefix</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_code_block"><code>signature_code_block</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_in_header"><code>signature_in_header</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_with_def"><code>signature_with_def</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_class_prefix"><code>signature_class_prefix</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_expression_maxlength"><code>signature_expression_maxlength</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.render_toc"><code>render_toc</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.render_toc_title"><code>render_toc_title</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.toc_maxdepth"><code>toc_maxdepth</code></h3>
+
+
+<h2 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer"><code>MarkdownRenderer</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.render"><code>MarkdownRenderer.render(self, config, graph)</code></h3>
+
+
+<h1 id="pydoc_markdown.contrib.renderers.mkdocs"><code>pydoc_markdown.contrib.renderers.mkdocs</code></h1>
+
+Produces MkDocs structure.
+
+<h2 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRendererConfig"><code>MkDocsRendererConfig</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRendererConfig.output_directory"><code>output_directory</code></h3>
+
+
+<h2 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer"><code>MkDocsRenderer</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer.render"><code>MkDocsRenderer.render(self, modules)</code></h3>
+
+
+<h1 id="pydoc_markdown.contrib.processors"><code>pydoc_markdown.contrib.processors</code></h1>
+
+
+<h1 id="pydoc_markdown.contrib.processors.sphinx"><code>pydoc_markdown.contrib.processors.sphinx</code></h1>
+
+Provides the `SphinxProcessor` that converts reST/Sphinx syntax to
+markdown compatible syntax.
+
+<h2 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessorConfig"><code>SphinxProcessorConfig</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor"><code>SphinxProcessor</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.preprocess"><code>SphinxProcessor.preprocess(self, root, node)</code></h3>
+
+
+<h1 id="pydoc_markdown.contrib.processors.pydocmd"><code>pydoc_markdown.contrib.processors.pydocmd</code></h1>
+
+Provides the `PydocmdProcessor` class which converts the Pydoc-Markdown
+highlighting syntax into Markdown.
+
+<h2 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessorConfig"><code>PydocmdProcessorConfig</code> Objects</h2>
+
+
+<h2 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor"><code>PydocmdProcessor</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor.process"><code>PydocmdProcessor.process(self, config, graph)</code></h3>
+
+
+<h1 id="pydoc_markdown.contrib.processors.filter"><code>pydoc_markdown.contrib.processors.filter</code></h1>
+
+Provides a processor that implements various filter capabilities.
+
+<h2 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration"><code>FilterProcessorConfiguration</code> Objects</h2>
+
+
+<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.expression"><code>expression</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.documented_only"><code>documented_only</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.exclude_private"><code>exclude_private</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.exclude_special"><code>exclude_special</code></h3>
+
+
+<h2 id="pydoc_markdown.contrib.processors.filter.FilterProcessor"><code>FilterProcessor</code> Objects</h2>
+
+The `filter` processor removes module and class members based on certain
+criteria.
+
+__Example__
+
+
+```py
+- type: filter
+  expression: not name.startswith('_') and default()
+```
+
+<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessor.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
+
+
+<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessor.process"><code>FilterProcessor.process(self, config, graph)</code></h3>
 
 
 <h1 id="pydoc_markdown.contrib.loaders"><code>pydoc_markdown.contrib.loaders</code></h1>
@@ -236,254 +671,40 @@ packages. Which files are parsed depends on the configuration (see
 <h3 id="pydoc_markdown.contrib.loaders.python.PythonLoader.load"><code>PythonLoader.load(self, config, graph)</code></h3>
 
 
-<h1 id="pydoc_markdown.contrib.processors"><code>pydoc_markdown.contrib.processors</code></h1>
+<h1 id="pydoc_markdown.utils"><code>pydoc_markdown.utils</code></h1>
 
+-*- coding: utf8 -*-
+Copyright (c) 2019 Niklas Rosenstein
 
-<h1 id="pydoc_markdown.contrib.processors.filter"><code>pydoc_markdown.contrib.processors.filter</code></h1>
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Provides a processor that implements various filter capabilities.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-<h2 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration"><code>FilterProcessorConfiguration</code> Objects</h2>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
 
+<h2 id="pydoc_markdown.utils.import_object"><code>import_object(name)</code></h2>
 
-<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.expression"><code>expression</code></h3>
 
+<h2 id="pydoc_markdown.utils.load_entry_point"><code>load_entry_point(group, name)</code></h2>
 
-<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.documented_only"><code>documented_only</code></h3>
+Returns the first entry point registered to the specified *group* that
+matches the *name*. If multiple entry points are registered to that name,
+an `EnvironmentError` is raised.
 
-
-<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.exclude_private"><code>exclude_private</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessorConfiguration.exclude_special"><code>exclude_special</code></h3>
-
-
-<h2 id="pydoc_markdown.contrib.processors.filter.FilterProcessor"><code>FilterProcessor</code> Objects</h2>
-
-The `filter` processor removes module and class members based on certain
-criteria.
-
-__Example__
-
-
-```py
-- type: filter
-  expression: not name.startswith('_') and default()
-```
-
-<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessor.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.processors.filter.FilterProcessor.process"><code>FilterProcessor.process(self, config, graph)</code></h3>
-
-
-<h1 id="pydoc_markdown.contrib.processors.pydocmd"><code>pydoc_markdown.contrib.processors.pydocmd</code></h1>
-
-Provides the `PydocmdProcessor` class which converts the Pydoc-Markdown
-highlighting syntax into Markdown.
-
-<h2 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessorConfig"><code>PydocmdProcessorConfig</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor"><code>PydocmdProcessor</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor.process"><code>PydocmdProcessor.process(self, config, graph)</code></h3>
-
-
-<h1 id="pydoc_markdown.contrib.processors.sphinx"><code>pydoc_markdown.contrib.processors.sphinx</code></h1>
-
-Provides the `SphinxProcessor` that converts reST/Sphinx syntax to
-markdown compatible syntax.
-
-<h2 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessorConfig"><code>SphinxProcessorConfig</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor"><code>SphinxProcessor</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.preprocess"><code>SphinxProcessor.preprocess(self, root, node)</code></h3>
-
-
-<h1 id="pydoc_markdown.contrib.renderers"><code>pydoc_markdown.contrib.renderers</code></h1>
-
-
-<h1 id="pydoc_markdown.contrib.renderers.markdown"><code>pydoc_markdown.contrib.renderers.markdown</code></h1>
-
-Implements a renderer that produces Markdown output.
-
-<h2 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig"><code>MarkdownRendererConfig</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.filename"><code>filename</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.encoding"><code>encoding</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.html_headings"><code>html_headings</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.code_headings"><code>code_headings</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.code_lang"><code>code_lang</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.descriptive_class_title"><code>descriptive_class_title</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.add_method_class_prefix"><code>add_method_class_prefix</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.add_full_prefix"><code>add_full_prefix</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.sub_prefix"><code>sub_prefix</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_code_block"><code>signature_code_block</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_in_header"><code>signature_in_header</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_with_def"><code>signature_with_def</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_class_prefix"><code>signature_class_prefix</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.signature_expression_maxlength"><code>signature_expression_maxlength</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.render_toc"><code>render_toc</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.render_toc_title"><code>render_toc_title</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRendererConfig.toc_maxdepth"><code>toc_maxdepth</code></h3>
-
-
-<h2 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer"><code>MarkdownRenderer</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.render"><code>MarkdownRenderer.render(self, config, graph)</code></h3>
-
-
-<h1 id="pydoc_markdown.contrib.renderers.mkdocs"><code>pydoc_markdown.contrib.renderers.mkdocs</code></h1>
-
-Produces MkDocs structure.
-
-<h2 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRendererConfig"><code>MkDocsRendererConfig</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRendererConfig.output_directory"><code>output_directory</code></h3>
-
-
-<h2 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer"><code>MkDocsRenderer</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
-
-
-<h3 id="pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer.render"><code>MkDocsRenderer.render(self, modules)</code></h3>
-
-
-<h1 id="pydoc_markdown.interfaces"><code>pydoc_markdown.interfaces</code></h1>
-
-`pydoc_markdown.interfaces`
-===========================
-
-This module defines the interfaces that can to be implemented for
-Pydoc-Markdown to implement custom loaders for documentation data,
-processors or renderers.
-
-<h2 id="pydoc_markdown.interfaces.Configurable"><code>Configurable</code> Objects</h2>
-
-This interface represents an object that provides information on how it can
-be configured via a YAML configuration file.
-
-Implementations of this class can usually be loaded using the
-[[load_implementation()]] function via the entrypoint specified on the
-implementation class
-
-<h3 id="pydoc_markdown.interfaces.Configurable.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
-
-
-<h3 id="pydoc_markdown.interfaces.Configurable.CONFIG_CLASS"><code>CONFIG_CLASS</code></h3>
-
-
-<h3 id="pydoc_markdown.interfaces.Configurable.config"><code>config</code></h3>
-
-
-<h3 id="pydoc_markdown.interfaces.Configurable.make_instance"><code>Configurable.make_instance(cls, impl_name, config)</code></h3>
-
-
-<h2 id="pydoc_markdown.interfaces.Loader"><code>Loader</code> Objects</h2>
-
-This interface describes an object that is capable of loading documentation
-data. The location from which the documentation is loaded must be defined
-with the configuration class.
-
-<h3 id="pydoc_markdown.interfaces.Loader.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
-
-
-<h3 id="pydoc_markdown.interfaces.Loader.load"><code>Loader.load(self, config, graph)</code></h3>
-
-Fill the [[ModuleGraph]].
-
-<h2 id="pydoc_markdown.interfaces.LoaderError"><code>LoaderError</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.interfaces.Processor"><code>Processor</code> Objects</h2>
-
-A processor is an object that takes a `ModuleGraph` object as an input and
-transforms it in an arbitrary way. This usually processes docstrings to
-convert from various documentation syntaxes to plain Markdown.
-
-<h3 id="pydoc_markdown.interfaces.Processor.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
-
-
-<h3 id="pydoc_markdown.interfaces.Processor.process"><code>Processor.process(self, config, graph)</code></h3>
-
-
-<h2 id="pydoc_markdown.interfaces.Renderer"><code>Renderer</code> Objects</h2>
-
-A renderer is an object that takes a `ModuleGraph` as an input and produces
-output files or writes to stdout. It may also expose additional command-line
-arguments. There can only be one renderer at the end of the processor chain.
-
-Note that sometimes a renderer may need to perform some processing before
-the render step. To keep the possibility open that a renderer may implement
-generic processing that could be used without the actual renderering
-functionality, `Renderer` is a subclass of `Processor`.
-
-<h3 id="pydoc_markdown.interfaces.Renderer.ENTRYPOINT_NAME"><code>ENTRYPOINT_NAME</code></h3>
-
-
-<h3 id="pydoc_markdown.interfaces.Renderer.process"><code>Renderer.process(self, config, graph)</code></h3>
-
-
-<h3 id="pydoc_markdown.interfaces.Renderer.render"><code>Renderer.render(self, config, graph)</code></h3>
-
-
-<h2 id="pydoc_markdown.interfaces.load_implementation"><code>load_implementation(interface, impl_name)</code></h2>
-
-Loads an implementation of the specified *interface* (which must be a class
-that provides an `ENTRYPOINT_NAME` attribute) that has the name *impl_name*.
-The loaded class must implement *interface* or else a `RuntimeError` is
-raised.
+If no entry point with the specified *name* can be found, a `ValueError`
+is raised instead.
 
 <h1 id="pydoc_markdown.main"><code>pydoc_markdown.main</code></h1>
 
@@ -524,144 +745,4 @@ a dictionary.
 
 <h2 id="pydoc_markdown.main.main"><code>main(argv=None, prog=None)</code></h2>
 
-
-<h1 id="pydoc_markdown.reflection"><code>pydoc_markdown.reflection</code></h1>
-
-This module provides the abstract representation of a code library. It is
-generalised and intended to be usable for any language.
-
-<h2 id="pydoc_markdown.reflection.Location"><code>Location</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.reflection.Object"><code>Object</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.reflection.Object.__init__"><code>Object.__init__(self, args, *,, ,, kwargs)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.__repr__"><code>Object.__repr__(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.path"><code>Object.path(self, separator='.')</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.remove"><code>Object.remove(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.is_module"><code>Object.is_module(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.is_class"><code>Object.is_class(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.is_data"><code>Object.is_data(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.is_function"><code>Object.is_function(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.is_method"><code>Object.is_method(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Object.visit"><code>Object.visit(self, func, allow_mutation=False)</code></h3>
-
-
-<h2 id="pydoc_markdown.reflection.Module"><code>Module</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.reflection.Class"><code>Class</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.reflection.Function"><code>Function</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.reflection.Function.signature"><code>Function.signature(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Function.signature_args"><code>Function.signature_args(self)</code></h3>
-
-
-<h2 id="pydoc_markdown.reflection.Data"><code>Data</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.reflection.Decorator"><code>Decorator</code> Objects</h2>
-
-
-<h2 id="pydoc_markdown.reflection.Argument"><code>Argument</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.reflection.Argument.POS"><code>POS</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Argument.POS_REMAINDER"><code>POS_REMAINDER</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Argument.KW"><code>KW</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Argument.KW_ONLY"><code>KW_ONLY</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Argument.KW_REMAINDER"><code>KW_REMAINDER</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Argument.__str__"><code>Argument.__str__(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.Argument.format_arglist"><code>Argument.format_arglist(arglist)</code></h3>
-
-
-<h2 id="pydoc_markdown.reflection.Expression"><code>Expression</code> Objects</h2>
-
-
-<h3 id="pydoc_markdown.reflection.Expression.__str__"><code>Expression.__str__(self)</code></h3>
-
-
-<h2 id="pydoc_markdown.reflection.ModuleGraph"><code>ModuleGraph</code> Objects</h2>
-
-Represents a collection of `Module` objects.
-
-<h3 id="pydoc_markdown.reflection.ModuleGraph.__init__"><code>ModuleGraph.__init__(self)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.ModuleGraph.add_module"><code>ModuleGraph.add_module(self, module)</code></h3>
-
-
-<h3 id="pydoc_markdown.reflection.ModuleGraph.visit"><code>ModuleGraph.visit(self, func, allow_mutation=False)</code></h3>
-
-
-<h1 id="pydoc_markdown.utils"><code>pydoc_markdown.utils</code></h1>
-
--*- coding: utf8 -*-
-Copyright (c) 2019 Niklas Rosenstein
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to
-deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
-
-<h2 id="pydoc_markdown.utils.import_object"><code>import_object(name)</code></h2>
-
-
-<h2 id="pydoc_markdown.utils.load_entry_point"><code>load_entry_point(group, name)</code></h2>
-
-Returns the first entry point registered to the specified *group* that
-matches the *name*. If multiple entry points are registered to that name,
-an `EnvironmentError` is raised.
-
-If no entry point with the specified *name* can be found, a `ValueError`
-is raised instead.
 
