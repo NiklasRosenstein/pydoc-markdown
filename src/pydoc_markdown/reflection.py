@@ -24,17 +24,17 @@ This module provides the abstract representation of a code library. It is
 generalised and intended to be usable for any language.
 """
 
-from nr.types.record import Record
+from nr.types import structured
 
 
-class Location(Record):
+class Location(structured.Object):
   __annotations__ = [
     ('filename', str),
     ('lineno', int)
   ]
 
 
-class Object(Record):
+class Object(structured.Object):
   __annotations__ = [
     ('location', str),
     ('parent', 'Object'),
@@ -127,14 +127,14 @@ class Data(Object):
   ]
 
 
-class Decorator(Record):
+class Decorator(structured.Object):
   __annotations__ = [
     ('name', str),
     ('args', 'Expression')
   ]
 
 
-class Argument(Record):
+class Argument(structured.Object):
   __annotations__ = [
     ('name', str),
     ('annotation', 'Expression'),
@@ -178,7 +178,7 @@ class Argument(Record):
     return ', '.join(parts)
 
 
-class Expression(Record):
+class Expression(structured.Object):
   __annotations__ = [
     ('text', str)
   ]
