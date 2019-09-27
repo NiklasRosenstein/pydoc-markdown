@@ -27,7 +27,6 @@ import argparse
 import sys
 import yaml
 
-from nr.types import record
 from nr.types.structured import Field, Object, WildcardField, extract
 from pydoc_markdown.interfaces import Loader, Processor, Renderer, load_implementation
 from pydoc_markdown.reflection import ModuleGraph
