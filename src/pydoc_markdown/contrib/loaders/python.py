@@ -33,7 +33,7 @@ from lib2to3.refactor import RefactoringTool
 from lib2to3.pgen2 import token
 from lib2to3.pgen2.parse import ParseError
 from lib2to3.pygram import python_symbols as syms
-from lib2to3.pytree import Node
+from lib2to3.pytree import Leaf, Node
 from nr.types.structured import Field, Object
 from nr.types.interface import implements
 from pydoc_markdown.interfaces import Loader, LoaderError
@@ -186,6 +186,7 @@ class Parser(object):
       return result
 
     def consume_arg(node, argtype, index):
+      assert isinstance(node, Leaf), self.location_from(node)
       if node.type == syms.tname:
         index = ListScanner(node.children)
       name = node.value
