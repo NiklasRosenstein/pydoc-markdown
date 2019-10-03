@@ -174,6 +174,40 @@ class Parser(object):
     return Function(self.location_from(node), parent, name, docstring,
       is_async=is_async, decorators=decorators, args=args, return_=return_)
 
+  def parse_argument(self, node, argtype, scanner):
+    # type: (Union[Leaf, Node], str, ListScanner) -> Argument
+    """
+    Parses an argument from the AST. *node* must be the current node at
+    the current position of the *scanner*. The scanner is used to extract
+    the optional default argument value that follows the *node*.
+    """
+
+    def parse_annotated_name(node):
+      if node.type == syms.tname:
+        scanner = ListScanner(node.children)
+        name = scanner.current.value
+        node = scanner.advance()
+        assert node.type == token.COLON, node.parent
+        node = scanner.advance()
+        annotation = Expression(self.nodes_to_string([node]))
+      elif node:
+        name = node.value
+        annotation = None
+      else:
+        raise RuntimeError('unexpected node: {!r}'.format(node))
+      return (name, annotation)
+
+    name, annotation = parse_annotated_name(node)
+
+    node = scanner.advance()
+    default = None
+    if node and node.type == token.EQUAL:
+      node = scanner.advance()
+      default = Expression(self.nodes_to_string([node]))
+      node = scanner.advance()
+
+    return Argument(name, annotation, default, argtype)
+
   def parse_parameters(self, parameters):
     assert parameters.type == syms.parameters, parameters.type
     result = []
@@ -185,24 +219,6 @@ class Parser(object):
         result.append(Argument(parameters.children[1].value, None, None, Argument.POS))
       return result
 
-    def consume_arg(node, argtype, index):
-      assert isinstance(node, Leaf), self.location_from(node)
-      if node.type == syms.tname:
-        index = ListScanner(node.children)
-      name = node.value
-      node = index.advance()
-      annotation = None
-      if node and node.type == token.COLON:
-        node = index.advance()
-        annotation = Expression(self.nodes_to_string([node]))
-        node = index.advance()
-      default = None
-      if node and node.type == token.EQUAL:
-        node = index.advance()
-        default = Expression(self.nodes_to_string([node]))
-        node = index.advance()
-      return Argument(name, annotation, default, argtype)
-
     argtype = Argument.POS
 
     index = ListScanner(arglist.children)
@@ -211,16 +227,16 @@ class Parser(object):
       if node.type == token.STAR:
         node = index.advance()
         if node.type != token.COMMA:
-          result.append(consume_arg(node, Argument.POS_REMAINDER, index))
+          result.append(self.parse_argument(node, Argument.POS_REMAINDER, index))
         else:
           index.advance()
         argtype = Argument.KW_ONLY
         continue
       elif node.type == token.DOUBLESTAR:
         node = index.advance()
-        result.append(consume_arg(node, Argument.KW_REMAINDER, index))
+        result.append(self.parse_argument(node, Argument.KW_REMAINDER, index))
         continue
-      result.append(consume_arg(node, argtype, index))
+      result.append(self.parse_argument(node, argtype, index))
       index.advance()
 
     return result

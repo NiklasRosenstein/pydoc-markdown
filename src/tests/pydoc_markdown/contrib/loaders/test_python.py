@@ -51,13 +51,24 @@ class TestParser:
       Argument('project_type', None, None, Argument.POS),
       Argument('port', None, Expression('8001'), Argument.POS),
     ]
+    assert fun.return_ is None
 
-  @pytest.mark.skip
   def test_parser_function_def_annotations(self):
     module = self.parse('''
-      def fun(project_name: str, project_type: ProjectType, port: int) -> bool:
+      def fun(project_name: str, project_type: ProjectType, port: int=8001) -> bool:
         pass
     ''')
 
-    # TODO (NiklasRosenstein): This test fails
-    pass
+    assert module.name == 'test_parser_function_def_annotations'
+    assert len(module.members) == 1
+
+    fun = module.members['fun']
+    assert type(fun) is Function
+    assert fun.name == 'fun'
+    assert len(fun.args) == 3
+    assert fun.args == [
+      Argument('project_name', Expression('str'), None, Argument.POS),
+      Argument('project_type', Expression('ProjectType'), None, Argument.POS),
+      Argument('port', Expression('int'), Expression('8001'), Argument.POS),
+    ]
+    assert fun.return_ == Expression('bool')
