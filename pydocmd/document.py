@@ -60,10 +60,10 @@ class Section(object):
 
     if self.header_type == 'html':
       print('<h{depth} id="{id}">{title}</h{depth}>\n'
-          .format(depth=self.depth, id=self.identifier, title=self.title),
-          file=stream)
+        .format(depth = self.depth, id = self.identifier, title = self.title),
+        file = stream)
     elif self.header_type == 'markdown':
-      print('\n' + ('#' * self.depth), self.title, file=stream)
+      print('#' * self.depth, self.title, file = stream)
     else:
       raise ValueError('Invalid header type: %s' % self.header_type)
     print(self.content, file=stream)
@@ -129,8 +129,7 @@ class Index(object):
     if os.path.isabs(filename):
       raise ValueError('filename must be relative')
     if filename in self.documents:
-      raise ValueError(
-        'document filename {!r} already used'.format(filename))
+      raise ValueError('document filename {!r} already used'.format(filename))
     if not url:
       url = filename[:-3]
 
@@ -151,7 +150,7 @@ class Index(object):
     if section.identifier:
       if section.identifier in self.sections:
         raise ValueError('section identifier {!r} already used'
-                 .format(section.identifier))
+          .format(section.identifier))
       self.sections[section.identifier] = section
     doc.sections.append(section)
     return section

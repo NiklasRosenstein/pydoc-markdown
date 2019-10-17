@@ -28,7 +28,6 @@ from __future__ import print_function
 from .imp import import_object_with_scope
 import inspect
 import types
-from yapf.yapflib.yapf_api import FormatCode
 
 function_types = (types.FunctionType, types.LambdaType, types.MethodType,
   types.BuiltinFunctionType, types.BuiltinMethodType)
@@ -89,14 +88,11 @@ class PythonLoader(object):
     # Add the function signature in a code-block.
     if callable(obj):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
-      sig, _ = FormatCode(sig, style_config='pep8')
-      section.content = '```python\n{}\n```\n'.format(sig.strip()) + section.content
+      section.content = '```python\n{}\n```\n'.format(sig) + section.content
 
 
 def get_docstring(function):
-  if isinstance(function, (staticmethod, classmethod)):
-    return function.__func__.__doc__ or ''
-  elif hasattr(function, '__name__') or isinstance(function, property):
+  if hasattr(function, '__name__') or isinstance(function, property):
     return function.__doc__ or ''
   elif hasattr(function, '__call__'):
     return function.__call__.__doc__ or ''
@@ -105,6 +101,8 @@ def get_docstring(function):
 
 
 def get_function_signature(function, owner_class=None, show_module=False):
+  isclass = inspect.isclass(function)
+
   # Get base name.
   name_parts = []
   if show_module:
@@ -119,16 +117,16 @@ def get_function_signature(function, owner_class=None, show_module=False):
     function = function.__call__
   name = '.'.join(name_parts)
 
+  if isclass:
+    function = getattr(function, '__init__', None)
   if hasattr(inspect, 'signature'):
     sig = str(inspect.signature(function))
-    if owner_class:
-      sig = sig.replace('(self)', '()', 1).replace('(self, ', '(', 1)
   else:
     try:
       argspec = inspect.getargspec(function)
     except TypeError:
       # handle Py2 classes that don't define __init__
-      args = []
+      args = ['self']
     else:
       # Generate the argument list that is separated by colons.
       args = argspec.args[:]
@@ -140,8 +138,6 @@ def get_function_signature(function, owner_class=None, show_module=False):
         args.append('*' + argspec.varargs)
       if argspec.keywords:
         args.append('**' + argspec.keywords)
-      if owner_class:
-        args.remove('self')
     sig = '(' + ', '.join(args) + ')'
 
   return name + sig

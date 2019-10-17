@@ -66,15 +66,9 @@ def import_object_with_scope(name):
   for part in parts[1:]:
     current_name += '.' + part
     try:
-      if hasattr(obj, '__dict__'):
-        # Using directly __dict__ for descriptors, where we want to get the descriptor's instance
-        # and not calling the descriptor's __get__ method.
-        sub_obj = obj.__dict__[part]
-      else:
-        sub_obj = getattr(obj, part)
-
+      sub_obj = getattr(obj, part)
       scope, obj = obj, sub_obj
-    except (AttributeError, KeyError):
+    except AttributeError:
       try:
         obj = scope = import_module(current_name)
       except ImportError as exc:
@@ -93,7 +87,7 @@ def force_lazy_import(name):
   module_items = list(getattr(obj, '__dict__', {}).items())
   for key, value in module_items:
     if getattr(value, '__module__', None):
-      import_object(name + '.' + key)
+        import_object(name + '.' + key)
 
 
 def dir_object(name, sort_order, need_docstrings=True):
@@ -112,18 +106,14 @@ def dir_object(name, sort_order, need_docstrings=True):
   for key, value in getattr(obj, '__dict__', {}).items():
     if isinstance(value, (staticmethod, classmethod)):
       value = value.__func__
-    if key.startswith('_'):
-      continue
-    if not hasattr(value, '__doc__'):
-      continue
+    if key.startswith('_'): continue
+    if not hasattr(value, '__doc__'): continue
 
     # If we have a type, we only want to skip it if it doesn't have
     # any documented members.
     if not (isinstance(value, type) and dir_object(name + '.' + key, sort_order, True)):
-      if need_docstrings and not value.__doc__:
-        continue
-      if all is not None and key not in all:
-        continue
+      if need_docstrings and not value.__doc__: continue
+      if all is not None and key not in all: continue
 
     if prefix is not None and getattr(value, '__module__', None) != prefix:
       continue
