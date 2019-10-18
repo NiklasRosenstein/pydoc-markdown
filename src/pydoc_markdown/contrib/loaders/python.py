@@ -60,7 +60,10 @@ def parse_to_ast(code, filename):
   """
 
   try:
-    return RefactoringTool([]).refactor_string(code, filename)
+    # NOTE (@NiklasRosenstein): Adding newline at the end as a ParseError
+    #   could be raised without a trailing newline (tested in CPython 3.6
+    #   and 3.7).
+    return RefactoringTool([]).refactor_string(code + '\n', filename)
   except ParseError as exc:
     raise ParseError(exc.msg, exc.type, exc.value, exc.context + (filename,))
 
