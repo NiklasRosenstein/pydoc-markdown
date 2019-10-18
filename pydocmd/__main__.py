@@ -44,7 +44,7 @@ def read_config():
   """
 
   with open(PYDOCMD_CONFIG) as fp:
-    config = yaml.load(fp)
+    config = yaml.safe_load(fp)
   return default_config(config)
 
 
