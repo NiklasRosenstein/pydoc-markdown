@@ -217,9 +217,16 @@ class Parser(object):
 
     arglist = find(lambda x: x.type == syms.typedargslist, parameters.children)
     if not arglist:
-      assert len(parameters.children) in (2, 3), parameters.children
-      if len(parameters.children) == 3:
-        result.append(Argument(parameters.children[1].value, None, None, Argument.POS))
+      # NOTE (@NiklasRosenstein): A single argument (annotated or not) does
+      #   not get wrapped in a `typedargslist`, but in a single `tname`.
+      tname = find(lambda x: x.type == syms.tname, parameters.children)
+      if tname:
+        scanner = ListScanner(parameters.children, parameters.children.index(tname))
+        result.append(self.parse_argument(tname, Argument.POS, scanner))
+      else:
+        assert len(parameters.children) in (2, 3), parameters.children
+        if len(parameters.children) == 3:
+          result.append(Argument(parameters.children[1].value, None, None, Argument.POS))
       return result
 
     argtype = Argument.POS
