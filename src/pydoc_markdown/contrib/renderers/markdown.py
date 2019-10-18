@@ -94,6 +94,8 @@ class MarkdownRenderer(object):
             func.is_function() and func.parent and func.parent.is_class()):
           fp.write(func.parent.name + '.')
         fp.write(func.signature)
+        if func.return_:
+          fp.write(' -> {}'.format(func.return_))
         fp.write('\n```\n\n')
     if self.config.signature_code_block and obj.is_data():
       fp.write('```{}\n'.format('python' if self.config.code_lang else ''))
