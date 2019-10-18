@@ -153,6 +153,11 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
+### v2.0.6 (unreleased)
+
+- Use `yaml.safe_load()` instead of `yaml.load()` to silence warning about
+  unsafe operation (#87)
+
 ### v2.0.5 (2018-11-15)
 
 - Now copies all files from the docs_dir (to include images etc.) (see #56)
