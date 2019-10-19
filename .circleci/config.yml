@@ -39,7 +39,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            pytest --cov=./src/nr
+            pytest --cov=./src/pydoc_markdown
             coverage html
 
       - run:
@@ -47,7 +47,7 @@ jobs:
           command: |
             . venv/bin/activate
             pip install pylint
-            pylint --rcfile=.pylintrc nr.types || true
+            pylint --rcfile=.pylintrc pydoc_markdown || true
 
       - store_artifacts:
           path: .coverage
