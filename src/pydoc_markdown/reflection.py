@@ -46,7 +46,7 @@ class Object(Struct):
   ]
 
   def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+    super(Object, self).__init__(*args, **kwargs)
     if self.parent is not None:
       if self.name in self.parent.members:
         self.parent.members[self.name].remove()
