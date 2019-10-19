@@ -1,0 +1,95 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  test-3.6: &test
+    working_directory: ~/repo
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      INSTALL_PYTHON_ENV1: python3 -m venv venv
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      #- restore_cache:
+      #    keys:
+      #      - v1-dependencies-{{ checksum "setup.py" }}
+      #      # fallback to using the latest cache if no exact match is found
+      #      - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            $INSTALL_PYTHON_ENV1
+            $INSTALL_PYTHON_ENV2
+            $INSTALL_PYTHON_ENV3
+            . venv/bin/activate
+            pip install -e .[full,test] pytest pytest-cov
+
+      #- save_cache:
+      #    paths:
+      #      - ./venv
+      #    key: v1-dependencies-{{ checksum "setup.py" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            pytest --cov=./src/nr
+            coverage html
+
+      - run:
+          name: pylint
+          command: |
+            . venv/bin/activate
+            pip install pylint
+            pylint --rcfile=.pylintrc nr.types || true
+
+      - store_artifacts:
+          path: .coverage
+
+      - store_artifacts:
+          path: htmlcov
+
+  test-3.8:
+    <<: *test
+    docker:
+      - image: circleci/python:3.8.0b2
+
+  test-3.7:
+    <<: *test
+    docker:
+      - image: circleci/python:3.7.3
+
+  test-3.5:
+    <<: *test
+    docker:
+      - image: circleci/python:3.5.7
+
+  test-3.4:
+    <<: *test
+    docker:
+      - image: circleci/python:3.4.10
+
+  test-2.7:
+    <<: *test
+    docker:
+      - image: circleci/python:2.7.15
+    environment:
+      INSTALL_PYTHON_ENV1: pip install virtualenv
+      INSTALL_PYTHON_ENV2: python -m virtualenv venv
+
+workflows:
+  version: 2
+  test_and_publish:
+    jobs:
+      - test-3.8
+      - test-3.7
+      - test-3.6
+      - test-3.5
+      - test-3.4
+      - test-2.7
