@@ -1,14 +1,9 @@
-# pydoc-markdown
-
-<table><tr><td>master</td><td>
-
-[![CircleCI](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/master.svg?style=svg)](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/master)
-</td><td>develop</td><td>
-
-[![CircleCI](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop.svg?style=svg)](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop)    
-</td></tr></table>
+# Pydoc Markdown
 
 Pydoc-markdown produces Markdown API documentation from Python code.
+
+- [![CircleCI](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/master.svg?style=svg)](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/master) (master)
+- [![CircleCI](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop.svg?style=svg)](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop) (develop)
 
 __Table of Contents__
 
