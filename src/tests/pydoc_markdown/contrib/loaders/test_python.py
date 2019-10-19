@@ -72,3 +72,47 @@ class TestParser:
       Argument('port', Expression('int'), Expression('8001'), Argument.POS),
     ]
     assert fun.return_ == Expression('bool')
+
+  def test_parser_function_single_stmt(self):
+    def assert_(module, docstring):
+      assert module.name == 'test_parser_function_single_stmt'
+      assert len(module.members) == 1
+
+      func = module.members['func']
+      assert type(func) is Function
+      assert func.name == 'func'
+      assert len(func.args) == 1
+      assert func.args == [Argument('self', None, None, Argument.POS)]
+      assert func.return_ is None
+      assert func.docstring == docstring
+
+    module = self.parse('''
+      def func(self): return self.foo
+    ''')
+    assert_(module, None)
+
+    module = self.parse('''
+      def func(self):
+        # ABC
+        #   DEF
+        return self.foo
+    ''')
+    assert_(module, 'ABC\nDEF')
+
+    module = self.parse('''
+      def func(self):
+        """ ABC
+          DEF """
+        return self.foo
+    ''')
+    assert_(module, 'ABC\nDEF')
+
+    module = self.parse('''
+      def func(self):
+        """
+        ABC
+          DEF
+        """
+        return self.foo
+    ''')
+    assert_(module, 'ABC\n  DEF')
