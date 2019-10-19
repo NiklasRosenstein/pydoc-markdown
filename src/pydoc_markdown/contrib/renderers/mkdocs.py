@@ -24,20 +24,15 @@ Produces MkDocs structure.
 """
 
 
-from nr.types.structured import Field, Object
+from nr.types.struct import Field, Struct
 from nr.types.interface import implements
 from pydoc_markdown.contrib.markdown_rendere import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer
 
 
-class MkDocsRendererConfig(Object):
-  output_directory = Field(str)
-
-
 @implements(Renderer)
-class MkDocsRenderer(object):
-
-  CONFIG_CLASS = MkDocsRendererConfig
+class MkDocsRenderer(Struct):
+  output_directory = Field(str)
 
   def render(self, modules):
     for m in modules:

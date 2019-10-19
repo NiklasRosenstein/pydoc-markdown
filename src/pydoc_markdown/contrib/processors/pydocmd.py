@@ -26,24 +26,17 @@ highlighting syntax into Markdown.
 
 import re
 
-from nr.types.structured import Field, Object
+from nr.types.struct import Field, Struct
 from nr.types.interface import implements
 from pydoc_markdown.interfaces import Processor
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other
 #     objects so that they can be properly handled by the renderer.
 
-
-class PydocmdProcessorConfig(Object):
-  pass
-
-
 @implements(Processor)
-class PydocmdProcessor(object):
+class PydocmdProcessor(Struct):
 
-  CONFIG_CLASS = PydocmdProcessorConfig
-
-  def process(self, config, graph):
+  def process(self, graph):
     graph.visit(self._process_node)
 
   def _process_node(self, node):

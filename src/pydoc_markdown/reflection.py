@@ -24,22 +24,24 @@ This module provides the abstract representation of a code library. It is
 generalised and intended to be usable for any language.
 """
 
-from nr.types import structured
+from typing import Optional
+from nr.types.struct import Struct, DefaultTypeMapper, set_type_mapper, AnyType
+set_type_mapper(__name__, DefaultTypeMapper(fallback=AnyType()))
 
 
-class Location(structured.Object):
+class Location(Struct):
   __annotations__ = [
     ('filename', str),
     ('lineno', int)
   ]
 
 
-class Object(structured.Object):
+class Object(Struct):
   __annotations__ = [
-    ('location', str),
+    ('location', Location),
     ('parent', 'Object'),
     ('name', str),
-    ('docstring', str),
+    ('docstring', Optional[str]),
     ('members', dict, lambda: dict()),
   ]
 
@@ -127,14 +129,14 @@ class Data(Object):
   ]
 
 
-class Decorator(structured.Object):
+class Decorator(Struct):
   __annotations__ = [
     ('name', str),
     ('args', 'Expression')
   ]
 
 
-class Argument(structured.Object):
+class Argument(Struct):
   __annotations__ = [
     ('name', str),
     ('annotation', 'Expression'),
@@ -178,7 +180,7 @@ class Argument(structured.Object):
     return ', '.join(parts)
 
 
-class Expression(structured.Object):
+class Expression(Struct):
   __annotations__ = [
     ('text', str)
   ]

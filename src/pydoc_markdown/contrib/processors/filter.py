@@ -24,19 +24,13 @@ Provides a processor that implements various filter capabilities.
 """
 
 from nr.types.interface import implements
-from nr.types.structured import Field, Object
+from nr.types.struct import Field, Struct
 from pydoc_markdown.interfaces import Processor
 
 
-class FilterProcessorConfiguration(Object):
-  expression = Field(str, default=None)
-  documented_only = Field(bool, default=False)
-  exclude_private = Field(bool, default=True)
-  exclude_special = Field(bool, default=True)
-
 
 @implements(Processor)
-class FilterProcessor(object):
+class FilterProcessor(Struct):
   """
   The `filter` processor removes module and class members based on certain
   criteria.
@@ -49,24 +43,27 @@ class FilterProcessor(object):
   ```
   """
 
-  CONFIG_CLASS = FilterProcessorConfiguration
+  expression = Field(str, default=None)
+  documented_only = Field(bool, default=False)
+  exclude_private = Field(bool, default=True)
+  exclude_special = Field(bool, default=True)
 
-  def process(self, config, graph):
-    graph.visit(lambda x: self._process_member(config, x), allow_mutation=True)
+  def process(self, graph):
+    graph.visit(lambda x: self._process_member(x), allow_mutation=True)
 
-  def _process_member(self, config, node):
+  def _process_member(self, node):
     def default_check():
-      if config.documented_only and not node.docstring:
+      if self.documented_only and not node.docstring:
         return False
-      if config.exclude_private and node.name.startswith('_') and not node.name.endswith('_'):
+      if self.exclude_private and node.name.startswith('_') and not node.name.endswith('_'):
         return False
-      if config.exclude_special and node.name in ('__path__', '__annotations__', '__name__', '__all__'):
+      if self.exclude_special and node.name in ('__path__', '__annotations__', '__name__', '__all__'):
         return False
       return True
 
-    if config.expression:
+    if self.expression:
       scope = {'name': node.name, 'node': node, 'default': default_check}
-      if not eval(config.expression, scope):
+      if not eval(self.expression, scope):
         node.remove()
     if node.parent and not default_check():
       node.remove()

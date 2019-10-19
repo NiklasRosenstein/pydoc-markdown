@@ -34,7 +34,7 @@ from lib2to3.pgen2 import token
 from lib2to3.pgen2.parse import ParseError
 from lib2to3.pygram import python_symbols as syms
 from lib2to3.pytree import Leaf, Node
-from nr.types.structured import Field, Object
+from nr.types.struct import Field, Struct
 from nr.types.interface import implements
 from pydoc_markdown.interfaces import Loader, LoaderError
 from pydoc_markdown.reflection import *
@@ -483,37 +483,33 @@ class ListScanner(object):
         raise RuntimeError('next() has not been called on the ListScanner')
 
 
-class PythonLoaderConfig(Object):
-  #: A list of module or package names that this loader will search for and
-  #: then parse. The modules are searched using the [[sys.path]] of the current
-  #: Python interpreter, unless the [[search_path]] option is specified.
-  modules = Field([str])
-
-  #: The module search path. If not specified, the current [[sys.path]] is
-  #: used instead. If any of the elements contain a `*` (star) symbol, it
-  #: will be expanded with [[sys.path]].
-  search_path = Field([str], default=None)
-
-
 @implements(Loader)
-class PythonLoader(object):
+class PythonLoader(Struct):
   """
   This implementation of the [[Loader]] interface parses Python modules and
   packages. Which files are parsed depends on the configuration (see
   [[PythonLoaderConfig]]).
   """
 
-  CONFIG_CLASS = PythonLoaderConfig
+  #: A list of module or package names that this loader will search for and
+  #: then parse. The modules are searched using the [[sys.path]] of the current
+  #: Python interpreter, unless the [[search_path]] option is specified.
+  modules = Field([str], default=[])
 
-  def load(self, config, graph):
-    path = config.search_path
+  #: The module search path. If not specified, the current [[sys.path]] is
+  #: used instead. If any of the elements contain a `*` (star) symbol, it
+  #: will be expanded with [[sys.path]].
+  search_path = Field([str], default=None)
+
+  def load(self, graph):
+    path = self.search_path
     if path is None:
       path = sys.path
     elif '*' in path:
       index = path.index('*')
       path[index:index+1] = sys.path
 
-    for module in config.modules:
+    for module in self.modules:
       try:
         path = imp.find_module(module, path)[1]
       except ImportError as exc:

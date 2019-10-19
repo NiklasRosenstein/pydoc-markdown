@@ -26,13 +26,14 @@ Implements a renderer that produces Markdown output.
 import io
 import sys
 
-from nr.types.structured import Field, Object
+from nr.types.struct import Field, Struct
 from nr.types.interface import implements
 from pydoc_markdown.interfaces import Renderer
 from pydoc_markdown.reflection import *
 
 
-class MarkdownRendererConfig(Object):
+@implements(Renderer)
+class MarkdownRenderer(Struct):
   filename = Field(str, default=None)
   encoding = Field(str, default='utf8')
   html_headings = Field(bool, default=False)
@@ -51,16 +52,8 @@ class MarkdownRendererConfig(Object):
   render_toc_title = Field(str, default='Table of Contents')
   toc_maxdepth = Field(int, default=2)
 
-  # TODO(nrosenstein): render_toc option
-
-
-@implements(Renderer)
-class MarkdownRenderer(object):
-
-  CONFIG_CLASS = MarkdownRendererConfig
-
   def _render_toc(self, fp, level, obj):
-    if level > self.config.toc_maxdepth:
+    if level > self.toc_maxdepth:
       return
     object_id = self._generate_object_id(obj)
     fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
@@ -68,14 +61,14 @@ class MarkdownRenderer(object):
       self._render_toc(fp, level + 1, child)
 
   def _render_object(self, fp, level, obj):
-    if self.config.html_headings:
+    if self.html_headings:
       object_id = self._generate_object_id(obj)
       heading_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
     else:
       heading_template = level * '#' + ' {title}'
     fp.write(heading_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
-    if self.config.signature_code_block and (obj.is_class() or obj.is_function()):
+    if self.signature_code_block and (obj.is_class() or obj.is_function()):
       if obj.is_class():
         func = obj.members.get('__init__')
         if func and not func.is_function():
@@ -83,25 +76,25 @@ class MarkdownRenderer(object):
       else:
         func = obj
       if func:
-        fp.write('```{}\n'.format('python' if self.config.code_lang else ''))
+        fp.write('```{}\n'.format('python' if self.code_lang else ''))
         for dec in func.decorators:
           fp.write('@{}{}\n'.format(dec.name, dec.args or ''))
         if func.is_async:
           fp.write('async ')
-        if self.config.signature_with_def:
+        if self.signature_with_def:
           fp.write('def ')
-        if self.config.signature_class_prefix and (
+        if self.signature_class_prefix and (
             func.is_function() and func.parent and func.parent.is_class()):
           fp.write(func.parent.name + '.')
         fp.write(func.signature)
         if func.return_:
           fp.write(' -> {}'.format(func.return_))
         fp.write('\n```\n\n')
-    if self.config.signature_code_block and obj.is_data():
-      fp.write('```{}\n'.format('python' if self.config.code_lang else ''))
+    if self.signature_code_block and obj.is_data():
+      fp.write('```{}\n'.format('python' if self.code_lang else ''))
       expr = str(obj.expr)
-      if len(expr) > self.config.signature_expression_maxlength:
-        expr = expr[:self.config.signature_expression_maxlength] + ' ...'
+      if len(expr) > self.signature_expression_maxlength:
+        expr = expr[:self.signature_expression_maxlength] + ' ...'
       fp.write(obj.name + ' = ' + expr)
       fp.write('\n```\n\n')
     if obj.docstring:
@@ -115,9 +108,9 @@ class MarkdownRenderer(object):
       self._render_recursive(fp, level+1, member)
 
   def _render(self, graph, fp):
-    if self.config.render_toc:
-      if self.config.render_toc_title:
-        fp.write('# {}\n\n'.format(self.config.render_toc_title))
+    if self.render_toc:
+      if self.render_toc_title:
+        fp.write('# {}\n\n'.format(self.render_toc_title))
       for m in graph.modules:
         self._render_toc(fp, 1, m)
       fp.write('\n')
@@ -126,20 +119,20 @@ class MarkdownRenderer(object):
 
   def _get_title(self, obj):
     title = obj.name
-    if self.config.add_method_class_prefix and obj.is_method():
+    if self.add_method_class_prefix and obj.is_method():
       title = obj.parent.name + '.' + title
-    elif self.config.add_full_prefix and not obj.is_method():
+    elif self.add_full_prefix and not obj.is_method():
       title = obj.path()
 
     if obj.is_function():
-      if self.config.signature_in_header:
+      if self.signature_in_header:
         title += '(' + obj.signature_args + ')'
       else:
         title += '()'
 
-    if self.config.code_headings:
-      if self.config.html_headings or self.config.sub_prefix:
-        if self.config.sub_prefix and '.' in title:
+    if self.code_headings:
+      if self.html_headings or self.sub_prefix:
+        if self.sub_prefix and '.' in title:
           prefix, title = title.rpartition('.')[::2]
           title = '<sub>{}.</sub>{}'.format(prefix, title)
         title = '<code>{}</code>'.format(title)
@@ -147,7 +140,7 @@ class MarkdownRenderer(object):
         title ='`{}`'.format(title)
     else:
       title = obj.name
-    if isinstance(obj, Class) and self.config.descriptive_class_title:
+    if isinstance(obj, Class) and self.descriptive_class_title:
       title += ' Objects'
     return title
 
@@ -163,9 +156,9 @@ class MarkdownRenderer(object):
 
   # Renderer
 
-  def render(self, config, graph):
-    if self.config.filename is None:
+  def render(self, graph):
+    if self.filename is None:
       self._render(graph, sys.stdout)
     else:
-      with io.open(self.config.filename, 'w', encoding=self.config.encoding) as fp:
+      with io.open(self.filename, 'w', encoding=self.encoding) as fp:
         self._render(graph, fp)

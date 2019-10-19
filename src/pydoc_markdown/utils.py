@@ -20,6 +20,7 @@
 # IN THE SOFTWARE.
 
 import pkg_resources
+from nr.types import abc
 
 
 def import_object(name):
@@ -50,3 +51,20 @@ def load_entry_point(group, name):
   if result is None:
     raise ValueError('no entry point registered to {}:{}'.format(group, name))
   return result
+
+
+class EntrypointDict(abc.Mapping):
+
+  def __init__(self, entrypoint_group):
+    self._values = {}
+    for ep in pkg_resources.iter_entry_points(entrypoint_group):
+      self._values[ep.name] = ep
+
+  def __getitem__(self, key):
+    return self._values[key].load()
+
+  def __len__(self):
+    return len(self._values)
+
+  def __iter__(self):
+    return iter(self._values)

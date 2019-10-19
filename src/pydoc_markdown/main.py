@@ -27,32 +27,26 @@ import argparse
 import sys
 import yaml
 
-from nr.types.structured import Field, Object, WildcardField, extract
-from pydoc_markdown.interfaces import Loader, Processor, Renderer, load_implementation
+from nr.types.struct import JsonObjectMapper, Field, Struct, WildcardField, deserialize, DeserializeDefault
+from nr.types.struct.contrib.union import UnionType, EntrypointTypeResolver
+from pydoc_markdown.interfaces import Loader, Processor, Renderer
 from pydoc_markdown.reflection import ModuleGraph
+from .utils import EntrypointDict
 
 
-class _ExtensionConfig(Object):
-  type = Field(str)
-  options = WildcardField(object)
+class PydocMarkdown(Struct):
+  loaders = Field(
+    [UnionType(EntrypointTypeResolver('pydoc_markdown.interfaces.Loader', base_type=Loader))],
+    default=DeserializeDefault([{'type': 'python'}], JsonObjectMapper()))
+  processors = Field(
+    [UnionType(EntrypointTypeResolver('pydoc_markdown.interfaces.Processor', base_type=Processor))],
+    default=DeserializeDefault([{'type': 'pydocmd'}], JsonObjectMapper()))
+  renderer = Field(
+    UnionType(EntrypointTypeResolver('pydoc_markdown.interfaces.Renderer', base_type=Renderer)),
+    default=DeserializeDefault({'type': 'markdown'}, JsonObjectMapper()))
 
-
-class PydocMarkdownConfig(Object):
-  loaders = Field([_ExtensionConfig], default=list)
-  processors = Field([_ExtensionConfig], default=lambda: [_ExtensionConfig('pydocmd', {})])
-  renderer = Field(_ExtensionConfig, default=lambda: _ExtensionConfig('markdown', {}))
-
-
-class PydocMarkdown(object):
-  """
-  This class wraps all the functionality provided by the command-line.
-  """
-
-  def __init__(self):
-    self.config = PydocMarkdownConfig()
-    self.loaders = []
-    self.processors = []
-    self.renderer = None
+  def __init__(self, *args, **kwargs):
+    super(PydocMarkdown, self).__init__(*args, **kwargs)
     self.graph = ModuleGraph()
 
   def load_config(self, data):
@@ -64,22 +58,20 @@ class PydocMarkdown(object):
     if isinstance(data, str):
       with open(data) as fp:
         data = yaml.safe_load(fp)
-    self.config = extract(data, PydocMarkdownConfig)
-    self.loaders = [Loader.make_instance(x.type, x.options) for x in self.config.loaders]
-    self.processors = [Processor.make_instance(x.type, x.options) for x in self.config.processors]
-    self.renderer = Renderer.make_instance(self.config.renderer.type, self.config.renderer.options)
+    result = deserialize(JsonObjectMapper(), data, type(self))
+    vars(self).update({k: getattr(result, k) for k in self.__fields__})
 
   def load_module_graph(self):
     for loader in self.loaders:
-      loader.load(loader.config, self.graph)
+      loader.load(self.graph)
 
   def process(self):
     for processor in self.processors:
-      processor.process(processor.config, self.graph)
+      processor.process(self.graph)
 
   def render(self):
-    self.renderer.process(self.renderer.config, self.graph)
-    self.renderer.render(self.renderer.config, self.graph)
+    self.renderer.process(self.graph)
+    self.renderer.render(self.graph)
 
 
 def main(argv=None, prog=None):
