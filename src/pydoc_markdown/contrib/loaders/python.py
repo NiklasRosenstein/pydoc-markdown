@@ -23,8 +23,8 @@
 Loads Python source code into the Pydoc-markdown reflection format.
 """
 
-import imp
 import os
+import pkgutil
 import re
 import textwrap
 import sys
@@ -503,21 +503,28 @@ class PythonLoader(Struct):
   search_path = Field([str], default=None)
 
   def load(self, graph):
-    path = self.search_path
-    if path is None:
-      path = sys.path
-    elif '*' in path:
-      index = path.index('*')
-      path[index:index+1] = sys.path
+    search_path = self.search_path
+    if search_path is None:
+      search_path = sys.path
+    elif '*' in search_path:
+      index = search_path.index('*')
+      search_path[index:index+1] = sys.path
 
-    for module in self.modules:
-      try:
-        path = imp.find_module(module, path)[1]
-      except ImportError as exc:
-        raise LoaderError(exc)
-      for module_name, filename in self._iter_module_files(module, path):
-        module = parse_file(None, filename, module_name)
-        graph.add_module(module)
+    old_path = sys.path
+    sys.path = search_path
+    try:
+      for module in self.modules:
+        try:
+          path = pkgutil.find_loader(module).get_filename()
+        except ImportError as exc:
+          raise LoaderError(exc)
+        if os.path.basename(path).startswith('__init__.'):
+          path = os.path.dirname(path)
+        for module_name, filename in self._iter_module_files(module, path):
+          module = parse_file(None, filename, module_name)
+          graph.add_module(module)
+    finally:
+      sys.path = old_path
 
   def _iter_module_files(self, module_name, path):
     if os.path.isfile(path):
