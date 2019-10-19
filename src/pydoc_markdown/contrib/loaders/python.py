@@ -166,10 +166,11 @@ class Parser(object):
 
   def parse_funcdef(self, parent, node, is_async, decorators):
     parameters = find(lambda x: x.type == syms.parameters, node.children)
-    suite = find(lambda x: x.type == syms.suite, node.children)
+    body = find(lambda x: x.type == syms.suite, node.children) or \
+      find(lambda x: x.type == syms.simple_stmt, node.children)
 
     name = node.children[1].value
-    docstring = self.get_docstring_from_first_node(suite)
+    docstring = self.get_docstring_from_first_node(body)
     args = self.parse_parameters(parameters)
     return_ = self.get_return_annotation(node)
     decorators = decorators or []
