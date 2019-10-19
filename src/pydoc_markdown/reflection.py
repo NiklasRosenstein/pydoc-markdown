@@ -146,7 +146,7 @@ class Argument(Struct):
 
   POS = 'pos'
   POS_REMAINDER = 'pos_remainder'
-  KW = 'kw'
+  KW_SEPARATOR = 'kw_separator'
   KW_ONLY = 'kw_only'
   KW_REMAINDER = 'kw_remainder'
 

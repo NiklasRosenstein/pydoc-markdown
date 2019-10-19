@@ -237,10 +237,11 @@ class Parser(object):
       node = index.current
       if node.type == token.STAR:
         node = index.advance()
-        if node.type != token.COMMA:
-          result.append(self.parse_argument(node, Argument.POS_REMAINDER, index))
-        else:
+        if node.type == token.COMMA:
+          result.append(Argument('', None, None, Argument.KW_SEPARATOR))
           index.advance()
+        else:
+          result.append(self.parse_argument(node, Argument.POS_REMAINDER, index))
         argtype = Argument.KW_ONLY
         continue
       elif node.type == token.DOUBLESTAR:

@@ -116,3 +116,18 @@ class TestParser:
         return self.foo
     ''')
     assert_(module, 'ABC\n  DEF')
+
+  def test_parser_function_starred_args(self):
+    def assert_(module, arglist):
+      func = module.members['func']
+      assert func.args == arglist
+
+    module = self.parse('''
+      def func(a, *, b, **c): pass
+    ''')
+    assert_(module, [
+      Argument('a', None, None, Argument.POS),
+      Argument('', None, None, Argument.KW_SEPARATOR),
+      Argument('b', None, None, Argument.KW_ONLY),
+      Argument('c', None, None, Argument.KW_REMAINDER)
+    ])
