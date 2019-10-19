@@ -26,7 +26,7 @@ setuptools.setup(
   keywords = 'markdown pydoc generator docs documentation',
   packages = setuptools.find_packages('src'),
   package_dir = {'': 'src'},
-  install_requires = ['nr.types>=3.1.0,<4.0.0', 'pyyaml>=3.12', 'six>=0.11.0'],
+  install_requires = ['nr.types>=4.0.0,<5.0.0', 'pyyaml>=3.12', 'six>=0.11.0'],
   entry_points = {
     'console_scripts': [
       'pydoc-markdown = pydoc_markdown.main:_entry_point',
