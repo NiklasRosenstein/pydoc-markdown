@@ -72,7 +72,7 @@ def write_temp_mkdocs_config(inconf):
   ignored_keys = ('gens_dir', 'pages', 'headers', 'generate', 'loader',
                   'preprocessor', 'additional_search_paths')
 
-  config = {key: value for key, value in inconf.items() if key not in ignored_keys}
+  config = {k: v for k, v in inconf.items() if k not in ignored_keys}
   config['docs_dir'] = inconf['gens_dir']
   if 'pages' in inconf:
       config['nav'] = inconf['pages']
@@ -111,7 +111,7 @@ def process_pages(data, gens_dir):
 
 def copy_source_files(config, pages_required=True):
   """
-  Copies all files from the `docs_dir` to the `gens_dir` defined in the
+  Copies `docs_dir` folder and its content to the `gens_dir` defined in the
   *config*. It also takes the MkDocs `pages` configuration into account
   and converts the special `<< INFILE` syntax by copying them to the
   `gens_dir` as well.
@@ -127,7 +127,9 @@ def copy_source_files(config, pages_required=True):
   for root, dirs, files in os.walk(config['docs_dir']):
     rel_root = os.path.relpath(root, config['docs_dir'])
     for fname in files:
-      dest_fname = os.path.join(config['gens_dir'], rel_root, fname)
+      dest_fname = os.path.join(
+          config['gens_dir'], config['docs_dir'], rel_root, fname
+        )
       makedirs(os.path.dirname(dest_fname))
       shutil.copyfile(os.path.join(root, fname), dest_fname)
 
@@ -143,7 +145,12 @@ def copy_source_files(config, pages_required=True):
 
 def new_project():
   with open('pydocmd.yml', 'w') as fp:
-    fp.write('site_name: Welcome to pydoc-markdown\ngenerate:\npages:\n- Home: index.md << ../README.md\n')
+    fp.writelines((
+        'site_name: Welcome to pydoc-markdown\n',
+        'generate:\n',
+        'pages:\n',
+        '- Home: index.md << ../README.md\n'
+      ))
 
 
 def log(*args, **kwargs):
@@ -213,7 +220,11 @@ def main():
       def create_sections(name, level):
         if level > expand_depth:
           return
-        index.new_section(doc, name, depth=depth + level, header_type=config.get('headers', 'html'))
+        index.new_section(
+            doc, 
+            name, 
+            depth=depth + level, 
+            header_type=config.get('headers', 'html'))
         sort_order = config.get('sort')
         if sort_order not in ('line', 'name'):
           sort_order = 'line'
