@@ -7,8 +7,8 @@ generate:
   - pydocmd.imp+
 - extensions/loader.md:
   - pydocmd.loader++
-- extensions/preprocessor.md:
-  - pydocmd.preprocessor++
+- extensions/preprocessors.md:
+  - pydocmd.preprocessors++
 pages:
 - Home: index.md << ../README.md
 - API Documentation:
@@ -16,4 +16,4 @@ pages:
   - Import Utils: imp.md
 - Extension API:
   - Loader: extensions/loader.md
-  - Preprocessor: extensions/preprocessor.md
+  - Preprocessors: extensions/preprocessors.md
