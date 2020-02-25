@@ -1,0 +1,42 @@
+name: "pydoc-markdown"
+version: "3.0.0"
+description: "Create Python API documentation in Markdown format."
+license: "MIT"
+url: "https://github.com/NiklasRosenstein/pydoc-markdown"
+classifiers:
+  - "Development Status :: 3 - Alpha"
+  - "Intended Audience :: Developers"
+  - "Intended Audience :: End Users/Desktop"
+  - "Topic :: Software Development :: Code Generators"
+  - "Topic :: Utilities"
+  - "License :: OSI Approved :: MIT License"
+  - "Programming Language :: Python :: 2"
+  - "Programming Language :: Python :: 2.7"
+  - "Programming Language :: Python :: 3"
+  - "Programming Language :: Python :: 3.3"
+  - "Programming Language :: Python :: 3.4"
+  - "Programming Language :: Python :: 3.5"
+keywords:
+  - documentation
+  - docs
+  - generator
+  - markdown
+  - pydoc
+
+requirements:
+  - nr.databind ~0.0.1
+  - six ^0.11.0
+  - PyYAML ^5.3
+
+entrypoints:
+  console_scripts:
+    - pydoc-markdown = pydoc_markdown.main:_entry_point
+  pydoc_markdown.interfaces.Loader:
+    - python = pydoc_markdown.contrib.loaders.python:PythonLoader
+  pydoc_markdown.interfaces.Processor:
+    - filter = pydoc_markdown.contrib.processors.filter:FilterProcessor
+    - pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor
+    - sphinx = pydoc_markdown.contrib.processors.pydocmd:SphinxProcessor
+  pydoc_markdown.interfaces.Renderer:
+    - markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer
+    - mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkDocsRenderer
