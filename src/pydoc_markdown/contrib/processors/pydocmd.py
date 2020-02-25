@@ -26,8 +26,8 @@ highlighting syntax into Markdown.
 
 import re
 
-from nr.types.struct import Field, Struct
-from nr.types.interface import implements
+from nr.databind.core import Field, Struct
+from nr.interface import implements
 from pydoc_markdown.interfaces import Processor
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other

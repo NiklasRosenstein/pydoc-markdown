@@ -28,8 +28,8 @@ Pydoc-Markdown to implement custom loaders for documentation data,
 processors or renderers.
 """
 
-from nr.types.struct import Struct
-from nr.types.interface import Interface, implements, default
+from nr.databind.core import Struct, DeserializeAs, UnionType
+from nr.interface import Interface, implements, default
 from .reflection import Module, ModuleGraph
 from .utils import load_entry_point
 
@@ -42,6 +42,7 @@ class Loader(Interface):
   """
 
   ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Loader'
+  DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
   def load(self, graph):  # type: (Object, ModuleGraph) -> None
     """
@@ -61,6 +62,7 @@ class Processor(Interface):
   """
 
   ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Processor'
+  DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
   def process(self, graph):  # type: (Object, ModuleGraph) -> None
     pass
@@ -79,6 +81,7 @@ class Renderer(Processor):
   """
 
   ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Renderer'
+  DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
   @default
   def process(self, graph):  # type: (Object, ModuleGraph) -> None

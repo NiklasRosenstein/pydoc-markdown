@@ -27,23 +27,22 @@ import argparse
 import sys
 import yaml
 
-from nr.types.struct import JsonObjectMapper, Field, Struct, WildcardField, deserialize, DeserializeDefault
-from nr.types.struct.contrib.union import UnionType, EntrypointTypeResolver
+from nr.databind.core import Field, ObjectMapper, Struct, UnionType
+from nr.databind.json import JsonModule
 from pydoc_markdown.interfaces import Loader, Processor, Renderer
 from pydoc_markdown.reflection import ModuleGraph
+from pydoc_markdown.contrib.loaders.python import PythonLoader
+from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from .utils import EntrypointDict
+
+mapper = ObjectMapper(JsonModule())
 
 
 class PydocMarkdown(Struct):
-  loaders = Field(
-    [UnionType(EntrypointTypeResolver('pydoc_markdown.interfaces.Loader', base_type=Loader))],
-    default=DeserializeDefault([{'type': 'python'}], JsonObjectMapper()))
-  processors = Field(
-    [UnionType(EntrypointTypeResolver('pydoc_markdown.interfaces.Processor', base_type=Processor))],
-    default=DeserializeDefault([{'type': 'pydocmd'}], JsonObjectMapper()))
-  renderer = Field(
-    UnionType(EntrypointTypeResolver('pydoc_markdown.interfaces.Renderer', base_type=Renderer)),
-    default=DeserializeDefault({'type': 'markdown'}, JsonObjectMapper()))
+  loaders = Field([Loader], default=[PythonLoader()])
+  processors = Field([Processor], default=[PydocmdProcessor()])
+  renderer = Field(Renderer, default=MarkdownRenderer())
 
   def __init__(self, *args, **kwargs):
     super(PydocMarkdown, self).__init__(*args, **kwargs)
@@ -55,10 +54,13 @@ class PydocMarkdown(Struct):
     a dictionary.
     """
 
+    filename = None
     if isinstance(data, str):
+      filename = data
       with open(data) as fp:
         data = yaml.safe_load(fp)
-    result = deserialize(JsonObjectMapper(), data, type(self))
+
+    result = mapper.deserialize(data, type(self), filename=filename)
     vars(self).update({k: getattr(result, k) for k in self.__fields__})
 
   def load_module_graph(self):

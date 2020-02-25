@@ -26,8 +26,8 @@ Implements a renderer that produces Markdown output.
 import io
 import sys
 
-from nr.types.struct import Field, Struct
-from nr.types.interface import implements
+from nr.databind.core import Field, Struct
+from nr.interface import implements
 from pydoc_markdown.interfaces import Renderer
 from pydoc_markdown.reflection import *
 

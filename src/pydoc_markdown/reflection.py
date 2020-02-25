@@ -24,26 +24,27 @@ This module provides the abstract representation of a code library. It is
 generalised and intended to be usable for any language.
 """
 
+from nr.databind.core import Field, Struct, forward_decl
 from typing import Optional
-from nr.types.struct import Struct, DefaultTypeMapper, set_type_mapper, AnyType
-set_type_mapper(__name__, DefaultTypeMapper(fallback=AnyType()))
+
+Argument = forward_decl()
+Decorator = forward_decl()
+Expression = forward_decl()
+Object = forward_decl()
 
 
 class Location(Struct):
-  __annotations__ = [
-    ('filename', str),
-    ('lineno', int)
-  ]
+  filename = Field(str)
+  lineno = Field(int)
 
 
+@forward_decl(Object)
 class Object(Struct):
-  __annotations__ = [
-    ('location', Location),
-    ('parent', 'Object'),
-    ('name', str),
-    ('docstring', Optional[str]),
-    ('members', dict, lambda: dict()),
-  ]
+  location = Field(Location)
+  parent = Field(Object, default=None)
+  name = Field(str)
+  docstring = Field(str, default=None)
+  members = Field(dict, default=dict)
 
   def __init__(self, *args, **kwargs):
     super(Object, self).__init__(*args, **kwargs)
@@ -99,20 +100,16 @@ class Module(Object):
 
 
 class Class(Object):
-  __annotations__ = [
-    ('decorators', 'List[Decorators]'),
-    ('bases', 'List[Expression]'),
-    ('metaclass', 'Expression'),
-  ]
+  decorators = Field([Decorator])
+  bases = Field([Expression])
+  metaclass = Field(Expression)
 
 
 class Function(Object):
-  __annotations__ = [
-    ('is_async', bool),
-    ('decorators', 'List[Decorator]'),
-    ('args', 'List[Argument]'),
-    ('return_', 'Expression')
-  ]
+  is_async = Field(bool)
+  decorators = Field([Decorator])
+  args = Field([Argument])
+  return_ = Field(Expression)
 
   @property
   def signature(self):
@@ -124,25 +121,21 @@ class Function(Object):
 
 
 class Data(Object):
-  __annotations__ = [
-    ('expr', 'Expression')
-  ]
+  expr = Field(Expression)
 
 
+@forward_decl(Decorator)
 class Decorator(Struct):
-  __annotations__ = [
-    ('name', str),
-    ('args', 'Expression')
-  ]
+  name = Field(str)
+  args = Field(Expression, default=None)
 
 
+@forward_decl(Argument)
 class Argument(Struct):
-  __annotations__ = [
-    ('name', str),
-    ('annotation', 'Expression'),
-    ('default', 'Expression'),
-    ('type', str)
-  ]
+  name = Field(str)
+  annotation = Field(Expression, default=None)
+  default = Field(Expression, default=None)
+  type = Field(str)
 
   POS = 'pos'
   POS_REMAINDER = 'pos_remainder'
@@ -180,10 +173,9 @@ class Argument(Struct):
     return ', '.join(parts)
 
 
+@forward_decl(Expression)
 class Expression(Struct):
-  __annotations__ = [
-    ('text', str)
-  ]
+  text = Field(str)
 
   def __str__(self):
     return self.text

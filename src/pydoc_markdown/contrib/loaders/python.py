@@ -34,8 +34,8 @@ from lib2to3.pgen2 import token
 from lib2to3.pgen2.parse import ParseError
 from lib2to3.pygram import python_symbols as syms
 from lib2to3.pytree import Leaf, Node
-from nr.types.struct import Field, Struct
-from nr.types.interface import implements
+from nr.databind.core import Field, Struct
+from nr.interface import implements
 from pydoc_markdown.interfaces import Loader, LoaderError
 from pydoc_markdown.reflection import *
 

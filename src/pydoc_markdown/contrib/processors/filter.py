@@ -23,8 +23,8 @@
 Provides a processor that implements various filter capabilities.
 """
 
-from nr.types.interface import implements
-from nr.types.struct import Field, Struct
+from nr.databind.core import Field, Struct
+from nr.interface import implements
 from pydoc_markdown.interfaces import Processor
 
 

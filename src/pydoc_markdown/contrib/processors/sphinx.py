@@ -26,8 +26,8 @@ markdown compatible syntax.
 
 import re
 
-from nr.types.structured import Field, Object
-from nr.types.interface import implements
+from nr.databind.core import Field, Object
+from nr.interface import implements
 from pydoc_markdown.interfaces import Processor
 
 
