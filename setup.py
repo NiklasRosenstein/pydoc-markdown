@@ -47,5 +47,7 @@ setuptools.setup(
       'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkDocsRenderer',
     ]
   },
-  cmdclass = {}
+  cmdclass = {},
+  keywords = ['documentation', 'docs', 'generator', 'markdown', 'pydoc'],
+  classifiers = ['Development Status :: 3 - Alpha', 'Intended Audience :: Developers', 'Intended Audience :: End Users/Desktop', 'Topic :: Software Development :: Code Generators', 'Topic :: Utilities', 'License :: OSI Approved :: MIT License', 'Programming Language :: Python :: 2', 'Programming Language :: Python :: 2.7', 'Programming Language :: Python :: 3', 'Programming Language :: Python :: 3.3', 'Programming Language :: Python :: 3.4', 'Programming Language :: Python :: 3.5'],
 )
