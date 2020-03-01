@@ -162,3 +162,39 @@ class TestParser:
       Argument('', None, None, Argument.KW_SEPARATOR),
     ])
     assert module.members['func'].signature == 'func(abc, *)'
+
+  def test_parser_class_bases(self):
+    module = self.parse('''
+      class MyError:
+        pass
+    ''')
+    assert module.members['MyError'].bases == []
+    assert module.members['MyError'].metaclass is None
+
+    module = self.parse('''
+      class MyError():
+        pass
+    ''')
+    assert module.members['MyError'].bases == []
+    assert module.members['MyError'].metaclass is None
+
+    module = self.parse('''
+      class MyError(RuntimeError):
+        pass
+    ''')
+    assert module.members['MyError'].bases == [Expression('RuntimeError')]
+    assert module.members['MyError'].metaclass is None
+
+    module = self.parse('''
+      class MyError(RuntimeError, metaclass=ABCMeta):
+        pass
+    ''')
+    assert module.members['MyError'].bases == [Expression('RuntimeError')]
+    assert module.members['MyError'].metaclass == Expression('ABCMeta')
+
+    module = self.parse('''
+      class MyError(metaclass=ABCMeta):
+        pass
+    ''')
+    assert module.members['MyError'].bases == []
+    assert module.members['MyError'].metaclass == Expression('ABCMeta')

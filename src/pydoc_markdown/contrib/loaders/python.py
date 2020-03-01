@@ -264,6 +264,7 @@ class Parser(object):
     bases = []
     metaclass = None
 
+    # An arglist is available if there are at least two parameters.
     classargs = find(lambda x: x.type == syms.arglist, node.children)
     if classargs:
       for child in classargs.children[::2]:
@@ -272,10 +273,28 @@ class Parser(object):
           if key == 'metaclass':
             metaclass = Expression(value)
           else:
-            # TODO @NiklasRosenstein handle metaclass arguments
+            # TODO @NiklasRosenstein: handle metaclass arguments
             pass
         else:
           bases.append(Expression(str(child)))
+
+    # Otherwise we have to deal with parsing a raw sequence of nodes.
+    else:
+      index = ListScanner(node.children, 2)
+      if index.current.type == token.LPAR:
+        index.advance()
+        while index.current.type != token.RPAR:
+          if index.current.type == syms.argument:
+            key = index.current.children[0].value
+            value = Expression(str(index.current.children[2]))
+            if key == 'metaclass':
+              metaclass = value
+            else:
+              # TODO @NiklasRosenstein: handle metaclass arguments
+              pass
+          else:
+            bases.append(Expression(str(index.current)))
+          index.advance()
 
     suite = find(lambda x: x.type == syms.suite, node.children)
     docstring = self.get_docstring_from_first_node(suite)
