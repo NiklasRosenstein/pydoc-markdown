@@ -39,6 +39,9 @@ from nr.interface import implements
 from pydoc_markdown.interfaces import Loader, LoaderError
 from pydoc_markdown.reflection import *
 
+_reverse_syms = {v: k for k, v in vars(syms).items() if isinstance(v, int)}
+_reverse_token = {v: k for k, v in vars(token).items() if isinstance(v, int)}
+
 
 def dedent_docstring(s):
   lines = s.split('\n')
