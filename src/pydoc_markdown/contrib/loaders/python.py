@@ -37,7 +37,15 @@ from lib2to3.pytree import Leaf, Node
 from nr.databind.core import Field, Struct
 from nr.interface import implements
 from pydoc_markdown.interfaces import Loader, LoaderError
-from pydoc_markdown.reflection import *
+from pydoc_markdown.reflection import (
+  Argument,
+  Expression,
+  Class,
+  Data,
+  Decorator,
+  Function,
+  Location,
+  Module)
 
 _reverse_syms = {v: k for k, v in vars(syms).items() if isinstance(v, int)}
 _reverse_token = {v: k for k, v in vars(token).items() if isinstance(v, int)}
@@ -93,7 +101,7 @@ class Parser(object):
   """
 
   def parse(self, ast, filename, module_name=None):
-    self.filename = filename
+    self.filename = filename  # pylint: disable=attribute-defined-outside-init
 
     if module_name is None:
       module_name = os.path.basename(filename)
