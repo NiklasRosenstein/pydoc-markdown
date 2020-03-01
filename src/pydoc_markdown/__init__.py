@@ -30,6 +30,7 @@ from nr.databind.json import JsonModule
 from pydoc_markdown.interfaces import Loader, Processor, Renderer
 from pydoc_markdown.reflection import ModuleGraph
 from pydoc_markdown.contrib.loaders.python import PythonLoader
+from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 import yaml
@@ -41,7 +42,7 @@ mapper = ObjectMapper(JsonModule())
 
 class PydocMarkdown(Struct):
   loaders = Field([Loader], default=[PythonLoader()])
-  processors = Field([Processor], default=[PydocmdProcessor()])
+  processors = Field([Processor], default=[PydocmdProcessor(), FilterProcessor()])
   renderer = Field(Renderer, default=MarkdownRenderer())
 
   def __init__(self, *args, **kwargs):
