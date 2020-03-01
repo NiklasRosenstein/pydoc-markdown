@@ -33,11 +33,14 @@ from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+import logging
 import yaml
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
 __version__ = '3.0.0'
+
 mapper = ObjectMapper(JsonModule())
+logger = logging.getLogger(__name__)
 
 
 class PydocMarkdown(Struct):
@@ -50,22 +53,26 @@ class PydocMarkdown(Struct):
     self.graph = ModuleGraph()
 
   def load_config(self, data):
-    """
-    Loads the configuration. *data* be a string pointing to a YAML file or
-    a dictionary.
+    """ Loads a YAML configuration from *data*.
+
+    Args:
+      data (str, dict): If a string is specified, it is treated as the path
+        to a YAML file.
+    Return: self
     """
 
     filename = None
     if isinstance(data, str):
       filename = data
+      logger.info('Loading configuration file "%s".', filename)
       with open(data) as fp:
         data = yaml.safe_load(fp)
 
     result = mapper.deserialize(data, type(self), filename=filename)
-    vars(self).update({k: getattr(result, k) for k in self.__fields__})
+    vars(self).update(vars(result))
     return result
 
-  def load_module_graph(self):
+  def load_modules(self):
     for loader in self.loaders:
       loader.load(self.graph)
 

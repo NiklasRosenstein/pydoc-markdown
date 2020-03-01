@@ -27,6 +27,8 @@ classifiers:
   - "Programming Language :: Python :: 3.5"
 
 requirements:
+  - python ^3.5
+  - click ^7.0
   - nr.collections ~0.0.1
   - nr.databind ~0.0.4
   - six ^1.11.0
@@ -34,7 +36,7 @@ requirements:
 
 entrypoints:
   console_scripts:
-    - pydoc-markdown = pydoc_markdown.main:_entry_point
+    - pydoc-markdown = pydoc_markdown.main:cli
   pydoc_markdown.interfaces.Loader:
     - python = pydoc_markdown.contrib.loaders.python:PythonLoader
   pydoc_markdown.interfaces.Processor:

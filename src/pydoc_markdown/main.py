@@ -24,47 +24,62 @@ Implements the pydoc-markdown CLI.
 """
 
 from . import PydocMarkdown
-import argparse
 import click
+import logging
+import os
 import sys
+
+config_filenames = [
+  'pydoc-markdown.yml',
+  'pydoc-markdown.yaml',
+]
 
 
 def error(*args):
-  print(*args, file=sys.stderr)
+  print('error:', *args, file=sys.stderr)
   exit(1)
 
 
 @click.command()
-@click.option('--config', '-c', help='Path to the YAML configuration '
-    'file. Defaults to pydoc-markdown.yml')
-@click.option('--modules', multiple=True, help='One or more module names '
-    'to generate API documentation for. If specified, the configuration '
-    'file will not be read, but instead the default configuration is used.')
-@click.option('--search-path', multiple=True, help='One or more search paths for '
-  'the Python loader. Only used in combination with --modules')
-def main(config, modules, search_path):
-  if config and modules:
-    error('--modules cannot be combined with --config')
+@click.argument('config', required=False)
+@click.option(
+  '--verbose', '-v',
+  is_flag=True,
+  help='Increase log verbosity.')
+@click.option(
+  '--quiet', '-q',
+  is_flag=True,
+  help='Decrease the log verbosity.')
+def cli(verbose, quiet, config):
+  """ Pydoc-Markdown is a renderer for Python API documentation in Markdown
+  format.
 
-  pydocmd = PydocMarkdown()
-  if modules:
-    config = {'loaders': [{
-      'type': 'python',
-      'modules': modules,
-      'search_path': search_path
-    }]}
+  With no arguments it will load the default configuration file. If the
+  *config* argument is specified, it must be the name of a configuration file
+  or a YAML formatted object for the configuration. """
 
-  config = pydocmd.load_config(config or 'pydoc-markdown.yml')
-  if not config.loaders:
-    error('no loaders configured')
+  if verbose is not None:
+    if verbose:
+      level = logging.INFO
+    elif quiet:
+      level = logging.ERROR
+    else:
+      level = logging.WARNING
+    logging.basicConfig(format='%(message)s', level=level)
 
-  pydocmd.load_module_graph()
+  if config and (config.lstrip().startswith('{') or '\n' in config):
+    config = yaml.load(config)
+  if not config:
+    try:
+      config = next((x for x in config_filenames if os.path.exists(x)))
+    except StopIteration:
+      error('config file not found.')
+
+  pydocmd = PydocMarkdown().load_config(config)
+  pydocmd.load_modules()
   pydocmd.process()
   pydocmd.render()
 
 
-_entry_point = lambda: sys.exit(main())
-
-
 if __name__ == '__main__':
-  sys.exit(_entry_point())
+  cli()

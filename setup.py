@@ -10,7 +10,7 @@ with io.open('src/pydoc_markdown/__init__.py', encoding='utf8') as fp:
 with io.open('README.md', encoding='utf8') as fp:
   long_description = fp.read()
 
-requirements = ['nr.collections >=0.0.1,<0.1.0', 'nr.databind >=0.0.4,<0.1.0', 'six >=1.11.0,<2.0.0', 'PyYAML >=5.3,<6.0.0']
+requirements = ['click >=7.0,<8.0.0', 'nr.collections >=0.0.1,<0.1.0', 'nr.databind >=0.0.4,<0.1.0', 'six >=1.11.0,<2.0.0', 'PyYAML >=5.3,<6.0.0']
 
 setuptools.setup(
   name = 'pydoc-markdown',
@@ -28,11 +28,11 @@ setuptools.setup(
   install_requires = requirements,
   extras_require = {},
   tests_require = [],
-  python_requires = None, # TODO: None,
+  python_requires = None, # TODO: '>=3.5,<4.0.0',
   data_files = [],
   entry_points = {
     'console_scripts': [
-      'pydoc-markdown = pydoc_markdown.main:_entry_point',
+      'pydoc-markdown = pydoc_markdown.main:cli',
     ],
     'pydoc_markdown.interfaces.Loader': [
       'python = pydoc_markdown.contrib.loaders.python:PythonLoader',
