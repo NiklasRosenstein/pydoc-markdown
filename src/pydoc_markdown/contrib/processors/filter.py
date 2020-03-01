@@ -48,8 +48,10 @@ class FilterProcessor(Struct):
   exclude_private = Field(bool, default=True)
   exclude_special = Field(bool, default=True)
 
+  SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')
+
   def process(self, graph):
-    graph.visit(lambda x: self._process_member(x), allow_mutation=True)
+    graph.visit(self._process_member, allow_mutation=True)
 
   def _process_member(self, node):
     def default_check():
@@ -57,13 +59,13 @@ class FilterProcessor(Struct):
         return False
       if self.exclude_private and node.name.startswith('_') and not node.name.endswith('_'):
         return False
-      if self.exclude_special and node.name in ('__path__', '__annotations__', '__name__', '__all__'):
+      if self.exclude_special and node.name in self.SPECIAL_MEMBERS:
         return False
       return True
 
     if self.expression:
       scope = {'name': node.name, 'node': node, 'default': default_check}
-      if not eval(self.expression, scope):
+      if not eval(self.expression, scope):  # pylint: disable=eval-used
         node.remove()
     if node.parent and not default_check():
       node.remove()

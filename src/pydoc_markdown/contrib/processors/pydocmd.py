@@ -26,7 +26,7 @@ highlighting syntax into Markdown.
 
 import re
 
-from nr.databind.core import Field, Struct
+from nr.databind.core import Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor
 

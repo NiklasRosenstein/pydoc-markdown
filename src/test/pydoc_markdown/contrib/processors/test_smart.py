@@ -1,7 +1,6 @@
 
-from . import assert_processor_result, test_google, test_pydocmd, test_sphinx
+from . import test_google, test_pydocmd, test_sphinx
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
-import textwrap
 
 
 def test_google_style():

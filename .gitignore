@@ -12,3 +12,4 @@ Pipfile
 Pipfile.lock
 .idea
 .pytest_cache/
+.vscode

@@ -28,6 +28,7 @@ import click
 import logging
 import os
 import sys
+import yaml
 
 config_filenames = [
   'pydoc-markdown.yml',
@@ -37,7 +38,7 @@ config_filenames = [
 
 def error(*args):
   print('error:', *args, file=sys.stderr)
-  exit(1)
+  sys.exit(1)
 
 
 @click.command()
@@ -82,4 +83,4 @@ def cli(verbose, quiet, config):
 
 
 if __name__ == '__main__':
-  cli()
+  cli()  # pylint: disable=no-value-for-parameter

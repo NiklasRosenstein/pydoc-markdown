@@ -1,7 +1,6 @@
 
 from . import assert_processor_result
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
-import textwrap
 
 
 def test_sphinx_processor(processor=None):

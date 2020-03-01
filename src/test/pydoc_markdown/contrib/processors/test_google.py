@@ -1,7 +1,6 @@
 
 from . import assert_processor_result
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
-import textwrap
 
 
 def test_google_processor(processor=None):

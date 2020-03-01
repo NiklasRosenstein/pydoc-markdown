@@ -19,8 +19,9 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, Struct
+from nr.databind.core import Struct
 from nr.interface import implements, override
+from pydoc_markdown.contrib.processors.sphinx import generate_sections_markdown
 from pydoc_markdown.interfaces import Processor
 import re
 
@@ -71,7 +72,7 @@ class GoogleProcessor(Struct):
   }
 
   def check_docstring_format(self, docstring: str) -> bool:
-    for section_name in self._keywords_map.keys():
+    for section_name in self._keywords_map:
       if section_name in docstring:
         return True
     return False
@@ -81,6 +82,9 @@ class GoogleProcessor(Struct):
     graph.visit(self.process_node)
 
   def process_node(self, node):
+    if not node.docstring:
+      return
+
     lines = []
     in_codeblock = False
     keyword = None
@@ -121,20 +125,5 @@ class GoogleProcessor(Struct):
       if not param_match:
         components[keyword].append('  {line}'.format(line=line))
 
-    for key in components:
-      self._append_section(lines, key, components)
-
+    generate_sections_markdown(lines, components)
     node.docstring = '\n'.join(lines)
-
-  @staticmethod
-  def _append_section(lines, key, sections):
-    section = sections.get(key)
-    if not section:
-      return
-
-    if lines and lines[-1]:
-      lines.append('')
-
-    # add an extra line because of markdown syntax
-    lines.extend(['**{}**:'.format(key), ''])
-    lines.extend(section)

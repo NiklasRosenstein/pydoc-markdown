@@ -24,10 +24,19 @@ Provides the #SphinxProcessor that converts reST/Sphinx syntax to
 markdown compatible syntax.
 """
 
-from nr.databind.core import Field, Struct
+from nr.databind.core import Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor
 import re
+
+
+def generate_sections_markdown(lines, sections):
+  for key, section in sections.items():
+    if lines and lines[-1]:
+      lines.append('')
+
+    lines.extend(['**{}**:'.format(key), ''])  # add an extra line because of markdown syntax
+    lines.extend(section)
 
 
 @implements(Processor)
@@ -44,6 +53,7 @@ class SphinxProcessor(Struct):
   def process_node(self, node):
     if not node.docstring:
       return
+
     lines = []
     in_codeblock = False
     keyword = None
@@ -65,9 +75,8 @@ class SphinxProcessor(Struct):
           text = match.group(2)
           text = text.strip()
 
-          component = components.get(keyword, [])
+          component = components.setdefault(keyword, [])
           component.append('- `{}`: {}'.format(param, text))
-          components[keyword] = component
           continue
 
         match = re.match(r'\s*:(?:return|returns)\s*:(.*)?$', line)
@@ -76,9 +85,8 @@ class SphinxProcessor(Struct):
           text = match.group(1)
           text = text.strip()
 
-          component = components.get(keyword, [])
+          component = components.setdefault(keyword, [])
           component.append(text)
-          components[keyword] = component
           continue
 
         match = re.match('\\s*:(?:raises|raise)\\s+(\\w+)\\s*:(.*)?$', line)
@@ -88,9 +96,8 @@ class SphinxProcessor(Struct):
           text = match.group(2)
           text = text.strip()
 
-          component = components.get(keyword, [])
+          component = components.setdefault(keyword, [])
           component.append('- `{}`: {}'.format(exception, text))
-          components[keyword] = component
           continue
 
       if keyword is not None:
@@ -98,20 +105,5 @@ class SphinxProcessor(Struct):
       else:
         lines.append(line)
 
-    for key in components:
-      self._append_section(lines, key, components)
-
+    generate_sections_markdown(lines, components)
     node.docstring = '\n'.join(lines)
-
-  @staticmethod
-  def _append_section(lines, key, sections):
-    section = sections.get(key)
-    if not section:
-      return
-
-    if lines and lines[-1]:
-      lines.append('')
-
-    lines.extend(['**{}**:'.format(key), ''])  # add an extra line because of markdown syntax
-    lines.extend(section)
-

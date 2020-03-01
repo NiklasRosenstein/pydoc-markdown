@@ -1,5 +1,24 @@
 [MASTER]
-disable = bad-continuation, missing-function-docstring, invalid-name
+disable =
+  attribute-defined-outside-init,
+  bad-continuation,
+  invalid-name,
+  missing-class-docstring,
+  missing-function-docstring,
+  missing-module-docstring,
+  no-init,
+  no-else-continue,
+  no-else-return,
+  too-few-public-methods,
+  unidiomatic-typecheck,
+  wrong-import-order,
+
+  # Because of nr.databind
+  no-member,
+  not-an-iterable,
+  unsubscriptable-object,
+  unsupported-assignment-operation,
+
 indent-string='  '
 
 [TYPECHECK]

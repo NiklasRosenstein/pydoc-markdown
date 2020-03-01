@@ -25,7 +25,6 @@ from pydoc_markdown.interfaces import Processor
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
 from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
-import re
 
 
 @implements(Processor)
@@ -43,7 +42,7 @@ class SmartProcessor(Struct):
 
   def process_node(self, node):
     if not node.docstring:
-      return
+      return None
     if self.sphinx.check_docstring_format(node.docstring):
       return self.sphinx.process_node(node)
     if self.google.check_docstring_format(node.docstring):

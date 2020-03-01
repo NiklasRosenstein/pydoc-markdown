@@ -93,7 +93,7 @@ def parse_file(code, filename, module_name=None, **kwargs):
   return Parser().parse(parse_to_ast(code, filename, **kwargs), filename, module_name)
 
 
-class Parser(object):
+class Parser:
   """
   A helper class that parses a Python AST to turn it into objects of the
   [[pydoc_markdown.reflection]] module. Extracts docstrings from functions
@@ -267,42 +267,53 @@ class Parser(object):
 
     return result
 
+  def parse_classdef_arglist(self, classargs):
+    metaclass = None
+    bases = []
+    for child in classargs.children[::2]:
+      if child.type == syms.argument:
+        key, value = child.children[0].value, self.nodes_to_string(child.children[2:])
+        if key == 'metaclass':
+          metaclass = Expression(value)
+        else:
+          # TODO @NiklasRosenstein: handle metaclass arguments
+          pass
+      else:
+        bases.append(Expression(str(child)))
+    return metaclass, bases
+
+  def parse_classdef_rawargs(self, classdef):
+    metaclass = None
+    bases = []
+    index = ListScanner(classdef.children, 2)
+    if index.current.type == token.LPAR:
+      index.advance()
+      while index.current.type != token.RPAR:
+        if index.current.type == syms.argument:
+          key = index.current.children[0].value
+          value = Expression(str(index.current.children[2]))
+          if key == 'metaclass':
+            metaclass = value
+          else:
+            # TODO @NiklasRosenstein: handle metaclass arguments
+            pass
+        else:
+          bases.append(Expression(str(index.current)))
+        index.advance()
+    return metaclass, bases
+
   def parse_classdef(self, parent, node, decorators):
     name = node.children[1].value
     bases = []
     metaclass = None
 
     # An arglist is available if there are at least two parameters.
+    # Otherwise we have to deal with parsing a raw sequence of nodes.
     classargs = find(lambda x: x.type == syms.arglist, node.children)
     if classargs:
-      for child in classargs.children[::2]:
-        if child.type == syms.argument:
-          key, value = child.children[0].value, self.nodes_to_string(child.children[2:])
-          if key == 'metaclass':
-            metaclass = Expression(value)
-          else:
-            # TODO @NiklasRosenstein: handle metaclass arguments
-            pass
-        else:
-          bases.append(Expression(str(child)))
-
-    # Otherwise we have to deal with parsing a raw sequence of nodes.
+      metaclass, bases = self.parse_classdef_arglist(classargs)
     else:
-      index = ListScanner(node.children, 2)
-      if index.current.type == token.LPAR:
-        index.advance()
-        while index.current.type != token.RPAR:
-          if index.current.type == syms.argument:
-            key = index.current.children[0].value
-            value = Expression(str(index.current.children[2]))
-            if key == 'metaclass':
-              metaclass = value
-            else:
-              # TODO @NiklasRosenstein: handle metaclass arguments
-              pass
-          else:
-            bases.append(Expression(str(index.current)))
-          index.advance()
+      metaclass, bases = self.parse_classdef_rawargs(node)
 
     suite = find(lambda x: x.type == syms.suite, node.children)
     docstring = self.get_docstring_from_first_node(suite)
@@ -442,7 +453,7 @@ class Parser(object):
       return node.value
 
 
-class ListScanner(object):
+class ListScanner:
   """
   A helper class to navigate through a list. This is useful if you would
   usually iterate over the list by index to be able to acces the next
@@ -568,6 +579,7 @@ class PythonLoader(Struct):
       sys.path = old_path
 
   def _iter_module_files(self, module_name, path):
+    # pylint: disable=stop-iteration-return
     if os.path.isfile(path):
       yield module_name, path
       return

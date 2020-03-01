@@ -1,7 +1,6 @@
 
 from pydoc_markdown import PydocMarkdown
 from test.pydoc_markdown.utils import assert_text_equals
-import pytest
 import textwrap
 
 
@@ -11,7 +10,8 @@ def assert_code_as_markdown(source_code, markdown):
   config.renderer.render_toc = False
   module = config.loaders[0].load_source(textwrap.dedent(source_code),
     '_inline', '<string>')
-  [config.graph.add_module(v) for v in module.members.values()]
+  for member in module.members.values():
+    config.graph.add_module(member)
   config.process()
   result = config.renderer.render_to_string(config.graph)
   assert_text_equals(result, textwrap.dedent(markdown))

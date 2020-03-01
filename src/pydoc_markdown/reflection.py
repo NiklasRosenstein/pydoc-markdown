@@ -25,7 +25,6 @@ generalised and intended to be usable for any language.
 """
 
 from nr.databind.core import Field, Struct, forward_decl
-from typing import Optional
 
 Argument = forward_decl()
 Decorator = forward_decl()
@@ -38,7 +37,7 @@ class Location(Struct):
   lineno = Field(int)
 
 
-@forward_decl(Object)
+@forward_decl(Object)  # pylint: disable=function-redefined
 class Object(Struct):
   location = Field(Location, nullable=True)
   parent = Field(Object, default=None)
@@ -125,13 +124,13 @@ class Data(Object):
   expr = Field(Expression)
 
 
-@forward_decl(Decorator)
+@forward_decl(Decorator)  # pylint: disable=function-redefined
 class Decorator(Struct):
   name = Field(str)
   args = Field(Expression, default=None)
 
 
-@forward_decl(Argument)
+@forward_decl(Argument)  # pylint: disable=function-redefined
 class Argument(Struct):
   name = Field(str)
   annotation = Field(Expression, default=None)
@@ -167,13 +166,12 @@ class Argument(Struct):
   @staticmethod
   def format_arglist(arglist):
     parts = []
-    found_kw_only = False
     for arg in arglist:
       parts.append(str(arg))
     return ', '.join(parts)
 
 
-@forward_decl(Expression)
+@forward_decl(Expression)  # pylint: disable=function-redefined
 class Expression(Struct):
   text = Field(str)
 
@@ -181,7 +179,7 @@ class Expression(Struct):
     return self.text
 
 
-class ModuleGraph(object):
+class ModuleGraph:
   """
   Represents a collection of #Module objects.
   """

@@ -28,9 +28,9 @@ Pydoc-Markdown to implement custom loaders for documentation data,
 processors or renderers.
 """
 
-from nr.databind.core import Struct, DeserializeAs, UnionType
-from nr.interface import Interface, implements, default
-from .reflection import Module, ModuleGraph
+from nr.databind.core import  DeserializeAs, UnionType
+from nr.interface import Interface, default
+from .reflection import ModuleGraph
 
 
 class Loader(Interface):

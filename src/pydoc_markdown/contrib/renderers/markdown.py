@@ -29,7 +29,7 @@ import sys
 from nr.databind.core import Field, Struct
 from nr.interface import implements
 from pydoc_markdown.interfaces import Renderer
-from pydoc_markdown.reflection import *
+from pydoc_markdown.reflection import Class, Module
 
 
 @implements(Renderer)
@@ -64,49 +64,58 @@ class MarkdownRenderer(Struct):
     for child in obj.members.values():
       self._render_toc(fp, level + 1, child)
 
+  def _render_header(self, fp, level, obj):
+    object_id = self._generate_object_id(obj)
+    if self.insert_heading_anchors and not self.html_headings:
+      fp.write('<a name="{}"></a>\n'.format(object_id))
+    if self.html_headings:
+      heading_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
+    else:
+      heading_template = level * '#' + ' {title}'
+    fp.write(heading_template.format(title=self._get_title(obj)))
+    fp.write('\n\n')
+
+  def _render_signature_block(self, fp, obj):
+    if obj.is_class():
+      func = obj.members.get('__init__')
+      if func and not func.is_function():
+        func = None
+    else:
+      func = obj
+    if func:
+      fp.write('```{}\n'.format('python' if self.code_lang else ''))
+      for dec in func.decorators:
+        fp.write('@{}{}\n'.format(dec.name, dec.args or ''))
+      if func.is_async:
+        fp.write('async ')
+      if self.signature_with_def:
+        fp.write('def ')
+      if self.signature_class_prefix and (
+          func.is_function() and func.parent and func.parent.is_class()):
+        fp.write(func.parent.name + '.')
+      fp.write(func.signature)
+      if func.return_:
+        fp.write(' -> {}'.format(func.return_))
+      fp.write('\n```\n\n')
+
+  def _render_data_block(self, fp, obj):
+    fp.write('```{}\n'.format('python' if self.code_lang else ''))
+    expr = str(obj.expr)
+    if len(expr) > self.signature_expression_maxlength:
+      expr = expr[:self.signature_expression_maxlength] + ' ...'
+    fp.write(obj.name + ' = ' + expr)
+    fp.write('\n```\n\n')
+
   def _render_object(self, fp, level, obj):
     if not isinstance(obj, Module) or self.render_module_header:
-      object_id = self._generate_object_id(obj)
-      if self.insert_heading_anchors and not self.html_headings:
-        fp.write('<a name="{}"></a>\n'.format(object_id))
-      if self.html_headings:
-        heading_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
-      else:
-        heading_template = level * '#' + ' {title}'
-      fp.write(heading_template.format(title=self._get_title(obj)))
-      fp.write('\n\n')
+      self._render_header(fp, level, obj)
     if self.classdef_code_block and obj.is_class():
       bases = ', '.join(map(str, obj.bases))
       fp.write('```python\nclass {}({})\n```\n\n'.format(obj.name, bases))
     if self.signature_code_block and (obj.is_class() or obj.is_function()):
-      if obj.is_class():
-        func = obj.members.get('__init__')
-        if func and not func.is_function():
-          func = None
-      else:
-        func = obj
-      if func:
-        fp.write('```{}\n'.format('python' if self.code_lang else ''))
-        for dec in func.decorators:
-          fp.write('@{}{}\n'.format(dec.name, dec.args or ''))
-        if func.is_async:
-          fp.write('async ')
-        if self.signature_with_def:
-          fp.write('def ')
-        if self.signature_class_prefix and (
-            func.is_function() and func.parent and func.parent.is_class()):
-          fp.write(func.parent.name + '.')
-        fp.write(func.signature)
-        if func.return_:
-          fp.write(' -> {}'.format(func.return_))
-        fp.write('\n```\n\n')
+      self._render_signature_block(fp, obj)
     if self.data_code_block and obj.is_data():
-      fp.write('```{}\n'.format('python' if self.code_lang else ''))
-      expr = str(obj.expr)
-      if len(expr) > self.signature_expression_maxlength:
-        expr = expr[:self.signature_expression_maxlength] + ' ...'
-      fp.write(obj.name + ' = ' + expr)
-      fp.write('\n```\n\n')
+      self._render_data_block(fp, obj)
     if obj.docstring:
       fp.write(obj.docstring)
       fp.write('\n\n')
@@ -146,7 +155,7 @@ class MarkdownRenderer(Struct):
           title = '<sub>{}.</sub>{}'.format(prefix, title)
         title = '<code>{}</code>'.format(title)
       else:
-        title ='`{}`'.format(title)
+        title = '`{}`'.format(title)
     else:
       title = obj.name
     if isinstance(obj, Class) and self.descriptive_class_title:
