@@ -82,3 +82,19 @@ def test_starred_arguments():
 
   Docstring goes here.
   ''')
+
+
+def test_class():
+  # https://github.com/NiklasRosenstein/pydoc-markdown/issues/83
+  assert_code_as_markdown(
+  '''
+  class MyError(RuntimeError):
+    """ Error raised when my thing happens. """
+    pass
+  ''',
+  '''
+  # `MyError` Objects
+
+  Error raised when my thing happens.
+  '''
+  )
