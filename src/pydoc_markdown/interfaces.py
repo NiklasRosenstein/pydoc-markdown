@@ -46,7 +46,7 @@ class Loader(Interface):
 
   def load(self, graph):  # type: (ModuleGraph) -> None
     """
-    Fill the [[ModuleGraph]].
+    Fill the #ModuleGraph.
     """
 
 

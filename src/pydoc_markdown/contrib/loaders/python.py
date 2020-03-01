@@ -99,7 +99,7 @@ def parse_file(code, filename, module_name=None, **kwargs):
 class Parser:
   """
   A helper class that parses a Python AST to turn it into objects of the
-  [[pydoc_markdown.reflection]] module. Extracts docstrings from functions
+  #pydoc_markdown.reflection module. Extracts docstrings from functions
   and single-line comments.
   """
 
@@ -503,7 +503,7 @@ class ListScanner:
   def advance(self, expect=False):
     """
     Advances the scanner to the next element in the list. If *expect* is set
-    to `True`, an [[IndexError]] will be raised when there is no next element.
+    to `True`, an #IndexError will be raised when there is no next element.
     Otherwise, `None` will be returned.
     """
 
@@ -518,14 +518,14 @@ class ListScanner:
   def safe_iter(self, auto_advance=True):
     """
     A useful generator function that iterates over every element in the list.
-    You may call [[advance()]] during the iteration to retrieve the next
+    You may call #advance() during the iteration to retrieve the next
     element in the list within a single iteration.
 
     If *auto_advance* is `True` (default), the function generator will
     always advance to the next element automatically. If it is set to `False`,
-    [[advance()]] must be called manually in every iteration to ensure that
+    #advance() must be called manually in every iteration to ensure that
     the scanner has advanced at least to the next element, or a
-    [[RuntimeError]] will be raised.
+    #RuntimeError will be raised.
     """
 
     index = self._index
@@ -540,28 +540,28 @@ class ListScanner:
 @implements(Loader)
 class PythonLoader(Struct):
   """
-  This implementation of the [[Loader]] interface parses Python modules and
+  This implementation of the #Loader interface parses Python modules and
   packages. Which files are parsed depends on the configuration (see
-  [[PythonLoaderConfig]]).
+  #PythonLoaderConfig).
   """
 
   #: A list of module or package names that this loader will search for and
-  #: then parse. The modules are searched using the [[sys.path]] of the current
-  #: Python interpreter, unless the [[search_path]] option is specified.
+  #: then parse. The modules are searched using the #sys.path of the current
+  #: Python interpreter, unless the #search_path option is specified.
   #:
   #: If this is not specified, it will attempt to find packages to document
   #: in the src/ folder of the current directory.
   modules = Field([str], default=None)
 
-  #: The module search path. If not specified, the current [[sys.path]] is
+  #: The module search path. If not specified, the current #sys.path is
   #: used instead. If any of the elements contain a `*` (star) symbol, it
-  #: will be expanded with [[sys.path]].
+  #: will be expanded with #sys.path.
   search_path = Field([str], default=None)
 
   #: The "print_function" flag will be passed down to the lib2to3
   #: RefactoringTool. This enables parsing Python 3 code that uses the
   #: print function without importing importing print_function from the
-  #: __future__ module.
+  #: `__future__` module.
   print_function = Field(bool, default=True)
 
   IGNORE_DISCOVERED_MODULES = ('test', 'tests', 'setup')
