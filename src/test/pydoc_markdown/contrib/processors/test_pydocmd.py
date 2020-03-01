@@ -4,8 +4,8 @@ from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 import textwrap
 
 
-def test_arguments():
-  assert_processor_result(PydocmdProcessor(),
+def test_pydocmd_processor(processor=None):
+  assert_processor_result(processor or PydocmdProcessor(),
   '''
   # Arguments
   s (str): A string.

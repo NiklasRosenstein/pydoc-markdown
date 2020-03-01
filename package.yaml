@@ -43,7 +43,8 @@ entrypoints:
     - filter = pydoc_markdown.contrib.processors.filter:FilterProcessor
     - google = pydoc_markdown.contrib.processors.google:GoogleProcessor
     - pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor
-    - sphinx = pydoc_markdown.contrib.processors.pydocmd:SphinxProcessor
+    - smart = pydoc_markdown.contrib.processors.smart:SmartProcessor
+    - sphinx = pydoc_markdown.contrib.processors.sphinx:SphinxProcessor
   pydoc_markdown.interfaces.Renderer:
     - markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer
     - mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkDocsRenderer

@@ -4,8 +4,8 @@ from pydoc_markdown.contrib.processors.google import GoogleProcessor
 import textwrap
 
 
-def test_google_processor():
-  assert_processor_result(GoogleProcessor(),
+def test_google_processor(processor=None):
+  assert_processor_result(processor or GoogleProcessor(),
   '''
   Args:
     s (str): A string.

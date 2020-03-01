@@ -4,8 +4,8 @@ from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
 import textwrap
 
 
-def test_sphinx_processor():
-  assert_processor_result(SphinxProcessor(),
+def test_sphinx_processor(processor=None):
+  assert_processor_result(processor or SphinxProcessor(),
   '''
   :param s: A string.
   :param b: An int.
