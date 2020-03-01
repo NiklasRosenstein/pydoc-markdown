@@ -53,8 +53,10 @@ class SphinxProcessor(Preprocessor):
       if line.startswith("```"):
         in_codeblock = not in_codeblock
 
-      if not in_codeblock:
-        match = re.match(r':(?:param|parameter)\s+(\w+)\s*:(.*)?$', line)
+      line_codeblock = line.startswith('    ')
+
+      if not in_codeblock and not line_codeblock:
+        match = re.match(r'\s*:(?:param|parameter)\s+(\w+)\s*:(.*)?$', line)
         if match:
           keyword = 'Arguments'
           param = match.group(1)
@@ -66,7 +68,7 @@ class SphinxProcessor(Preprocessor):
           components[keyword] = component
           continue
 
-        match = re.match(r':(?:return|returns)\s*:(.*)?$', line)
+        match = re.match(r'\s*:(?:return|returns)\s*:(.*)?$', line)
         if match:
           keyword = 'Returns'
           text = match.group(1)
@@ -77,7 +79,7 @@ class SphinxProcessor(Preprocessor):
           components[keyword] = component
           continue
 
-        match = re.match(':(?:raises|raise)\s+(\w+)\s*:(.*)?$', line)
+        match = re.match('\\s*:(?:raises|raise)\\s+(\\w+)\\s*:(.*)?$', line)
         if match:
           keyword = 'Raises'
           exception = match.group(1)
