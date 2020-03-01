@@ -197,3 +197,21 @@ def test_attribute_docstring():
 
   This is a member docstring.
   ''')
+
+  assert_code_as_markdown(
+  '''
+  class Foo:
+    member = None
+    """ This is a member docstring. """
+  ''',
+  '''
+  # `Foo` Objects
+
+  ```python
+  class Foo()
+  ```
+
+  ## `member`
+
+  This is a member docstring.
+  ''')

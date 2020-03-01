@@ -378,6 +378,13 @@ class Parser:
       docstring, doc_type = self.get_hashtag_docstring_from_prefix(node)
       if doc_type == 'statement':
         return docstring
+    # Look for the next string literal instead.
+    while node and node.type != syms.simple_stmt:
+      node = node.parent
+    if node and node.next_sibling and node.next_sibling.type == syms.simple_stmt:
+      string_literal = node.next_sibling.children[0]
+      if string_literal.type == token.STRING:
+        return self.prepare_docstring(string_literal.value)
     return None
 
   def get_hashtag_docstring_from_prefix(self, node):
