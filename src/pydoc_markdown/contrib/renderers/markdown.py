@@ -41,6 +41,7 @@ class MarkdownRenderer(Struct):
   code_headings = Field(bool, default=True)
   code_lang = Field(bool, default=True)
   descriptive_class_title = Field(bool, default=True)
+  descriptive_module_title = Field(bool, default=True)
   add_method_class_prefix = Field(bool, default=True)
   add_full_prefix = Field(bool, default=False)
   sub_prefix = Field(bool, default=False)
@@ -155,6 +156,8 @@ class MarkdownRenderer(Struct):
         title = '`{}`'.format(title)
     else:
       title = obj.name
+    if isinstance(obj, Module) and self.descriptive_module_title:
+      title = 'Module ' + title
     if isinstance(obj, Class) and self.descriptive_class_title:
       title += ' Objects'
     return title
