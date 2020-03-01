@@ -32,7 +32,7 @@ def test_starred_arguments():
   # `a()`
 
   ```python
-  def a(args, *,, ,, kwargs)
+  def a(*args, **kwargs)
   ```
 
   Docstring goes here.

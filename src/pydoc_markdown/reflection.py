@@ -155,9 +155,9 @@ class Argument(Struct):
       if self.annotation:
         parts.append(' ')
       parts.append(str(self.default))
-    if self.type == 'POS_REMAINDER':
+    if self.type == Argument.POS_REMAINDER:
       parts.insert(0, '*')
-    elif self.type == 'KW_REMAINDER':
+    elif self.type == Argument.KW_REMAINDER:
       parts.insert(0, '**')
     return ''.join(parts)
 

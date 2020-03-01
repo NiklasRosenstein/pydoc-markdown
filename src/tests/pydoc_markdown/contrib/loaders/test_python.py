@@ -131,3 +131,21 @@ class TestParser:
       Argument('b', None, None, Argument.KW_ONLY),
       Argument('c', None, None, Argument.KW_REMAINDER)
     ])
+
+    module = self.parse('''
+      def func(*args, **kwargs):
+        """ Docstring goes here. """
+    ''')
+    assert_(module, [
+      Argument('args', None, None, Argument.POS_REMAINDER),
+      Argument('kwargs', None, None, Argument.KW_REMAINDER),
+    ])
+
+    module = self.parse('''
+      def func(*, **kwargs):
+        """ Docstring goes here. """
+    ''')
+    assert_(module, [
+      Argument('', None, None, Argument.KW_SEPARATOR),
+      Argument('kwargs', None, None, Argument.KW_REMAINDER),
+    ])

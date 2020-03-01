@@ -244,6 +244,7 @@ class Parser(object):
           index.advance()
         else:
           result.append(self.parse_argument(node, Argument.POS_REMAINDER, index))
+          index.advance()
         argtype = Argument.KW_ONLY
         continue
       elif node.type == token.DOUBLESTAR:
