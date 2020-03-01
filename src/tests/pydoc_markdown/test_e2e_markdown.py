@@ -17,8 +17,6 @@ def assert_code_as_markdown(source_code, markdown):
 
 
 def test_starred_arguments():
-  # TODO (@NiklasRosenstein): Fix the parsing/rendering of starred arguments
-  #   and update this test afterwards.
   assert_code_as_markdown(
   '''
   def a(*args, **kwargs):
@@ -40,7 +38,7 @@ def test_starred_arguments():
   # `b()`
 
   ```python
-  def b(abc, )
+  def b(abc, *)
   ```
 
   Docstring goes here.
@@ -48,7 +46,7 @@ def test_starred_arguments():
   # `c()`
 
   ```python
-  def c(abc, , *,, defg)
+  def c(abc, *, defg)
   ```
 
   Docstring goes here.

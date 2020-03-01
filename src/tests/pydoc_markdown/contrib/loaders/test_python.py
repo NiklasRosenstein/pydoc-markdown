@@ -131,6 +131,7 @@ class TestParser:
       Argument('b', None, None, Argument.KW_ONLY),
       Argument('c', None, None, Argument.KW_REMAINDER)
     ])
+    assert module.members['func'].signature == 'func(a, *, b, **c)'
 
     module = self.parse('''
       def func(*args, **kwargs):
@@ -140,6 +141,7 @@ class TestParser:
       Argument('args', None, None, Argument.POS_REMAINDER),
       Argument('kwargs', None, None, Argument.KW_REMAINDER),
     ])
+    assert module.members['func'].signature == 'func(*args, **kwargs)'
 
     module = self.parse('''
       def func(*, **kwargs):
@@ -149,3 +151,14 @@ class TestParser:
       Argument('', None, None, Argument.KW_SEPARATOR),
       Argument('kwargs', None, None, Argument.KW_REMAINDER),
     ])
+    assert module.members['func'].signature == 'func(*, **kwargs)'
+
+    module = self.parse('''
+      def func(abc, *,):
+          """Docstring goes here."""
+    ''')
+    assert_(module, [
+      Argument('abc', None, None, Argument.POS),
+      Argument('', None, None, Argument.KW_SEPARATOR),
+    ])
+    assert module.members['func'].signature == 'func(abc, *)'

@@ -144,6 +144,8 @@ class Argument(Struct):
   KW_REMAINDER = 'kw_remainder'
 
   def __str__(self):
+    if self.type == Argument.KW_SEPARATOR:
+      return '*'
     parts = [self.name]
     if self.annotation:
       parts.append(': ' + str(self.annotation))
@@ -166,9 +168,6 @@ class Argument(Struct):
     parts = []
     found_kw_only = False
     for arg in arglist:
-      if not found_kw_only and arg.type == Argument.KW_ONLY:
-        found_kw_only = True
-        parts.append('*,')
       parts.append(str(arg))
     return ', '.join(parts)
 
