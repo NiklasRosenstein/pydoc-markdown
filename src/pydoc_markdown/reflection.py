@@ -40,7 +40,7 @@ class Location(Struct):
 
 @forward_decl(Object)
 class Object(Struct):
-  location = Field(Location)
+  location = Field(Location, nullable=True)
   parent = Field(Object, default=None)
   name = Field(str)
   docstring = Field(str, default=None)

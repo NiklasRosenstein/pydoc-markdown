@@ -24,22 +24,19 @@ Provides the #SphinxProcessor that converts reST/Sphinx syntax to
 markdown compatible syntax.
 """
 
-import re
-
-from nr.databind.core import Field, Object
+from nr.databind.core import Field, Struct
 from nr.interface import implements
 from pydoc_markdown.interfaces import Processor
+import re
 
 
-class SphinxProcessorConfig(Object):
-  pass
+@implements(Processor)
+class SphinxProcessor(Struct):
 
+  def process(self, graph):
+    graph.visit(self._process_node)
 
-class SphinxProcessor(Preprocessor):
-
-  CONFIG_CLASS = SphinxProcessorConfig
-
-  def preprocess(self, root, node):
+  def _process_node(self, node):
     if not node.docstring:
       return
     lines = []
