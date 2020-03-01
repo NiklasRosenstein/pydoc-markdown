@@ -31,6 +31,7 @@ from pydoc_markdown.interfaces import Loader, Processor, Renderer
 from pydoc_markdown.reflection import ModuleGraph
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
+from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 import logging
@@ -45,12 +46,14 @@ logger = logging.getLogger(__name__)
 
 class PydocMarkdown(Struct):
   loaders = Field([Loader], default=lambda: [PythonLoader()])
-  processors = Field([Processor], default=lambda: [SmartProcessor(), FilterProcessor()])
-  renderer = Field(Renderer, default=lambda: MarkdownRenderer())
+  processors = Field([Processor], default=lambda: [
+    FilterProcessor(), SmartProcessor(), CrossrefProcessor()])
+  renderer = Field(Renderer, default=MarkdownRenderer)
 
   def __init__(self, *args, **kwargs):
     super(PydocMarkdown, self).__init__(*args, **kwargs)
     self.graph = ModuleGraph()
+    self.resolver = None
 
   def load_config(self, data):
     """ Loads a YAML configuration from *data*.
@@ -77,9 +80,13 @@ class PydocMarkdown(Struct):
       loader.load(self.graph)
 
   def process(self):
+    if self.resolver is None:
+      self.resolver = self.renderer.get_resolver(self.graph)
     for processor in self.processors:
-      processor.process(self.graph)
+      processor.process(self.graph, self.resolver)
 
   def render(self):
-    self.renderer.process(self.graph)
+    if self.resolver is None:
+      self.resolver = self.renderer.get_resolver(self.graph)
+    self.renderer.process(self.graph, self.resolver)
     self.renderer.render(self.graph)

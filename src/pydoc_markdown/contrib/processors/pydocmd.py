@@ -37,7 +37,7 @@ from pydoc_markdown.interfaces import Processor
 class PydocmdProcessor(Struct):
 
   @override
-  def process(self, graph):
+  def process(self, graph, resolver):
     graph.visit(self.process_node)
 
   def process_node(self, node):
@@ -52,7 +52,7 @@ class PydocmdProcessor(Struct):
       if not codeblock_opened:
         line, current_section = self._preprocess_line(line, current_section)
       lines.append(line)
-    node.docstring = self._preprocess_refs('\n'.join(lines))
+    node.docstring = '\n'.join(lines)
 
   def _preprocess_line(self, line, current_section):
     match = re.match(r'# (.*)$', line)
@@ -79,17 +79,3 @@ class PydocmdProcessor(Struct):
       line = re.sub(r'__(\w+)\s*\((.*?)\)__:', sub, line)
 
     return line, current_section
-
-  def _preprocess_refs(self, content):
-    def handler(match):
-      ref = match.group('ref')
-      parens = match.group('parens') or ''
-      has_trailing_dot = False
-      if not parens and ref.endswith('.'):
-        ref = ref[:-1]
-        has_trailing_dot = True
-      result = '`{}`'.format(ref + parens)
-      if has_trailing_dot:
-        result += '.'
-      return (match.group('prefix') or '') + result
-    return re.sub(r'(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?', handler, content)

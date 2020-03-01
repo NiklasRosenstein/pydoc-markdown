@@ -40,6 +40,7 @@ entrypoints:
   pydoc_markdown.interfaces.Loader:
     - python = pydoc_markdown.contrib.loaders.python:PythonLoader
   pydoc_markdown.interfaces.Processor:
+    - crossref = pydoc_markdown.contrib.processors.crossref:CrossrefProcessor
     - filter = pydoc_markdown.contrib.processors.filter:FilterProcessor
     - google = pydoc_markdown.contrib.processors.google:GoogleProcessor
     - pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor

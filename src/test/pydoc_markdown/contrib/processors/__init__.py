@@ -10,5 +10,5 @@ def assert_processor_result(processor, docstring, expected_output):
   obj = Object(None, name='test', docstring=textwrap.dedent(docstring))
   graph = ModuleGraph()
   graph.add_module(obj)
-  processor.process(graph)
+  processor.process(graph, None)
   assert_text_equals(obj.docstring, textwrap.dedent(expected_output))

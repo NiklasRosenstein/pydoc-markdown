@@ -43,8 +43,9 @@ is defined as
 loaders:
   - type: python
 processors:
-  - type: smart
   - type: filter
+  - type: smart
+  - type: crossref
 renderer:
   - type: markdown
 ```

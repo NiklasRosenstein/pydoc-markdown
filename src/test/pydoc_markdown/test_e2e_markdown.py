@@ -7,6 +7,7 @@ import textwrap
 def assert_code_as_markdown(source_code, markdown, full=False):
   config = PydocMarkdown()
   config.renderer.insert_header_anchors = False
+  config.renderer.add_member_class_prefix = False
   config.renderer.render_toc = False
   module = config.loaders[0].load_source(textwrap.dedent(source_code),
     '_inline', '<string>')

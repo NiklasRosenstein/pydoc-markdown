@@ -25,6 +25,7 @@ generalised and intended to be usable for any language.
 """
 
 from nr.databind.core import Field, Struct, forward_decl
+from typing import List, Optional
 
 Argument = forward_decl()
 Decorator = forward_decl()
@@ -35,6 +36,9 @@ Object = forward_decl()
 class Location(Struct):
   filename = Field(str)
   lineno = Field(int)
+
+  def __str__(self):
+    return '{}:{}'.format(self.filename, self.lineno)
 
 
 @forward_decl(Object)  # pylint: disable=function-redefined
@@ -181,7 +185,7 @@ class Expression(Struct):
 
 class ModuleGraph:
   """
-  Represents a collection of #Module objects.
+  Represents a collection of #Object#s, typically #Module#s.
   """
 
   def __init__(self):
@@ -193,6 +197,34 @@ class ModuleGraph:
   def visit(self, func, allow_mutation=False):
     for module in self.modules:
       module.visit(func, allow_mutation)
+
+  def resolve_ref(self, scope: Object, ref: List[str]) -> Optional[Object]:
+    """ Resolve a reference to another object from within the specified
+    *scope*. Returns the target, or None if the target cannot be resolved
+    from the ref.
+
+    The *ref* must be a list of names that can be retrieved from the scope's
+    members in order. If no scope is specified, it will be resolved inside
+    the #ModuleGraph. """
+
+    if not ref:
+      return None
+
+    def _single_resolve(scope, ref):
+      for name in ref:
+        if name not in scope.members:
+          return None
+        scope = scope.members[name]
+      return scope
+
+    while scope:
+      target = _single_resolve(scope, ref)
+      if target:
+        return target
+      scope = scope.parent
+
+    fake = Object(location=None, name='fake', members={x.name: x for x in self.modules})
+    return _single_resolve(fake, ref)
 
 
 __all__ = [

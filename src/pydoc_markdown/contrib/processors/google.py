@@ -78,7 +78,7 @@ class GoogleProcessor(Struct):
     return False
 
   @override
-  def process(self, graph):
+  def process(self, graph, _resolver):
     graph.visit(self.process_node)
 
   def process_node(self, node):

@@ -50,7 +50,7 @@ class FilterProcessor(Struct):
 
   SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')
 
-  def process(self, graph):
+  def process(self, graph, _resolver):
     graph.visit(self._process_member, allow_mutation=True)
 
   def _process_member(self, node):

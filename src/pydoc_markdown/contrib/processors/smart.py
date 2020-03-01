@@ -33,7 +33,7 @@ class SmartProcessor(Struct):
   pydocmd = Field(PydocmdProcessor, default=PydocmdProcessor)
   sphinx = Field(SphinxProcessor, default=SphinxProcessor)
 
-  def process(self, graph):
+  def process(self, graph, _resolver):
     """
     Preprocessors a given section into it's components.
     """

@@ -30,7 +30,8 @@ processors or renderers.
 
 from nr.databind.core import  DeserializeAs, UnionType
 from nr.interface import Interface, default
-from .reflection import ModuleGraph
+from typing import Optional
+from .reflection import ModuleGraph, Object
 
 
 class Loader(Interface):
@@ -43,7 +44,7 @@ class Loader(Interface):
   ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Loader'
   DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
-  def load(self, graph):  # type: (Object, ModuleGraph) -> None
+  def load(self, graph):  # type: (ModuleGraph) -> None
     """
     Fill the [[ModuleGraph]].
     """
@@ -63,7 +64,15 @@ class Processor(Interface):
   ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Processor'
   DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
-  def process(self, graph):  # type: (Object, ModuleGraph) -> None
+  def process(self, graph, resolver):  # type: (ModuleGraph, Optional[Resolver]) -> None
+    pass
+
+
+class Resolver(Interface):
+  """ A resolver can be used by a #Processor to replace cross references
+  with a hyperlink. """
+
+  def resolve_ref(self, scope: Object, ref: str) -> Optional[str]:
     pass
 
 
@@ -83,8 +92,11 @@ class Renderer(Processor):
   DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
   @default
-  def process(self, graph):  # type: (Object, ModuleGraph) -> None
+  def process(self, graph, resolver):  # type: (ModuleGraph, Optional[Resolver]) -> None
     pass
 
-  def render(self, graph):  # type: (Object, ModuleGraph) -> None
+  def render(self, graph):  # type: (ModuleGraph) -> None
+    pass
+
+  def get_resolver(self, graph):  # type: (ModuleGraph) -> Optional[Resolver]
     pass

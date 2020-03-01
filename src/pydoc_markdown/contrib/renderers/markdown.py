@@ -23,13 +23,13 @@
 Implements a renderer that produces Markdown output.
 """
 
-import io
-import sys
-
 from nr.databind.core import Field, Struct
 from nr.interface import implements
-from pydoc_markdown.interfaces import Renderer
-from pydoc_markdown.reflection import Class, Module
+from pydoc_markdown.interfaces import Renderer, Resolver
+from pydoc_markdown.reflection import Object, Class, Module, ModuleGraph
+from typing import Optional
+import io
+import sys
 
 
 @implements(Renderer)
@@ -193,7 +193,7 @@ class MarkdownRenderer(Struct):
     for member in obj.members.values():
       self._render_recursive(fp, level+1, member)
 
-  def _render(self, graph, fp):
+  def _render_graph(self, graph, fp):
     if self.render_toc:
       if self.render_toc_title:
         fp.write('# {}\n\n'.format(self.render_toc_title))
@@ -243,16 +243,24 @@ class MarkdownRenderer(Struct):
   def _escape(self, s):
     return s.replace('_', '\\_').replace('*', '\\*')
 
-  def render_to_string(self, graph):
+  def render_to_string(self, graph: ModuleGraph):
     fp = io.StringIO()
-    self._render(graph, fp)
+    self._render_graph(graph, fp)
     return fp.getvalue()
 
   # Renderer
 
-  def render(self, graph):
+  def get_resolver(self, graph: ModuleGraph) -> Resolver:
+    def resolver(scope: Object, ref: str) -> Optional[str]:
+      target = graph.resolve_ref(scope, ref.split('.'))
+      if target:
+        return '#' + self._generate_object_id(target)
+      return None
+    return Resolver(resolver)
+
+  def render(self, graph: ModuleGraph):
     if self.filename is None:
-      self._render(graph, sys.stdout)
+      self._render_graph(graph, sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
-        self._render(graph, fp)
+        self._render_graph(graph, fp)
