@@ -1,0 +1,46 @@
+name: "pydoc-markdown"
+source-directory: "."
+modulename: "pydocmd"
+version: "2.0.5"
+author: "Niklas Rosenstein <rosensteinniklas@gmail.com>"
+license: "MIT"
+description: "Create Python API documentation in Markdown format"
+url: "https://github.com/NiklasRosenstein/pydoc-markdown"
+tag-format: "v{version}"
+
+keywords:
+  - markdown
+  - pydoc
+  - generator
+  - docs
+  - documentation
+
+classifiers:
+  - "Development Status :: 3 - Alpha"
+  - "Intended Audience :: Developers"
+  - "Intended Audience :: End Users/Desktop"
+  - "Topic :: Software Development :: Code Generators"
+  - "Topic :: Utilities"
+  - "License :: OSI Approved :: MIT License"
+  - "Programming Language :: Python :: 2"
+  - "Programming Language :: Python :: 2.7"
+  - "Programming Language :: Python :: 3"
+  - "Programming Language :: Python :: 3.3"
+  - "Programming Language :: Python :: 3.4"
+  - "Programming Language :: Python :: 3.5"
+
+requirements:
+  - python ^3.4
+  - MkDocs>=1.0.0
+  - Markdown>=2.6.11
+  - PyYAML>=3.12
+  - six>=0.11.0
+  - yapf>=0.26.0
+
+entrypoints:
+  console_scripts:
+    - pydocmd=pydocmd.__main__:main
+
+manifest:
+  - include LICENSE.txt
+  - include README.md
