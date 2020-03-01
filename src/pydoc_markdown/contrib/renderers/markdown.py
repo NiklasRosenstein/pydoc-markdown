@@ -76,28 +76,21 @@ class MarkdownRenderer(Struct):
     fp.write(heading_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
-  def _render_signature_block(self, fp, obj):
-    if obj.is_class():
-      func = obj.members.get('__init__')
-      if func and not func.is_function():
-        func = None
-    else:
-      func = obj
-    if func:
-      fp.write('```{}\n'.format('python' if self.code_lang else ''))
-      for dec in func.decorators:
-        fp.write('@{}{}\n'.format(dec.name, dec.args or ''))
-      if func.is_async:
-        fp.write('async ')
-      if self.signature_with_def:
-        fp.write('def ')
-      if self.signature_class_prefix and (
-          func.is_function() and func.parent and func.parent.is_class()):
-        fp.write(func.parent.name + '.')
-      fp.write(func.signature)
-      if func.return_:
-        fp.write(' -> {}'.format(func.return_))
-      fp.write('\n```\n\n')
+  def _render_signature_block(self, fp, func):
+    fp.write('```{}\n'.format('python' if self.code_lang else ''))
+    for dec in func.decorators:
+      fp.write('@{}{}\n'.format(dec.name, dec.args or ''))
+    if func.is_async:
+      fp.write('async ')
+    if self.signature_with_def:
+      fp.write('def ')
+    if self.signature_class_prefix and (
+        func.is_function() and func.parent and func.parent.is_class()):
+      fp.write(func.parent.name + '.')
+    fp.write(func.signature)
+    if func.return_:
+      fp.write(' -> {}'.format(func.return_))
+    fp.write('\n```\n\n')
 
   def _render_data_block(self, fp, obj):
     fp.write('```{}\n'.format('python' if self.code_lang else ''))
@@ -113,7 +106,7 @@ class MarkdownRenderer(Struct):
     if self.classdef_code_block and obj.is_class():
       bases = ', '.join(map(str, obj.bases))
       fp.write('```python\nclass {}({})\n```\n\n'.format(obj.name, bases))
-    if self.signature_code_block and (obj.is_class() or obj.is_function()):
+    if self.signature_code_block and obj.is_function():
       self._render_signature_block(fp, obj)
     if self.data_code_block and obj.is_data():
       self._render_data_block(fp, obj)
