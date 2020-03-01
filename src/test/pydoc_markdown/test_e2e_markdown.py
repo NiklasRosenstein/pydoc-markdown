@@ -6,7 +6,7 @@ import textwrap
 
 def assert_code_as_markdown(source_code, markdown, full=False):
   config = PydocMarkdown()
-  config.renderer.insert_heading_anchors = False
+  config.renderer.insert_header_anchors = False
   config.renderer.render_toc = False
   module = config.loaders[0].load_source(textwrap.dedent(source_code),
     '_inline', '<string>')
@@ -194,7 +194,7 @@ def test_module_docstring():
   # This is the module docstring.
   ''',
   '''
-  # `_inline`
+  # Module `_inline`
 
   This is the module docstring.
   ''',
@@ -209,7 +209,7 @@ def test_module_docstring():
 
   ''',
   '''
-  # `_inline`
+  # Module `_inline`
 
   This is the module docstring.
   ''',

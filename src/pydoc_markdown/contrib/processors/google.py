@@ -86,21 +86,30 @@ class GoogleProcessor(Struct):
       return
 
     lines = []
+    current_lines = []
     in_codeblock = False
     keyword = None
-    components = {}
+
+    def _commit():
+      if keyword:
+        generate_sections_markdown(lines, {keyword: current_lines})
+      else:
+        lines.extend(current_lines)
+      current_lines.clear()
 
     for line in node.docstring.split('\n'):
-      line = line.strip()
-
       if line.startswith("```"):
         in_codeblock = not in_codeblock
-
-      if in_codeblock:
-        lines.append(line)
+        current_lines.append(line)
         continue
 
+      if in_codeblock:
+        current_lines.append(line)
+        continue
+
+      line = line.strip()
       if line in self._keywords_map:
+        _commit()
         keyword = self._keywords_map[line]
         continue
 
@@ -108,22 +117,19 @@ class GoogleProcessor(Struct):
         lines.append(line)
         continue
 
-      if keyword not in components:
-        components[keyword] = []
-
       for param_re in self._param_res:
         param_match = param_re.match(line)
         if param_match:
           if 'type' in param_match.groupdict():
-            components[keyword].append(
+            current_lines.append(
               '- `{param}` _{type}_ - {desc}'.format(**param_match.groupdict()))
           else:
-            components[keyword].append(
+            current_lines.append(
               '- `{param}` - {desc}'.format(**param_match.groupdict()))
           break
 
       if not param_match:
-        components[keyword].append('  {line}'.format(line=line))
+        current_lines.append('  {line}'.format(line=line))
 
-    generate_sections_markdown(lines, components)
+    _commit()
     node.docstring = '\n'.join(lines)

@@ -22,3 +22,26 @@ def test_google_processor(processor=None):
 
   - `any` - Something funny.
   ''')
+
+  assert_processor_result(processor or GoogleProcessor(),
+  '''
+  Example:
+
+  ```py
+  scanner = ListScanner(lst)
+  for value in scanner.safe_iter():
+    if some_condition(value):
+      value = scanner.advance()
+  ```
+  ''',
+  '''
+  **Examples**:
+
+
+  ```py
+  scanner = ListScanner(lst)
+  for value in scanner.safe_iter():
+    if some_condition(value):
+      value = scanner.advance()
+  ```
+  ''')
