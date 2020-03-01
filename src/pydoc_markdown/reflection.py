@@ -54,8 +54,9 @@ class Object(Struct):
       self.parent.members[self.name] = self
 
   def __repr__(self):
-    return '{}(name={!r}, members={!r})'.format(
-      type(self).__name__, self.name, list(self.members.values()))
+    v = ['{}={!r}'.format(k, getattr(self, k)) for k in self.__fields__
+         if k not in ('location', 'parent', 'docstring', 'members')]
+    return '{}({})'.format(type(self).__name__, ', '.join(v))
 
   def path(self, separator='.'):
     if not self.parent:
