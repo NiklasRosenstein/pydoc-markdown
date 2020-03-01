@@ -329,7 +329,7 @@ class Parser(object):
 
   def get_statement_docstring(self, node):
     prefix = self.get_most_recent_prefix(node)
-    ws = re.match('\s*', prefix[::-1]).group(0)
+    ws = re.match(r'\s*', prefix[::-1]).group(0)
     if ws.count('\n') == 1:
       docstring, doc_type = self.get_hashtag_docstring_from_prefix(node)
       if doc_type == 'statement':
