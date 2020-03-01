@@ -8,13 +8,14 @@ __Features__
 
 * Parses the AST instead of running your code
 * Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown)
+* Resolves cross-references of the form `#PetType.CAT`
+* Supports attribute docstrings (`#: ...` before or string literals after
+  the statement)
 
 __On the roadmap__
 
 * Mkdocs integration (for feature parity with Pydoc-Markdown 2.x)
-* Resolve linked objects in docstrings (#4)
 * Support for images (#94)
-* Support for attribute docstrings (#53)
 * Understand fixmes and hints in the source code (eg. `# doc: ignore`)
 
 ## Usage
