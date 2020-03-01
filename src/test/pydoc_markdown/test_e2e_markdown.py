@@ -4,14 +4,17 @@ from test.pydoc_markdown.utils import assert_text_equals
 import textwrap
 
 
-def assert_code_as_markdown(source_code, markdown):
+def assert_code_as_markdown(source_code, markdown, full=False):
   config = PydocMarkdown()
   config.renderer.insert_heading_anchors = False
   config.renderer.render_toc = False
   module = config.loaders[0].load_source(textwrap.dedent(source_code),
     '_inline', '<string>')
-  for member in module.members.values():
-    config.graph.add_module(member)
+  if full:
+    config.graph.add_module(module)
+  else:
+    for member in module.members.values():
+      config.graph.add_module(member)
   config.process()
   result = config.renderer.render_to_string(config.graph)
   assert_text_equals(result, textwrap.dedent(markdown))
@@ -128,3 +131,31 @@ def test_enum():
 
   ## `MOUSE`
   ''')
+
+
+def test_module_docstring():
+  assert_code_as_markdown(
+  '''
+  # This is the module docstring.
+  ''',
+  '''
+  # `_inline`
+
+  This is the module docstring.
+  ''',
+  full=True)
+
+
+  assert_code_as_markdown(
+  '''
+  # LICENSE INFO HERE.
+
+  """ This is the module docstring. """
+
+  ''',
+  '''
+  # `_inline`
+
+  This is the module docstring.
+  ''',
+  full=True)
