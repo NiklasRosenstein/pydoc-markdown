@@ -47,7 +47,7 @@ jobs:
           command: |
             . venv/bin/activate
             pip install pylint
-            pylint --rcfile=.pylintrc pydoc_markdown || true
+            pylint pylintrc pydoc_markdown || true
 
       - store_artifacts:
           path: .coverage
