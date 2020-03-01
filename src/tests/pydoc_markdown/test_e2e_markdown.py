@@ -39,7 +39,7 @@ def test_preprocessing():
 
   __Arguments__
 
-  - __s (str)__: Some string value.
+  - __s__ (`str`): Some string value.
 
   __Returns__
 

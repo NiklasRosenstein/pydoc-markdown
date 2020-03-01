@@ -59,8 +59,6 @@ class PydocmdProcessor(Struct):
       current_section = match.group(1).strip().lower()
       line = re.sub(r'# (.*)$', r'__\1__\n', line)
 
-    # TODO @NiklasRosenstein Parse type names in parentheses after the
-    #     argument/attribute name.
     if current_section in ('arguments', 'parameters'):
       style = r'- __\1__:\3'
     elif current_section in ('attributes', 'members', 'raises'):
@@ -72,6 +70,12 @@ class PydocmdProcessor(Struct):
     if style:
       #                  | ident  | types     | doc
       line = re.sub(r'\s*([^\\:]+)(\s*\(.+\))?:(.*)$', style, line)
+
+    # Rewrite the argument type in the parentheses.
+    if current_section in ('arguments', 'parameters'):
+      def sub(m):
+        return '__{}__ (`{}`):'.format(m.group(1), m.group(2))
+      line = re.sub(r'__(\w+)\s*\((.*?)\)__:', sub, line)
 
     return line, current_section
 
