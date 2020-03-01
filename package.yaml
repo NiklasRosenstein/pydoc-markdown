@@ -3,6 +3,15 @@ version: "3.0.0"
 description: "Create Python API documentation in Markdown format."
 license: "MIT"
 url: "https://github.com/NiklasRosenstein/pydoc-markdown"
+tag-format: "v{version}"
+
+keywords:
+  - documentation
+  - docs
+  - generator
+  - markdown
+  - pydoc
+
 classifiers:
   - "Development Status :: 3 - Alpha"
   - "Intended Audience :: Developers"
@@ -16,12 +25,6 @@ classifiers:
   - "Programming Language :: Python :: 3.3"
   - "Programming Language :: Python :: 3.4"
   - "Programming Language :: Python :: 3.5"
-keywords:
-  - documentation
-  - docs
-  - generator
-  - markdown
-  - pydoc
 
 requirements:
   - nr.collections ~0.0.1
