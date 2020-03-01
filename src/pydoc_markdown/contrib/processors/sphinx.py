@@ -25,7 +25,7 @@ markdown compatible syntax.
 """
 
 from nr.databind.core import Field, Struct
-from nr.interface import implements
+from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor
 import re
 
@@ -33,10 +33,15 @@ import re
 @implements(Processor)
 class SphinxProcessor(Struct):
 
-  def process(self, graph):
-    graph.visit(self._process_node)
+  def check_docstring_format(self, docstring: str) -> bool:
+    return ':param' in docstring or ':return' in docstring or \
+      ':raise' in docstring
 
-  def _process_node(self, node):
+  @override
+  def process(self, graph):
+    graph.visit(self.process_node)
+
+  def process_node(self, node):
     if not node.docstring:
       return
     lines = []

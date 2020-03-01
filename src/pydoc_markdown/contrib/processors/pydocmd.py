@@ -27,7 +27,7 @@ highlighting syntax into Markdown.
 import re
 
 from nr.databind.core import Field, Struct
-from nr.interface import implements
+from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other
@@ -36,10 +36,11 @@ from pydoc_markdown.interfaces import Processor
 @implements(Processor)
 class PydocmdProcessor(Struct):
 
+  @override
   def process(self, graph):
-    graph.visit(self._process_node)
+    graph.visit(self.process_node)
 
-  def _process_node(self, node):
+  def process_node(self, node):
     if not getattr(node, 'docstring', None):
       return
     lines = []

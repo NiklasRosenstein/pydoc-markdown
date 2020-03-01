@@ -19,9 +19,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-
 from nr.databind.core import Field, Struct
-from nr.interface import implements
+from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor
 import re
 
@@ -71,13 +70,17 @@ class GoogleProcessor(Struct):
     'Yields:': 'Yields',
   }
 
-  def get_section_names(self):
-    return list(self._keywords_map.keys())
+  def check_docstring_format(self, docstring: str) -> bool:
+    for section_name in self._keywords_map.keys():
+      if section_name in docstring:
+        return True
+    return False
 
+  @override
   def process(self, graph):
-    graph.visit(self._process_node)
+    graph.visit(self.process_node)
 
-  def _process_node(self, node):
+  def process_node(self, node):
     lines = []
     in_codeblock = False
     keyword = None
