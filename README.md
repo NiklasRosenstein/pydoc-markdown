@@ -153,10 +153,19 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
-### v2.0.6 (unreleased)
+### v2.1.0 (2020-03-01)
 
 - Use `yaml.safe_load()` instead of `yaml.load()` to silence warning about
   unsafe operation (#87)
+- #65 &ndash; Properly loaded docstring for classmethod/staticmethod.
+- #62 &ndash; getting descriptor's instance instead calling its __get__ method.
+- #61 &ndash; 'pages' configuration is deprecated in MKDocs > 1.0.0. MKDoc dependency bumped to >=1.0.0.
+- #63 &ndash; Pages configuration not required when mkdocs.yml present.
+- Add newline before titles for plaintext visibility
+- Arguments/Returns section is considered ended if an empty line is found
+- Parse references and replace them with markdown links
+- Pretty print function signature
+- Add smart and google preprocessors
 
 ### v2.0.5 (2018-11-15)
 
