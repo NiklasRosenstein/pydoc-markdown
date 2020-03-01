@@ -25,7 +25,7 @@ keywords:
 
 requirements:
   - nr.collections ~0.0.1
-  - nr.databind ~0.0.1
+  - nr.databind ~0.0.4
   - six ^1.11.0
   - PyYAML ^5.3
 

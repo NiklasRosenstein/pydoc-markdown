@@ -100,16 +100,16 @@ class Module(Object):
 
 
 class Class(Object):
-  decorators = Field([Decorator])
+  decorators = Field([Decorator], nullable=True)
   bases = Field([Expression])
-  metaclass = Field(Expression)
+  metaclass = Field(Expression, nullable=True)
 
 
 class Function(Object):
   is_async = Field(bool)
   decorators = Field([Decorator])
   args = Field([Argument])
-  return_ = Field(Expression)
+  return_ = Field(Expression, nullable=True)
 
   @property
   def signature(self):
