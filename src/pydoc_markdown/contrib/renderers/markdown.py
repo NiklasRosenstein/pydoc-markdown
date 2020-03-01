@@ -55,6 +55,7 @@ class MarkdownRenderer(Struct):
   render_toc_title = Field(str, default='Table of Contents')
   toc_maxdepth = Field(int, default=2)
   render_module_header = Field(bool, default=True)
+  docstrings_as_blockquote = Field(bool, default=False)
 
   def _render_toc(self, fp, level, obj):
     if level > self.toc_maxdepth:
@@ -117,7 +118,10 @@ class MarkdownRenderer(Struct):
     if self.data_code_block and obj.is_data():
       self._render_data_block(fp, obj)
     if obj.docstring:
-      fp.write(obj.docstring)
+      lines = obj.docstring.split('\n')
+      if self.docstrings_as_blockquote:
+        lines = ['> ' + x for x in lines]
+      fp.write('\n'.join(lines))
       fp.write('\n\n')
 
   def _render_recursive(self, fp, level, obj):
