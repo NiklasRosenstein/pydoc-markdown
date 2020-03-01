@@ -110,10 +110,7 @@ class Parser:
       module_name = os.path.basename(filename)
       module_name = os.path.splitext(module_name)[0]
 
-    docstring = None
-    if ast.children:
-      docstring = self.get_docstring_from_first_node(ast, module_level=True)
-
+    docstring = self.get_docstring_from_first_node(ast, module_level=True)
     module = Module(self.location_from(ast), None, module_name, docstring)
 
     for node in ast.children:
@@ -364,12 +361,12 @@ class Parser:
     """
 
     node = find(lambda x: isinstance(x, Node), parent.children)
-    if not node:
-      return None
-    if node.type == syms.simple_stmt:
+    if node and node.type == syms.simple_stmt:
       if node.children[0].type == token.STRING:
         return self.prepare_docstring(node.children[0].value)
-    docstring, doc_type = self.get_hashtag_docstring_from_prefix(node)
+    if not node and not module_level:
+      return None
+    docstring, doc_type = self.get_hashtag_docstring_from_prefix(node or parent)
     if doc_type == 'block':
       return docstring
     return None
