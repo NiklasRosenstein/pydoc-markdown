@@ -67,6 +67,10 @@ class MarkdownRenderer(Struct):
   #: by default.
   add_method_class_prefix = Field(bool, default=True)
 
+  #: Add the class name as a prefix to member names. This is enabled by
+  #: default.
+  add_member_class_prefix = Field(bool, default=True)
+
   #: Add the full module name as a prefix to the title of the header.
   #: This is disabled by default.
   add_full_prefix = Field(bool, default=False)
@@ -201,7 +205,8 @@ class MarkdownRenderer(Struct):
 
   def _get_title(self, obj):
     title = obj.name
-    if self.add_method_class_prefix and obj.is_method():
+    if (self.add_method_class_prefix and obj.is_method()) or \
+       (self.add_member_class_prefix and obj.is_data()):
       title = obj.parent.name + '.' + title
     elif self.add_full_prefix and not obj.is_method():
       title = obj.path()
