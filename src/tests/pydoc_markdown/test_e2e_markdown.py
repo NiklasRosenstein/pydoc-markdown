@@ -9,7 +9,7 @@ def assert_code_as_markdown(source_code, markdown):
   config.renderer.render_toc = False
   module = config.loaders[0].load_source(textwrap.dedent(source_code),
     '_inline', '<string>')
-  config.graph.add_module(module)
+  [config.graph.add_module(v) for v in module.members.values()]
   config.process()
   result = config.renderer.render_to_string(config.graph)
   assert [x.rstrip() for x in result.strip().split('\n')] == \
@@ -23,10 +23,7 @@ def test_something():
     pass
   ''',
   '''
-  # `_inline`
-
-
-  ## `test()`
+  # `test()`
 
   ```python
   def test()
