@@ -19,11 +19,9 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-import pytest
-import textwrap
-
 from pydoc_markdown.reflection import Argument, Expression, Function
 from pydoc_markdown.contrib.loaders.python import parse_file
+import textwrap
 
 
 class TestParser:
@@ -74,7 +72,7 @@ class TestParser:
     assert fun.return_ == Expression('bool')
 
   def test_parser_function_single_stmt(self):
-    def assert_(module, docstring):
+    def assert_funcdef(module, docstring):
       assert module.name == 'test_parser_function_single_stmt'
       assert len(module.members) == 1
 
@@ -89,7 +87,7 @@ class TestParser:
     module = self.parse('''
       def func(self): return self.foo
     ''')
-    assert_(module, None)
+    assert_funcdef(module, None)
 
     module = self.parse('''
       def func(self):
@@ -97,7 +95,7 @@ class TestParser:
         #   DEF
         return self.foo
     ''')
-    assert_(module, 'ABC\nDEF')
+    assert_funcdef(module, 'ABC\nDEF')
 
     module = self.parse('''
       def func(self):
@@ -105,7 +103,7 @@ class TestParser:
           DEF """
         return self.foo
     ''')
-    assert_(module, 'ABC\nDEF')
+    assert_funcdef(module, 'ABC\nDEF')
 
     module = self.parse('''
       def func(self):
@@ -115,17 +113,17 @@ class TestParser:
         """
         return self.foo
     ''')
-    assert_(module, 'ABC\n  DEF')
+    assert_funcdef(module, 'ABC\n  DEF')
 
   def test_parser_function_starred_args(self):
-    def assert_(module, arglist):
+    def assert_funcdef(module, arglist):
       func = module.members['func']
       assert func.args == arglist
 
     module = self.parse('''
       def func(a, *, b, **c): pass
     ''')
-    assert_(module, [
+    assert_funcdef(module, [
       Argument('a', None, None, Argument.POS),
       Argument('', None, None, Argument.KW_SEPARATOR),
       Argument('b', None, None, Argument.KW_ONLY),
@@ -137,7 +135,7 @@ class TestParser:
       def func(*args, **kwargs):
         """ Docstring goes here. """
     ''')
-    assert_(module, [
+    assert_funcdef(module, [
       Argument('args', None, None, Argument.POS_REMAINDER),
       Argument('kwargs', None, None, Argument.KW_REMAINDER),
     ])
@@ -147,7 +145,7 @@ class TestParser:
       def func(*, **kwargs):
         """ Docstring goes here. """
     ''')
-    assert_(module, [
+    assert_funcdef(module, [
       Argument('', None, None, Argument.KW_SEPARATOR),
       Argument('kwargs', None, None, Argument.KW_REMAINDER),
     ])
@@ -157,7 +155,7 @@ class TestParser:
       def func(abc, *,):
           """Docstring goes here."""
     ''')
-    assert_(module, [
+    assert_funcdef(module, [
       Argument('abc', None, None, Argument.POS),
       Argument('', None, None, Argument.KW_SEPARATOR),
     ])

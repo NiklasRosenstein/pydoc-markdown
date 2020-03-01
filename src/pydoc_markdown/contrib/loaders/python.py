@@ -493,7 +493,8 @@ class ListScanner(object):
     try:
       return self.current
     except IndexError:
-      if expect: raise
+      if expect:
+        raise
       return None
 
   def safe_iter(self, auto_advance=True):
