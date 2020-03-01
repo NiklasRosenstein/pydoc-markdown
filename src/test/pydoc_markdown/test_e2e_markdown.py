@@ -106,6 +106,24 @@ def test_class():
   Error raised when my thing happens.
   ''')
 
+  assert_code_as_markdown(
+  '''
+  class Foo:
+    # This is not a member docstring.
+    member = None
+  ''',
+  '''
+  # `Foo` Objects
+
+  ```python
+  class Foo()
+  ```
+
+  This is not a member docstring.
+
+  ## `member`
+  ''')
+
 
 def test_enum():
   assert_code_as_markdown(
@@ -159,3 +177,23 @@ def test_module_docstring():
   This is the module docstring.
   ''',
   full=True)
+
+
+def test_attribute_docstring():
+  assert_code_as_markdown(
+  '''
+  class Foo:
+    #: This is a member docstring.
+    member = None
+  ''',
+  '''
+  # `Foo` Objects
+
+  ```python
+  class Foo()
+  ```
+
+  ## `member`
+
+  This is a member docstring.
+  ''')
