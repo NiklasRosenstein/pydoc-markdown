@@ -69,8 +69,8 @@ def cli(verbose, quiet, config):
     logging.basicConfig(format='%(message)s', level=level)
 
   if config and (config.lstrip().startswith('{') or '\n' in config):
-    config = yaml.load(config)
-  if not config:
+    config = yaml.safe_load(config)
+  if config is None:
     try:
       config = next((x for x in config_filenames if os.path.exists(x)))
     except StopIteration:

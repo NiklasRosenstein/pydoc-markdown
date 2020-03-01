@@ -1,85 +1,66 @@
-# Pydoc Markdown
+<a href="https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop"><img align="right" src="https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop.svg?style=svg" alt="CircleCI"></a>
+# Pydoc-Markdown
 
-Pydoc-markdown produces Markdown API documentation from Python code.
+Pydoc-Markdown is a tool to create Python API documentation in markdown format
+based on `lib2to3`.
 
-- [![CircleCI](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/master.svg?style=svg)](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/master) (master)
-- [![CircleCI](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop.svg?style=svg)](https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop) (develop)
+__Features__
 
-__Table of Contents__
+* Parses the AST instead of running your code
+* Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown)
 
-* [Get started](#get-started)
-* [Syntax](#syntax)
-* [State of Pydoc-markdown 3.x](#state-of-pydoc-markdown-3x)
-* [Migrating from Pydoc-markdown 2.x](#migrating-from-pydoc-markdown-2x)
+__On the roadmap__
 
-## Get started
+* Mkdocs integration (for feature parity with Pydoc-Markdown 2.x)
+* Resolve linked objects in docstrings (#4)
+* Support for images (#94)
+* Support for attribute docstrings (#53)
+* Understand fixmes and hints in the source code (eg. `# doc: ignore`)
 
-Install Pydoc-markdown from GitHub:
+## Usage
 
+  [Pipx]: https://pypi.org/project/pipx/
+
+Pydoc-Markdown 3 is not currently available on PyPI. To install the current
+development version, you can simply pass the Git repository URL to Pip. It is
+recommended to install Pydoc-Markdown in isolation with [Pipx].
+
+    $ pipx install git+https://github.com/NiklasRosenstein/pydoc-markdown.git@develop
+
+This makes the `pydoc-markdown` command available in your command-line.
+
+On the CLI you specify either the name of a configuration file or provide a
+YAML formatted configuration. If you do not specify any arguments, the default
+configuration file is loaded (`pydoc-markdown.ya?ml`).
+
+    $ pydoc-markdown [<config>]
+
+The configuration is composed of three main components: A list of loaders,
+a list of documentation processors and a renderer. The default configuration
+is defined as
+
+```yaml
+loaders:
+  - type: python
+processors:
+  - type: smart
+  - type: filter
+renderer:
+  - type: markdown
 ```
-$ pip install git+https://github.com/NiklasRosenstein/pydoc-markdown.git@develop
-```
 
-Simple mode:
+This default configuration is used automatically if no configuration is
+supplied, or if you specify a YAML configuration that does not actually
+override values, eg:
 
-    $ pydoc-markdown --modules mymodule --search-path src/ > out.md
+    $ pydoc-markdown "{}"
 
-Project mode:
+## lib2to3 Quirks
 
-    $ cat pydoc-markdown.yml
-    loaders:
-      - type: python
-        modules: [mymodule]
-        search_path: [src]
-    processors:
-      - type: pydocmd
-      - type: filter
-        document_only: true
-    renderer:
-      type: markdown
-    $ pydoc-markdown > out.md
+Pydoc-Markdown doesn't execute your Python code but instead relies on the
+`lib2to3` parser. This means it also inherits any quirks of `lib2to3`.
 
-## Syntax
+__List of known quirks__
 
-Just use Markdown syntax in your docstrings. There are some special treatments
-applied by the `pydocmd` processor though.
-
-* `[[my_function()]]` is a reference to a function (resolved in the current
-  static scope of the docstring), for members in the current scope you would
-  prefix it with a hash (eg. `[[#my_method()]]`)
-* `# Section Name` in a docstring will be converted to just bold text
-
-## State of Pydoc-markdown 3.x
-
-* [x] Parsing with `lib2to3`
-* [x] CLI with a "simple" mode
-* [ ] Render Markdown files for MkDocs (`pydoc_markdown.contribs.renderers.mkdocs`)
-* [ ] Port community contributions of 2.x to 3.x
-* [ ] Add backwards-compatible processor for links (translating `#my_function()`
-      to `[[my_function()]]`)
-* [ ] Understand hints in Python docs (g. `# doc: ignore`)
-* [ ] Capture `TODO` and `NOTE` comments in classes and functions and optionally
-      include that information in generated docs
-* [ ] Parse and resolve links to other objects in the document
-
-## Migrating from Pydoc-markdown 2.x
-
-Pydoc-markdown 3 is a major rewrite and comes with a great deal of
-architectural changes. First and foremost, it no longer executes Python code
-to retrieve docstrings. Instead, it uses the `lib2to3` module to parse the
-code and convert it into a "reflection" of the code.
-
-Using `lib2to3` to parse the code has three main advantages:
-
-1. No longer need to execute Python code
-2. Python version used to generated docs can (usually) differ from the Python
-   version that the code was written for
-3. Adds the ability to extract docstrings from single-line comments
-
-However it also means that Pydoc-markdown inherits the quirks of `lib2to3`.
-One of these quirks is for example (state CPython 3.7) that a function
-argument in Python 3 may be called "print", but `lib2to3` treats this as a
-syntax error.
-
-Pydoc-markdown 3.x also uses a different syntax for links to other objects,
-but a backwards-compatible processor will be added.
+* A function argument in Python 3 cannot be called `print` even though
+  it is legal syntax
