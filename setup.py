@@ -28,7 +28,7 @@ setuptools.setup(
   install_requires = requirements,
   extras_require = {},
   tests_require = [],
-  python_requires = None, # TODO: '>=3.5,<4.0.0',
+  python_requires = None, # TODO: '>=3.6,<4.0.0',
   data_files = [],
   entry_points = {
     'console_scripts': [
@@ -38,10 +38,12 @@ setuptools.setup(
       'python = pydoc_markdown.contrib.loaders.python:PythonLoader',
     ],
     'pydoc_markdown.interfaces.Processor': [
+      'crossref = pydoc_markdown.contrib.processors.crossref:CrossrefProcessor',
       'filter = pydoc_markdown.contrib.processors.filter:FilterProcessor',
       'google = pydoc_markdown.contrib.processors.google:GoogleProcessor',
       'pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor',
-      'sphinx = pydoc_markdown.contrib.processors.pydocmd:SphinxProcessor',
+      'smart = pydoc_markdown.contrib.processors.smart:SmartProcessor',
+      'sphinx = pydoc_markdown.contrib.processors.sphinx:SphinxProcessor',
     ],
     'pydoc_markdown.interfaces.Renderer': [
       'markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer',
