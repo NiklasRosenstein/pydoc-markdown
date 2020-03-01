@@ -34,28 +34,94 @@ from pydoc_markdown.reflection import Class, Module
 
 @implements(Renderer)
 class MarkdownRenderer(Struct):
+  #: The name of the file to render to. If no file is specified, it will
+  #: render to stdout.
   filename = Field(str, default=None)
+
+  #: The encoding of the output file. This is ignored when rendering to
+  #: stdout.
   encoding = Field(str, default='utf8')
-  insert_heading_anchors = Field(bool, default=True)
-  html_headings = Field(bool, default=False)
-  code_headings = Field(bool, default=True)
-  code_lang = Field(bool, default=True)
+
+  #: If enabled, inserts anchors before Markdown headers to ensure that
+  #: links to the header work. This is enabled by default.
+  insert_header_anchors = Field(bool, default=True)
+
+  #: Generate HTML headers instead of Mearkdown headers. This is disabled
+  #: by default.
+  html_headers = Field(bool, default=False)
+
+  #: Render names in headers as code (using backticks or `<code>` tags,
+  #: depending on #html_headers). This is enabled by default.
+  code_headers = Field(bool, default=True)
+
+  #: Generate descriptive class titles by adding the word "Objects" after
+  #: the class name. This is enabled by default.
   descriptive_class_title = Field(bool, default=True)
+
+  #: Generate descriptivie module titles by adding the word "Module" before
+  #: the module name. This is enabled by default.
   descriptive_module_title = Field(bool, default=True)
+
+  #: Add the class name as a prefix to method names. This class name is
+  #: also rendered as code if #code_headers is enabled. This is enabled
+  #: by default.
   add_method_class_prefix = Field(bool, default=True)
+
+  #: Add the full module name as a prefix to the title of the header.
+  #: This is disabled by default.
   add_full_prefix = Field(bool, default=False)
+
+  #: If #add_full_prefix is enabled, this will result in the prefix to
+  #: be wrapped in a `<sub>` tag.
   sub_prefix = Field(bool, default=False)
+
+  #: Render the definition of data members as a code block. This is disabled
+  #: by default.
   data_code_block = Field(bool, default=False)
+
+  #: Max length of expressions. If this limit is exceeded, the remaining
+  #: characters will be replaced with three dots. This is set to 100 by
+  #: default.
+  data_expression_maxlength = Field(int, default=100)
+
+  #: Render the class signature as a code block. This includes the "class"
+  #: keyword, the class name and its bases. This is enabled by default.
   classdef_code_block = Field(bool, default=True)
+
+  #: Render the function signature as a code block. This includes the "def"
+  #: keyword, the function name and its arguments. This is enabled by
+  #: default.
   signature_code_block = Field(bool, default=True)
+
+  #: Render the function signature in the header. This is disabled by default.
   signature_in_header = Field(bool, default=False)
+
+  #: Include the "def" keyword in the function signature. This is enabled
+  #: by default.
   signature_with_def = Field(bool, default=True)
+
+  #: Render the class name in the code block for function signature. Note
+  #: that this results in invalid Python syntax to be rendered. This is
+  #: disabled by default.
   signature_class_prefix = Field(bool, default=False)
-  signature_expression_maxlength = Field(int, default=100)
+
+  #: Add the string "python" after the backticks for code blocks. This is
+  #: enabled by default.
+  code_lang = Field(bool, default=True)
+
+  #: Render a table of contents at the beginning of the file.
   render_toc = Field(bool, default=True)
+
+  #: The title of the "Table of Contents" header.
   render_toc_title = Field(str, default='Table of Contents')
+
+  #: The maximum depth of the table of contents. Defaults to 2.
   toc_maxdepth = Field(int, default=2)
+
+  #: Render module headers. This is enabled by default.
   render_module_header = Field(bool, default=True)
+
+  #: Render docstrings as blockquotes. This is disabled by default.
   docstrings_as_blockquote = Field(bool, default=False)
 
   def _render_toc(self, fp, level, obj):
@@ -68,13 +134,13 @@ class MarkdownRenderer(Struct):
 
   def _render_header(self, fp, level, obj):
     object_id = self._generate_object_id(obj)
-    if self.insert_heading_anchors and not self.html_headings:
+    if self.insert_header_anchors and not self.html_headers:
       fp.write('<a name="{}"></a>\n'.format(object_id))
-    if self.html_headings:
-      heading_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
+    if self.html_headers:
+      header_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
     else:
-      heading_template = level * '#' + ' {title}'
-    fp.write(heading_template.format(title=self._get_title(obj)))
+      header_template = level * '#' + ' {title}'
+    fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
   def _render_signature_block(self, fp, func):
@@ -96,8 +162,8 @@ class MarkdownRenderer(Struct):
   def _render_data_block(self, fp, obj):
     fp.write('```{}\n'.format('python' if self.code_lang else ''))
     expr = str(obj.expr)
-    if len(expr) > self.signature_expression_maxlength:
-      expr = expr[:self.signature_expression_maxlength] + ' ...'
+    if len(expr) > self.data_expression_maxlength:
+      expr = expr[:self.data_expression_maxlength] + ' ...'
     fp.write(obj.name + ' = ' + expr)
     fp.write('\n```\n\n')
 
@@ -146,8 +212,8 @@ class MarkdownRenderer(Struct):
       else:
         title += '()'
 
-    if self.code_headings:
-      if self.html_headings or self.sub_prefix:
+    if self.code_headers:
+      if self.html_headers or self.sub_prefix:
         if self.sub_prefix and '.' in title:
           prefix, title = title.rpartition('.')[::2]
           title = '<sub>{}.</sub>{}'.format(prefix, title)
