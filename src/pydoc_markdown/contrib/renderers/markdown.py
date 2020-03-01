@@ -44,6 +44,7 @@ class MarkdownRenderer(Struct):
   add_method_class_prefix = Field(bool, default=True)
   add_full_prefix = Field(bool, default=False)
   sub_prefix = Field(bool, default=False)
+  data_code_block = Field(bool, default=False)
   classdef_code_block = Field(bool, default=True)
   signature_code_block = Field(bool, default=True)
   signature_in_header = Field(bool, default=False)
@@ -99,7 +100,7 @@ class MarkdownRenderer(Struct):
         if func.return_:
           fp.write(' -> {}'.format(func.return_))
         fp.write('\n```\n\n')
-    if self.signature_code_block and obj.is_data():
+    if self.data_code_block and obj.is_data():
       fp.write('```{}\n'.format('python' if self.code_lang else ''))
       expr = str(obj.expr)
       if len(expr) > self.signature_expression_maxlength:
@@ -108,8 +109,7 @@ class MarkdownRenderer(Struct):
       fp.write('\n```\n\n')
     if obj.docstring:
       fp.write(obj.docstring)
-      fp.write('\n')
-    fp.write('\n')
+      fp.write('\n\n')
 
   def _render_recursive(self, fp, level, obj):
     self._render_object(fp, level, obj)
