@@ -598,7 +598,10 @@ class PythonLoader(Struct):
     try:
       for module in modules:
         try:
-          path = pkgutil.find_loader(module).get_filename()
+          loader = pkgutil.find_loader(module)
+          if loader is None:
+            raise ImportError('module "{}" not found'.format(module))
+          path = loader.get_filename()
         except ImportError as exc:
           raise LoaderError(exc)
         if os.path.basename(path).startswith('__init__.'):
