@@ -50,8 +50,8 @@ def main(config, modules, search_path):
   if modules:
     config = {'loaders': [{
       'type': 'python',
-      'modules': args.modules,
-      'search_path': args.search_path
+      'modules': modules,
+      'search_path': search_path
     }]}
 
   config = pydocmd.load_config(config or 'pydoc-markdown.yml')
