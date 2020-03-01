@@ -44,9 +44,9 @@ logger = logging.getLogger(__name__)
 
 
 class PydocMarkdown(Struct):
-  loaders = Field([Loader], default=[PythonLoader()])
-  processors = Field([Processor], default=[SmartProcessor(), FilterProcessor()])
-  renderer = Field(Renderer, default=MarkdownRenderer())
+  loaders = Field([Loader], default=lambda: [PythonLoader()])
+  processors = Field([Processor], default=lambda: [SmartProcessor(), FilterProcessor()])
+  renderer = Field(Renderer, default=lambda: MarkdownRenderer())
 
   def __init__(self, *args, **kwargs):
     super(PydocMarkdown, self).__init__(*args, **kwargs)
