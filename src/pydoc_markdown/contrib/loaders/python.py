@@ -532,7 +532,7 @@ class PythonLoader(Struct):
           path = os.path.dirname(path)
         for module_name, filename in self._iter_module_files(module, path):
           module = self.load_file(module_name, filename)
-          graph.add(module)
+          graph.add_module(module)
     finally:
       sys.path = old_path
 
