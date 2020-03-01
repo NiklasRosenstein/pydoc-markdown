@@ -1,0 +1,6 @@
+[MASTER]
+disable = bad-continuation, missing-function-docstring, invalid-name
+indent-string='  '
+
+[TYPECHECK]
+ignored-modules = lib2to3.pygram
