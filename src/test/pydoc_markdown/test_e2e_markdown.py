@@ -1,5 +1,6 @@
 
 from pydoc_markdown import PydocMarkdown
+from test.pydoc_markdown.utils import assert_text_equals
 import pytest
 import textwrap
 
@@ -13,8 +14,7 @@ def assert_code_as_markdown(source_code, markdown):
   [config.graph.add_module(v) for v in module.members.values()]
   config.process()
   result = config.renderer.render_to_string(config.graph)
-  assert '\n'.join([x.rstrip() for x in result.strip().split('\n')]) == \
-         '\n'.join([x.rstrip() for x in textwrap.dedent(markdown).strip().split('\n')])
+  assert_text_equals(result, textwrap.dedent(markdown))
 
 
 def test_preprocessing():
