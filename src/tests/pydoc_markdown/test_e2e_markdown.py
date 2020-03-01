@@ -6,6 +6,7 @@ import textwrap
 
 def assert_code_as_markdown(source_code, markdown):
   config = PydocMarkdown()
+  config.renderer.insert_heading_anchors = False
   config.renderer.render_toc = False
   module = config.loaders[0].load_source(textwrap.dedent(source_code),
     '_inline', '<string>')
@@ -100,5 +101,30 @@ def test_class():
   ```
 
   Error raised when my thing happens.
+  ''')
+
+
+def test_enum():
+  assert_code_as_markdown(
   '''
-  )
+    class PetType(enum.Enum):
+      """ Enumeration to identify possible pet types. """
+      DOG = 0
+      CAT = 1
+      MOUSE = 2  #: Mice are rare.
+  ''',
+  '''
+  # `PetType` Objects
+
+  ```python
+  class PetType(enum.Enum)
+  ```
+
+  Enumeration to identify possible pet types.
+
+  ## `DOG`
+
+  ## `CAT`
+
+  ## `MOUSE`
+  ''')
