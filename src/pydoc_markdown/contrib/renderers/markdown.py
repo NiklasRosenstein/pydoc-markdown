@@ -154,6 +154,11 @@ class MarkdownRenderer(Struct):
   def _escape(self, s):
     return s.replace('_', '\\_').replace('*', '\\*')
 
+  def render_to_string(self, graph):
+    fp = io.StringIO()
+    self._render(graph, fp)
+    return fp.getvalue()
+
   # Renderer
 
   def render(self, graph):

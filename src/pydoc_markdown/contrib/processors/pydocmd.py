@@ -87,4 +87,4 @@ class PydocmdProcessor(Struct):
       if has_trailing_dot:
         result += '.'
       return (match.group('prefix') or '') + result
-    return re.sub('(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?', handler, content)
+    return re.sub(r'(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?', handler, content)

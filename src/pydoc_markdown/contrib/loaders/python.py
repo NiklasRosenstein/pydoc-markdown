@@ -530,9 +530,8 @@ class PythonLoader(Struct):
         if os.path.basename(path).startswith('__init__.'):
           path = os.path.dirname(path)
         for module_name, filename in self._iter_module_files(module, path):
-          module = parse_file(None, filename, module_name,
-            print_function=self.print_function)
-          graph.add_module(module)
+          module = self.load_file(module_name, filename)
+          graph.add(module)
     finally:
       sys.path = old_path
 
@@ -555,3 +554,12 @@ class PythonLoader(Struct):
       return
     else:
       raise LoaderError('path "{}" does not exist'.format(path))
+
+  def load_file(self, module_name, filename):
+    return parse_file(None, filename, module_name,
+      print_function=self.print_function)
+
+  def load_source(self, source_code, module_name, filename=None):
+    ast = parse_to_ast(source_code, filename,
+      print_function=self.print_function)
+    return Parser().parse(ast, filename, module_name)
