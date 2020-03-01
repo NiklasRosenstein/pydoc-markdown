@@ -23,6 +23,7 @@
 Loads Python source code into the Pydoc-markdown reflection format.
 """
 
+import logging
 import os
 import pkgutil
 import re
@@ -47,8 +48,10 @@ from pydoc_markdown.reflection import (
   Location,
   Module)
 
-_reverse_syms = {v: k for k, v in vars(syms).items() if isinstance(v, int)}
-_reverse_token = {v: k for k, v in vars(token).items() if isinstance(v, int)}
+_REVERSE_SYMS = {v: k for k, v in vars(syms).items() if isinstance(v, int)}
+_REVERSE_TOKEN = {v: k for k, v in vars(token).items() if isinstance(v, int)}
+
+logger = logging.getLogger(__name__)
 
 
 def dedent_docstring(s):
@@ -541,7 +544,10 @@ class PythonLoader(Struct):
   #: A list of module or package names that this loader will search for and
   #: then parse. The modules are searched using the [[sys.path]] of the current
   #: Python interpreter, unless the [[search_path]] option is specified.
-  modules = Field([str], default=[])
+  #:
+  #: If this is not specified, it will attempt to find packages to document
+  #: in the src/ folder of the current directory.
+  modules = Field([str], default=None)
 
   #: The module search path. If not specified, the current [[sys.path]] is
   #: used instead. If any of the elements contain a `*` (star) symbol, it
@@ -554,18 +560,39 @@ class PythonLoader(Struct):
   #: __future__ module.
   print_function = Field(bool, default=True)
 
+  IGNORE_DISCOVERED_MODULES = ('test', 'tests', 'setup')
+
   def load(self, graph):
-    search_path = self.search_path
-    if search_path is None:
-      search_path = sys.path
-    elif '*' in search_path:
-      index = search_path.index('*')
-      search_path[index:index+1] = sys.path
+    if self.search_path is None:
+      search_path = ['.', 'src'] if self.modules is None else sys.path
+    else:
+      search_path = list(self.search_path)
+      if '*' in search_path:
+        index = search_path.index('*')
+        search_path[index:index+1] = sys.path
+
+    if self.modules is None:
+      modules = []
+      for path in search_path:
+        try:
+          items = os.listdir(path)
+        except OSError:
+          continue
+        for name in items:
+          if name.endswith('.py') and name[:-3] not in self.IGNORE_DISCOVERED_MODULES:
+            modules.append(name[:-3])
+            continue
+          full_path = os.path.join(path, name, '__init__.py')
+          if os.path.isfile(full_path) and name not in self.IGNORE_DISCOVERED_MODULES:
+            modules.append(name)
+      logger.info('Detected modules in search_path: %s', modules)
+    else:
+      modules = self.modules
 
     old_path = sys.path
     sys.path = search_path
     try:
-      for module in self.modules:
+      for module in modules:
         try:
           path = pkgutil.find_loader(module).get_filename()
         except ImportError as exc:
