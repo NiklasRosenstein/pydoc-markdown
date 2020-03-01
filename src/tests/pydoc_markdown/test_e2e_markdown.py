@@ -16,6 +16,37 @@ def assert_code_as_markdown(source_code, markdown):
          '\n'.join([x.rstrip() for x in textwrap.dedent(markdown).strip().split('\n')])
 
 
+def test_preprocessing():
+  assert_code_as_markdown(
+  '''
+  def func(s: str) -> List[str]:
+    """ Docstring goes here.
+
+    # Arguments
+    s (str): Some string value.
+
+    # Returns
+    List[str]: Some more strings. """
+  ''',
+  '''
+  # `func()`
+
+  ```python
+  def func(s: str) -> List[str]
+  ```
+
+  Docstring goes here.
+
+  __Arguments__
+
+  - __s (str)__: Some string value.
+
+  __Returns__
+
+  `List[str]`: Some more strings.
+  ''')
+
+
 def test_starred_arguments():
   assert_code_as_markdown(
   '''
