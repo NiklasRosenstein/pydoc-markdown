@@ -118,7 +118,7 @@ class MarkdownRenderer(Struct):
       if self.render_toc_title:
         fp.write('# {}\n\n'.format(self.render_toc_title))
       for m in graph.modules:
-        self._render_toc(fp, 1, m)
+        self._render_toc(fp, 0, m)
       fp.write('\n')
     for m in graph.modules:
       self._render_recursive(fp, 1, m)
