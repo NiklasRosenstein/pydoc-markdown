@@ -43,6 +43,7 @@ class MarkdownRenderer(Struct):
   add_method_class_prefix = Field(bool, default=True)
   add_full_prefix = Field(bool, default=False)
   sub_prefix = Field(bool, default=False)
+  classdef_code_block = Field(bool, default=True)
   signature_code_block = Field(bool, default=True)
   signature_in_header = Field(bool, default=False)
   signature_with_def = Field(bool, default=True)
@@ -70,6 +71,9 @@ class MarkdownRenderer(Struct):
         heading_template = level * '#' + ' {title}'
       fp.write(heading_template.format(title=self._get_title(obj)))
       fp.write('\n\n')
+    if self.classdef_code_block and obj.is_class():
+      bases = ', '.join(map(str, obj.bases))
+      fp.write('```python\nclass {}({})\n```\n\n'.format(obj.name, bases))
     if self.signature_code_block and (obj.is_class() or obj.is_function()):
       if obj.is_class():
         func = obj.members.get('__init__')

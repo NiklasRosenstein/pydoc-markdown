@@ -95,6 +95,10 @@ def test_class():
   '''
   # `MyError` Objects
 
+  ```python
+  class MyError(RuntimeError)
+  ```
+
   Error raised when my thing happens.
   '''
   )
