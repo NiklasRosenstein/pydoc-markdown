@@ -1,7 +1,7 @@
 name: "pydoc-markdown"
 source-directory: "."
 modulename: "pydocmd"
-version: "2.0.5"
+version: "2.1.0"
 author: "Niklas Rosenstein <rosensteinniklas@gmail.com>"
 license: "MIT"
 description: "Create Python API documentation in Markdown format"
