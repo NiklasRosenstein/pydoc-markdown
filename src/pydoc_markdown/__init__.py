@@ -24,5 +24,54 @@ Pydoc-markdown is an extensible framework for generating API documentation,
 with a focus on Python source code and the Markdown output format.
 """
 
+
+from nr.databind.core import Field, ObjectMapper, Struct, UnionType
+from nr.databind.json import JsonModule
+from pydoc_markdown.interfaces import Loader, Processor, Renderer
+from pydoc_markdown.reflection import ModuleGraph
+from pydoc_markdown.contrib.loaders.python import PythonLoader
+from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+import yaml
+
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
 __version__ = '3.0.0'
+mapper = ObjectMapper(JsonModule())
+
+
+class PydocMarkdown(Struct):
+  loaders = Field([Loader], default=[PythonLoader()])
+  processors = Field([Processor], default=[PydocmdProcessor()])
+  renderer = Field(Renderer, default=MarkdownRenderer())
+
+  def __init__(self, *args, **kwargs):
+    super(PydocMarkdown, self).__init__(*args, **kwargs)
+    self.graph = ModuleGraph()
+
+  def load_config(self, data):
+    """
+    Loads the configuration. *data* be a string pointing to a YAML file or
+    a dictionary.
+    """
+
+    filename = None
+    if isinstance(data, str):
+      filename = data
+      with open(data) as fp:
+        data = yaml.safe_load(fp)
+
+    result = mapper.deserialize(data, type(self), filename=filename)
+    vars(self).update({k: getattr(result, k) for k in self.__fields__})
+    return result
+
+  def load_module_graph(self):
+    for loader in self.loaders:
+      loader.load(self.graph)
+
+  def process(self):
+    for processor in self.processors:
+      processor.process(self.graph)
+
+  def render(self):
+    self.renderer.process(self.graph)
+    self.renderer.render(self.graph)

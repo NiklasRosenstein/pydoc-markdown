@@ -31,7 +31,6 @@ processors or renderers.
 from nr.databind.core import Struct, DeserializeAs, UnionType
 from nr.interface import Interface, implements, default
 from .reflection import Module, ModuleGraph
-from .utils import load_entry_point
 
 
 class Loader(Interface):
