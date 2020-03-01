@@ -36,6 +36,7 @@ from pydoc_markdown.reflection import *
 class MarkdownRenderer(Struct):
   filename = Field(str, default=None)
   encoding = Field(str, default='utf8')
+  insert_heading_anchors = Field(bool, default=True)
   html_headings = Field(bool, default=False)
   code_headings = Field(bool, default=True)
   code_lang = Field(bool, default=True)
@@ -64,8 +65,10 @@ class MarkdownRenderer(Struct):
 
   def _render_object(self, fp, level, obj):
     if not isinstance(obj, Module) or self.render_module_header:
+      object_id = self._generate_object_id(obj)
+      if self.insert_heading_anchors and not self.html_headings:
+        fp.write('<a name="{}"></a>\n'.format(object_id))
       if self.html_headings:
-        object_id = self._generate_object_id(obj)
         heading_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
       else:
         heading_template = level * '#' + ' {title}'
