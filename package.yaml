@@ -27,7 +27,7 @@ classifiers:
   - "Programming Language :: Python :: 3.5"
 
 requirements:
-  - python ^3.5
+  - python ^3.6
   - click ^7.0
   - nr.collections ~0.0.1
   - nr.databind ~0.0.4

@@ -29,31 +29,20 @@ jobs:
       - store_artifacts:
           path: htmlcov
 
-  test-3.8:
-    <<: *test
-    docker:
-      - image: python:3.8
-
   test-3.7:
     <<: *test
     docker:
       - image: python:3.7
 
-  test-3.5:
+  test-3.8:
     <<: *test
     docker:
-      - image: python:3.5
-
-  test-2.7:
-    <<: *test
-    docker:
-      - image: python:2.7
+      - image: python:3.8
 
 workflows:
   version: 2
   test:
     jobs:
-      - test-3.8
       - test-3.7
       - test-3.6
-      - test-3.5
+      - test-3.8
