@@ -54,21 +54,23 @@ def find(predicate, iterable):
   return None
 
 
-def parse_to_ast(code, filename):
+def parse_to_ast(code, filename, print_function=True):
   """
   Parses the string *code* to an AST with #lib2to3.
   """
+
+  options = {'print_function': print_function}
 
   try:
     # NOTE (@NiklasRosenstein): Adding newline at the end as a ParseError
     #   could be raised without a trailing newline (tested in CPython 3.6
     #   and 3.7).
-    return RefactoringTool([]).refactor_string(code + '\n', filename)
+    return RefactoringTool([], options).refactor_string(code + '\n', filename)
   except ParseError as exc:
     raise ParseError(exc.msg, exc.type, exc.value, exc.context + (filename,))
 
 
-def parse_file(code, filename, module_name=None):
+def parse_file(code, filename, module_name=None, **kwargs):
   """
   Creates a reflection of the Python source in the string *code*.
   """
@@ -77,7 +79,7 @@ def parse_file(code, filename, module_name=None):
     with open(filename, 'r') as fp:
       code = fp.read()
 
-  return Parser().parse(parse_to_ast(code, filename), filename, module_name)
+  return Parser().parse(parse_to_ast(code, filename, **kwargs), filename, module_name)
 
 
 class Parser(object):
@@ -503,6 +505,12 @@ class PythonLoader(Struct):
   #: will be expanded with [[sys.path]].
   search_path = Field([str], default=None)
 
+  #: The "print_function" flag will be passed down to the lib2to3
+  #: RefactoringTool. This enables parsing Python 3 code that uses the
+  #: print function without importing importing print_function from the
+  #: __future__ module.
+  print_function = Field(bool, default=True)
+
   def load(self, graph):
     search_path = self.search_path
     if search_path is None:
@@ -522,7 +530,8 @@ class PythonLoader(Struct):
         if os.path.basename(path).startswith('__init__.'):
           path = os.path.dirname(path)
         for module_name, filename in self._iter_module_files(module, path):
-          module = parse_file(None, filename, module_name)
+          module = parse_file(None, filename, module_name,
+            print_function=self.print_function)
           graph.add_module(module)
     finally:
       sys.path = old_path
