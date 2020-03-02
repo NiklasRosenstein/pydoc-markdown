@@ -104,8 +104,10 @@ def get_docstring(function):
     return function.__doc__ or ''
   elif hasattr(function, '__call__'):
     return function.__call__.__doc__ or ''
-  else:
+  elif isinstance(function, type):
     return function.__doc__ or ''
+  else:
+    return ''
 
 
 def get_full_arg_spec(func):

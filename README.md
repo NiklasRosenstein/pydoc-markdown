@@ -153,6 +153,15 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
+### v2.1.1 (2020-03-02)
+
+- Reimplement `get_function_signature()` for better compatibility with
+  default values and annotations
+- Prettifying signature with `yapf` no longer raises a `SyntaxError` as
+  all default values and annotations are replaced with placeholders (see
+  #100 and #101)
+- String constants no longer get the `str` built-in docstring
+
 ### v2.1.0 (2020-03-01)
 
 - Use `yaml.safe_load()` instead of `yaml.load()` to silence warning about
