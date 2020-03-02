@@ -28,7 +28,6 @@ from nr.interface import implements
 from pydoc_markdown.interfaces import Processor
 
 
-
 @implements(Processor)
 class FilterProcessor(Struct):
   """
@@ -44,14 +43,14 @@ class FilterProcessor(Struct):
   """
 
   expression = Field(str, default=None)
-  documented_only = Field(bool, default=False)
+  documented_only = Field(bool, default=True)
   exclude_private = Field(bool, default=True)
   exclude_special = Field(bool, default=True)
 
   SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')
 
   def process(self, graph, _resolver):
-    graph.visit(self._process_member, allow_mutation=True)
+    graph.visit(self._process_member)
 
   def _process_member(self, node):
     def default_check():
@@ -66,6 +65,6 @@ class FilterProcessor(Struct):
     if self.expression:
       scope = {'name': node.name, 'node': node, 'default': default_check}
       if not eval(self.expression, scope):  # pylint: disable=eval-used
-        node.remove()
+        node.visible = False
     if node.parent and not default_check():
-      node.remove()
+      node.visible = False

@@ -52,15 +52,15 @@ class MarkdownRenderer(Struct):
 
   #: Render names in headers as code (using backticks or `<code>` tags,
   #: depending on #html_headers). This is enabled by default.
-  code_headers = Field(bool, default=True)
+  code_headers = Field(bool, default=False)
 
   #: Generate descriptive class titles by adding the word "Objects" after
   #: the class name. This is enabled by default.
-  descriptive_class_title = Field(bool, default=True)
+  descriptive_class_title = Field(bool, default=False)
 
   #: Generate descriptivie module titles by adding the word "Module" before
   #: the module name. This is enabled by default.
-  descriptive_module_title = Field(bool, default=True)
+  descriptive_module_title = Field(bool, default=False)
 
   #: Add the class name as a prefix to method names. This class name is
   #: also rendered as code if #code_headers is enabled. This is enabled
@@ -92,6 +92,10 @@ class MarkdownRenderer(Struct):
   #: keyword, the class name and its bases. This is enabled by default.
   classdef_code_block = Field(bool, default=True)
 
+  #: Render the constructor signature in the class definition code block
+  #: if it's `__init__()` member is not visible.
+  classdef_render_init_signature_if_needed = Field(bool, default=True)
+
   #: Render the function signature as a code block. This includes the "def"
   #: keyword, the function name and its arguments. This is enabled by
   #: default.
@@ -114,7 +118,7 @@ class MarkdownRenderer(Struct):
   code_lang = Field(bool, default=True)
 
   #: Render a table of contents at the beginning of the file.
-  render_toc = Field(bool, default=True)
+  render_toc = Field(bool, default=False)
 
   #: The title of the "Table of Contents" header.
   render_toc_title = Field(str, default='Table of Contents')
@@ -149,20 +153,25 @@ class MarkdownRenderer(Struct):
     fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
-  def _render_signature_block(self, fp, func):
-    fp.write('```{}\n'.format('python' if self.code_lang else ''))
+  def _format_function_signature(self, func):
+    parts = []
     for dec in func.decorators:
-      fp.write('@{}{}\n'.format(dec.name, dec.args or ''))
+      parts.append('@{}{}\n'.format(dec.name, dec.args or ''))
     if func.is_async:
-      fp.write('async ')
+      parts.append('async ')
     if self.signature_with_def:
-      fp.write('def ')
+      parts.append('def ')
     if self.signature_class_prefix and (
         func.is_function() and func.parent and func.parent.is_class()):
-      fp.write(func.parent.name + '.')
-    fp.write(func.signature)
+      parts.append(func.parent.name + '.')
+    parts.append(func.signature)
     if func.return_:
-      fp.write(' -> {}'.format(func.return_))
+      parts.append(' -> {}'.format(func.return_))
+    return ''.join(parts)
+
+  def _render_signature_block(self, fp, func):
+    fp.write('```{}\n'.format('python' if self.code_lang else ''))
+    fp.write(self._format_function_signature(func))
     fp.write('\n```\n\n')
 
   def _render_data_block(self, fp, obj):
@@ -178,7 +187,11 @@ class MarkdownRenderer(Struct):
       self._render_header(fp, level, obj)
     if self.classdef_code_block and obj.is_class():
       bases = ', '.join(map(str, obj.bases))
-      fp.write('```python\nclass {}({})\n```\n\n'.format(obj.name, bases))
+      code = 'class {}({})'.format(obj.name, bases)
+      if self.classdef_render_init_signature_if_needed and (
+          '__init__' in obj.members and not obj.members['__init__'].visible):
+        code += ':\n    ' + self._format_function_signature(obj.members['__init__'])
+      fp.write('```python\n{}\n```\n\n'.format(code))
     if self.signature_code_block and obj.is_function():
       self._render_signature_block(fp, obj)
     if self.data_code_block and obj.is_data():
