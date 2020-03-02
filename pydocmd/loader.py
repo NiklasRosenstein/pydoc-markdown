@@ -89,7 +89,8 @@ class PythonLoader(object):
     # Add the function signature in a code-block.
     if callable(obj):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
-      sig, _ = FormatCode(sig, style_config='pep8')
+      sig, _ = FormatCode('def ' + sig + ': pass', style_config='pep8')
+      sig = sig[4:].rpartition(':')[0]
       section.content = '```python\n{}\n```\n'.format(sig.strip()) + section.content
 
 
