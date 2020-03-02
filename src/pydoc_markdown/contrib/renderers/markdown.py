@@ -65,11 +65,11 @@ class MarkdownRenderer(Struct):
   #: Add the class name as a prefix to method names. This class name is
   #: also rendered as code if #code_headers is enabled. This is enabled
   #: by default.
-  add_method_class_prefix = Field(bool, default=True)
+  add_method_class_prefix = Field(bool, default=False)
 
   #: Add the class name as a prefix to member names. This is enabled by
   #: default.
-  add_member_class_prefix = Field(bool, default=True)
+  add_member_class_prefix = Field(bool, default=False)
 
   #: Add the full module name as a prefix to the title of the header.
   #: This is disabled by default.
@@ -231,8 +231,6 @@ class MarkdownRenderer(Struct):
     if obj.is_function():
       if self.signature_in_header:
         title += '(' + obj.signature_args + ')'
-      else:
-        title += '()'
 
     if self.code_headers:
       if self.html_headers or self.sub_prefix:
@@ -243,7 +241,7 @@ class MarkdownRenderer(Struct):
       else:
         title = '`{}`'.format(title)
     else:
-      title = obj.name
+      title = self._escape(title)
     if isinstance(obj, Module) and self.descriptive_module_title:
       title = 'Module ' + title
     if isinstance(obj, Class) and self.descriptive_class_title:
