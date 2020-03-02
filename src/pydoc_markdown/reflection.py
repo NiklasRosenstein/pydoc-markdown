@@ -48,6 +48,7 @@ class Object(Struct):
   name = Field(str)
   docstring = Field(str, default=None)
   members = Field(dict, default=dict)
+  visible = Field(bool, default=True)
 
   def __init__(self, *args, **kwargs):
     super(Object, self).__init__(*args, **kwargs)
@@ -62,7 +63,7 @@ class Object(Struct):
     return '{}({})'.format(type(self).__name__, ', '.join(v))
 
   def path(self, separator='.'):
-    if not self.parent:
+    if not self.parent or isinstance(self.parent, ModuleGraph):
       return self.name
     else:
       return self.parent.path(separator) + separator + self.name
@@ -183,20 +184,30 @@ class Expression(Struct):
     return self.text
 
 
-class ModuleGraph:
+class ModuleGraph(Object):
   """
   Represents a collection of #Object#s, typically #Module#s.
   """
 
-  def __init__(self):
-    self.modules = []
+  # TODO (@NiklasRosenstein): Change "module" naming to "node".
 
-  def add_module(self, module):
-    self.modules.append(module)
+  def __init__(self, nodes=()):
+    super().__init__(
+      location=None,
+      parent=None,
+      name='',
+      docstring=None,
+      members={})
+    for node in nodes:
+      self.add_module(node)
 
-  def visit(self, func, allow_mutation=False):
-    for module in self.modules:
-      module.visit(func, allow_mutation)
+  @property
+  def modules(self):
+    return list(self.members.values())
+
+  def add_module(self, node):
+    self.members[node.name] = node
+    node.parent = self
 
   def resolve_ref(self, scope: Object, ref: List[str]) -> Optional[Object]:
     """ Resolve a reference to another object from within the specified

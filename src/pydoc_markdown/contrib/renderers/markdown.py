@@ -131,10 +131,12 @@ class MarkdownRenderer(Struct):
   def _render_toc(self, fp, level, obj):
     if level > self.toc_maxdepth:
       return
-    object_id = self._generate_object_id(obj)
-    fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
+    if obj.visible:
+      object_id = self._generate_object_id(obj)
+      fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
+      level += 1
     for child in obj.members.values():
-      self._render_toc(fp, level + 1, child)
+      self._render_toc(fp, level, child)
 
   def _render_header(self, fp, level, obj):
     object_id = self._generate_object_id(obj)
@@ -189,9 +191,11 @@ class MarkdownRenderer(Struct):
       fp.write('\n\n')
 
   def _render_recursive(self, fp, level, obj):
-    self._render_object(fp, level, obj)
+    if obj.visible:
+      self._render_object(fp, level, obj)
+      level += 1
     for member in obj.members.values():
-      self._render_recursive(fp, level+1, member)
+      self._render_recursive(fp, level, member)
 
   def _render_graph(self, graph, fp):
     if self.render_toc:
