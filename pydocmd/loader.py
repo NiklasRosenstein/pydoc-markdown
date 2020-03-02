@@ -232,10 +232,16 @@ def get_function_signature(
   class repr_str(str):
     def __repr__(self):
       return self
+  def prettify(val):  # type: (Parameter.Value) -> Parameter.Value
+    if isinstance(val.value, type):
+      val = Parameter.Value(repr_str(val.value.__name__))
+    return val
   for i, param in enumerate(parameters):
-    if param.annotation and isinstance(param.annotation, type):
-      parameters[i] = param.replace(
-        annotation=Parameter.Value(repr_str(param.annotation.__name__)))
+    if param.annotation:
+      param = param.replace(annotation=prettify(param.annotation))
+    if param.default:
+      param = param.replace(default=prettify(param.default))
+    parameters[i] = param
 
   if pretty:
     # Replace annotations and defaults with placeholders that are valid syntax.
@@ -244,7 +250,7 @@ def get_function_signature(
 
     def _add_supplement(value):
       annotation_id = '_{}'.format(counter[0])
-      annotation_id += '_' * (len(repr(param.annotation)) - len(annotation_id))
+      annotation_id += '_' * (len(repr(value)) - len(annotation_id))
       supplements[annotation_id] = value
       counter[0] += 1
       return repr_str(annotation_id)
@@ -258,7 +264,10 @@ def get_function_signature(
           default=Parameter.Value(_add_supplement(param.default.value)))
       parameters[i] = param
 
-  sig = '_NAME_PLACEHOLDER_' + '(' + format_parameters_list(parameters) + ')'
+  # Use a placeholder in pretty mode as the generated *name* may also
+  # sometimes not be valid syntax (eg. if it includes the class name).
+  name_placeholder = '_PH_' + '_' * (len(name)-2)
+  sig = (name_placeholder if pretty else name) + '(' + format_parameters_list(parameters) + ')'
 
   if pretty:
     sig, _ = FormatCode('def ' + sig + ': pass', style_config='pep8')
@@ -268,5 +277,15 @@ def get_function_signature(
     for placeholder, annotation in supplements.items():
       sig = sig.replace(placeholder, repr(annotation))
 
-  sig = sig.replace('_NAME_PLACEHOLDER_', name)
+    # Replace the placeholder and fix indents.
+    sig = sig.replace(name_placeholder, name)
+    delta = len(name_placeholder) - len(name)
+    lines = sig.split('\n')
+    for i, line in enumerate(lines[1:], 1):
+      indent = len(line) - len(line.lstrip()) - delta - 4  # 4 for "def "
+      if indent <= 0 and line.strip() != ')':
+        indent = 4
+      lines[i] = ' ' * indent + line.lstrip()
+    sig = '\n'.join(lines)
+
   return sig
