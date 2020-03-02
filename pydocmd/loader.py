@@ -38,6 +38,9 @@ if hasattr(types, 'UnboundMethodType'):
   function_types += (types.UnboundMethodType,)
 
 
+NotSet = object()
+
+
 def trim(docstring):
   if not docstring:
     return ''
@@ -121,54 +124,69 @@ def get_full_arg_spec(func):
   }
 
 
-class Parameter(collections.namedtuple('Parameter', 'name,annotation,default,kind')):
+class Parameter(object):
   POS = 'POS'
   KWONLY = 'KWONLY'
   VARARGS_POS = 'VARARGS_POS'
   VARARGS_KW = 'VARARGS_KW'
 
+  Value = collections.namedtuple('Value', 'value')
+
+  def __init__(self, kind, name, annotation=None, default=None):
+    self.kind = kind
+    self.name = name
+    self.annotation = annotation
+    self.default = default
+
+  def __repr__(self):
+    return 'Parameter(kind={}, name={!r}, annotation={!r}, default={!r})'\
+        .format(self.kind, self.name, self.annotation, self.default)
+
   def __str__(self):
     result = self.name
     if self.annotation:
-      result += ': ' + str(self.annotation)
+      result += ': ' + repr(self.annotation.value)
     if self.default:
-      result += ' = ' + str(self.default)
+      result += ' = ' + repr(self.default.value)
     if self.kind == self.VARARGS_POS:
       result = '*' + result
     if self.kind == self.VARARGS_KW:
       result = '**' + result
     return result
 
-  def replace(self, name=NotImplemented, annotation=NotImplemented,
-              default=NotImplemented, kind=NotImplemented):
+  def replace(self, name=NotSet, annotation=NotSet,
+              default=NotSet, kind=NotSet):
     return Parameter(
-      self.name if name is NotImplemented else name,
-      self.annotation if annotation is NotImplemented else annotation,
-      self.default if default is NotImplemented else default,
-      self.kind if kind is NotImplemented else kind)
+      self.kind if kind is NotSet else kind,
+      self.name if name is NotSet else name,
+      self.annotation if annotation is NotSet else annotation,
+      self.default if default is NotSet else default)
 
 
 def get_paramaters_from_arg_spec(argspec, strip_self=False):
-  args = [Parameter(x, None, None, Parameter.POS) for x in argspec['args'][:]]
+  args = [Parameter(Parameter.POS, x) for x in argspec['args'][:]]
   if argspec['defaults']:
     offset = len(args) - len(argspec['defaults'])
     for i, default in enumerate(argspec['defaults']):
-      args[i + offset] = args[i + offset].replace(default=default)
+      args[i + offset] = args[i + offset].replace(default=Parameter.Value(default))
 
   if argspec['varargs']:
-    args.append(Parameter(argspec['varargs'], None, None, Parameter.VARARGS_POS))
+    args.append(Parameter(Parameter.VARARGS_POS, argspec['varargs']))
 
   for name in argspec['kwonlyargs']:
-    args.append(Parameter(name, None, None, Parameter.KWONLY))
+    args.append(Parameter(Parameter.KWONLY, name))
 
   if argspec['varkw']:
-    args.append(Parameter(argspec['varkw'], None, None, Parameter.VARARGS_KW))
+    args.append(Parameter(Parameter.VARARGS_KW, argspec['varkw']))
 
   if strip_self and args and args[0].name == 'self':
     args.pop(0)
 
-  args = [x.replace(annotation=argspec['annotations'].get(x.name))
-          for x in args]
+  for i, param in enumerate(args):
+    if param.name in argspec['annotations']:
+      annotation = argspec['annotations'][param.name]
+      args[i] = param.replace(annotation=Parameter.Value(annotation))
+
   return args
 
 
@@ -216,28 +234,39 @@ def get_function_signature(
       return self
   for i, param in enumerate(parameters):
     if param.annotation and isinstance(param.annotation, type):
-      parameters[i] = param.replace(annotation=repr_str(param.annotation.__name__))
+      parameters[i] = param.replace(
+        annotation=Parameter.Value(repr_str(param.annotation.__name__)))
 
   if pretty:
-    # Replace annotations with placeholders that are valid syntax.
-    annotation_refs = {}
-    counter = 0
+    # Replace annotations and defaults with placeholders that are valid syntax.
+    supplements = {}
+    counter = [0]
+
+    def _add_supplement(value):
+      annotation_id = '_{}'.format(counter[0])
+      annotation_id += '_' * (len(repr(param.annotation)) - len(annotation_id))
+      supplements[annotation_id] = value
+      counter[0] += 1
+      return repr_str(annotation_id)
+
     for i, param in enumerate(parameters):
       if param.annotation:
-        annotation_id = '_{}'.format(counter)
-        annotation_id += '_' * (len(str(param.annotation)) - len(annotation_id))
-        annotation_refs[annotation_id] = param.annotation
-        parameters[i] = param.replace(annotation=annotation_id)
-        counter += 1
+        param = param.replace(
+          annotation=Parameter.Value(_add_supplement(param.annotation.value)))
+      if param.default:
+        param = param.replace(
+          default=Parameter.Value(_add_supplement(param.default.value)))
+      parameters[i] = param
 
-  sig = name + '(' + format_parameters_list(parameters) + ')'
+  sig = '_NAME_PLACEHOLDER_' + '(' + format_parameters_list(parameters) + ')'
 
   if pretty:
     sig, _ = FormatCode('def ' + sig + ': pass', style_config='pep8')
     sig = sig[4:].rpartition(':')[0]
 
-    # Replace the annotation placeholders with the actual annotations.
-    for placeholder, annotation in annotation_refs.items():
-      sig = sig.replace(placeholder, str(annotation))
+    # Replace the annotation and default placeholders with the actual values.
+    for placeholder, annotation in supplements.items():
+      sig = sig.replace(placeholder, repr(annotation))
 
+  sig = sig.replace('_NAME_PLACEHOLDER_', name)
   return sig
