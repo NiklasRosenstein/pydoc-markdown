@@ -23,7 +23,8 @@
 Implements the pydoc-markdown CLI.
 """
 
-from . import PydocMarkdown
+from pydoc_markdown import PydocMarkdown
+from pydoc_markdown.contrib.loaders.python import PythonLoader
 import click
 import logging
 import os
@@ -43,15 +44,23 @@ def error(*args):
 
 @click.command()
 @click.argument('config', required=False)
-@click.option(
-  '--verbose', '-v',
+@click.option('--verbose', '-v',
   is_flag=True,
   help='Increase log verbosity.')
-@click.option(
-  '--quiet', '-q',
+@click.option('--quiet', '-q',
   is_flag=True,
   help='Decrease the log verbosity.')
-def cli(verbose, quiet, config):
+@click.option('--module', '-m', 'modules',
+  multiple=True,
+  help='The module to parse and generated API documentation for. Can be '
+       'specified multiple times. If specified, the configuration will not '
+       'be loaded implicitly from a file.')
+@click.option('--search-path', '-I',
+  multiple=True,
+  help='A directory to use in the search for Python modules. Can be '
+       'specified multiple times. If specified, the configuration will not '
+       'be loaded implicitly from a file.')
+def cli(config, verbose, quiet, modules, search_path):
   """ Pydoc-Markdown is a renderer for Python API documentation in Markdown
   format.
 
@@ -59,6 +68,9 @@ def cli(verbose, quiet, config):
   *config* argument is specified, it must be the name of a configuration file
   or a YAML formatted object for the configuration. """
 
+  load_implicit_config = not any((modules, search_path))
+
+  # Initialize logging.
   if verbose is not None:
     if verbose:
       level = logging.INFO
@@ -68,15 +80,30 @@ def cli(verbose, quiet, config):
       level = logging.WARNING
     logging.basicConfig(format='%(message)s', level=level)
 
+  # Load the configuration.
   if config and (config.lstrip().startswith('{') or '\n' in config):
     config = yaml.safe_load(config)
-  if config is None:
+  if config is None and load_implicit_config:
     try:
       config = next((x for x in config_filenames if os.path.exists(x)))
     except StopIteration:
       error('config file not found.')
 
-  pydocmd = PydocMarkdown().load_config(config)
+  pydocmd = PydocMarkdown()
+  if config:
+    pydocmd.load_config(config)
+
+  # Update configuration per command-line options.
+  if modules or search_path:
+    loader = next(
+      (l for l in pydocmd.loaders if isinstance(l, PythonLoader)), None)
+    if not loader:
+      error('no python loader found')
+    if modules:
+      loader.modules = modules
+    if search_path:
+      loader.search_path = search_path
+
   pydocmd.load_modules()
   pydocmd.process()
   pydocmd.render()
