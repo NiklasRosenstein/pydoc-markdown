@@ -26,8 +26,10 @@ that name, but is not supposed to apply preprocessing.
 
 from __future__ import print_function
 from .imp import import_object_with_scope
+import collections
 import inspect
 import types
+import uuid
 from yapf.yapflib.yapf_api import FormatCode
 
 function_types = (types.FunctionType, types.LambdaType, types.MethodType,
@@ -89,8 +91,6 @@ class PythonLoader(object):
     # Add the function signature in a code-block.
     if callable(obj):
       sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
-      sig, _ = FormatCode('def ' + sig + ': pass', style_config='pep8')
-      sig = sig[4:].rpartition(':')[0]
       section.content = '```python\n{}\n```\n'.format(sig.strip()) + section.content
 
 
@@ -105,7 +105,90 @@ def get_docstring(function):
     return function.__doc__ or ''
 
 
-def get_function_signature(function, owner_class=None, show_module=False):
+def get_full_arg_spec(func):
+  if hasattr(inspect, 'getfullargspec'):
+    spec = inspect.getfullargspec(func)
+    return {k: getattr(spec, k) for k in dir(spec) if not k.startswith('_')}
+  spec = inspect.getargspec(func)
+  return {
+    'args': spec.args,
+    'varargs': spec.varargs,
+    'varkw': spec.keywords,
+    'defaults': spec.defaults,
+    'kwonlyargs': [],
+    'kwonlydefaults': [],
+    'annotations': {}
+  }
+
+
+class Parameter(collections.namedtuple('Parameter', 'name,annotation,default,kind')):
+  POS = 'POS'
+  KWONLY = 'KWONLY'
+  VARARGS_POS = 'VARARGS_POS'
+  VARARGS_KW = 'VARARGS_KW'
+
+  def __str__(self):
+    result = self.name
+    if self.annotation:
+      result += ': ' + str(self.annotation)
+    if self.default:
+      result += ' = ' + str(self.default)
+    if self.kind == self.VARARGS_POS:
+      result = '*' + result
+    if self.kind == self.VARARGS_KW:
+      result = '**' + result
+    return result
+
+  def replace(self, name=NotImplemented, annotation=NotImplemented,
+              default=NotImplemented, kind=NotImplemented):
+    return Parameter(
+      self.name if name is NotImplemented else name,
+      self.annotation if annotation is NotImplemented else annotation,
+      self.default if default is NotImplemented else default,
+      self.kind if kind is NotImplemented else kind)
+
+
+def get_paramaters_from_arg_spec(argspec, strip_self=False):
+  args = [Parameter(x, None, None, Parameter.POS) for x in argspec['args'][:]]
+  if argspec['defaults']:
+    offset = len(args) - len(argspec['defaults'])
+    for i, default in enumerate(argspec['defaults']):
+      args[i + offset] = args[i + offset].replace(default=default)
+
+  if argspec['varargs']:
+    args.append(Parameter(argspec['varargs'], None, None, Parameter.VARARGS_POS))
+
+  for name in argspec['kwonlyargs']:
+    args.append(Parameter(name, None, None, Parameter.KWONLY))
+
+  if argspec['varkw']:
+    args.append(Parameter(argspec['varkw'], None, None, Parameter.VARARGS_KW))
+
+  if strip_self and args and args[0].name == 'self':
+    args.pop(0)
+
+  args = [x.replace(annotation=argspec['annotations'].get(x.name))
+          for x in args]
+  return args
+
+
+def format_parameters_list(parameters):
+  found_kwonly = False
+  result = []
+  for param in parameters:
+    if param.kind == Parameter.KWONLY and not found_kwonly:
+      found_kwonly = True
+      result.append('*')
+    result.append(str(param))
+  return ', '.join(result)
+
+
+def get_function_signature(
+  function,
+  owner_class=None,
+  show_module=False,
+  pretty=True,
+):
   # Get base name.
   name_parts = []
   if show_module:
@@ -120,29 +203,41 @@ def get_function_signature(function, owner_class=None, show_module=False):
     function = function.__call__
   name = '.'.join(name_parts)
 
-  if hasattr(inspect, 'signature'):
-    sig = str(inspect.signature(function))
-    if owner_class:
-      sig = sig.replace('(self)', '()', 1).replace('(self, ', '(', 1)
+  try:
+    argspec = get_full_arg_spec(function)
+  except TypeError:
+    parameters = []
   else:
-    try:
-      argspec = inspect.getargspec(function)
-    except TypeError:
-      # handle Py2 classes that don't define __init__
-      args = []
-    else:
-      # Generate the argument list that is separated by colons.
-      args = argspec.args[:]
-      if argspec.defaults:
-        offset = len(args) - len(argspec.defaults)
-        for i, default in enumerate(argspec.defaults):
-          args[i + offset] = '{}={!r}'.format(args[i + offset], argspec.defaults[i])
-      if argspec.varargs:
-        args.append('*' + argspec.varargs)
-      if argspec.keywords:
-        args.append('**' + argspec.keywords)
-      if owner_class:
-        args.remove('self')
-    sig = '(' + ', '.join(args) + ')'
+    parameters = get_paramaters_from_arg_spec(argspec, strip_self=owner_class)
 
-  return name + sig
+  # Prettify annotations.
+  class repr_str(str):
+    def __repr__(self):
+      return self
+  for i, param in enumerate(parameters):
+    if param.annotation and isinstance(param.annotation, type):
+      parameters[i] = param.replace(annotation=repr_str(param.annotation.__name__))
+
+  if pretty:
+    # Replace annotations with placeholders that are valid syntax.
+    annotation_refs = {}
+    counter = 0
+    for i, param in enumerate(parameters):
+      if param.annotation:
+        annotation_id = '_{}'.format(counter)
+        annotation_id += '_' * (len(str(param.annotation)) - len(annotation_id))
+        annotation_refs[annotation_id] = param.annotation
+        parameters[i] = param.replace(annotation=annotation_id)
+        counter += 1
+
+  sig = name + '(' + format_parameters_list(parameters) + ')'
+
+  if pretty:
+    sig, _ = FormatCode('def ' + sig + ': pass', style_config='pep8')
+    sig = sig[4:].rpartition(':')[0]
+
+    # Replace the annotation placeholders with the actual annotations.
+    for placeholder, annotation in annotation_refs.items():
+      sig = sig.replace(placeholder, str(annotation))
+
+  return sig
