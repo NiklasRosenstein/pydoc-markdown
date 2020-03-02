@@ -187,6 +187,8 @@ class MarkdownRenderer(Struct):
       self._render_header(fp, level, obj)
     if self.classdef_code_block and obj.is_class():
       bases = ', '.join(map(str, obj.bases))
+      if obj.metaclass:
+        bases += ', metaclass=' + str(obj.metaclass)
       code = 'class {}({})'.format(obj.name, bases)
       if self.classdef_render_init_signature_if_needed and (
           '__init__' in obj.members and not obj.members['__init__'].visible):
