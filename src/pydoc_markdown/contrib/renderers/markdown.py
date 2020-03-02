@@ -106,7 +106,7 @@ class MarkdownRenderer(Struct):
 
   #: Include the "def" keyword in the function signature. This is enabled
   #: by default.
-  signature_with_def = Field(bool, default=True)
+  signature_with_def = Field(bool, default=False)
 
   #: Render the class name in the code block for function signature. Note
   #: that this results in invalid Python syntax to be rendered. This is
