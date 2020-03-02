@@ -1,0 +1,31 @@
+renderer:
+  type: mkdocs
+  pages:
+  - title: Home
+    source: README.md
+  - title: API Documentation
+    children:
+    - title: CLI
+      contents:
+      - pydoc_markdown.main.cli
+    - title: Interfaces
+      contents:
+      - pydoc_markdown.interfaces.*
+    - title: Reflection
+      contents:
+      - pydoc_markdown.reflection.*
+    - title: Loaders
+      contents:
+      - pydoc_markdown.contrib.loaders.python.PythonLoader
+    - title: Processors
+      contents:
+      - pydoc_markdown.contrib.processors.crossref.CrossrefProcessor
+      - pydoc_markdown.contrib.processors.filter.FilterProcessor
+      - pydoc_markdown.contrib.processors.google.GoogleProcessor
+      - pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor
+      - pydoc_markdown.contrib.processors.smart.SmartProcessor
+      - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor
+    - title: Renderers
+      contents:
+      - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer
+      - pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer
