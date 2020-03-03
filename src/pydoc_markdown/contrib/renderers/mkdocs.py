@@ -33,6 +33,7 @@ import fnmatch
 import logging
 import os
 import re
+import shutil
 import subprocess
 import yaml
 
@@ -113,12 +114,15 @@ class MkdocsRenderer(Struct):
   def render(self, graph):
     docs_dir = os.path.join(self.output_directory, 'docs')
     for page, items in self.organize_modules(graph):
-      # TODO (@NiklasRosenstein): Handle #Page.source
       filename = os.path.join(docs_dir, page.get_name() + '.md')
       os.makedirs(os.path.dirname(filename), exist_ok=True)
-      self.markdown.filename = filename
-      logger.info('Rendering "%s"', filename)
-      self.markdown.render(ModuleGraph(items))
+      if page.source:
+        logger.info('Writing "%s" (source: "%s")', filename, page.source)
+        shutil.copyfile(page.source, filename)
+      else:
+        logger.info('Rendering "%s"', filename)
+        self.markdown.filename = filename
+        self.markdown.render(ModuleGraph(items))
 
     config = copy.deepcopy(self.mkdocs_config)
     config['site_name'] = self.site_name
