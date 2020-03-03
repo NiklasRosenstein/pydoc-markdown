@@ -43,7 +43,7 @@ def test_preprocessing():
     List[str]: Some more strings. """
   ''',
   '''
-  # func
+  #### func
 
   ```python
   func(s: str) -> List[str]
@@ -72,7 +72,7 @@ def test_starred_arguments():
       """Docstring goes here."""
   ''',
   '''
-  # a
+  #### a
 
   ```python
   a(*args, **kwargs)
@@ -80,7 +80,7 @@ def test_starred_arguments():
 
   Docstring goes here.
 
-  # b
+  #### b
 
   ```python
   b(abc, *)
@@ -88,7 +88,7 @@ def test_starred_arguments():
 
   Docstring goes here.
 
-  # c
+  #### c
 
   ```python
   c(abc, *, defg)
@@ -107,7 +107,7 @@ def test_class():
     pass
   ''',
   '''
-  # MyError
+  ### MyError
 
   ```python
   class MyError(RuntimeError)
@@ -123,7 +123,7 @@ def test_class():
     member = None
   ''',
   '''
-  # Foo
+  ### Foo
 
   ```python
   class Foo()
@@ -131,7 +131,7 @@ def test_class():
 
   This is not a member docstring.
 
-  ## member
+  #### member
   ''')
 
   assert_code_as_markdown(
@@ -149,8 +149,8 @@ def test_class():
       """
       self.param = param
   ''',
-  r'''
-  # Class
+  '''
+  ### Class
 
   ```python
   class Class()
@@ -158,7 +158,7 @@ def test_class():
 
   The class documentation!
 
-  ## \_\_init\_\_
+  #### \\_\\_init\\_\\_
 
   ```python
   __init__(self, param)
@@ -182,7 +182,7 @@ def test_enum():
       MOUSE = 2  #: Mice are rare.
   ''',
   '''
-  # PetType
+  ### PetType
 
   ```python
   class PetType(enum.Enum)
@@ -190,11 +190,11 @@ def test_enum():
 
   Enumeration to identify possible pet types.
 
-  ## DOG
+  #### DOG
 
-  ## CAT
+  #### CAT
 
-  ## MOUSE
+  #### MOUSE
   ''')
 
 
@@ -203,8 +203,8 @@ def test_module_docstring():
   '''
   # This is the module docstring.
   ''',
-  r'''
-  # \_inline
+  '''
+  ## \\_inline
 
   This is the module docstring.
   ''',
@@ -218,8 +218,8 @@ def test_module_docstring():
   """ This is the module docstring. """
 
   ''',
-  r'''
-  # \_inline
+  '''
+  ## \\_inline
 
   This is the module docstring.
   ''',
@@ -234,13 +234,13 @@ def test_attribute_docstring():
     member = None
   ''',
   '''
-  # Foo
+  ### Foo
 
   ```python
   class Foo()
   ```
 
-  ## member
+  #### member
 
   This is a member docstring.
   ''')
@@ -252,13 +252,13 @@ def test_attribute_docstring():
     """ This is a member docstring. """
   ''',
   '''
-  # Foo
+  ### Foo
 
   ```python
   class Foo()
   ```
 
-  ## member
+  #### member
 
   This is a member docstring.
   ''')
