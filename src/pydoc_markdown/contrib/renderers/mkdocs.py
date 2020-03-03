@@ -69,6 +69,8 @@ class MkdocsRenderer(Struct):
   #: `build/docs`.
   output_directory = Field(str, default='build/docs')
 
+  clean_docs_directory_on_render = Field(bool, default=True)
+
   #: The pages to render into the output directory.
   pages = Field([Page])
 
@@ -93,17 +95,18 @@ class MkdocsRenderer(Struct):
       path = node.path()
       return any(fnmatch.fnmatch(path, x) for x in page.contents or ())
 
-    def _visit(page):
+    def _visit(page, path):
       def _update_nodes(x):
         x.visible = _match(page, x)
       clone = copy.deepcopy(graph)
       clone.visit(_update_nodes)
-      yield page, clone.modules
+      yield path, page, clone.modules
+      path = path + [page.get_name()]
       for sub_page in page.children:
-        yield from _visit(sub_page)
+        yield from _visit(sub_page, path)
 
     for page in self.pages:
-      yield from _visit(page)
+      yield from _visit(page, [])
 
   def mkdocs_serve(self):
     return subprocess.Popen(['mkdocs', 'serve'], cwd=self.output_directory)
@@ -113,8 +116,21 @@ class MkdocsRenderer(Struct):
   @override
   def render(self, graph):
     docs_dir = os.path.join(self.output_directory, 'docs')
-    for page, items in self.organize_modules(graph):
-      filename = os.path.join(docs_dir, page.get_name() + '.md')
+
+    if self.clean_docs_directory_on_render:
+      logger.info('Cleaning directory "%s"', docs_dir)
+      shutil.rmtree(docs_dir)
+
+    for path, page, items in self.organize_modules(graph):
+      # Construct the filename for the generated Markdown page.
+      path = path + [page.get_name()]
+      if page.children:
+        if not page.contents and not page.source:
+          continue
+        path.append('index')
+      filename = os.path.join(docs_dir, *path) + '.md'
+
+      # Render the page or copy from the specified source file.
       os.makedirs(os.path.dirname(filename), exist_ok=True)
       if page.source:
         logger.info('Writing "%s" (source: "%s")', filename, page.source)
