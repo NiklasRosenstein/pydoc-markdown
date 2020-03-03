@@ -1,21 +1,30 @@
 
 from pydoc_markdown import PydocMarkdown
+from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from test.pydoc_markdown.utils import assert_text_equals
 import textwrap
 
 
 def assert_code_as_markdown(source_code, markdown, full=False):
   config = PydocMarkdown()
+
+  # Init the settings in which we want to run the tests.
   config.renderer.insert_header_anchors = False
   config.renderer.add_member_class_prefix = False
   config.renderer.render_toc = False
-  module = config.loaders[0].load_source(textwrap.dedent(source_code),
-    '_inline', '<string>')
+  filter_processor = next(x for x in config.processors if isinstance(x, FilterProcessor))
+  filter_processor.documented_only = False
+
+  # Load the source code as a module.
+  module = config.loaders[0].load_source(
+    textwrap.dedent(source_code), '_inline', '<string>')
+
   if full:
     config.graph.add_module(module)
   else:
     for member in module.members.values():
       config.graph.add_module(member)
+
   config.process()
   result = config.renderer.render_to_string(config.graph)
   assert_text_equals(result, textwrap.dedent(markdown))
@@ -34,10 +43,10 @@ def test_preprocessing():
     List[str]: Some more strings. """
   ''',
   '''
-  # `func()`
+  # func
 
   ```python
-  def func(s: str) -> List[str]
+  func(s: str) -> List[str]
   ```
 
   Docstring goes here.
@@ -63,26 +72,26 @@ def test_starred_arguments():
       """Docstring goes here."""
   ''',
   '''
-  # `a()`
+  # a
 
   ```python
-  def a(*args, **kwargs)
+  a(*args, **kwargs)
   ```
 
   Docstring goes here.
 
-  # `b()`
+  # b
 
   ```python
-  def b(abc, *)
+  b(abc, *)
   ```
 
   Docstring goes here.
 
-  # `c()`
+  # c
 
   ```python
-  def c(abc, *, defg)
+  c(abc, *, defg)
   ```
 
   Docstring goes here.
@@ -98,7 +107,7 @@ def test_class():
     pass
   ''',
   '''
-  # `MyError` Objects
+  # MyError
 
   ```python
   class MyError(RuntimeError)
@@ -114,7 +123,7 @@ def test_class():
     member = None
   ''',
   '''
-  # `Foo` Objects
+  # Foo
 
   ```python
   class Foo()
@@ -122,7 +131,7 @@ def test_class():
 
   This is not a member docstring.
 
-  ## `member`
+  ## member
   ''')
 
   assert_code_as_markdown(
@@ -140,8 +149,8 @@ def test_class():
       """
       self.param = param
   ''',
-  '''
-  # `Class` Objects
+  r'''
+  # Class
 
   ```python
   class Class()
@@ -149,10 +158,10 @@ def test_class():
 
   The class documentation!
 
-  ## `Class.__init__()`
+  ## \_\_init\_\_
 
   ```python
-  def __init__(self, param)
+  __init__(self, param)
   ```
 
   The constructor.
@@ -173,7 +182,7 @@ def test_enum():
       MOUSE = 2  #: Mice are rare.
   ''',
   '''
-  # `PetType` Objects
+  # PetType
 
   ```python
   class PetType(enum.Enum)
@@ -181,11 +190,11 @@ def test_enum():
 
   Enumeration to identify possible pet types.
 
-  ## `DOG`
+  ## DOG
 
-  ## `CAT`
+  ## CAT
 
-  ## `MOUSE`
+  ## MOUSE
   ''')
 
 
@@ -194,8 +203,8 @@ def test_module_docstring():
   '''
   # This is the module docstring.
   ''',
-  '''
-  # Module `_inline`
+  r'''
+  # \_inline
 
   This is the module docstring.
   ''',
@@ -209,8 +218,8 @@ def test_module_docstring():
   """ This is the module docstring. """
 
   ''',
-  '''
-  # Module `_inline`
+  r'''
+  # \_inline
 
   This is the module docstring.
   ''',
@@ -225,13 +234,13 @@ def test_attribute_docstring():
     member = None
   ''',
   '''
-  # `Foo` Objects
+  # Foo
 
   ```python
   class Foo()
   ```
 
-  ## `member`
+  ## member
 
   This is a member docstring.
   ''')
@@ -243,13 +252,13 @@ def test_attribute_docstring():
     """ This is a member docstring. """
   ''',
   '''
-  # `Foo` Objects
+  # Foo
 
   ```python
   class Foo()
   ```
 
-  ## `member`
+  ## member
 
   This is a member docstring.
   ''')
