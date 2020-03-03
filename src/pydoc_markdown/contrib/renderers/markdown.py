@@ -177,7 +177,7 @@ class MarkdownRenderer(Struct):
     for dec in func.decorators:
       parts.append('@{}{}\n'.format(dec.name, dec.args or ''))
     if self.signature_python_help_style and not func.is_method():
-        parts.append('{} = '.format(func.path()))
+      parts.append('{} = '.format(func.path()))
     if func.is_async:
       parts.append('async ')
     if self.signature_with_def:
