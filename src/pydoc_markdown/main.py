@@ -32,6 +32,7 @@ import click
 import logging
 import os
 import sys
+import webbrowser
 import yaml
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,7 @@ config_filenames = [
   'pydoc-markdown.yaml',
 ]
 
+MKDOCS_DEFAULT_SERVE_URL = 'http://localhost:8000'
 DEFAULT_CONFIG_NOTICE = 'Using this option will disable loading the '\
   'default configuration file.'
 
@@ -82,13 +84,20 @@ def error(*args):
   help='Watch for file changes and re-render if needed, and run "mkdocs '
        'serve" in the background. This option is only supported for the '
        '"mkdocs" renderer.')
-def cli(config, verbose, quiet, modules, search_path, render_toc, py2, watch_and_serve):
+@click.option('--open', '-o', 'open_browser',
+  is_flag=True,
+  help='Open your browser after starting "mkdocs serve". Can only be used '
+       'together with the --watch-and-serve option.')
+def cli(config, verbose, quiet, modules, search_path, render_toc, py2, watch_and_serve, open_browser):
   """ Pydoc-Markdown is a renderer for Python API documentation in Markdown
   format.
 
   With no arguments it will load the default configuration file. If the
   *config* argument is specified, it must be the name of a configuration file
   or a YAML formatted object for the configuration. """
+
+  if open_browser and not watch_and_serve:
+    error('--open can only be used with --watch-and-serve')
 
   load_implicit_config = not any((modules, search_path, py2 is not None))
 
@@ -174,6 +183,8 @@ def cli(config, verbose, quiet, modules, search_path, render_toc, py2, watch_and
       if proc is None:
         logger.info('Starting MkDocs serve.')
         proc = pydocmd.renderer.mkdocs_serve()
+        if open_browser:
+          webbrowser.open(MKDOCS_DEFAULT_SERVE_URL)
       event.wait(0.5)
   finally:
     if observer:
