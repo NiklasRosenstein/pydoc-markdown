@@ -122,6 +122,8 @@ class Function(Object):
 
   @property
   def signature_args(self):
+    if self.is_method and self.args and self.args[0].name == 'self':
+      return Argument.format_arglist(self.args[1:])
     return Argument.format_arglist(self.args)
 
 
