@@ -45,6 +45,7 @@ class CrossrefProcessor(Struct):
     def handler(match):
       ref = match.group('ref')
       parens = match.group('parens') or ''
+      trailing = (match.group('trailing') or '').lstrip('#')
       # Remove the dot from the ref if its trailing (it is probably just
       # the end of the sentence).
       has_trailing_dot = False
@@ -53,7 +54,7 @@ class CrossrefProcessor(Struct):
         has_trailing_dot = True
       href = resolver.resolve_ref(node, ref)
       if href:
-        result = '[`{}`]({})'.format(ref + parens, href)
+        result = '[`{}`]({})'.format(ref + parens + trailing, href)
       else:
         logger.warning('ref "%s" could not be resolved in %s "%s" (%s)',
           ref, type(node).__name__, node.path(), node.location)
@@ -64,6 +65,6 @@ class CrossrefProcessor(Struct):
       return (match.group('prefix') or '') + result
 
     node.docstring = re.sub(
-      r'(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?',
+      r'(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?(?P<trailing>#[\w\d\._]+)?',
       handler,
       node.docstring)
