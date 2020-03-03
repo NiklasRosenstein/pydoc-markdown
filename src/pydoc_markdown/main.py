@@ -62,10 +62,15 @@ def error(*args):
   help='A directory to use in the search for Python modules. Can be '
        'specified multiple times. If specified, the configuration will not '
        'be loaded implicitly from a file.')
+@click.option('--py2/--py3', 'py2', default=None,
+  help='Switch between parsing Python 2 and Python 3 code. The default '
+       'is Python 3. Using --py2 will enable parsing code that uses the '
+       '"print" statement. This is equivalent of setting the print_function '
+       'option of the "python" loader to False.')
 @click.option('--render-toc/--no-render-toc',
   default=None,
   help='Enable/disable the rendering of the TOC in the "markdown" renderer.')
-def cli(config, verbose, quiet, modules, search_path, render_toc):
+def cli(config, verbose, quiet, modules, search_path, render_toc, py2):
   """ Pydoc-Markdown is a renderer for Python API documentation in Markdown
   format.
 
@@ -73,7 +78,7 @@ def cli(config, verbose, quiet, modules, search_path, render_toc):
   *config* argument is specified, it must be the name of a configuration file
   or a YAML formatted object for the configuration. """
 
-  load_implicit_config = not any((modules, search_path))
+  load_implicit_config = not any((modules, search_path, py2 is not None))
 
   # Initialize logging.
   if verbose is not None:
@@ -99,7 +104,7 @@ def cli(config, verbose, quiet, modules, search_path, render_toc):
     pydocmd.load_config(config)
 
   # Update configuration per command-line options.
-  if modules or search_path:
+  if modules or search_path or py2 is not None:
     loader = next(
       (l for l in pydocmd.loaders if isinstance(l, PythonLoader)), None)
     if not loader:
@@ -108,6 +113,8 @@ def cli(config, verbose, quiet, modules, search_path, render_toc):
       loader.modules = modules
     if search_path:
       loader.search_path = search_path
+    if py2 is not None:
+      loader.print_function = not py2
   if render_toc is not None:
     if isinstance(pydocmd.renderer, MkdocsRenderer):
       markdown = pydocmd.renderer.markdown
