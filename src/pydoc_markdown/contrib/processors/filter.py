@@ -26,6 +26,7 @@ Provides a processor that implements various filter capabilities.
 from nr.databind.core import Field, Struct
 from nr.interface import implements
 from pydoc_markdown.interfaces import Processor
+from pydoc_markdown.reflection import ModuleGraph
 
 
 @implements(Processor)
@@ -53,7 +54,7 @@ class FilterProcessor(Struct):
     graph.visit(self._process_member)
 
   def _process_member(self, node):
-    def default_check():
+    def _check(node):
       if self.documented_only and not node.docstring:
         return False
       if self.exclude_private and node.name.startswith('_') and not node.name.endswith('_'):
@@ -63,8 +64,9 @@ class FilterProcessor(Struct):
       return True
 
     if self.expression:
-      scope = {'name': node.name, 'node': node, 'default': default_check}
+      scope = {'name': node.name, 'node': node, 'default': _check}
       if not eval(self.expression, scope):  # pylint: disable=eval-used
         node.visible = False
-    if node.parent and not default_check():
+
+    if node.parent and not isinstance(node.parent, ModuleGraph) and not _check(node):
       node.visible = False
