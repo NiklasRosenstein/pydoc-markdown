@@ -47,7 +47,7 @@ setuptools.setup(
     ],
     'pydoc_markdown.interfaces.Renderer': [
       'markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer',
-      'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkDocsRenderer',
+      'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer',
     ]
   },
   cmdclass = {},

@@ -47,7 +47,7 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
 
 @forward_decl(Page)  # pylint: disable=function-redefined
 class Page(Struct):
-  """ Desribes a page that is rendered by the #MkDocsRenderer. """
+  """ Desribes a page that is rendered by the #MkdocsRenderer. """
 
   name = Field(str, default=None)
   title = Field(str)
@@ -62,7 +62,7 @@ class Page(Struct):
 
 
 @implements(Renderer)
-class MkDocsRenderer(Struct):
+class MkdocsRenderer(Struct):
   #: The output directory for the generated Markdown files. Defaults to
   #: `build/docs`.
   output_directory = Field(str, default='build/docs')

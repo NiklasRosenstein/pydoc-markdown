@@ -28,4 +28,4 @@ renderer:
     - title: Renderers
       contents:
       - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer
-      - pydoc_markdown.contrib.renderers.mkdocs.MkDocsRenderer
+      - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer
