@@ -51,11 +51,57 @@ renderer:
   - type: markdown
 ```
 
-This default configuration is used automatically if no configuration is
-supplied, or if you specify a YAML configuration that does not actually
-override values, eg:
+It is automatically applied when using the Pydoc-Markdown CLI to render
+Markdown documentation for Python modules on the fly (without a YAML
+configuration file). Example:
 
-    $ pydoc-markdown "{}"
+    $ cat <<EOF >a.py
+    def say_hello(name: str):
+      """ Says hello to the person specified with *name*.
+
+      :param name: The person to say hello to.
+      :raises ValueError: If *name* is empty.
+      :returns: Nothing """
+      # ...
+    EOF
+    $ pydoc-markdown -m a -I .
+
+<details><summary>Expand to see the generated Markdown</summary>
+
+<a name=".a"></a>
+## a
+
+<a name=".a.say_hello"></a>
+#### say\_hello
+
+```python
+say_hello(name: str)
+```
+
+Says hello to the person specified with *name*.
+
+**Arguments**:
+
+- `name`: The person to say hello to.
+
+**Raises**:
+
+- `ValueError`: If *name* is empty.
+
+**Returns**:
+
+Nothing
+
+---
+
+</details>
+
+If a configuration file exists, then the CLI needs to be invoked without
+arguments, or with one argument that specifies the path to the configuration
+file. When using the `mkdocs` renderer, you may add the `--watch-and-serve`
+and `--open` arguments for smooth live-feedback.
+
+    $ pydoc-markdown ./pydoc-markdown.yaml -wo
 
 ## lib2to3 Quirks
 
