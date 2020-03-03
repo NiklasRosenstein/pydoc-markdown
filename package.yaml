@@ -35,6 +35,7 @@ requirements:
   - nr.databind ~0.0.4
   - six ^1.11.0
   - PyYAML ^5.3
+  - watchdog ^0.10.2
 
 entrypoints:
   console_scripts:

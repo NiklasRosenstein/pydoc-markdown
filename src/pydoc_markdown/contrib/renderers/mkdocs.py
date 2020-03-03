@@ -33,6 +33,7 @@ import fnmatch
 import logging
 import os
 import re
+import subprocess
 import yaml
 
 logger = logging.getLogger(__name__)
@@ -102,6 +103,9 @@ class MkdocsRenderer(Struct):
 
     for page in self.pages:
       yield from _visit(page)
+
+  def mkdocs_serve(self):
+    return subprocess.Popen(['mkdocs', 'serve'], cwd=self.output_directory)
 
   # Renderer
 
