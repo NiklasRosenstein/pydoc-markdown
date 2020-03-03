@@ -50,12 +50,12 @@ def error(*args):
 @click.option('--quiet', '-q',
   is_flag=True,
   help='Decrease the log verbosity.')
-@click.option('--module', '-m', 'modules',
+@click.option('--module', '-m', 'modules', metavar='MODULE',
   multiple=True,
   help='The module to parse and generated API documentation for. Can be '
        'specified multiple times. If specified, the configuration will not '
        'be loaded implicitly from a file.')
-@click.option('--search-path', '-I',
+@click.option('--search-path', '-I', metavar='PATH',
   multiple=True,
   help='A directory to use in the search for Python modules. Can be '
        'specified multiple times. If specified, the configuration will not '
