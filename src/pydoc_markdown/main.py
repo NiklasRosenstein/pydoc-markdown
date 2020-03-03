@@ -25,6 +25,8 @@ Implements the pydoc-markdown CLI.
 
 from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.loaders.python import PythonLoader
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
 import click
 import logging
 import os
@@ -60,7 +62,10 @@ def error(*args):
   help='A directory to use in the search for Python modules. Can be '
        'specified multiple times. If specified, the configuration will not '
        'be loaded implicitly from a file.')
-def cli(config, verbose, quiet, modules, search_path):
+@click.option('--render-toc/--no-render-toc',
+  default=None,
+  help='Enable/disable the rendering of the TOC in the "markdown" renderer.')
+def cli(config, verbose, quiet, modules, search_path, render_toc):
   """ Pydoc-Markdown is a renderer for Python API documentation in Markdown
   format.
 
@@ -103,6 +108,15 @@ def cli(config, verbose, quiet, modules, search_path):
       loader.modules = modules
     if search_path:
       loader.search_path = search_path
+  if render_toc is not None:
+    if isinstance(pydocmd.renderer, MkdocsRenderer):
+      markdown = pydocmd.renderer.markdown
+    elif isinstance(pydocmd.renderer, MarkdownRenderer):
+      markdown = pydocmd.renderer
+    else:
+      error('no markdown renderer found')
+    if render_toc is not None:
+      markdown.render_toc = render_toc
 
   pydocmd.load_modules()
   pydocmd.process()
