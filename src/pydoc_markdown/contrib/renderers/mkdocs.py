@@ -97,7 +97,12 @@ class MkdocsRenderer(Struct):
 
     def _visit(page, path):
       def _update_nodes(x):
-        x.visible = _match(page, x)
+        x.visible = x.visible and _match(page, x)
+        # Make sure all parents are visible as well.
+        while x and x.visible:
+          x = x.parent
+          if x:
+            x.visible = True
       clone = copy.deepcopy(graph)
       clone.visit(_update_nodes)
       yield path, page, clone.modules
@@ -150,5 +155,5 @@ class MkdocsRenderer(Struct):
       yaml.dump(config, fp)
 
   @override
-  def get_resolver(self, _graph):
-    return None  # TODO
+  def get_resolver(self, graph):
+    return self.markdown.get_resolver(graph)
