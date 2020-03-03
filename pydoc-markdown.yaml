@@ -2,6 +2,7 @@ renderer:
   type: mkdocs
   pages:
   - title: Home
+    name: index
     source: README.md
   - title: API Documentation
     children:
