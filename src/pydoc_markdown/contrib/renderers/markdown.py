@@ -26,7 +26,7 @@ Implements a renderer that produces Markdown output.
 from nr.databind.core import Field, Struct
 from nr.interface import implements
 from pydoc_markdown.interfaces import Renderer, Resolver
-from pydoc_markdown.reflection import Object, Class, Module, ModuleGraph
+from pydoc_markdown.reflection import Object, Class, Data, Function, Module, ModuleGraph
 from typing import Optional
 import io
 import sys
@@ -96,6 +96,10 @@ class MarkdownRenderer(Struct):
   #: if it's `__init__()` member is not visible.
   classdef_render_init_signature_if_needed = Field(bool, default=True)
 
+  #: Render classdef and function signature blocks in the Python help()
+  #: style.
+  signature_python_help_style = Field(bool, default=False)
+
   #: Render the function signature as a code block. This includes the "def"
   #: keyword, the function name and its arguments. This is enabled by
   #: default.
@@ -153,10 +157,12 @@ class MarkdownRenderer(Struct):
     fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
-  def _format_function_signature(self, func):
+  def _format_function_signature(self, func: Function) -> str:
     parts = []
     for dec in func.decorators:
       parts.append('@{}{}\n'.format(dec.name, dec.args or ''))
+    if self.signature_python_help_style and not func.is_method():
+        parts.append('{} = '.format(func.path()))
     if func.is_async:
       parts.append('async ')
     if self.signature_with_def:
@@ -167,37 +173,46 @@ class MarkdownRenderer(Struct):
     parts.append(func.signature)
     if func.return_:
       parts.append(' -> {}'.format(func.return_))
-    return ''.join(parts)
+    result = ''.join(parts)
+    if self.signature_python_help_style and func.is_method():
+      result = '\n'.join('| ' + l for l in result.split('\n'))
+    return result
 
-  def _render_signature_block(self, fp, func):
-    fp.write('```{}\n'.format('python' if self.code_lang else ''))
-    fp.write(self._format_function_signature(func))
-    fp.write('\n```\n\n')
+  def _format_classdef_signature(self, cls: Class) -> str:
+    bases = ', '.join(map(str, cls.bases))
+    if cls.metaclass:
+      bases += ', metaclass=' + str(cls.metaclass)
+    code = 'class {}({})'.format(cls.name, bases)
+    if self.signature_python_help_style:
+      code = cls.path() + ' = ' + code
+    if self.classdef_render_init_signature_if_needed and (
+        '__init__' in cls.members and not cls.members['__init__'].visible):
+      code += ':\n    ' + self._format_function_signature(cls.members['__init__'])
+    return code
 
-  def _render_data_block(self, fp, obj):
-    fp.write('```{}\n'.format('python' if self.code_lang else ''))
-    expr = str(obj.expr)
+  def _format_data_signature(self, data: Data) -> str:
+    expr = str(data.expr)
     if len(expr) > self.data_expression_maxlength:
       expr = expr[:self.data_expression_maxlength] + ' ...'
-    fp.write(obj.name + ' = ' + expr)
+    return data.name + ' = ' + expr
+
+  def _render_signature_block(self, fp, obj):
+    if self.classdef_code_block and obj.is_class():
+      code = self._format_classdef_signature(obj)
+    elif self.signature_code_block and obj.is_function():
+      code = self._format_function_signature(obj)
+    elif self.data_code_block and obj.is_data():
+      code = self._format_data_signature(obj)
+    else:
+      return
+    fp.write('```{}\n'.format('python' if self.code_lang else ''))
+    fp.write(code)
     fp.write('\n```\n\n')
 
   def _render_object(self, fp, level, obj):
     if not isinstance(obj, Module) or self.render_module_header:
       self._render_header(fp, level, obj)
-    if self.classdef_code_block and obj.is_class():
-      bases = ', '.join(map(str, obj.bases))
-      if obj.metaclass:
-        bases += ', metaclass=' + str(obj.metaclass)
-      code = 'class {}({})'.format(obj.name, bases)
-      if self.classdef_render_init_signature_if_needed and (
-          '__init__' in obj.members and not obj.members['__init__'].visible):
-        code += ':\n    ' + self._format_function_signature(obj.members['__init__'])
-      fp.write('```python\n{}\n```\n\n'.format(code))
-    if self.signature_code_block and obj.is_function():
-      self._render_signature_block(fp, obj)
-    if self.data_code_block and obj.is_data():
-      self._render_data_block(fp, obj)
+    self._render_signature_block(fp, obj)
     if obj.docstring:
       lines = obj.docstring.split('\n')
       if self.docstrings_as_blockquote:
