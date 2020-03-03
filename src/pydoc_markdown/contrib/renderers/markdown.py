@@ -136,6 +136,19 @@ class MarkdownRenderer(Struct):
   #: Render docstrings as blockquotes. This is disabled by default.
   docstrings_as_blockquote = Field(bool, default=False)
 
+  #: Use a fixed header level for every kind of API object. The individual
+  #: levels can be defined with #header_level_by_type.
+  use_fixed_header_levels = Field(bool, default=True)
+
+  #: Fixed header levels by API object type.
+  header_level_by_type = Field({int}, default={
+    'Module': 2,
+    'Class': 3,
+    'Method': 4,
+    'Function': 4,
+    'Data': 4,
+  })
+
   def _render_toc(self, fp, level, obj):
     if level > self.toc_maxdepth:
       return
@@ -148,6 +161,8 @@ class MarkdownRenderer(Struct):
 
   def _render_header(self, fp, level, obj):
     object_id = self._generate_object_id(obj)
+    if self.use_fixed_header_levels:
+      level = self.header_level_by_type.get(type(obj).__name__, level)
     if self.insert_header_anchors and not self.html_headers:
       fp.write('<a name="{}"></a>\n'.format(object_id))
     if self.html_headers:
