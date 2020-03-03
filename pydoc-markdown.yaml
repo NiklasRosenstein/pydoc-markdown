@@ -30,3 +30,5 @@ renderer:
       contents:
       - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*
       - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
+  mkdocs_config:
+    theme: readthedocs
