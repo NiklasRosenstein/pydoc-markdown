@@ -47,6 +47,7 @@ class FilterProcessor(Struct):
   documented_only = Field(bool, default=True)
   exclude_private = Field(bool, default=True)
   exclude_special = Field(bool, default=True)
+  include_root_objects = Field(bool, default=True)
 
   SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')
 
@@ -68,5 +69,9 @@ class FilterProcessor(Struct):
       if not eval(self.expression, scope):  # pylint: disable=eval-used
         node.visible = False
 
-    if node.parent and not isinstance(node.parent, ModuleGraph) and not _check(node):
+    if self.include_root_objects and (
+        not node.parent or isinstance(node.parent, ModuleGraph)):
+      return
+
+    if not _check(node):
       node.visible = False
