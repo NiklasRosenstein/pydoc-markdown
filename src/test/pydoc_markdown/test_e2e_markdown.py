@@ -161,7 +161,7 @@ def test_class():
   #### \\_\\_init\\_\\_
 
   ```python
-  __init__(self, param)
+   | __init__(param)
   ```
 
   The constructor.

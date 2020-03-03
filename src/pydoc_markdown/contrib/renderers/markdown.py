@@ -172,7 +172,7 @@ class MarkdownRenderer(Struct):
     fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
-  def _format_function_signature(self, func: Function) -> str:
+  def _format_function_signature(self, func: Function, override_name: str = None, add_method_bar: bool = True) -> str:
     parts = []
     for dec in func.decorators:
       parts.append('@{}{}\n'.format(dec.name, dec.args or ''))
@@ -185,12 +185,13 @@ class MarkdownRenderer(Struct):
     if self.signature_class_prefix and (
         func.is_function() and func.parent and func.parent.is_class()):
       parts.append(func.parent.name + '.')
-    parts.append(func.signature)
+    parts.append((override_name or func.name))
+    parts.append('(' + func.signature_args + ')')
     if func.return_:
       parts.append(' -> {}'.format(func.return_))
     result = ''.join(parts)
-    if self.signature_python_help_style and func.is_method():
-      result = '\n'.join('| ' + l for l in result.split('\n'))
+    if add_method_bar and func.is_method():
+      result = '\n'.join(' | ' + l for l in result.split('\n'))
     return result
 
   def _format_classdef_signature(self, cls: Class) -> str:
@@ -202,7 +203,8 @@ class MarkdownRenderer(Struct):
       code = cls.path() + ' = ' + code
     if self.classdef_render_init_signature_if_needed and (
         '__init__' in cls.members and not cls.members['__init__'].visible):
-      code += ':\n    ' + self._format_function_signature(cls.members['__init__'])
+      code += ':\n |  ' + self._format_function_signature(
+        cls.members['__init__'], override_name=cls.name, add_method_bar=False)
     return code
 
   def _format_data_signature(self, data: Data) -> str:
