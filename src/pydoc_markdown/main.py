@@ -38,6 +38,9 @@ config_filenames = [
   'pydoc-markdown.yaml',
 ]
 
+DEFAULT_CONFIG_NOTICE = 'Using this option will disable loading the '\
+  'default configuration file.'
+
 
 def error(*args):
   print('error:', *args, file=sys.stderr)
@@ -55,18 +58,16 @@ def error(*args):
 @click.option('--module', '-m', 'modules', metavar='MODULE',
   multiple=True,
   help='The module to parse and generated API documentation for. Can be '
-       'specified multiple times. If specified, the configuration will not '
-       'be loaded implicitly from a file.')
+       'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
 @click.option('--search-path', '-I', metavar='PATH',
   multiple=True,
   help='A directory to use in the search for Python modules. Can be '
-       'specified multiple times. If specified, the configuration will not '
-       'be loaded implicitly from a file.')
+       'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
 @click.option('--py2/--py3', 'py2', default=None,
   help='Switch between parsing Python 2 and Python 3 code. The default '
        'is Python 3. Using --py2 will enable parsing code that uses the '
        '"print" statement. This is equivalent of setting the print_function '
-       'option of the "python" loader to False.')
+       'option of the "python" loader to False. ' + DEFAULT_CONFIG_NOTICE)
 @click.option('--render-toc/--no-render-toc',
   default=None,
   help='Enable/disable the rendering of the TOC in the "markdown" renderer.')
