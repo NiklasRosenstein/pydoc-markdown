@@ -55,15 +55,18 @@ def error(*args):
 @click.option('--quiet', '-q',
   is_flag=True,
   help='Decrease the log verbosity.')
-@click.option('--module', '-m', 'modules', metavar='MODULE',
+@click.option('--module', '-m', 'modules',
+  metavar='MODULE',
   multiple=True,
   help='The module to parse and generated API documentation for. Can be '
        'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
-@click.option('--search-path', '-I', metavar='PATH',
+@click.option('--search-path', '-I',
+  metavar='PATH',
   multiple=True,
   help='A directory to use in the search for Python modules. Can be '
        'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
-@click.option('--py2/--py3', 'py2', default=None,
+@click.option('--py2/--py3', 'py2',
+  default=None,
   help='Switch between parsing Python 2 and Python 3 code. The default '
        'is Python 3. Using --py2 will enable parsing code that uses the '
        '"print" statement. This is equivalent of setting the print_function '
