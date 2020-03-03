@@ -49,7 +49,10 @@ class CrossrefProcessor(Struct):
       # Remove the dot from the ref if its trailing (it is probably just
       # the end of the sentence).
       has_trailing_dot = False
-      if not parens and ref.endswith('.'):
+      if trailing and trailing.endswith('.'):
+        trailing = trailing[:-1]
+        has_trailing_dot = True
+      elif not parens and ref.endswith('.'):
         ref = ref[:-1]
         has_trailing_dot = True
       href = resolver.resolve_ref(node, ref)
@@ -62,9 +65,9 @@ class CrossrefProcessor(Struct):
       # Add back the dot.
       if has_trailing_dot:
         result += '.'
-      return (match.group('prefix') or '') + result
+      return result
 
     node.docstring = re.sub(
-      r'(?P<prefix>^| |\t)#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?(?P<trailing>#[\w\d\._]+)?',
+      r'\B#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?(?P<trailing>#[\w\d\._]+)?',
       handler,
       node.docstring)
