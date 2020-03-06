@@ -17,6 +17,7 @@ __On the roadmap__
 * Mkdocs integration (for feature parity with Pydoc-Markdown 2.x)
 * Support for images (#94)
 * Understand fixmes and hints in the source code (eg. `# doc: ignore`)
+* Cross-page (and cross-project) links in API documentation
 
 ## Usage
 
