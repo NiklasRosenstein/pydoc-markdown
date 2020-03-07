@@ -91,9 +91,15 @@ class PythonLoader(object):
     section.content = trim(get_docstring(obj))
     section.loader_context = {'obj': obj, 'scope': scope}
 
+    strip_self_param = inspect.isclass(scope)
+    if isinstance(obj, (staticmethod, classmethod)):
+      strip_self_param = strip_self_param and not isinstance(obj, staticmethod)
+      obj = obj.__func__
+
     # Add the function signature in a code-block.
     if callable(obj):
-      sig = get_function_signature(obj, scope if inspect.isclass(scope) else None)
+      owner_class = scope if inspect.isclass(scope) else None
+      sig = get_function_signature(obj, owner_class, strip_self_param)
       section.content = '```python\n{}\n```\n'.format(sig.strip()) + section.content
 
 
@@ -181,7 +187,7 @@ def get_paramaters_from_arg_spec(argspec, strip_self=False):
   if argspec['varkw']:
     args.append(Parameter(Parameter.VARARGS_KW, argspec['varkw']))
 
-  if strip_self and args and args[0].name == 'self':
+  if strip_self and args and args[0].name in ('cls', 'self'):
     args.pop(0)
 
   for i, param in enumerate(args):
@@ -206,6 +212,7 @@ def format_parameters_list(parameters):
 def get_function_signature(
   function,
   owner_class=None,
+  strip_self_param=False,
   show_module=False,
   pretty=True,
 ):
@@ -228,7 +235,7 @@ def get_function_signature(
   except TypeError:
     parameters = []
   else:
-    parameters = get_paramaters_from_arg_spec(argspec, strip_self=owner_class)
+    parameters = get_paramaters_from_arg_spec(argspec, strip_self=strip_self_param)
 
   # Prettify annotations.
   class repr_str(str):
