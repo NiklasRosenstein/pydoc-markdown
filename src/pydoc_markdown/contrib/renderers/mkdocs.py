@@ -27,7 +27,7 @@ from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer
 from pydoc_markdown.reflection import Object, ModuleGraph
-from typing import Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple
 import copy
 import fnmatch
 import logging
@@ -69,6 +69,7 @@ class MkdocsRenderer(Struct):
   #: `build/docs`.
   output_directory = Field(str, default='build/docs')
 
+  #: Remove the `docs` directory in the #output_directory before rendering.
   clean_docs_directory_on_render = Field(bool, default=True)
 
   #: The pages to render into the output directory.
@@ -79,13 +80,17 @@ class MkdocsRenderer(Struct):
 
   #: The name of the site. This will be carried into the `site_name` key
   #: of the #mkdocs_config.
-  site_name = Field(str, default='My Project')
+  site_name = Field(str, default=None)
 
   #: Arbitrary configuration values that will be rendered to an
   #: `mkdocs.yml` file.
   mkdocs_config = Field(dict, default=dict)
 
-  def organize_modules(self, graph) -> Iterable[Tuple[Page, List[Object]]]:
+  @property
+  def docs_dir(self) -> str:
+    return os.path.join(self.output_directory, 'docs')
+
+  def organize_modules(self, graph) -> Iterable[Tuple[List[str], Page, List[Object]]]:
     """ Organizes the objects in the *graph* in pairs with the pages that
     are supposed to contain them (per the "contents" filter). """
 
@@ -116,15 +121,27 @@ class MkdocsRenderer(Struct):
   def mkdocs_serve(self):
     return subprocess.Popen(['mkdocs', 'serve'], cwd=self.output_directory)
 
+  def generate_mkdocs_nav(self, page_to_filename: Dict[Page, str]) -> Dict:
+    def _generate(pages):
+      result = []
+      for page in pages:
+        if page.children:
+          result.append({page.title: _generate(page.children)})
+        else:
+          filename = os.path.relpath(page_to_filename[id(page)], self.docs_dir)
+          result.append({page.title: filename})
+      return result
+    return _generate(self.pages)
+
   # Renderer
 
   @override
   def render(self, graph):
-    docs_dir = os.path.join(self.output_directory, 'docs')
+    if self.clean_docs_directory_on_render and os.path.isdir(self.docs_dir):
+      logger.info('Cleaning directory "%s"', self.docs_dir)
+      shutil.rmtree(self.docs_dir)
 
-    if self.clean_docs_directory_on_render:
-      logger.info('Cleaning directory "%s"', docs_dir)
-      shutil.rmtree(docs_dir)
+    page_to_filename = {}
 
     for path, page, items in self.organize_modules(graph):
       # Construct the filename for the generated Markdown page.
@@ -133,7 +150,8 @@ class MkdocsRenderer(Struct):
         if not page.contents and not page.source:
           continue
         path.append('index')
-      filename = os.path.join(docs_dir, *path) + '.md'
+      filename = os.path.join(self.docs_dir, *path) + '.md'
+      page_to_filename[id(page)] = filename
 
       # Render the page or copy from the specified source file.
       os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -146,8 +164,12 @@ class MkdocsRenderer(Struct):
         self.markdown.render(ModuleGraph(items))
 
     config = copy.deepcopy(self.mkdocs_config)
-    config['site_name'] = self.site_name
+    if self.site_name:
+      config['site_name'] = self.site_name
+    if not config.get('site_name'):
+      config['site_name'] = 'My Project'
     config['docs_dir'] = 'docs'
+    config['nav'] = self.generate_mkdocs_nav(page_to_filename)
 
     filename = os.path.join(self.output_directory, 'mkdocs.yml')
     logger.info('Rendering "%s"', filename)
