@@ -53,6 +53,7 @@ class Page(Struct):
 
   name = Field(str, default=None)
   title = Field(str)
+  href = Field(str, default=None)
   source = Field(str, default=None)
   contents = Field([str], default=None)
   children = Field([Page], default=list)
@@ -127,6 +128,8 @@ class MkdocsRenderer(Struct):
       for page in pages:
         if page.children:
           result.append({page.title: _generate(page.children)})
+        elif page.href:
+          result.append({page.title: page.href})
         else:
           filename = os.path.relpath(page_to_filename[id(page)], self.docs_dir)
           result.append({page.title: filename})
