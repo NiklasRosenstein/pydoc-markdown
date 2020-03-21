@@ -153,6 +153,15 @@ GitHub-style Markdown code-blocks with language annotations can be used.
 
 ## Changes
 
+### v2.1.3 (2020-03-21)
+
+- Support `arg` and `argument` keywords in reStructuredText processor (contributed
+  by @pastelmind in #104)
+
+### v2.1.2 (2020-03-07)
+
+- Fix function signature for classmethods and staticmethods
+
 ### v2.1.1 (2020-03-02)
 
 - Reimplement `get_function_signature()` for better compatibility with
