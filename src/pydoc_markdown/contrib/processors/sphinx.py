@@ -68,7 +68,7 @@ class SphinxProcessor(Struct):
       line_codeblock = line.startswith('    ')
 
       if not in_codeblock and not line_codeblock:
-        match = re.match(r'\s*:(?:param|parameter)\s+(\w+)\s*:(.*)?$', line)
+        match = re.match(r'\s*:(?:arg|argument|param|parameter)\s+(\w+)\s*:(.*)?$', line)
         if match:
           keyword = 'Arguments'
           param = match.group(1)
