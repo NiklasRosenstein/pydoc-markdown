@@ -19,17 +19,20 @@ __On the roadmap__
 * Understand fixmes and hints in the source code (eg. `# doc: ignore`)
 * Cross-page (and cross-project) links in API documentation
 
-## Usage
+## Installation
 
   [Pipx]: https://pypi.org/project/pipx/
 
-Pydoc-Markdown 3 is not currently available on PyPI. To install the current
-development version, you can simply pass the Git repository URL to Pip. It is
-recommended to install Pydoc-Markdown in isolation with [Pipx].
+Using [Pipx][] is recommended to avoid dependency clashes that can occur when installing multiple
+command-line tools into a single environment.
+
+    $ pipx install 'pydoc-markdown>=3.0.0,<4.0.0'
+
+For the cutting-edge version, you can install Pydoc-Markdown directly from GitHub:
 
     $ pipx install git+https://github.com/NiklasRosenstein/pydoc-markdown.git@develop
 
-This makes the `pydoc-markdown` command available in your command-line.
+## Usage
 
 On the CLI you specify either the name of a configuration file or provide a
 YAML formatted configuration. If you do not specify any arguments, the default
