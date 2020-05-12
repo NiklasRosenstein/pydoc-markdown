@@ -54,3 +54,12 @@ entrypoints:
   pydoc_markdown.interfaces.Renderer:
     - markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer
     - mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer
+
+use:
+  - type: pypi
+    repository: pypi
+    username: '__token__'
+    password: '$PYPI_TOKEN'
+    test_repository: testpypi
+    test_username: '__token__'
+    test_password: '$TEST_PYPI_TOKEN'
