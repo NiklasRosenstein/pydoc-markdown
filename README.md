@@ -11,13 +11,13 @@ __Features__
 * Resolves cross-references of the form `#PetType.CAT`
 * Supports attribute docstrings (`#: ...` before or string literals after
   the statement)
+* Mkdocs integration
+* Cross-page (and cross-project) links in API documentation) [Work in progress]
 
 __On the roadmap__
 
-* Mkdocs integration (for feature parity with Pydoc-Markdown 2.x)
 * Support for images (#94)
 * Understand fixmes and hints in the source code (eg. `# doc: ignore`)
-* Cross-page (and cross-project) links in API documentation
 
 ## Installation
 
