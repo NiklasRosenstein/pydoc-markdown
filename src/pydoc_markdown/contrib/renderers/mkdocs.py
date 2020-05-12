@@ -22,7 +22,7 @@
 """ Implements the `mkdocs` renderer. It uses the `markdown` renderer to
 produce an MkDocs-compatible folder structure. """
 
-from nr.databind.core import Field, Struct, forward_decl
+from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer
@@ -38,7 +38,7 @@ import subprocess
 import yaml
 
 logger = logging.getLogger(__name__)
-Page = forward_decl()
+Page = ProxyType()
 
 
 class CustomizedMarkdownRenderer(MarkdownRenderer):
@@ -47,7 +47,7 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
   render_toc = Field(bool, default=False)
 
 
-@forward_decl(Page)  # pylint: disable=function-redefined
+@Page.implementation  # pylint: disable=function-redefined
 class Page(Struct):
   """ Desribes a page that is rendered by the #MkdocsRenderer. """
 

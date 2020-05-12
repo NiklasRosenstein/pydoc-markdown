@@ -24,13 +24,13 @@ This module provides the abstract representation of a code library. It is
 generalised and intended to be usable for any language.
 """
 
-from nr.databind.core import Field, Struct, forward_decl
+from nr.databind.core import Field, Struct, ProxyType
 from typing import List, Optional
 
-Argument = forward_decl()
-Decorator = forward_decl()
-Expression = forward_decl()
-Object = forward_decl()
+Argument = ProxyType()
+Decorator = ProxyType()
+Expression = ProxyType()
+Object = ProxyType()
 
 
 class Location(Struct):
@@ -41,7 +41,7 @@ class Location(Struct):
     return '{}:{}'.format(self.filename, self.lineno)
 
 
-@forward_decl(Object)  # pylint: disable=function-redefined
+@Object.implementation  # pylint: disable=function-redefined
 class Object(Struct):
   location = Field(Location, nullable=True)
   parent = Field(Object, default=None)
@@ -131,13 +131,13 @@ class Data(Object):
   expr = Field(Expression)
 
 
-@forward_decl(Decorator)  # pylint: disable=function-redefined
+@Decorator.implementation  # pylint: disable=function-redefined
 class Decorator(Struct):
   name = Field(str)
   args = Field(Expression, default=None)
 
 
-@forward_decl(Argument)  # pylint: disable=function-redefined
+@Argument.implementation  # pylint: disable=function-redefined
 class Argument(Struct):
   name = Field(str)
   annotation = Field(Expression, default=None)
@@ -178,7 +178,7 @@ class Argument(Struct):
     return ', '.join(parts)
 
 
-@forward_decl(Expression)  # pylint: disable=function-redefined
+@Expression.implementation  # pylint: disable=function-redefined
 class Expression(Struct):
   text = Field(str)
 

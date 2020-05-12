@@ -28,21 +28,19 @@ Pydoc-Markdown to implement custom loaders for documentation data,
 processors or renderers.
 """
 
-from nr.databind.core import  DeserializeAs, UnionType
+from nr.databind.core import  SerializeAs, UnionType
 from nr.interface import Interface, default
 from typing import Optional
 from .reflection import ModuleGraph, Object
 
 
+@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Loader'))
 class Loader(Interface):
   """
   This interface describes an object that is capable of loading documentation
   data. The location from which the documentation is loaded must be defined
   with the configuration class.
   """
-
-  ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Loader'
-  DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
   def load(self, graph):  # type: (ModuleGraph) -> None
     """
@@ -54,15 +52,13 @@ class LoaderError(Exception):
   pass
 
 
+@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Processor'))
 class Processor(Interface):
   """
   A processor is an object that takes a #ModuleGraph object as an input and
   transforms it in an arbitrary way. This usually processes docstrings to
   convert from various documentation syntaxes to plain Markdown.
   """
-
-  ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Processor'
-  DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
   def process(self, graph, resolver):  # type: (ModuleGraph, Optional[Resolver]) -> None
     pass
@@ -75,7 +71,7 @@ class Resolver(Interface):
   def resolve_ref(self, scope: Object, ref: str) -> Optional[str]:
     pass
 
-
+@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Renderer'))
 class Renderer(Processor):
   """
   A renderer is an object that takes a #ModuleGraph as an input and produces
@@ -87,9 +83,6 @@ class Renderer(Processor):
   generic processing that could be used without the actual renderering
   functionality, #Renderer is a subclass of #Processor.
   """
-
-  ENTRYPOINT_NAME = 'pydoc_markdown.interfaces.Renderer'
-  DeserializeAs(UnionType.with_entrypoint_resolver(ENTRYPOINT_NAME))
 
   @default
   def process(self, graph, resolver):  # type: (ModuleGraph, Optional[Resolver]) -> None

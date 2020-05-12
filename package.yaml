@@ -3,6 +3,7 @@
 name: "pydoc-markdown"
 version: "3.0.0"
 description: "Create Python API documentation in Markdown format."
+author: "Niklas Rosenstein <rosensteinniklas@gmail.com>"
 license: "MIT"
 url: "https://github.com/NiklasRosenstein/pydoc-markdown"
 tag-format: "v{version}"
@@ -32,7 +33,8 @@ requirements:
   - python ^3.6
   - click ^7.0
   - nr.collections ~0.0.1
-  - nr.databind ~0.0.4
+  - nr.databind.core ~0.0.10
+  - nr.databind.json ~0.0.8
   - six ^1.11.0
   - PyYAML ^5.3
   - watchdog ^0.10.2
