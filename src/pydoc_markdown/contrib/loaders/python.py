@@ -84,7 +84,7 @@ def parse_to_ast(code, filename, print_function=True):
     raise ParseError(exc.msg, exc.type, exc.value, exc.context + (filename,))
 
 
-def parse_file(code, filename, module_name=None, **kwargs):
+def parse_file(code, filename, module_name=None, parser=None, **kwargs):
   """
   Creates a reflection of the Python source in the string *code*.
   """
@@ -93,7 +93,10 @@ def parse_file(code, filename, module_name=None, **kwargs):
     with open(filename, 'r') as fp:
       code = fp.read()
 
-  return Parser().parse(parse_to_ast(code, filename, **kwargs), filename, module_name)
+  if parser is None:
+    parser = Parser()
+
+  return parser.parse(parse_to_ast(code, filename, **kwargs), filename, module_name)
 
 
 class Parser:
@@ -102,6 +105,8 @@ class Parser:
   #pydoc_markdown.reflection module. Extracts docstrings from functions
   and single-line comments.
   """
+
+  treat_singleline_comment_blocks_as_docstrings = True
 
   def parse(self, ast, filename, module_name=None):
     self.filename = filename  # pylint: disable=attribute-defined-outside-init
@@ -366,9 +371,10 @@ class Parser:
         return self.prepare_docstring(node.children[0].value)
     if not node and not module_level:
       return None
-    docstring, doc_type = self.get_hashtag_docstring_from_prefix(node or parent)
-    if doc_type == 'block':
-      return docstring
+    if self.treat_singleline_comment_blocks_as_docstrings:
+      docstring, doc_type = self.get_hashtag_docstring_from_prefix(node or parent)
+      if doc_type == 'block':
+        return docstring
     return None
 
   def get_statement_docstring(self, node):
@@ -564,6 +570,10 @@ class PythonLoader(Struct):
   #: `__future__` module.
   print_function = Field(bool, default=True)
 
+  #: Whether to treat blocks of single line comments as docstrings at the
+  #: header of a module or inside a class or function definition. Defaults to True.
+  treat_singleline_comment_blocks_as_docstrings = Field(bool, default=True)
+
   IGNORE_DISCOVERED_MODULES = ('test', 'tests', 'setup')
 
   def load(self, graph):
@@ -633,11 +643,22 @@ class PythonLoader(Struct):
     else:
       raise LoaderError('path "{}" does not exist'.format(path))
 
+  def _get_parser(self):
+    parser = Parser()
+    parser.treat_singleline_comment_blocks_as_docstrings = self.treat_singleline_comment_blocks_as_docstrings
+    return parser
+
   def load_file(self, module_name, filename):
-    return parse_file(None, filename, module_name,
+    return parse_file(
+      None,
+      filename,
+      module_name,
+      parser=self._get_parser(),
       print_function=self.print_function)
 
   def load_source(self, source_code, module_name, filename=None):
-    ast = parse_to_ast(source_code, filename,
+    ast = parse_to_ast(
+      source_code,
+      filename,
       print_function=self.print_function)
-    return Parser().parse(ast, filename, module_name)
+    return self._get_parser().parse(ast, filename, module_name)
