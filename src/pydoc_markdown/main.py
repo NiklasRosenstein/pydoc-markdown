@@ -23,7 +23,7 @@
 Implements the pydoc-markdown CLI.
 """
 
-from pydoc_markdown import PydocMarkdown
+from pydoc_markdown import __version__, PydocMarkdown
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
@@ -83,6 +83,7 @@ def error(*args):
 
 @click.command()
 @click.argument('config', required=False)
+@click.version_option(__version__)
 @click.option('--bootstrap',
   is_flag=True,
   help='Render the default configuration file into the current working directory and quit.')
