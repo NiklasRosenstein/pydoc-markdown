@@ -27,8 +27,12 @@ renderer:
       - pydoc_markdown.contrib.processors.smart.SmartProcessor
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor
     - title: Renderers
-      contents:
-      - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*
-      - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
+      children:
+      - title: MarkdownRenderer
+        contents:
+        - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*
+      - title: MkdocsRenderer
+        contents:
+        - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
   mkdocs_config:
     theme: readthedocs
