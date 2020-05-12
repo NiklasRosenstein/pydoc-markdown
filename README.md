@@ -39,7 +39,7 @@ configuration file is loaded (`pydoc-markdown.ya?ml`).
 
 The configuration is composed of three main components: A list of loaders,
 a list of documentation processors and a renderer. The default configuration
-is defined as
+is defined as follows:
 
 ```yaml
 loaders:
@@ -69,6 +69,8 @@ configuration file). Example:
 
 <details><summary>Expand to see the generated Markdown</summary>
 
+---
+
 <a name=".a"></a>
 ## a
 
@@ -96,6 +98,9 @@ Nothing
 ---
 
 </details>
+
+To jumpstart your documentation endavours, try running `pydoc-markdown --bootstrap` or
+`pydoc-markdown --bootsrap-mkdocs` to generate a template configuration file.
 
 If a configuration file exists, then the CLI needs to be invoked without
 arguments, or with one argument that specifies the path to the configuration

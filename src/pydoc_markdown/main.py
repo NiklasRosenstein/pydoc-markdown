@@ -45,6 +45,35 @@ config_filenames = [
 MKDOCS_DEFAULT_SERVE_URL = 'http://localhost:8000'
 DEFAULT_CONFIG_NOTICE = 'Using this option will disable loading the '\
   'default configuration file.'
+DEFAULT_CONFIG = '''
+loaders:
+  - type: python
+processors:
+  - type: filter
+  - type: smart
+  - type: crossref
+renderer:
+  - type: markdown
+'''.lstrip()
+DEFAULT_CONFIG_MKDOCS = '''
+loaders:
+  - type: python
+processors:
+  - type: filter
+  - type: smart
+  - type: crossref
+renderer:
+  type: mkdocs
+  pages:
+    - title: Home
+      name: index
+      source: README.md
+    - title: API Documentation
+      contents:
+        - my_module.api.*
+  mkdocs_config:
+    theme: readthedocs
+'''.lstrip()
 
 
 def error(*args):
@@ -54,6 +83,13 @@ def error(*args):
 
 @click.command()
 @click.argument('config', required=False)
+@click.option('--bootstrap',
+  is_flag=True,
+  help='Render the default configuration file into the current working directory and quit.')
+@click.option('--bootstrap-mkdocs',
+  is_flag=True,
+  help='Render a template configuration file for generating MkDpcs files into the current '
+       'working directory and quit.')
 @click.option('--verbose', '-v',
   is_flag=True,
   help='Increase log verbosity.')
@@ -88,13 +124,41 @@ def error(*args):
   is_flag=True,
   help='Open your browser after starting "mkdocs serve". Can only be used '
        'together with the --watch-and-serve option.')
-def cli(config, verbose, quiet, modules, search_path, render_toc, py2, watch_and_serve, open_browser):
+def cli(
+    config,
+    bootstrap,
+    bootstrap_mkdocs,
+    verbose,
+    quiet,
+    modules,
+    search_path,
+    render_toc,
+    py2,
+    watch_and_serve,
+    open_browser):
   """ Pydoc-Markdown is a renderer for Python API documentation in Markdown
   format.
 
   With no arguments it will load the default configuration file. If the
   *config* argument is specified, it must be the name of a configuration file
   or a YAML formatted object for the configuration. """
+
+  if bootstrap and bootstrap_mkdocs:
+    error('--bootstrap and --bootstrap-mkdocs are incompatible options')
+  if bootstrap or bootstrap_mkdocs:
+    if config or modules or search_path or render_toc or py2 or watch_and_serve or open_browser:
+      error('--bootstrap must be used as a sole argument')
+    existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
+    if existing_file:
+      error('file already exists: {!r}'.format(existing_file))
+    filename = config_filenames[0]
+    with open(filename, 'w') as fp:
+      if bootstrap_mkdocs:
+        fp.write(DEFAULT_CONFIG_MKDOCS)
+      else:
+        fp.write(DEFAULT_CONFIG)
+    print('created', filename)
+    return
 
   if open_browser and not watch_and_serve:
     error('--open can only be used with --watch-and-serve')
