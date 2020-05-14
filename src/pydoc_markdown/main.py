@@ -20,7 +20,11 @@
 # IN THE SOFTWARE.
 
 """
-Implements the pydoc-markdown CLI.
+Pydoc-Markdown is a renderer for Python API documentation in Markdown format.
+
+With no arguments it will load the default configuration file. If the
+*config* argument is specified, it must be the name of a configuration file
+or a YAML formatted object for the configuration.
 """
 
 from nr.databind.core import StructType
@@ -29,6 +33,7 @@ from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
 from pydoc_markdown.util.watchdog import watch_paths
+from typing import List, Set, Union
 import click
 import logging
 import os
@@ -77,53 +82,156 @@ renderer:
 '''.lstrip()
 
 
+class RenderSession:
+  """
+  Helper class to load the Pydoc-markdown configuration from a file, apply
+  overrides and invoke the renderer.
+  """
+
+  def __init__(self,
+      config: Union[None, dict, str],  #: Configuration object or file
+      render_toc: bool = None,  #: Override the "render_toc" option in the MarkdownRenderer
+      search_path: List[str] = None,  #: Override the search path in the Python loader
+      modules: List[str] = None,  #: Override the modules in the Python loader
+      py2: bool = None,  #: Override Python2 compatibility in the Python loader
+      ) -> None:
+    self.config = config
+    self.render_toc = render_toc
+    self.search_path = search_path
+    self.modules = modules
+    self.py2 = py2
+
+  def _apply_overrides(self, config: PydocMarkdown):
+    """
+    Applies overrides to the configuration.
+    """
+
+    # Update configuration per command-line options.
+    if self.modules or self.search_path or self.py2 is not None:
+      loader = next(
+        (l for l in config.loaders if isinstance(l, PythonLoader)), None)
+      if not loader:
+        error('no python loader found')
+      if self.modules:
+        loader.modules = self.modules
+      if self.search_path:
+        loader.search_path = self.search_path
+      if self.py2 is not None:
+        loader.print_function = not self.py2
+
+    if self.render_toc is not None:
+      # Find the #MarkdownRenderer field for this renderer.
+      for field in config.renderer.__fields__.values():
+        if isinstance(field.datatype, StructType) and \
+            issubclass(field.datatype.struct_cls, MarkdownRenderer):
+          markdown = getattr(config.renderer, field.name)
+          break
+      else:
+        if isinstance(config.renderer, MarkdownRenderer):
+          markdown = config.renderer
+        else:
+          error('renderer {!r} does not expose a MarkdownRenderer'
+                .format(type(config.renderer).__name__))
+      markdown.render_toc = self.render_toc
+
+  def load(self) -> PydocMarkdown:
+    """
+    Loads the configuration and applies the overrides.
+    """
+
+    config = PydocMarkdown()
+    if self.config:
+      config.load_config(self.config)
+    self._apply_overrides(config)
+    return config
+
+  def render(self, config: PydocMarkdown) -> List[str]:
+    """
+    Kicks off the rendering process and returns a list of files to watch.
+    """
+
+    config.load_modules()
+    config.process()
+    config.render()
+
+    watch_files = set(m.location.filename for m in config.graph.modules)
+    if isinstance(config, str):
+      watch_files.add(config)
+
+    return list(watch_files)
+
+  def watch_and_serve(self, config: PydocMarkdown, open_browser: bool = False):
+    """
+    Watches files for changes and (re-) starts a server process that
+    serves an HTML page from the renderer output on the fly.
+    """
+
+    # TODO: Generic interface.
+    if not isinstance(config.renderer, MkdocsRenderer):
+      error('--watch-and-serve can only be used in combination with '
+            'the "mkdocs" renderer.')
+
+    observer, event, process = None, None, None
+    watch_files = []
+
+    try:
+      while True:
+        # Initial render or re-render if a file changed.
+        if not event or event.is_set():
+          logger.info('Rendering.')
+          watch_files = self.render(config)
+          if observer:
+            observer.stop()
+          observer, event = watch_paths(watch_files)
+
+        # If the process doesn't exist, start it.
+        if process is None:
+          logger.info('Starting MkDocs serve.')
+          process = config.renderer.mkdocs_serve()
+          if open_browser:
+            webbrowser.open(MKDOCS_DEFAULT_SERVE_URL)
+
+        event.wait(0.5)
+    finally:
+      if observer:
+        observer.stop()
+      if process:
+        process.terminate()
+
+
 def error(*args):
   print('error:', *args, file=sys.stderr)
   sys.exit(1)
 
 
-@click.command()
+@click.command(help=__doc__)
 @click.argument('config', required=False)
 @click.version_option(__version__)
-@click.option('--bootstrap',
-  is_flag=True,
+@click.option('--bootstrap', is_flag=True,
   help='Render the default configuration file into the current working directory and quit.')
-@click.option('--bootstrap-mkdocs',
-  is_flag=True,
+@click.option('--bootstrap-mkdocs', is_flag=True,
   help='Render a template configuration file for generating MkDpcs files into the current '
        'working directory and quit.')
-@click.option('--verbose', '-v',
-  is_flag=True,
-  help='Increase log verbosity.')
-@click.option('--quiet', '-q',
-  is_flag=True,
-  help='Decrease the log verbosity.')
-@click.option('--module', '-m', 'modules',
-  metavar='MODULE',
-  multiple=True,
+@click.option('--verbose', '-v', is_flag=True, help='Increase log verbosity.')
+@click.option('--quiet', '-q', is_flag=True, help='Decrease the log verbosity.')
+@click.option('--module', '-m', 'modules', metavar='MODULE', multiple=True,
   help='The module to parse and generated API documentation for. Can be '
        'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
-@click.option('--search-path', '-I',
-  metavar='PATH',
-  multiple=True,
+@click.option('--search-path', '-I', metavar='PATH', multiple=True,
   help='A directory to use in the search for Python modules. Can be '
        'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
-@click.option('--py2/--py3', 'py2',
-  default=None,
+@click.option('--py2/--py3', 'py2', default=None,
   help='Switch between parsing Python 2 and Python 3 code. The default '
        'is Python 3. Using --py2 will enable parsing code that uses the '
        '"print" statement. This is equivalent of setting the print_function '
        'option of the "python" loader to False. ' + DEFAULT_CONFIG_NOTICE)
-@click.option('--render-toc/--no-render-toc',
-  default=None,
+@click.option('--render-toc/--no-render-toc', default=None,
   help='Enable/disable the rendering of the TOC in the "markdown" renderer.')
-@click.option('--watch-and-serve', '-w',
-  is_flag=True,
+@click.option('--watch-and-serve', '-w', is_flag=True,
   help='Watch for file changes and re-render if needed, and run "mkdocs '
        'serve" in the background. This option is only supported for the '
        '"mkdocs" renderer.')
-@click.option('--open', '-o', 'open_browser',
-  is_flag=True,
+@click.option('--open', '-o', 'open_browser', is_flag=True,
   help='Open your browser after starting "mkdocs serve". Can only be used '
        'together with the --watch-and-serve option.')
 def cli(
@@ -138,12 +246,6 @@ def cli(
     py2,
     watch_and_serve,
     open_browser):
-  """ Pydoc-Markdown is a renderer for Python API documentation in Markdown
-  format.
-
-  With no arguments it will load the default configuration file. If the
-  *config* argument is specified, it must be the name of a configuration file
-  or a YAML formatted object for the configuration. """
 
   if bootstrap and bootstrap_mkdocs:
     error('--bootstrap and --bootstrap-mkdocs are incompatible options')
@@ -186,83 +288,18 @@ def cli(
     except StopIteration:
       error('config file not found.')
 
-  def _apply_overrides(pydocmd):
-    # Update configuration per command-line options.
-    if modules or search_path or py2 is not None:
-      loader = next(
-        (l for l in pydocmd.loaders if isinstance(l, PythonLoader)), None)
-      if not loader:
-        error('no python loader found')
-      if modules:
-        loader.modules = modules
-      if search_path:
-        loader.search_path = search_path
-      if py2 is not None:
-        loader.print_function = not py2
-    if render_toc is not None:
-      # Find the #MarkdownRenderer field for this renderer.
-      for field in pydocmd.renderer.__fields__.values():
-        if isinstance(field.datatype, StructType) and \
-            issubclass(field.datatype.struct_cls, MarkdownRenderer):
-          markdown = getattr(pydocmd.renderer, field.name)
-          break
-      else:
-        if isinstance(pydocmd.renderer, MarkdownRenderer):
-          markdown = pydocmd.renderer
-        else:
-          error('renderer {!r} does not expose a MarkdownRenderer'
-                .format(type(pydocmd.renderer).__name__))
-      markdown.render_toc = render_toc
+  session = RenderSession(
+    config=config,
+    render_toc=render_toc,
+    search_path=search_path,
+    modules=modules,
+    py2=py2)
 
-    if watch_and_serve:
-      if not isinstance(pydocmd.renderer, MkdocsRenderer):
-        error('--watch-and-serve can only be used in combination with '
-              'the "mkdocs" renderer.')
-
-  def _load_process_render():
-    pydocmd = PydocMarkdown()
-    if config:
-      pydocmd.load_config(config)
-
-    _apply_overrides(pydocmd)
-
-    pydocmd.load_modules()
-    pydocmd.process()
-    pydocmd.render()
-
-    watch_files = set(m.location.filename for m in pydocmd.graph.modules)
-    if isinstance(config, str):
-      watch_files.add(config)
-
-    return pydocmd, watch_files
-
-  if not watch_and_serve:
-    _load_process_render()
-    return
-
-  # Watch and re-render if needed. We rely on "mkdocs serve" to also
-  # be on watch duty, so we won't need to restart that process everytime.
-  observer, event = None, None
-  proc = None
-  try:
-    while True:
-      if not event or event.is_set():
-        logger.info('Rendering.')
-        pydocmd, watch_files = _load_process_render()
-        if observer:
-          observer.stop()
-        observer, event = watch_paths(watch_files)
-      if proc is None:
-        logger.info('Starting MkDocs serve.')
-        proc = pydocmd.renderer.mkdocs_serve()
-        if open_browser:
-          webbrowser.open(MKDOCS_DEFAULT_SERVE_URL)
-      event.wait(0.5)
-  finally:
-    if observer:
-      observer.stop()
-    if proc:
-      proc.terminate()
+  pydocmd = session.load()
+  if watch_and_serve:
+    session.watch_and_serve(pydocmd, open_browser)
+  else:
+    session.render(pydocmd)
 
 
 if __name__ == '__main__':
