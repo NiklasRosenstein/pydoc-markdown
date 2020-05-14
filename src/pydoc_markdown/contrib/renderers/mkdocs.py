@@ -27,6 +27,7 @@ from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer
 from pydoc_markdown.reflection import Object, ModuleGraph
+from pydoc_markdown.util.pages import Page, Pages
 from typing import Dict, Iterable, List, Tuple
 import copy
 import fnmatch
@@ -38,30 +39,12 @@ import subprocess
 import yaml
 
 logger = logging.getLogger(__name__)
-Page = ProxyType()
 
 
 class CustomizedMarkdownRenderer(MarkdownRenderer):
   """ We override some defaults in this subclass. """
 
   render_toc = Field(bool, default=False)
-
-
-@Page.implementation  # pylint: disable=function-redefined
-class Page(Struct):
-  """ Desribes a page that is rendered by the #MkdocsRenderer. """
-
-  name = Field(str, default=None)
-  title = Field(str)
-  href = Field(str, default=None)
-  source = Field(str, default=None)
-  contents = Field([str], default=None)
-  children = Field([Page], default=list)
-
-  def get_name(self):
-    if self.name:
-      return self.name
-    return re.sub(r'\s+', '-', self.title.lower())
 
 
 @implements(Renderer)
@@ -74,7 +57,7 @@ class MkdocsRenderer(Struct):
   clean_docs_directory_on_render = Field(bool, default=True)
 
   #: The pages to render into the output directory.
-  pages = Field([Page])
+  pages = Field(Pages)
 
   #: Markdown renderer settings.
   markdown = Field(CustomizedMarkdownRenderer, default=CustomizedMarkdownRenderer)
@@ -90,34 +73,6 @@ class MkdocsRenderer(Struct):
   @property
   def docs_dir(self) -> str:
     return os.path.join(self.output_directory, 'docs')
-
-  def organize_modules(self, graph) -> Iterable[Tuple[List[str], Page, List[Object]]]:
-    """ Organizes the objects in the *graph* in pairs with the pages that
-    are supposed to contain them (per the "contents" filter). """
-
-    def _match(page, node):
-      if not page.contents:
-        return False
-      path = node.path()
-      return any(fnmatch.fnmatch(path, x) for x in page.contents or ())
-
-    def _visit(page, path):
-      def _update_nodes(x):
-        x.visible = x.visible and _match(page, x)
-        # Make sure all parents are visible as well.
-        while x and x.visible:
-          x = x.parent
-          if x:
-            x.visible = True
-      clone = copy.deepcopy(graph)
-      clone.visit(_update_nodes)
-      yield path, page, clone.modules
-      path = path + [page.get_name()]
-      for sub_page in page.children:
-        yield from _visit(sub_page, path)
-
-    for page in self.pages:
-      yield from _visit(page, [])
 
   def mkdocs_serve(self):
     return subprocess.Popen(['mkdocs', 'serve'], cwd=self.output_directory)
@@ -146,9 +101,10 @@ class MkdocsRenderer(Struct):
 
     page_to_filename = {}
 
-    for path, page, items in self.organize_modules(graph):
-      # Construct the filename for the generated Markdown page.
-      path = path + [page.get_name()]
+    for page, parent_chain in self.pages.iter_hierarchy():
+
+      # Construct the filename for this page.
+      path = [p.name for p in parent_chain] + [page.name]
       if page.children:
         if not page.contents and not page.source:
           continue
@@ -164,7 +120,7 @@ class MkdocsRenderer(Struct):
       else:
         logger.info('Rendering "%s"', filename)
         self.markdown.filename = filename
-        self.markdown.render(ModuleGraph(items))
+        self.markdown.render(page.filtered_graph(graph))
 
     config = copy.deepcopy(self.mkdocs_config)
     if self.site_name:
