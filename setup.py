@@ -48,6 +48,7 @@ setuptools.setup(
       'sphinx = pydoc_markdown.contrib.processors.sphinx:SphinxProcessor',
     ],
     'pydoc_markdown.interfaces.Renderer': [
+      'hugo = pydoc_markdown.contrib.renderers.hugo:HugoRenderer',
       'markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer',
       'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer',
     ]

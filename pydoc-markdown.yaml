@@ -1,5 +1,9 @@
 renderer:
-  type: mkdocs
+  type: hugo
+  config:
+    baseURL: "https://niklasrosenstein.github.io/pydoc-markdown/"
+    title: "Pydoc-Markdown"
+    theme: "ananke"
   pages:
   - title: Home
     name: index
