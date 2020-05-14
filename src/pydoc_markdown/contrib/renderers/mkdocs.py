@@ -25,10 +25,10 @@ produce an MkDocs-compatible folder structure. """
 from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Renderer, Server
+from pydoc_markdown.interfaces import Renderer, Resolver, Server
 from pydoc_markdown.reflection import Object, ModuleGraph
 from pydoc_markdown.util.pages import Page, Pages
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 import copy
 import fnmatch
 import logging
@@ -91,33 +91,21 @@ class MkdocsRenderer(Struct):
   # Renderer
 
   @override
-  def render(self, graph):
+  def render(self, graph: ModuleGraph) -> None:
     if self.clean_docs_directory_on_render and os.path.isdir(self.docs_dir):
       logger.info('Cleaning directory "%s"', self.docs_dir)
       shutil.rmtree(self.docs_dir)
 
     page_to_filename = {}
 
-    for page, parent_chain in self.pages.iter_hierarchy():
+    for item in self.pages.iter_hierarchy():
+      filename = item.filename(self.docs_dir, '.md')
+      if not filename:
+        continue
 
-      # Construct the filename for this page.
-      path = [p.name for p in parent_chain] + [page.name]
-      if page.children:
-        if not page.contents and not page.source:
-          continue
-        path.append('index')
-      filename = os.path.join(self.docs_dir, *path) + '.md'
       page_to_filename[id(page)] = filename
-
-      # Render the page or copy from the specified source file.
-      os.makedirs(os.path.dirname(filename), exist_ok=True)
-      if page.source:
-        logger.info('Writing "%s" (source: "%s")', filename, page.source)
-        shutil.copyfile(page.source, filename)
-      else:
-        logger.info('Rendering "%s"', filename)
-        self.markdown.filename = filename
-        self.markdown.render(page.filtered_graph(graph))
+      self.markdown.filename = filename
+      item.page.render(filename, graph, self.markdown)
 
     config = copy.deepcopy(self.mkdocs_config)
     if self.site_name:
@@ -133,7 +121,9 @@ class MkdocsRenderer(Struct):
       yaml.dump(config, fp)
 
   @override
-  def get_resolver(self, graph):
+  def get_resolver(self, graph: ModuleGraph) -> Optional[Resolver]:
+    # TODO (@NiklasRosenstein): The resolver returned by the Markdown
+    #   renderer does not implement linking across multiple pages.
     return self.markdown.get_resolver(graph)
 
   # Server
