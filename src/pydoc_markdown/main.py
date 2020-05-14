@@ -23,6 +23,7 @@
 Implements the pydoc-markdown CLI.
 """
 
+from nr.databind.core import StructType
 from pydoc_markdown import __version__, PydocMarkdown
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
@@ -199,14 +200,20 @@ def cli(
       if py2 is not None:
         loader.print_function = not py2
     if render_toc is not None:
-      if isinstance(pydocmd.renderer, MkdocsRenderer):
-        markdown = pydocmd.renderer.markdown
-      elif isinstance(pydocmd.renderer, MarkdownRenderer):
-        markdown = pydocmd.renderer
+      # Find the #MarkdownRenderer field for this renderer.
+      for field in pydocmd.renderer.__fields__.values():
+        if isinstance(field.datatype, StructType) and \
+            issubclass(field.datatype.struct_cls, MarkdownRenderer):
+          markdown = getattr(pydocmd.renderer, field.name)
+          break
       else:
-        error('no markdown renderer found')
-      if render_toc is not None:
-        markdown.render_toc = render_toc
+        if isinstance(pydocmd.renderer, MarkdownRenderer):
+          markdown = pydocmd.renderer
+        else:
+          error('renderer {!r} does not expose a MarkdownRenderer'
+                .format(type(pydocmd.renderer).__name__))
+      markdown.render_toc = render_toc
+
     if watch_and_serve:
       if not isinstance(pydocmd.renderer, MkdocsRenderer):
         error('--watch-and-serve can only be used in combination with '
