@@ -112,6 +112,10 @@ class RenderSession:
     if self.config:
       config.load_config(self.config)
     self._apply_overrides(config)
+
+    if config.unknown_fields:
+      logger.warning('Unknown configuration options: %s', ', '.join(config.unknown_fields))
+
     return config
 
   def render(self, config: PydocMarkdown) -> List[str]:
@@ -247,7 +251,7 @@ def cli(
       level = logging.ERROR
     else:
       level = logging.WARNING
-    logging.basicConfig(format='%(message)s', level=level)
+    logging.basicConfig(format='[%(levelname)s - %(name)s]: %(message)s', level=level)
 
   # Load the configuration.
   if config and (config.lstrip().startswith('{') or '\n' in config):

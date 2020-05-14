@@ -25,8 +25,9 @@ with a focus on Python source code and the Markdown output format.
 """
 
 
-from nr.databind.core import Field, ObjectMapper, Struct, UnionType
+from nr.databind.core import Collect, Field, ObjectMapper, Struct, UnionType
 from nr.databind.json import JsonModule
+from nr.stream import concat
 from pydoc_markdown.interfaces import Loader, Processor, Renderer
 from pydoc_markdown.reflection import ModuleGraph
 from pydoc_markdown.contrib.loaders.python import PythonLoader
@@ -34,6 +35,7 @@ from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+from typing import Union
 import logging
 import yaml
 
@@ -49,19 +51,20 @@ class PydocMarkdown(Struct):
   processors = Field([Processor], default=lambda: [
     FilterProcessor(), SmartProcessor(), CrossrefProcessor()])
   renderer = Field(Renderer, default=MarkdownRenderer)
+  unknown_fields = Field([str], default=[], hidden=True)
 
   def __init__(self, *args, **kwargs):
     super(PydocMarkdown, self).__init__(*args, **kwargs)
     self.graph = ModuleGraph()
     self.resolver = None
 
-  def load_config(self, data):
-    """ Loads a YAML configuration from *data*.
+  def load_config(self, data: Union[str, dict]):
+    """
+    Loads a YAML configuration from *data*.
 
     Args:
       data (str, dict): If a string is specified, it is treated as the path
         to a YAML file.
-    Return: self
     """
 
     filename = None
@@ -71,9 +74,12 @@ class PydocMarkdown(Struct):
       with open(data) as fp:
         data = yaml.safe_load(fp)
 
-    result = mapper.deserialize(data, type(self), filename=filename)
+    collector = Collect()
+    result = mapper.deserialize(data, type(self), filename=filename, decorations=[collector])
     vars(self).update(vars(result))
-    return result
+
+    self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
+      for n in collector.nodes))
 
   def load_modules(self):
     for loader in self.loaders:
