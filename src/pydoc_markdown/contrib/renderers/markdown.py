@@ -34,6 +34,9 @@ import sys
 
 @implements(Renderer)
 class MarkdownRenderer(Struct):
+  #: Can be used to explicitly specify a file object to render to.
+  fp = Field(object, default=None, hidden=True)
+
   #: The name of the file to render to. If no file is specified, it will
   #: render to stdout.
   filename = Field(str, default=None)
@@ -309,7 +312,7 @@ class MarkdownRenderer(Struct):
 
   def render(self, graph: ModuleGraph):
     if self.filename is None:
-      self._render_graph(graph, sys.stdout)
+      self._render_graph(graph, self.fp or sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
         self._render_graph(graph, fp)
