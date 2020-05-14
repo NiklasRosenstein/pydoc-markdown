@@ -25,7 +25,7 @@ produce an MkDocs-compatible folder structure. """
 from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Renderer
+from pydoc_markdown.interfaces import Renderer, Server
 from pydoc_markdown.reflection import Object, ModuleGraph
 from pydoc_markdown.util.pages import Page, Pages
 from typing import Dict, Iterable, List, Tuple
@@ -47,7 +47,7 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
   render_toc = Field(bool, default=False)
 
 
-@implements(Renderer)
+@implements(Renderer, Server)
 class MkdocsRenderer(Struct):
   #: The output directory for the generated Markdown files. Defaults to
   #: `build/docs`.
@@ -73,9 +73,6 @@ class MkdocsRenderer(Struct):
   @property
   def docs_dir(self) -> str:
     return os.path.join(self.output_directory, 'docs')
-
-  def mkdocs_serve(self):
-    return subprocess.Popen(['mkdocs', 'serve'], cwd=self.output_directory)
 
   def generate_mkdocs_nav(self, page_to_filename: Dict[Page, str]) -> Dict:
     def _generate(pages):
@@ -138,3 +135,19 @@ class MkdocsRenderer(Struct):
   @override
   def get_resolver(self, graph):
     return self.markdown.get_resolver(graph)
+
+  # Server
+
+  @override
+  def get_server_url(self) -> str:
+    return 'http://localhost:8000'
+
+  @override
+  def start_server(self) -> subprocess.Popen:
+    return subprocess.Popen(['mkdocs', 'serve'], cwd=self.output_directory)
+
+  @override
+  def reload_server(self, process: subprocess.Popen):
+    # While MkDocs does support file watching and automatic reloading,
+    # it appears to be a bit quirky. Let's just restart the whole process.
+    process.terminate()

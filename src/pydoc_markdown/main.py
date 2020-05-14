@@ -32,6 +32,7 @@ from pydoc_markdown import __version__, PydocMarkdown
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
+from pydoc_markdown.interfaces import Server
 from pydoc_markdown.util.watchdog import watch_paths
 from typing import List, Set, Union
 import click
@@ -48,7 +49,6 @@ config_filenames = [
   'pydoc-markdown.yaml',
 ]
 
-MKDOCS_DEFAULT_SERVE_URL = 'http://localhost:8000'
 DEFAULT_CONFIG_NOTICE = 'Using this option will disable loading the '\
   'default configuration file.'
 DEFAULT_CONFIG = '''
@@ -166,10 +166,9 @@ class RenderSession:
     serves an HTML page from the renderer output on the fly.
     """
 
-    # TODO: Generic interface.
-    if not isinstance(config.renderer, MkdocsRenderer):
-      error('--watch-and-serve can only be used in combination with '
-            'the "mkdocs" renderer.')
+    if not Server.provided_by(config.renderer):
+      error('renderer {!r} cannot be used with --watch-and-serve'
+            .format(type(config.renderer).__name__))
 
     observer, event, process = None, None, None
     watch_files = []
@@ -183,13 +182,15 @@ class RenderSession:
           if observer:
             observer.stop()
           observer, event = watch_paths(watch_files)
+          if process:
+            process = config.renderer.reload_server(process)
 
         # If the process doesn't exist, start it.
         if process is None:
           logger.info('Starting MkDocs serve.')
-          process = config.renderer.mkdocs_serve()
+          process = config.renderer.start_server()
           if open_browser:
-            webbrowser.open(MKDOCS_DEFAULT_SERVE_URL)
+            webbrowser.open(config.renderer.get_server_url())
 
         event.wait(0.5)
     finally:
