@@ -28,7 +28,7 @@ or a YAML formatted object for the configuration.
 """
 
 from nr.databind.core import StructType
-from pydoc_markdown import __version__, PydocMarkdown
+from pydoc_markdown import __version__, PydocMarkdown, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
@@ -42,44 +42,13 @@ import sys
 import webbrowser
 import yaml
 
-logger = logging.getLogger(__name__)
-
 config_filenames = [
   'pydoc-markdown.yml',
   'pydoc-markdown.yaml',
 ]
-
-DEFAULT_CONFIG_NOTICE = 'Using this option will disable loading the '\
-  'default configuration file.'
-DEFAULT_CONFIG = '''
-loaders:
-  - type: python
-processors:
-  - type: filter
-  - type: smart
-  - type: crossref
-renderer:
-  - type: markdown
-'''.lstrip()
-DEFAULT_CONFIG_MKDOCS = '''
-loaders:
-  - type: python
-processors:
-  - type: filter
-  - type: smart
-  - type: crossref
-renderer:
-  type: mkdocs
-  pages:
-    - title: Home
-      name: index
-      source: README.md
-    - title: API Documentation
-      contents:
-        - my_module.api.*
-  mkdocs_config:
-    theme: readthedocs
-'''.lstrip()
+default_config_notice = (
+  'Using this option will disable loading the default configuration file.')
+logger = logging.getLogger(__name__)
 
 
 class RenderSession:
@@ -217,15 +186,15 @@ def error(*args):
 @click.option('--quiet', '-q', is_flag=True, help='Decrease the log verbosity.')
 @click.option('--module', '-m', 'modules', metavar='MODULE', multiple=True,
   help='The module to parse and generated API documentation for. Can be '
-       'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
+       'specified multiple times. ' + default_config_notice)
 @click.option('--search-path', '-I', metavar='PATH', multiple=True,
   help='A directory to use in the search for Python modules. Can be '
-       'specified multiple times. ' + DEFAULT_CONFIG_NOTICE)
+       'specified multiple times. ' + default_config_notice)
 @click.option('--py2/--py3', 'py2', default=None,
   help='Switch between parsing Python 2 and Python 3 code. The default '
        'is Python 3. Using --py2 will enable parsing code that uses the '
        '"print" statement. This is equivalent of setting the print_function '
-       'option of the "python" loader to False. ' + DEFAULT_CONFIG_NOTICE)
+       'option of the "python" loader to False. ' + default_config_notice)
 @click.option('--render-toc/--no-render-toc', default=None,
   help='Enable/disable the rendering of the TOC in the "markdown" renderer.')
 @click.option('--watch-and-serve', '-w', is_flag=True,
@@ -259,9 +228,9 @@ def cli(
     filename = config_filenames[0]
     with open(filename, 'w') as fp:
       if bootstrap_mkdocs:
-        fp.write(DEFAULT_CONFIG_MKDOCS)
+        fp.write(static.DEFAULT_MKDOCS_CONFIG)
       else:
-        fp.write(DEFAULT_CONFIG)
+        fp.write(static.DEFAULT_CONFIG)
     print('created', filename)
     return
 
