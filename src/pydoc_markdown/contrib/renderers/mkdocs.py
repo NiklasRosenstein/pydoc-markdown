@@ -99,9 +99,9 @@ class MkdocsRenderer(Struct):
     page_to_filename = {}
 
     for item in self.pages.iter_hierarchy():
-      filename = item.filename(self.docs_dir, '.md')
-      if not filename:
+      if not item.page.has_content():
         continue
+      filename = item.filename(self.docs_dir, '.md')
 
       page_to_filename[id(item.page)] = filename
       self.markdown.filename = filename

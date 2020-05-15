@@ -103,6 +103,9 @@ class Page(Struct):
     if not self.name:
       self.name = re.sub(r'\s+', '-', self.title.lower())
 
+  def has_content(self) -> bool:
+    return bool(self.source or self.contents)
+
   def iter_hierarchy(self, parent_chain: List['Page'] = None) -> Iterable[IterHierarchyItem]:
     if parent_chain is None:
       parent_chain = []
