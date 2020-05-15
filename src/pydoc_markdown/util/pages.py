@@ -53,13 +53,18 @@ class IterHierarchyItem(Struct):
       ) -> Optional[str]:
     path = [p.name for p in self.parent_chain] + [self.page.name]
     if self.page.children:
-      if skip_empty_pages and not self.page.contents and not self.page.source:
-        return None
-      path.append(index-name)
+      path.append(index_name)
     filename = os.path.join(*path) + suffix_with_dot
     if parent_dir:
       filename = os.path.join(parent_dir, filename)
     return filename
+
+
+class PageCollectionMixin(list):
+
+  def iter_hierarchy(self) -> Iterable[IterHierarchyItem]:
+    for page in self:
+      yield from page.iter_hierarchy()
 
 
 @Page.implementation  # pylint: disable=function-redefined
@@ -151,10 +156,9 @@ class Page(Struct):
       logger.info('Rendering "%s"', filename)
       renderer.render(self.filtered_graph(graph))
 
-
-class Pages(Collection, list):
-  item_type = Page
-
-  def iter_hierarchy(self) -> Iterable[IterHierarchyItem]:
-    for page in self:
-      yield from page.iter_hierarchy()
+  @classmethod
+  def collection_type(cls) -> PageCollectionMixin:
+    return type(
+      '{}Collection'.format(cls.__name__),
+      (Collection, PageCollectionMixin),
+      {'item_type': cls})

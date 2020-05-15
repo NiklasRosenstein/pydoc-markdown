@@ -27,7 +27,7 @@ from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
 from pydoc_markdown.reflection import Object, ModuleGraph
-from pydoc_markdown.util.pages import Page, Pages
+from pydoc_markdown.util.pages import Page
 from typing import Dict, Iterable, List, Optional, Tuple
 import copy
 import fnmatch
@@ -57,7 +57,7 @@ class MkdocsRenderer(Struct):
   clean_docs_directory_on_render = Field(bool, default=True)
 
   #: The pages to render into the output directory.
-  pages = Field(Pages)
+  pages = Field(Page.collection_type())
 
   #: Markdown renderer settings.
   markdown = Field(CustomizedMarkdownRenderer, default=CustomizedMarkdownRenderer)
@@ -103,7 +103,7 @@ class MkdocsRenderer(Struct):
       if not filename:
         continue
 
-      page_to_filename[id(page)] = filename
+      page_to_filename[id(item.page)] = filename
       self.markdown.filename = filename
       item.page.render(filename, graph, self.markdown)
 

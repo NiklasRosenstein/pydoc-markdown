@@ -25,6 +25,7 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
 from pydoc_markdown.reflection import ModuleGraph
 from pydoc_markdown.util.pages import Page, Pages
+from urllib.parse import urlparse, urljoin
 from typing import Optional, TextIO
 import logging
 import os
@@ -75,7 +76,7 @@ class HugoRenderer(Struct):
   clean_render = Field(bool, default=True)
 
   #: The pages to render.
-  pages = Field(Pages)
+  pages = Field(HugoPage.collection_type())
 
   #: Markdown render configuration.
   markdown = Field(MarkdownRenderer, default=Field.DEFAULT_CONSTRUCT)
@@ -112,9 +113,7 @@ class HugoRenderer(Struct):
 
     # Render the pages.
     for item in self.pages.iter_hierarchy():
-      filename = item.filename(content_dir, '.md')
-      if not filename:
-        continue
+      filename = item.filename(content_dir, '.md', index_name='_index')
       self._render_page(item.page.filtered_graph(graph), item.page, filename)
 
     # Render the config file.
@@ -133,7 +132,8 @@ class HugoRenderer(Struct):
 
   @override
   def get_server_url(self) -> str:
-    return 'http://localhost:1313/'
+    urlinfo = urlparse(self.config.baseURL)
+    return urljoin('http://localhost:1313/', urlinfo.path)
 
   @override
   def start_server(self) -> subprocess.Popen:
