@@ -19,7 +19,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, Remainder, Struct
+from nr.databind.core import Field, ProxyType, Remainder, Struct
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
@@ -35,6 +35,12 @@ import toml
 import yaml
 
 logger = logging.getLogger(__name__)
+HugoPage = ProxyType()
+
+@HugoPage.implementation
+class HugoPage(Page):
+  preamble = Field(dict, default=dict)
+  children = Field([HugoPage], default=list)
 
 
 class HugoThemePath(Struct):
@@ -84,9 +90,10 @@ class HugoRenderer(Struct):
   #: Hugo config.toml as YAML.
   config = Field(HugoConfig)
 
-  def _render_page(self, graph: ModuleGraph, page: Page, filename: str):
+  def _render_page(self, graph: ModuleGraph, page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     preamble = {'title': page.title}
+    preamble.update(page.preamble)
 
     with open(filename, 'w') as fp:
       fp.write('---\n')
