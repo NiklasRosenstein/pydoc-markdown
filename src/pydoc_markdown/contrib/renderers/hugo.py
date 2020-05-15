@@ -24,7 +24,7 @@ from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
 from pydoc_markdown.reflection import ModuleGraph
-from pydoc_markdown.util.pages import Page, Pages
+from pydoc_markdown.util.pages import Page
 from urllib.parse import urlparse, urljoin
 from typing import Optional, TextIO
 import logging
