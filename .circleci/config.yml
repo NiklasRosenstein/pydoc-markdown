@@ -90,7 +90,7 @@ jobs:
           command: |
             PATH="$PATH:$PWD" && cd docs/build && hugo
       - store_artifacts:
-          path: docs/build/site
+          path: docs/build/public
           destination: site
 
 
