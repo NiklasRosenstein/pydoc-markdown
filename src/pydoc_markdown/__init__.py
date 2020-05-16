@@ -40,7 +40,7 @@ import logging
 import yaml
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
-__version__ = '3.0.0'
+__version__ = '3.0.1'
 
 mapper = ObjectMapper(JsonModule())
 logger = logging.getLogger(__name__)
