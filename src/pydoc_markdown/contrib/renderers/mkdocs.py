@@ -103,7 +103,7 @@ class MkdocsRenderer(Struct):
       if not filename:
         continue
 
-      page_to_filename[id(page)] = filename
+      page_to_filename[id(item.page)] = filename
       self.markdown.filename = filename
       item.page.render(filename, graph, self.markdown)
 

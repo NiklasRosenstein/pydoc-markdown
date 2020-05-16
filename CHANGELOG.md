@@ -1,5 +1,9 @@
 # Changelog
 
+### v3.0.2 (2020-05-16)
+
+* Fix `NameError` in `MkdocsRenderer`
+
 ### v3.0.1 (2020-05-16)
 
 * Added `--version` option to `pydoc-markdown` command.
