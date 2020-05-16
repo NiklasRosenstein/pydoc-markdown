@@ -77,7 +77,6 @@ workflows:
   version: 2
   test:
     jobs:
-      - deploy-docs
       - test-3.6:
           filters: { tags: { only: /.*/ } }
       - test-3.7:
@@ -87,6 +86,9 @@ workflows:
       - trial-publish:
           filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
           requires: [ test-3.6, test-3.7, test-3.8 ]
+      - deploy-docs:
+          filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
+          requires: [ trial-publish ]
       - publish:
           filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
           requires: [ trial-publish ]
