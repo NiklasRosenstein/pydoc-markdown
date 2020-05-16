@@ -73,7 +73,7 @@ class MkdocsRenderer(Struct):
 
   #: Arbitrary configuration values that will be rendered to an
   #: `mkdocs.yml` file.
-  mkdocs_config = Field(dict, default=dict)
+  mkdocs_config = Field(dict, default=dict, nullable=True)
 
   @property
   def content_dir(self) -> str:
@@ -120,10 +120,11 @@ class MkdocsRenderer(Struct):
     config['docs_dir'] = self.content_directory_name
     config['nav'] = self.generate_mkdocs_nav(page_to_filename)
 
-    filename = os.path.join(self.output_directory, 'mkdocs.yml')
-    logger.info('Rendering "%s"', filename)
-    with open(filename, 'w') as fp:
-      yaml.dump(config, fp)
+    if self.mkdocs_config is not None:
+      filename = os.path.join(self.output_directory, 'mkdocs.yml')
+      logger.info('Rendering "%s"', filename)
+      with open(filename, 'w') as fp:
+        yaml.dump(config, fp)
 
   @override
   def get_resolver(self, graph: ModuleGraph) -> Optional[Resolver]:
