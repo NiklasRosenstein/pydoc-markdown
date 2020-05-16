@@ -61,7 +61,7 @@ jobs:
       - run: shore publish pypi -l
       - run: shore publish pypi
 
-  deploy-docs:
+  docs:
     docker:
       - image: python:3.6
     steps:
@@ -71,12 +71,23 @@ jobs:
       - checkout
       - run: pip install -q . mkdocs
       - run: pydoc-markdown
-      - run: mkdocs gh-deploy -f docs/build/mkdocs.yml
+      - run: |
+          if [[ "$CIRCLE_TAG" != "" ]]; then
+            mkdocs gh-deploy -f docs/build/mkdocs.yml
+          fi
+      - run: |
+          echo "use_directory_urls: false" >> docs/build/mkdocs.yml
+          mkdocs build -f docs/build/mkdocs.yml
+      - store_artifacts:
+          path: docs/build/site
+          destination: site
+
 
 workflows:
   version: 2
   test:
     jobs:
+      - docs
       - test-3.6:
           filters: { tags: { only: /.*/ } }
       - test-3.7:
@@ -86,9 +97,6 @@ workflows:
       - trial-publish:
           filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
           requires: [ test-3.6, test-3.7, test-3.8 ]
-      - deploy-docs:
-          filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
-          requires: [ trial-publish ]
       - publish:
           filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
           requires: [ trial-publish ]
