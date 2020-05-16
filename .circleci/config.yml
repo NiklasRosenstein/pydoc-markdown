@@ -71,7 +71,7 @@ jobs:
       - checkout
       - run: pip install . mkdocs
       - run: pydoc-markdown
-      - run: mkdocs gh-deploy -f build/docs/mkdocs.yml
+      - run: mkdocs gh-deploy -f docs/build/mkdocs.yml
 
 workflows:
   version: 2
