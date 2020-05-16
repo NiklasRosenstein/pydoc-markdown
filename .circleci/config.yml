@@ -71,14 +71,16 @@ jobs:
       - checkout
       - run: pip install -q . mkdocs
       - run: pydoc-markdown
-      - run: mkdocs build -f docs/build/mkdocs.yml
-      - store_artifacts:
-          path: docs/build/site
-          destination: site
       - run: |
           if [[ "$CIRCLE_TAG" != "" ]]; then
             mkdocs gh-deploy -f docs/build/mkdocs.yml
           fi
+      - run: |
+          echo "use_directory_urls: false" >> docs/build/mkdocs.yml
+          mkdocs build -f docs/build/mkdocs.yml
+      - store_artifacts:
+          path: docs/build/site
+          destination: site
 
 
 workflows:
