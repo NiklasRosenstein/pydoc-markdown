@@ -34,7 +34,7 @@ requirements:
   - click ^7.0
   - nr.collections ~0.0.1
   - nr.databind.core ~0.0.10
-  - nr.databind.json ~0.0.8
+  - nr.databind.json ~0.0.9
   - six ^1.11.0
   - PyYAML ^5.3
   - watchdog ^0.10.2
