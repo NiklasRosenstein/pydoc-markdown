@@ -5,6 +5,9 @@
 * Rename `--watch-and-serve` to `--server`
 * Update `MarkdownRenderer` defaults for `descriptive_class_title` and
   `descriptive_class_title`
+* Added `MkdocsRenderer.content_directory` (defaults to `content`)
+* Renamed `MkdocsRenderer.clean_docs_directory_on_render` to `.clean_render`
+  and make it default to `False`
 
 ### v3.0.2 (2020-05-16)
 

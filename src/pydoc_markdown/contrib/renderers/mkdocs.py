@@ -53,8 +53,13 @@ class MkdocsRenderer(Struct):
   #: `build/docs`.
   output_directory = Field(str, default='build/docs')
 
-  #: Remove the `docs` directory in the #output_directory before rendering.
-  clean_docs_directory_on_render = Field(bool, default=True)
+  #: Name of the content directory. Defaults to "content".
+  content_directory_name = Field(str, default='content')
+
+  #: Delete the content directory in the #output_directory before rendering.
+  #: Note that this does not play well with pre-existing content, as it will
+  #: be deleted as well. Defaults to False.
+  clean_render = Field(bool, default=False)
 
   #: The pages to render into the output directory.
   pages = Field(Pages)
@@ -71,8 +76,8 @@ class MkdocsRenderer(Struct):
   mkdocs_config = Field(dict, default=dict)
 
   @property
-  def docs_dir(self) -> str:
-    return os.path.join(self.output_directory, 'docs')
+  def content_dir(self) -> str:
+    return os.path.join(self.output_directory, self.content_directory_name)
 
   def generate_mkdocs_nav(self, page_to_filename: Dict[Page, str]) -> Dict:
     def _generate(pages):
@@ -83,7 +88,7 @@ class MkdocsRenderer(Struct):
         elif page.href:
           result.append({page.title: page.href})
         else:
-          filename = os.path.relpath(page_to_filename[id(page)], self.docs_dir)
+          filename = os.path.relpath(page_to_filename[id(page)], self.content_dir)
           result.append({page.title: filename})
       return result
     return _generate(self.pages)
@@ -92,14 +97,14 @@ class MkdocsRenderer(Struct):
 
   @override
   def render(self, graph: ModuleGraph) -> None:
-    if self.clean_docs_directory_on_render and os.path.isdir(self.docs_dir):
-      logger.info('Cleaning directory "%s"', self.docs_dir)
-      shutil.rmtree(self.docs_dir)
+    if self.clean_render and os.path.isdir(self.content_dir):
+      logger.info('Cleaning directory "%s"', self.content_dir)
+      shutil.rmtree(self.content_dir)
 
     page_to_filename = {}
 
     for item in self.pages.iter_hierarchy():
-      filename = item.filename(self.docs_dir, '.md')
+      filename = item.filename(self.content_dir, '.md')
       if not filename:
         continue
 
@@ -112,7 +117,7 @@ class MkdocsRenderer(Struct):
       config['site_name'] = self.site_name
     if not config.get('site_name'):
       config['site_name'] = 'My Project'
-    config['docs_dir'] = 'docs'
+    config['docs_dir'] = self.content_directory_name
     config['nav'] = self.generate_mkdocs_nav(page_to_filename)
 
     filename = os.path.join(self.output_directory, 'mkdocs.yml')
