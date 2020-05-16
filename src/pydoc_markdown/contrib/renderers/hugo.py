@@ -29,6 +29,7 @@ from urllib.parse import urlparse, urljoin
 from typing import Optional, TextIO
 import logging
 import os
+import posixpath
 import shutil
 import subprocess
 import toml
@@ -46,9 +47,31 @@ class HugoPage(Page):
 class HugoThemePath(Struct):
   path = Field(str)
 
+  @property
+  def name(self):
+    return os.path.basename(self.path)
+
+  def install(self, themes_dir: str):
+    # TODO (@NiklasRosenstein): Support Windows (which does not support symlinking).
+    dst = os.path.join(self.name)
+    if not os.path.lexists(dst):
+      os.symlink(self.path, dst)
+
 
 class HugoThemeGitUrl(Struct):
   clone_url = Field(str)
+  postinstall = Field([str], default=list)
+
+  @property
+  def name(self):
+    return posixpath.basename(self.clone_url).rstrip('.git')
+
+  def install(self, theme_dir: str):
+    dst = os.path.join(theme_dir, self.name)
+    if not os.path.isdir(dst):
+      subprocess.check_call(['git', 'clone', dst, '--depth', '1', '--recursive', '--shallow-submodules'])
+      for command in self.postinstall:
+        subprocess.check_call(command, shell=True, cwd=dst)
 
 
 class HugoConfig(Struct):
@@ -67,8 +90,7 @@ class HugoConfig(Struct):
     if isinstance(self.theme, str):
       data['theme'] = self.theme
     elif isinstance(self.theme, (HugoThemePath, HugoThemeGitUrl)):
-      # TODO (@NiklasRosenstein): Handle HugoThemePath and HugoThemeGitUrl
-      raise NotImplementedError(type(self.theme).__name__)
+      data['theme'] = self.theme.name
     else: assert False
     fp.write(toml.dumps(data))
 
@@ -126,8 +148,8 @@ class HugoRenderer(Struct):
       self._render_page(item.page.filtered_graph(graph), item.page, filename)
 
     # Render the config file.
-    # TODO (@NiklasRosenstein): Handle the case where the config specifies
-    #   a #HugoThemePath or #HugoThemeGitUrl.
+    if isinstance(self.config.theme, (HugoThemePath, HugoThemeGitUrl)):
+      self.config.theme.install(os.path.join(self.output_directory, 'themes'))
     with open(os.path.join(self.output_directory, 'config.toml'), 'w') as fp:
       self.config.to_toml(fp)
 
