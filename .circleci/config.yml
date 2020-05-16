@@ -13,7 +13,7 @@ jobs:
       - checkout
       - run:
           name: Install
-          command: pip install pytest pytest-cov pylint .
+          command: pip install -q pytest pytest-cov pylint .
 
       - run:
           name: Tests
@@ -44,7 +44,7 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install nr.shore==0.0.32
+      - run: pip install -q nr.shore==0.0.32
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
@@ -55,7 +55,7 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install nr.shore==0.0.32
+      - run: pip install -q nr.shore==0.0.32
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
@@ -66,10 +66,12 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
+      - run: ls -la ~/.ssh
       - add_ssh_keys:
           fingerprints:
             - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
-      - run: pip install . mkdocs
+      - run: ls -la ~/.ssh
+      - run: pip install -q . mkdocs
       - run: pydoc-markdown
       - run: mkdocs gh-deploy -f docs/build/mkdocs.yml
 
