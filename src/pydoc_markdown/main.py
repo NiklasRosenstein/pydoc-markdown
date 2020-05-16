@@ -154,6 +154,8 @@ class RenderSession:
       while True:
         # Initial render or re-render if a file changed.
         if not event or event.is_set():
+          if event:
+            config = self.load()
           logger.info('Rendering.')
           watch_files = self.render(config)
           if observer:
@@ -167,6 +169,7 @@ class RenderSession:
           logger.info('Starting MkDocs serve.')
           process = config.renderer.start_server()
           if open_browser:
+            open_browser = False
             webbrowser.open(config.renderer.get_server_url())
 
         event.wait(0.5)

@@ -8,6 +8,8 @@
 * Added `MkdocsRenderer.content_directory` (defaults to `content`)
 * Renamed `MkdocsRenderer.clean_docs_directory_on_render` to `.clean_render`
   and make it default to `False`
+* Fixed `--server` option, now reloads the `PydocMarkdown` config, does no
+  open the browser again and again
 
 ### v3.0.2 (2020-05-16)
 
