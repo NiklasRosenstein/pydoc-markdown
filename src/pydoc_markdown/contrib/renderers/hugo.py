@@ -38,6 +38,7 @@ import yaml
 logger = logging.getLogger(__name__)
 HugoPage = ProxyType()
 
+
 @HugoPage.implementation
 class HugoPage(Page):
   preamble = Field(dict, default=dict)
@@ -64,12 +65,14 @@ class HugoThemeGitUrl(Struct):
 
   @property
   def name(self):
-    return posixpath.basename(self.clone_url).rstrip('.git')
+    return posixpath.basename(self.clone_url).rstrip('.git').lstrip('hugo-')
 
   def install(self, theme_dir: str):
     dst = os.path.join(theme_dir, self.name)
     if not os.path.isdir(dst):
-      subprocess.check_call(['git', 'clone', dst, '--depth', '1', '--recursive', '--shallow-submodules'])
+      command = ['git', 'clone', self.clone_url, dst, '--depth', '1',
+                 '--recursive', '--shallow-submodules']
+      subprocess.check_call(command)
       for command in self.postinstall:
         subprocess.check_call(command, shell=True, cwd=dst)
 
@@ -97,8 +100,16 @@ class HugoConfig(Struct):
 
 @implements(Renderer, Server)
 class HugoRenderer(Struct):
-  #: Output directory for the generated files. Defaults to build/docs.
-  output_directory = Field(str, default='build/docs')
+  #: The directory where all generated files are placed.
+  #:
+  #: Default: `build/docs`
+  build_directory = Field(str, default='build/docs')
+
+  #: The directory _inside_ the build directory where the generated
+  #: pages are written to.
+  #
+  #: Default: `content`
+  content_directory = Field(str, default='content')
 
   #: Clean up generated directories before rendering. Defaults to True.
   clean_render = Field(bool, default=True)
@@ -134,7 +145,7 @@ class HugoRenderer(Struct):
 
   @override
   def render(self, graph: ModuleGraph) -> None:
-    content_dir = os.path.join(self.output_directory, 'content')
+    content_dir = os.path.join(self.build_directory, self.content_directory)
 
     if self.clean_render and os.path.isdir(content_dir):
       logger.info('Deleting directory "%s".', content_dir)
@@ -149,8 +160,8 @@ class HugoRenderer(Struct):
 
     # Render the config file.
     if isinstance(self.config.theme, (HugoThemePath, HugoThemeGitUrl)):
-      self.config.theme.install(os.path.join(self.output_directory, 'themes'))
-    with open(os.path.join(self.output_directory, 'config.toml'), 'w') as fp:
+      self.config.theme.install(os.path.join(self.build_directory, 'themes'))
+    with open(os.path.join(self.build_directory, 'config.toml'), 'w') as fp:
       self.config.to_toml(fp)
 
   @override
@@ -168,4 +179,4 @@ class HugoRenderer(Struct):
 
   @override
   def start_server(self) -> subprocess.Popen:
-    return subprocess.Popen(['hugo', 'server'], cwd=self.output_directory)
+    return subprocess.Popen(['hugo', 'server'], cwd=self.build_directory)
