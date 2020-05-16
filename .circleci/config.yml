@@ -65,10 +65,10 @@ jobs:
     docker:
       - image: python:3.6
     steps:
+      - checkout
       - add_ssh_keys:
           fingerprints:
             - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
-      - checkout
       - run: pip install . mkdocs
       - run: pydoc-markdown
       - run: mkdocs gh-deploy -f docs/build/mkdocs.yml
