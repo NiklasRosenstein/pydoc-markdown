@@ -61,10 +61,20 @@ jobs:
       - run: shore publish pypi -l
       - run: shore publish pypi
 
+  deploy-docs:
+    docker:
+      - image: python:3.6
+    steps:
+      - checkout
+      - run: pip install . mkdocs
+      - run: pydoc-markdown
+      - run: mkdocs gh-deploy -f build/docs/mkdocs.yml
+
 workflows:
   version: 2
   test:
     jobs:
+      - deploy-docs
       - test-3.6:
           filters: { tags: { only: /.*/ } }
       - test-3.7:
