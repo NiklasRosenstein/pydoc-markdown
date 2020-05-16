@@ -120,6 +120,8 @@ class HugoRenderer(Struct):
 
     # Render the pages.
     for item in self.pages.iter_hierarchy():
+      if item.page.name == 'index':
+        item.page.name = '_index'
       filename = item.filename(content_dir, '.md', index_name='_index')
       self._render_page(item.page.filtered_graph(graph), item.page, filename)
 
