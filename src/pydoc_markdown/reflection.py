@@ -128,7 +128,8 @@ class Function(Object):
 
 
 class Data(Object):
-  expr = Field(Expression)
+  expr = Field(Expression, default=None)
+  annotation = Field(Expression, default=None)
 
 
 @Decorator.implementation  # pylint: disable=function-redefined

@@ -14,6 +14,7 @@
 * Changed: `MkdocsRenderer.mkdocs_config` can be set to `null`, the renderer
   will then refrain from writing a `mkdocs.yml` configuration file into the
   output directory
+* `PythonLoader`: Fix assignments with annotations being ignored by the parser (#115)
 
 ### v3.0.2 (2020-05-16)
 
