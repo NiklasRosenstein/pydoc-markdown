@@ -3,6 +3,8 @@
 ### v3.0.3 (unreleased)
 
 * Rename `--watch-and-serve` to `--server`
+* Update `MarkdownRenderer` defaults for `descriptive_class_title` and
+  `descriptive_class_title`
 
 ### v3.0.2 (2020-05-16)
 

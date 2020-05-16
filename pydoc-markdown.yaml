@@ -4,6 +4,8 @@ renderer:
   - title: Home
     name: index
     source: README.md
+  - title: Getting Started
+    source: docs/getting-started.md
   - title: API Documentation
     children:
     - title: CLI

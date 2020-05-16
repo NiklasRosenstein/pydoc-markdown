@@ -59,7 +59,7 @@ class MarkdownRenderer(Struct):
 
   #: Generate descriptive class titles by adding the word "Objects" after
   #: the class name. This is enabled by default.
-  descriptive_class_title = Field(bool, default=False)
+  descriptive_class_title = Field(bool, default=True)
 
   #: Generate descriptivie module titles by adding the word "Module" before
   #: the module name. This is enabled by default.
@@ -145,8 +145,8 @@ class MarkdownRenderer(Struct):
 
   #: Fixed header levels by API object type.
   header_level_by_type = Field({int}, default={
-    'Module': 2,
-    'Class': 3,
+    'Module': 1,
+    'Class': 2,
     'Method': 4,
     'Function': 4,
     'Data': 4,
