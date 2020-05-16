@@ -62,12 +62,14 @@ class RenderSession:
       render_toc: bool = None,  #: Override the "render_toc" option in the MarkdownRenderer
       search_path: List[str] = None,  #: Override the search path in the Python loader
       modules: List[str] = None,  #: Override the modules in the Python loader
+      packages: List[str] = None,  #: Override the packages in the Python loader
       py2: bool = None,  #: Override Python2 compatibility in the Python loader
       ) -> None:
     self.config = config
     self.render_toc = render_toc
     self.search_path = search_path
     self.modules = modules
+    self.packages = packages
     self.py2 = py2
 
   def _apply_overrides(self, config: PydocMarkdown):
@@ -76,13 +78,15 @@ class RenderSession:
     """
 
     # Update configuration per command-line options.
-    if self.modules or self.search_path or self.py2 is not None:
+    if self.modules or self.packages or self.search_path or self.py2 is not None:
       loader = next(
         (l for l in config.loaders if isinstance(l, PythonLoader)), None)
       if not loader:
         error('no python loader found')
       if self.modules:
         loader.modules = self.modules
+      if self.packages:
+        loader.packages = self.packages
       if self.search_path:
         loader.search_path = self.search_path
       if self.py2 is not None:
@@ -191,6 +195,10 @@ def error(*args):
 @click.option('--module', '-m', 'modules', metavar='MODULE', multiple=True,
   help='The module to parse and generated API documentation for. Can be '
        'specified multiple times. ' + default_config_notice)
+@click.option('--package', '-p', 'packages', metavar='PACKAGE', multiple=True,
+  help='The package to parse and generated API documentation for including '
+       'all sub-packages and -modules. Can be specified multiple times. '
+       + default_config_notice)
 @click.option('--search-path', '-I', metavar='PATH', multiple=True,
   help='A directory to use in the search for Python modules. Can be '
        'specified multiple times. ' + default_config_notice)
@@ -215,6 +223,7 @@ def cli(
     verbose,
     quiet,
     modules,
+    packages,
     search_path,
     render_toc,
     py2,
@@ -224,7 +233,8 @@ def cli(
   if bootstrap and bootstrap_mkdocs:
     error('--bootstrap and --bootstrap-mkdocs are incompatible options')
   if bootstrap or bootstrap_mkdocs:
-    if config or modules or search_path or render_toc or py2 or watch_and_serve or open_browser:
+    if config or modules or packages or search_path or render_toc \
+        or py2 or watch_and_serve or open_browser:
       error('--bootstrap must be used as a sole argument')
     existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
     if existing_file:
@@ -241,7 +251,7 @@ def cli(
   if open_browser and not watch_and_serve:
     error('--open can only be used with --watch-and-serve')
 
-  load_implicit_config = not any((modules, search_path, py2 is not None))
+  load_implicit_config = not any((modules, packages, search_path, py2 is not None))
 
   # Initialize logging.
   if verbose is not None:
@@ -267,6 +277,7 @@ def cli(
     render_toc=render_toc,
     search_path=search_path,
     modules=modules,
+    packages=packages,
     py2=py2)
 
   pydocmd = session.load()
