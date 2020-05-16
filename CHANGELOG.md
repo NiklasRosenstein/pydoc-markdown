@@ -12,7 +12,7 @@
 * Fixed `--server` option, now reloads the `PydocMarkdown` config, does no
   open the browser again and again
 * Changed: `MkdocsRenderer.mkdocs_config` can be set to `null`, the renderer
-  will then refrain from writing a `mkdocs.yaml` configuration file into the
+  will then refrain from writing a `mkdocs.yml` configuration file into the
   output directory
 
 ### v3.0.2 (2020-05-16)
