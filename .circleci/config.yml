@@ -13,7 +13,7 @@ jobs:
       - checkout
       - run:
           name: Install
-          command: pip install pytest pytest-cov pylint .
+          command: pip install -q pytest pytest-cov pylint .
 
       - run:
           name: Tests
@@ -44,7 +44,7 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install nr.shore==0.0.32
+      - run: pip install -q nr.shore==0.0.32
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
@@ -55,11 +55,23 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install nr.shore==0.0.32
+      - run: pip install -q nr.shore==0.0.32
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
       - run: shore publish pypi
+
+  deploy-docs:
+    docker:
+      - image: python:3.6
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
+      - checkout
+      - run: pip install -q . mkdocs
+      - run: pydoc-markdown
+      - run: mkdocs gh-deploy -f docs/build/mkdocs.yml
 
 workflows:
   version: 2
@@ -74,6 +86,9 @@ workflows:
       - trial-publish:
           filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
           requires: [ test-3.6, test-3.7, test-3.8 ]
+      - deploy-docs:
+          filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
+          requires: [ trial-publish ]
       - publish:
           filters: { tags: { only: /.*/ }, branches: { ignore: /.*/ } }
           requires: [ trial-publish ]

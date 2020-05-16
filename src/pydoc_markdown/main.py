@@ -132,19 +132,19 @@ class RenderSession:
     config.render()
 
     watch_files = set(m.location.filename for m in config.graph.modules)
-    if isinstance(config, str):
-      watch_files.add(config)
+    if isinstance(self.config, str):
+      watch_files.add(self.config)
 
     return list(watch_files)
 
-  def watch_and_serve(self, config: PydocMarkdown, open_browser: bool = False):
+  def run_server(self, config: PydocMarkdown, open_browser: bool = False):
     """
     Watches files for changes and (re-) starts a server process that
     serves an HTML page from the renderer output on the fly.
     """
 
     if not Server.provided_by(config.renderer):
-      error('renderer {!r} cannot be used with --watch-and-serve'
+      error('renderer {!r} cannot be used with --server'
             .format(type(config.renderer).__name__))
 
     observer, event, process = None, None, None
@@ -154,6 +154,8 @@ class RenderSession:
       while True:
         # Initial render or re-render if a file changed.
         if not event or event.is_set():
+          if event:
+            config = self.load()
           logger.info('Rendering.')
           watch_files = self.render(config)
           if observer:
@@ -167,6 +169,7 @@ class RenderSession:
           logger.info('Starting MkDocs serve.')
           process = config.renderer.start_server()
           if open_browser:
+            open_browser = False
             webbrowser.open(config.renderer.get_server_url())
 
         event.wait(0.5)
@@ -209,13 +212,11 @@ def error(*args):
        'option of the "python" loader to False. ' + default_config_notice)
 @click.option('--render-toc/--no-render-toc', default=None,
   help='Enable/disable the rendering of the TOC in the "markdown" renderer.')
-@click.option('--watch-and-serve', '-w', is_flag=True,
-  help='Watch for file changes and re-render if needed, and run "mkdocs '
-       'serve" in the background. This option is only supported for the '
-       '"mkdocs" renderer.')
+@click.option('--server', '-s', is_flag=True,
+  help='Watch for file changes and re-render if needed and start the server '
+       'for the configured renderer. This doesn\'t work for all renderers.')
 @click.option('--open', '-o', 'open_browser', is_flag=True,
-  help='Open your browser after starting "mkdocs serve". Can only be used '
-       'together with the --watch-and-serve option.')
+  help='Open the browser after starting the server with -s,--server.')
 def cli(
     config,
     bootstrap,
@@ -227,14 +228,14 @@ def cli(
     search_path,
     render_toc,
     py2,
-    watch_and_serve,
+    server,
     open_browser):
 
   if bootstrap and bootstrap_mkdocs:
     error('--bootstrap and --bootstrap-mkdocs are incompatible options')
   if bootstrap or bootstrap_mkdocs:
     if config or modules or packages or search_path or render_toc \
-        or py2 or watch_and_serve or open_browser:
+        or py2 or server or open_browser:
       error('--bootstrap must be used as a sole argument')
     existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
     if existing_file:
@@ -248,8 +249,8 @@ def cli(
     print('created', filename)
     return
 
-  if open_browser and not watch_and_serve:
-    error('--open can only be used with --watch-and-serve')
+  if open_browser and not server:
+    error('--open can only be used with --server')
 
   load_implicit_config = not any((modules, packages, search_path, py2 is not None))
 
@@ -281,8 +282,8 @@ def cli(
     py2=py2)
 
   pydocmd = session.load()
-  if watch_and_serve:
-    session.watch_and_serve(pydocmd, open_browser)
+  if server:
+    session.run_server(pydocmd, open_browser)
   else:
     session.render(pydocmd)
 

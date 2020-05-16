@@ -102,8 +102,8 @@ class Server(Interface):
   This interface describes an object that can start a server process for
   live-viewing generated documentation in the browser. #Renderer
   implementations may additionally implement this interface to advocate their
-  compatibility with the `--watch-and-serve` and `--open` options of the
-  pydoc-markdown CLI.
+  compatibility with the `--server` and `--open` options of the pydoc-markdown
+  CLI.
   """
 
   def get_server_url(self) -> str:

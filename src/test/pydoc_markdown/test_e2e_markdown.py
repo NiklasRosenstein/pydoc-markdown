@@ -107,7 +107,7 @@ def test_class():
     pass
   ''',
   '''
-  ### MyError
+  ## MyError Objects
 
   ```python
   class MyError(RuntimeError)
@@ -123,7 +123,7 @@ def test_class():
     member = None
   ''',
   '''
-  ### Foo
+  ## Foo Objects
 
   ```python
   class Foo()
@@ -150,7 +150,7 @@ def test_class():
       self.param = param
   ''',
   '''
-  ### Class
+  ## Class Objects
 
   ```python
   class Class()
@@ -182,7 +182,7 @@ def test_enum():
       MOUSE = 2  #: Mice are rare.
   ''',
   '''
-  ### PetType
+  ## PetType Objects
 
   ```python
   class PetType(enum.Enum)
@@ -204,7 +204,7 @@ def test_module_docstring():
   # This is the module docstring.
   ''',
   '''
-  ## \\_inline
+  # \\_inline
 
   This is the module docstring.
   ''',
@@ -219,7 +219,7 @@ def test_module_docstring():
 
   ''',
   '''
-  ## \\_inline
+  # \\_inline
 
   This is the module docstring.
   ''',
@@ -234,7 +234,7 @@ def test_attribute_docstring():
     member = None
   ''',
   '''
-  ### Foo
+  ## Foo Objects
 
   ```python
   class Foo()
@@ -252,7 +252,7 @@ def test_attribute_docstring():
     """ This is a member docstring. """
   ''',
   '''
-  ### Foo
+  ## Foo Objects
 
   ```python
   class Foo()
