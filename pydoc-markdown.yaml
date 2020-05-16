@@ -4,6 +4,9 @@ renderer:
   - title: Home
     name: index
     source: README.md
+  - title: Changelog
+    name: changelog
+    source: CHANGELOG.md
   - title: Getting Started
     source: docs/getting-started.md
   - title: API Documentation
@@ -36,5 +39,4 @@ renderer:
       - title: MkdocsRenderer
         contents:
         - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
-  mkdocs_config:
-    theme: readthedocs
+  output_directory: docs/build
