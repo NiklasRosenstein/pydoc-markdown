@@ -107,10 +107,10 @@ To jumpstart your documentation endavours, try running `pydoc-markdown --bootstr
 
 If a configuration file exists, then the CLI needs to be invoked without
 arguments, or with one argument that specifies the path to the configuration
-file. When using the `mkdocs` renderer, you may add the `--watch-and-serve`
+file. When using the `mkdocs` renderer, you may add the `--server`
 and `--open` arguments for smooth live-feedback.
 
-    $ pydoc-markdown ./pydoc-markdown.yaml -wo
+    $ pydoc-markdown ./pydoc-markdown.yaml --server --open
 
 ## lib2to3 Quirks
 

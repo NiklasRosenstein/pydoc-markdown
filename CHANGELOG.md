@@ -1,5 +1,9 @@
 # Changelog
 
+### v3.0.3 (unreleased)
+
+* Rename `--watch-and-serve` to `--server`
+
 ### v3.0.2 (2020-05-16)
 
 * Fix `NameError` in `MkdocsRenderer`
