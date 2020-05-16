@@ -121,3 +121,7 @@ __List of known quirks__
 
 * A function argument in Python 3 cannot be called `print` even though
   it is legal syntax
+
+## Releasing
+
+Releases are automatically published from CircleCI.

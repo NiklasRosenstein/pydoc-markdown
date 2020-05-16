@@ -46,7 +46,8 @@ from pydoc_markdown.reflection import (
   Decorator,
   Function,
   Location,
-  Module)
+  Module,
+  ModuleGraph)
 
 _REVERSE_SYMS = {v: k for k, v in vars(syms).items() if isinstance(v, int)}
 _REVERSE_TOKEN = {v: k for k, v in vars(token).items() if isinstance(v, int)}
@@ -549,15 +550,19 @@ class PythonLoader(Struct):
   This implementation of the #Loader interface parses Python modules and
   packages. Which files are parsed depends on the configuration (see
   #PythonLoaderConfig).
+
+  If no #modules or #packages are set, the loader will attempt to find
+  # packages in the src/ folder of the current directory.
   """
 
-  #: A list of module or package names that this loader will search for and
-  #: then parse. The modules are searched using the #sys.path of the current
-  #: Python interpreter, unless the #search_path option is specified.
-  #:
-  #: If this is not specified, it will attempt to find packages to document
-  #: in the src/ folder of the current directory.
+  #: A list of module names that this loader will search for and then parse.
+  #: The modules are searched using the #sys.path of the current Python
+  # interpreter, unless the #search_path option is specified.
   modules = Field([str], default=None)
+
+  #: A list of package names that this loader will search for and then parse,
+  #: including all sub-packages and modules.
+  packages = Field([str], default=None)
 
   #: The module search path. If not specified, the current #sys.path is
   #: used instead. If any of the elements contain a `*` (star) symbol, it
@@ -585,8 +590,9 @@ class PythonLoader(Struct):
         index = search_path.index('*')
         search_path[index:index+1] = sys.path
 
-    if self.modules is None:
+    if self.modules is None and self.packages is None:
       modules = []
+      packages = []
       for path in search_path:
         try:
           items = os.listdir(path)
@@ -598,29 +604,40 @@ class PythonLoader(Struct):
             continue
           full_path = os.path.join(path, name, '__init__.py')
           if os.path.isfile(full_path) and name not in self.IGNORE_DISCOVERED_MODULES:
-            modules.append(name)
-      logger.info('Detected modules in search_path: %s', modules)
+            packages.append(name)
+      logger.info('Detected packages in search_path: %s', packages)
     else:
-      modules = self.modules
+      modules = self.modules or []
+      packages = self.packages or []
 
     old_path = sys.path
     sys.path = search_path
     try:
       for module in modules:
-        try:
-          loader = pkgutil.find_loader(module)
-          if loader is None:
-            raise ImportError('module "{}" not found'.format(module))
-          path = loader.get_filename()
-        except ImportError as exc:
-          raise LoaderError(exc)
-        if os.path.basename(path).startswith('__init__.'):
-          path = os.path.dirname(path)
-        for module_name, filename in self._iter_module_files(module, path):
-          module = self.load_file(module_name, filename)
-          graph.add_module(module)
+        self._load_module(graph, module, False)
+      for package in packages:
+        self._load_module(graph, package, True)
     finally:
       sys.path = old_path
+
+  def _load_module(self, graph: ModuleGraph, module_name: str, recursive: bool) -> None:
+    try:
+      loader = pkgutil.find_loader(module_name)
+      if loader is None:
+        raise LoaderError('module "{}" not found'.format(module_name))
+      path = loader.get_filename()
+    except ImportError as exc:
+      raise LoaderError(exc)
+
+    if recursive:
+      if os.path.basename(path).startswith('__init__.'):
+        path = os.path.dirname(path)
+      for submodule_name, filename in self._iter_module_files(module_name, path):
+        module = self.load_file(submodule_name, filename)
+        graph.add_module(module)
+    else:
+      module = self.load_file(module_name, path)
+      graph.add_module(module)
 
   def _iter_module_files(self, module_name, path):
     # pylint: disable=stop-iteration-return
