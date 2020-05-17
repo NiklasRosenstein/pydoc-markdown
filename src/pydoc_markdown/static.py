@@ -49,7 +49,7 @@ renderer:
       source: README.md
     - title: API Documentation
       contents:
-        - *
+        - '*'
   mkdocs_config:
     theme: readthedocs
 '''.lstrip()
