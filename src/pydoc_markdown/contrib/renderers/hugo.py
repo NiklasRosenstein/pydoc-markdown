@@ -44,6 +44,10 @@ class HugoPage(Page):
   preamble = Field(dict, default=dict)
   children = Field([HugoPage], default=list)
 
+  #: Override the directory that this page is rendered into (relative to the
+  #: content directory).
+  directory = Field(str, default=None)
+
 
 class HugoThemePath(Struct):
   path = Field(str)
@@ -117,6 +121,9 @@ class HugoRenderer(Struct):
   #: The pages to render.
   pages = Field(HugoPage.collection_type())
 
+  #: Default preamble applied to every page.
+  default_preamble = Field(dict, default=dict)
+
   #: Markdown render configuration.
   markdown = Field(MarkdownRenderer, default=Field.DEFAULT_CONSTRUCT)
 
@@ -125,8 +132,7 @@ class HugoRenderer(Struct):
 
   def _render_page(self, graph: ModuleGraph, page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    preamble = {'title': page.title}
-    preamble.update(page.preamble)
+    preamble = dict(**self.default_preamble, **{'title': page.title}, **page.preamble)
 
     with open(filename, 'w') as fp:
       fp.write('---\n')
@@ -155,7 +161,10 @@ class HugoRenderer(Struct):
     for item in self.pages.iter_hierarchy():
       if item.page.name == 'index':
         item.page.name = '_index'
-      filename = item.filename(content_dir, '.md', index_name='_index')
+      page_content_dir = content_dir
+      if item.page.directory:
+        page_content_dir = os.path.normpath(os.path.join(content_dir, item.page.directory))
+      filename = item.filename(page_content_dir, '.md', index_name='_index')
       self._render_page(item.page.filtered_graph(graph), item.page, filename)
 
     # Render the config file.
