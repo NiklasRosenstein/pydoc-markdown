@@ -232,6 +232,12 @@ def test_attribute_docstring():
   class Foo:
     #: This is a member docstring.
     member = None
+
+    #: This is a member with a type hint.
+    int_member: int = 32
+
+    #: A member with type hint but no value.
+    float_member: float
   ''',
   '''
   ## Foo Objects
@@ -243,6 +249,14 @@ def test_attribute_docstring():
   #### member
 
   This is a member docstring.
+
+  #### int\\_member
+
+  This is a member with a type hint.
+
+  #### float\\_member
+
+  A member with type hint but no value.
   ''')
 
   assert_code_as_markdown(

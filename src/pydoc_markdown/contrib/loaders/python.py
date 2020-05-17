@@ -156,24 +156,48 @@ class Parser:
       return self.parse_declaration(parent, node.children[1], decorators)
     return None
 
+  def _split_statement(self, stmt):
+    """
+    Parses a statement node into three lists, consisting of the leaf nodes
+    that are the name(s), annotation and value of the expression. The value
+    list will be empty if this is not an assignment statement (but for example
+    a plain expression).
+    """
+
+    def _parse(stack, current, stmt):
+      for child in stmt.children:
+        if not isinstance(child, Node) and child.value == '=':
+          stack.append(current)
+          current = ('value', [])
+        elif not isinstance(child, Node) and child.value == ':':
+          stack.append(current)
+          current = ('annotation', [])
+        elif isinstance(child, Node) and child.type == syms.annassign:
+          _parse(stack, current, child)
+        else:
+          current[1].append(child)
+      stack.append(current)
+      return stack
+
+    result = dict(_parse([], ('names', []), stmt))
+    return result.get('names', []), result.get('annotation', []), result.get('value', [])
+
   def parse_statement(self, parent, stmt):
-    is_assignment = False
-    names = []
-    expression = []
-    for child in stmt.children:
-      if not isinstance(child, Node) and child.value == '=':
-        is_assignment = True
-        names.append(expression)
-        expression = []
-      else:
-        expression.append(child)
-    if is_assignment:
+    names, annotation, value = self._split_statement(stmt)
+    if value or annotation:
       docstring = self.get_statement_docstring(stmt)
-      expr = Expression(self.nodes_to_string(expression))
+      expr = Expression(self.nodes_to_string(value)) if value else None
+      annotation = Expression(self.nodes_to_string(annotation)) if annotation else None
       assert names
       for name in names:
-        name = self.nodes_to_string(name)
-        data = Data(self.location_from(stmt), parent, name, docstring, expr=expr)
+        name = self.nodes_to_string([name])
+        data = Data(
+          self.location_from(stmt),
+          parent,
+          name,
+          docstring,
+          expr=expr,
+          annotation=annotation)
       return data
     return None
 
