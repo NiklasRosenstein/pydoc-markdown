@@ -82,7 +82,7 @@ class HugoThemeGitUrl(Struct):
 
 
 class HugoConfig(Struct):
-  baseURL = Field(str)
+  baseURL = Field(str, default=None)
   languageCode = Field(str, default='en-us')
   title = Field(str)
   theme = Field((str, HugoThemePath, HugoThemeGitUrl))
@@ -93,7 +93,9 @@ class HugoConfig(Struct):
     for field in self.__fields__:
       if field in ('additional_options', 'theme'):
         continue
-      data[field] = getattr(self, field)
+      value = getattr(self, field)
+      if value:
+        data[field] = value
     if isinstance(self.theme, str):
       data['theme'] = self.theme
     elif isinstance(self.theme, (HugoThemePath, HugoThemeGitUrl)):
@@ -183,7 +185,7 @@ class HugoRenderer(Struct):
 
   @override
   def get_server_url(self) -> str:
-    urlinfo = urlparse(self.config.baseURL)
+    urlinfo = urlparse(self.config.baseURL or '')
     return urljoin('http://localhost:1313/', urlinfo.path)
 
   @override
