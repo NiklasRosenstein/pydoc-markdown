@@ -40,3 +40,6 @@ renderer:
         contents:
         - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
   output_directory: docs/build
+  mkdocs_config:
+    site_name: Pydoc-Markdown
+    theme: material

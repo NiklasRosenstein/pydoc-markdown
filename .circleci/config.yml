@@ -69,7 +69,7 @@ jobs:
           fingerprints:
             - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
       - checkout
-      - run: pip install -q . mkdocs
+      - run: pip install -q . mkdocs mkdocs-material
       - run: pydoc-markdown
       - run: |
           if [[ "$CIRCLE_TAG" != "" ]]; then

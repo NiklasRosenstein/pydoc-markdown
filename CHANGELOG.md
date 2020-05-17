@@ -3,19 +3,19 @@
 ### v3.0.3 (unreleased)
 
 * CLI
-  * Rename `--watch-and-serve` to `--server`
-  * Watch & serve mainloop now reloads the config file and does not open the
-    browser on every reload
+    * Rename `--watch-and-serve` to `--server`
+    * Watch & serve mainloop now reloads the config file and does not open the
+      browser on every reload
 * `MarkdownRenderer`
-  * Update default for `header_level_by_type` (2 -> 1 for modules, 3 -> 2 for classes)
-  * Update default for `descriptive_class_title` (false -> true)
-  * Added `content_directory` option (replaces hardcoded default `docs` -> `content`)
-  * Renamed `clean_docs_directory_on_render` to `clean_render` and change default true -> false
+    * Update default for `header_level_by_type` (2 -> 1 for modules, 3 -> 2 for classes)
+    * Update default for `descriptive_class_title` (false -> true)
+    * Added `content_directory` option (replaces hardcoded default `docs` -> `content`)
+    * Renamed `clean_docs_directory_on_render` to `clean_render` and change default true -> false
 * `MkdocsRenderer`
-  * Changed `mkdocs_config` can be set to `null` (the renderer will refrain
-    from writing a `mkdocs.yml` configuration file into the output directory)
+    * Changed `mkdocs_config` can be set to `null` (the renderer will refrain
+      from writing a `mkdocs.yml` configuration file into the output directory)
 * `PythonLoader`
-  * Fix assignments with annotations being ignored by the parser (#115)
+    * Fix assignments with annotations being ignored by the parser (#115)
 
 ### v3.0.2 (2020-05-16)
 
