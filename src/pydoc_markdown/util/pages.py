@@ -55,7 +55,7 @@ class IterHierarchyItem(Struct):
     if self.page.children:
       if skip_empty_pages and not self.page.contents and not self.page.source:
         return None
-      path.append(index-name)
+      path.append(index_name)
     filename = os.path.join(*path) + suffix_with_dot
     if parent_dir:
       filename = os.path.join(parent_dir, filename)
