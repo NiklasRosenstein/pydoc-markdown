@@ -629,7 +629,10 @@ class PythonLoader(Struct):
           full_path = os.path.join(path, name, '__init__.py')
           if os.path.isfile(full_path) and name not in self.IGNORE_DISCOVERED_MODULES:
             packages.append(name)
-      logger.info('Detected packages in search_path: %s', packages)
+      if not modules and not packages:
+        logger.warning('No Python modules or packages detected.')
+      else:
+        logger.info('Detected packages in search_path: %s', packages)
     else:
       modules = self.modules or []
       packages = self.packages or []
