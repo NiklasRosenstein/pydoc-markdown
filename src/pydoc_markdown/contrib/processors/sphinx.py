@@ -26,7 +26,9 @@ markdown compatible syntax.
 
 from nr.databind.core import Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor
+from pydoc_markdown.interfaces import Processor, Resolver
+from typing import List, Optional
+import docspec
 import re
 
 
@@ -47,10 +49,10 @@ class SphinxProcessor(Struct):
       ':raise' in docstring
 
   @override
-  def process(self, graph, _resolver):
-    graph.visit(self.process_node)
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+    docspec.visit(modules, self._process)
 
-  def process_node(self, node):
+  def _process(self, node):
     if not node.docstring:
       return
 

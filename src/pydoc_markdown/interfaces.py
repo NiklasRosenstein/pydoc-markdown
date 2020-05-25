@@ -20,9 +20,6 @@
 # IN THE SOFTWARE.
 
 """
-`pydoc_markdown.interfaces`
-===========================
-
 This module defines the interfaces that can to be implemented for
 Pydoc-Markdown to implement custom loaders for documentation data,
 processors or renderers.
@@ -30,8 +27,8 @@ processors or renderers.
 
 from nr.databind.core import  SerializeAs, UnionType
 from nr.interface import Interface, default
-from typing import Optional
-from .reflection import ModuleGraph, Object
+from typing import Iterable, List, Optional
+import docspec
 import subprocess
 
 
@@ -43,9 +40,9 @@ class Loader(Interface):
   with the configuration class.
   """
 
-  def load(self, graph):  # type: (ModuleGraph) -> None
+  def load(self) -> Iterable[docspec.Module]:
     """
-    Fill the #ModuleGraph.
+    Load modules.
     """
 
 
@@ -53,47 +50,48 @@ class LoaderError(Exception):
   pass
 
 
-@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Processor'))
-class Processor(Interface):
+class Resolver(Interface):
   """
-  A processor is an object that takes a #ModuleGraph object as an input and
-  transforms it in an arbitrary way. This usually processes docstrings to
-  convert from various documentation syntaxes to plain Markdown.
+  A resolver can be used by a #Processor to replace cross references with a hyperlink.
   """
 
-  def process(self, graph, resolver):  # type: (ModuleGraph, Optional[Resolver]) -> None
+  def resolve_ref(self, scope: docspec.ApiObject, ref: str) -> Optional[str]:
     pass
 
 
-class Resolver(Interface):
-  """ A resolver can be used by a #Processor to replace cross references
-  with a hyperlink. """
+@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Processor'))
+class Processor(Interface):
+  """
+  A processor is an object that takes a list of #docspec.Module#s as an input and
+  transforms it in an arbitrary way. This usually processes docstrings to convert from
+  various documentation syntaxes to plain Markdown.
+  """
 
-  def resolve_ref(self, scope: Object, ref: str) -> Optional[str]:
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
     pass
 
 
 @SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Renderer'))
 class Renderer(Processor):
   """
-  A renderer is an object that takes a #ModuleGraph as an input and produces
-  output files or writes to stdout. It may also expose additional command-line
-  arguments. There can only be one renderer at the end of the processor chain.
+  A renderer is an object that takes a list of #docspec.Module#s as an input and produces
+  output files or writes to stdout. It may also expose additional command-line arguments.
+  There can only be one renderer at the end of the processor chain.
 
-  Note that sometimes a renderer may need to perform some processing before
-  the render step. To keep the possibility open that a renderer may implement
-  generic processing that could be used without the actual renderering
-  functionality, #Renderer is a subclass of #Processor.
+  Note that sometimes a renderer may need to perform some processing before the render step.
+  To keep the possibility open that a renderer may implement generic processing that could
+  used without the actual renderering functionality, #Renderer is a subclass of #Processor.
   """
 
   @default
-  def process(self, graph, resolver):  # type: (ModuleGraph, Optional[Resolver]) -> None
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
     pass
 
-  def render(self, graph):  # type: (ModuleGraph) -> None
-    pass
+  @default
+  def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
+    return None
 
-  def get_resolver(self, graph):  # type: (ModuleGraph) -> Optional[Resolver]
+  def render(self, modules: List[docspec.Module]) -> None:
     pass
 
 

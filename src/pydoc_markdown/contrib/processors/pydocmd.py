@@ -24,11 +24,12 @@ Provides the #PydocmdProcessor class which converts the Pydoc-Markdown
 highlighting syntax into Markdown.
 """
 
-import re
-
 from nr.databind.core import Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor
+from pydoc_markdown.interfaces import Processor, Resolver
+from typing import List, Optional
+import docspec
+import re
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other
 #     objects so that they can be properly handled by the renderer.
@@ -37,10 +38,10 @@ from pydoc_markdown.interfaces import Processor
 class PydocmdProcessor(Struct):
 
   @override
-  def process(self, graph, resolver):
-    graph.visit(self.process_node)
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+    docspec.visit(modules, self._process)
 
-  def process_node(self, node):
+  def _process(self, node: docspec.ApiObject):
     if not getattr(node, 'docstring', None):
       return
     lines = []

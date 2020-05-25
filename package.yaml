@@ -32,6 +32,8 @@ classifiers:
 requirements:
   - python ^3.6
   - click ^7.0
+  - docspec ~0.1.0
+  - docspec-python ~0.1.0
   - nr.collections ~0.0.1
   - nr.databind.core ~0.0.10
   - nr.databind.json ~0.0.9

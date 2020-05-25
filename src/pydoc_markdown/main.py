@@ -127,11 +127,11 @@ class RenderSession:
     Kicks off the rendering process and returns a list of files to watch.
     """
 
-    config.load_modules()
-    config.process()
-    config.render()
+    modules = config.load_modules()
+    config.process(modules)
+    config.render(modules)
 
-    watch_files = set(m.location.filename for m in config.graph.modules)
+    watch_files = set(m.location.filename for m in modules)
     if isinstance(self.config, str):
       watch_files.add(self.config)
 

@@ -24,7 +24,9 @@ docstrings with actual hyperlinks. """
 
 from nr.databind.core import Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor
+from pydoc_markdown.interfaces import Processor, Resolver
+from typing import List, Optional
+import docspec
 import logging
 import re
 
@@ -35,11 +37,12 @@ logger = logging.getLogger(__name__)
 class CrossrefProcessor(Struct):
 
   @override
-  def process(self, graph, resolver):
-    graph.visit(lambda x: self._preprocess_refs(x, resolver))
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]):
+    if resolver:
+      docspec.visit(modules, lambda x: self._preprocess_refs(x, resolver))
 
-  def _preprocess_refs(self, node, resolver):
-    if not resolver or not node.docstring:
+  def _preprocess_refs(self, node: docspec.ApiObject, resolver: Resolver):
+    if not node.docstring:
       return
 
     def handler(match):

@@ -23,11 +23,12 @@
 Implements a renderer that produces Markdown output.
 """
 
+from docspec_python import format_arglist
 from nr.databind.core import Field, Struct
 from nr.interface import implements
 from pydoc_markdown.interfaces import Renderer, Resolver
-from pydoc_markdown.reflection import Object, Class, Data, Function, Module, ModuleGraph
-from typing import Optional
+from typing import List, Optional, TextIO
+import docspec
 import io
 import sys
 
@@ -152,13 +153,26 @@ class MarkdownRenderer(Struct):
     'Data': 4,
   })
 
+  _reverse_map = Field(docspec.ReverseMap, default=None, hidden=True)
+  def _get_parent(self, obj: docspec.ApiObject) -> Optional[docspec.ApiObject]:
+    return self._reverse_map.get_parent(obj)
+
+  def _is_method(self, obj: docspec.ApiObject) -> bool:
+    return isinstance(obj, docspec.Function) and \
+      isinstance(self._reverse_map.get_parent(obj), docspec.Class)
+
+  def _format_arglist(self, func: docspec.Function) -> str:
+    args = func.args[:]
+    if self._is_method(func) and args and args[0].name == 'self':
+      args.pop(0)
+    return format_arglist(args)
+
   def _render_toc(self, fp, level, obj):
     if level > self.toc_maxdepth:
       return
-    if obj.visible:
-      object_id = self._generate_object_id(obj)
-      fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
-      level += 1
+    object_id = self._generate_object_id(obj)
+    fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
+    level += 1
     for child in obj.members.values():
       self._render_toc(fp, level, child)
 
@@ -175,53 +189,50 @@ class MarkdownRenderer(Struct):
     fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
-  def _format_function_signature(self, func: Function, override_name: str = None, add_method_bar: bool = True) -> str:
+  def _format_function_signature(self, func: docspec.Function, override_name: str = None, add_method_bar: bool = True) -> str:
     parts = []
-    for dec in func.decorators:
+    for dec in func.decorations:
       parts.append('@{}{}\n'.format(dec.name, dec.args or ''))
-    if self.signature_python_help_style and not func.is_method():
+    if self.signature_python_help_style and not self._is_method(func):
       parts.append('{} = '.format(func.path()))
-    if func.is_async:
-      parts.append('async ')
+    parts += [x + ' ' for x in func.modifiers or []]
     if self.signature_with_def:
       parts.append('def ')
-    if self.signature_class_prefix and (
-        func.is_function() and func.parent and func.parent.is_class()):
-      parts.append(func.parent.name + '.')
+    if self.signature_class_prefix and self._is_method(func):
+      parts.append(self._get_parent(func).name + '.')
     parts.append((override_name or func.name))
-    parts.append('(' + func.signature_args + ')')
-    if func.return_:
-      parts.append(' -> {}'.format(func.return_))
+    parts.append('(' + self._format_arglist(func) + ')')
+    if func.return_type:
+      parts.append(' -> {}'.format(func.return_type))
     result = ''.join(parts)
-    if add_method_bar and func.is_method():
+    if add_method_bar and self._is_method(func):
       result = '\n'.join(' | ' + l for l in result.split('\n'))
     return result
 
-  def _format_classdef_signature(self, cls: Class) -> str:
+  def _format_classdef_signature(self, cls: docspec.Class) -> str:
     bases = ', '.join(map(str, cls.bases))
     if cls.metaclass:
       bases += ', metaclass=' + str(cls.metaclass)
     code = 'class {}({})'.format(cls.name, bases)
     if self.signature_python_help_style:
       code = cls.path() + ' = ' + code
-    if self.classdef_render_init_signature_if_needed and (
-        '__init__' in cls.members and not cls.members['__init__'].visible):
+    if self.classdef_render_init_signature_if_needed and '__init__' in cls.members:
       code += ':\n |  ' + self._format_function_signature(
         cls.members['__init__'], override_name=cls.name, add_method_bar=False)
     return code
 
-  def _format_data_signature(self, data: Data) -> str:
+  def _format_data_signature(self, data: docspec.Data) -> str:
     expr = str(data.expr)
     if len(expr) > self.data_expression_maxlength:
       expr = expr[:self.data_expression_maxlength] + ' ...'
     return data.name + ' = ' + expr
 
   def _render_signature_block(self, fp, obj):
-    if self.classdef_code_block and obj.is_class():
+    if self.classdef_code_block and isinstance(obj, docspec.Class):
       code = self._format_classdef_signature(obj)
-    elif self.signature_code_block and obj.is_function():
+    elif self.signature_code_block and isinstance(obj, docspec.Function):
       code = self._format_function_signature(obj)
-    elif self.data_code_block and obj.is_data():
+    elif self.data_code_block and isinstance(obj, docspec.Data):
       code = self._format_data_signature(obj)
     else:
       return
@@ -230,7 +241,7 @@ class MarkdownRenderer(Struct):
     fp.write('\n```\n\n')
 
   def _render_object(self, fp, level, obj):
-    if not isinstance(obj, Module) or self.render_module_header:
+    if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
     self._render_signature_block(fp, obj)
     if obj.docstring:
@@ -241,33 +252,34 @@ class MarkdownRenderer(Struct):
       fp.write('\n\n')
 
   def _render_recursive(self, fp, level, obj):
-    if obj.visible:
-      self._render_object(fp, level, obj)
-      level += 1
-    for member in obj.members.values():
+    self._render_object(fp, level, obj)
+    level += 1
+    for member in getattr(obj, 'members', []):
       self._render_recursive(fp, level, member)
 
-  def _render_graph(self, graph, fp):
+  def _render_modules(self, modules: List[docspec.Module], fp: TextIO):
+    self._reverse_map = docspec.ReverseMap(modules)
+
     if self.render_toc:
       if self.render_toc_title:
         fp.write('# {}\n\n'.format(self.render_toc_title))
-      for m in graph.modules:
+      for m in modules:
         self._render_toc(fp, 0, m)
       fp.write('\n')
-    for m in graph.modules:
+    for m in modules:
       self._render_recursive(fp, 1, m)
 
   def _get_title(self, obj):
     title = obj.name
-    if (self.add_method_class_prefix and obj.is_method()) or \
-       (self.add_member_class_prefix and obj.is_data()):
-      title = obj.parent.name + '.' + title
-    elif self.add_full_prefix and not obj.is_method():
+    if (self.add_method_class_prefix and self._is_method(obj)) or \
+       (self.add_member_class_prefix and isinstance(obj, docspec.Data)):
+      title = self._get_parent(obj).name + '.' + title
+    elif self.add_full_prefix and not self._is_method(obj):
       title = obj.path()
 
-    if obj.is_function():
+    if isinstance(obj, docspec.Function):
       if self.signature_in_header:
-        title += '(' + obj.signature_args + ')'
+        title += '(' + self._format_arglist(obj) + ')'
 
     if self.code_headers:
       if self.html_headers or self.sub_prefix:
@@ -279,9 +291,9 @@ class MarkdownRenderer(Struct):
         title = '`{}`'.format(title)
     else:
       title = self._escape(title)
-    if isinstance(obj, Module) and self.descriptive_module_title:
+    if isinstance(obj, docspec.Module) and self.descriptive_module_title:
       title = 'Module ' + title
-    if isinstance(obj, Class) and self.descriptive_class_title:
+    if isinstance(obj, docspec.Class) and self.descriptive_class_title:
       title += ' Objects'
     return title
 
@@ -289,30 +301,53 @@ class MarkdownRenderer(Struct):
     parts = []
     while obj:
       parts.append(obj.name)
-      obj = obj.parent
+      obj = self._get_parent(obj)
     return '.'.join(reversed(parts))
 
   def _escape(self, s):
     return s.replace('_', '\\_').replace('*', '\\*')
 
-  def render_to_string(self, graph: ModuleGraph):
+  def render_to_string(self, modules: List[docspec.Module]) -> str:
     fp = io.StringIO()
-    self._render_graph(graph, fp)
+    self._render_modules(modules, fp)
     return fp.getvalue()
 
   # Renderer
 
-  def get_resolver(self, graph: ModuleGraph) -> Resolver:
-    def resolver(scope: Object, ref: str) -> Optional[str]:
-      target = graph.resolve_ref(scope, ref.split('.'))
+  def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
+    """
+    Returns a simple #Resolver implementation. Finds cross-references in the same file.
+    """
+
+    reverse_map = docspec.ReverseMap(modules)
+
+    def _resolve_reference(obj: docspec.ApiObject, ref: List[str]) -> Optional[docspec.ApiObject]:
+      for part_name in ref:
+        obj = docspec.get_member(obj, part_name)
+        if not obj:
+          return None
+      return obj
+
+    def _find_reference(obj: docspec.ApiObject, ref: List[str]) -> Optional[docspec.ApiObject]:
+      while obj:
+        resolved = _resolve_reference(obj, ref)
+        if resolved:
+          return resolved
+        obj = reverse_map.get_parent(obj)
+      return None
+
+    @Resolver
+    def resolver(obj: docspec.ApiObject, ref: str) -> Optional[str]:
+      target = _find_reference(obj, ref.split('.'))
       if target:
         return '#' + self._generate_object_id(target)
       return None
-    return Resolver(resolver)
 
-  def render(self, graph: ModuleGraph):
+    return resolver
+
+  def render(self, modules: List[docspec.Module]) -> None:
     if self.filename is None:
-      self._render_graph(graph, self.fp or sys.stdout)
+      self._render_modules(modules, self.fp or sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
-        self._render_graph(graph, fp)
+        self._render_modules(modules, fp)
