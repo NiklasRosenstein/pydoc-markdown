@@ -35,7 +35,7 @@ class SmartProcessor(Struct):
 
   def process(self, graph, _resolver):
     """
-    Preprocessors a given section into it's components.
+    Preprocesses a given section into its components.
     """
 
     graph.visit(self.process_node)

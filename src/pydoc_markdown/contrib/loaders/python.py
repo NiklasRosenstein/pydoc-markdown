@@ -595,7 +595,7 @@ class PythonLoader(Struct):
 
   #: The "print_function" flag will be passed down to the lib2to3
   #: RefactoringTool. This enables parsing Python 3 code that uses the
-  #: print function without importing importing print_function from the
+  #: print function without importing the print_function from the
   #: `__future__` module.
   print_function = Field(bool, default=True)
 
