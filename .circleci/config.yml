@@ -87,7 +87,8 @@ workflows:
   version: 2
   test:
     jobs:
-      - docs
+      - docs:
+          filters: { tags: { only: /.*/ } }
       - test-3.6:
           filters: { tags: { only: /.*/ } }
       - test-3.7:
