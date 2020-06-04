@@ -6,6 +6,7 @@
     * Rename `--watch-and-serve` to `--server`
     * Watch & serve mainloop now reloads the config file and does not open the
       browser on every reload
+    * Fix `pydoc-markdown.yml` generated with `--bootstrap` (#118)
 * `MarkdownRenderer`
     * Update default for `header_level_by_type` (2 -> 1 for modules, 3 -> 2 for classes)
     * Update default for `descriptive_class_title` (false -> true)
