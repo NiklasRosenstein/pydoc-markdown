@@ -33,7 +33,7 @@
 * Added `PythonLoader.packages` which will load the specified Python package
   including all sub-packages and -modules.
 * Changed behavior of `PythonLoader.modules`, which will now only load the
-  module that was explictly specified and not sub-packages or modules (note
+  module that was explicitly specified and not sub-packages or modules (note
   that this also affects the `-m,--module` command-line option)
 * Dynamically lookup `MarkdownRenderer` configuration from the configured
   renderer such that renderers other than the `MarkdownRenderer` and
