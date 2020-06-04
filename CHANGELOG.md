@@ -1,6 +1,6 @@
 # Changelog
 
-### v3.0.3 (unreleased)
+### v3.1.0 (2020-06-04)
 
 * CLI
     * Rename `--watch-and-serve` to `--server`
