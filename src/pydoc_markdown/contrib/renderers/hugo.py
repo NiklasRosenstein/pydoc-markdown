@@ -135,8 +135,9 @@ class HugoRenderer(Struct):
   #: The #MarkdownRenderer configuration.
   markdown = Field(MarkdownRenderer, default=Field.DEFAULT_CONSTRUCT)
 
-  #: The Hugo `config.toml` file as YAML.
-  config = Field(HugoConfig)
+  #: The contents of the Hugo `config.toml` file as YAML. This can be set to `null` in
+  #: order to not produce the `config.toml` file in the #build_directory.
+  config = Field(HugoConfig, nullable=True)
 
   #: Options for when the Hugo binary is not present and should be downloaded
   #: automatically. Example:
@@ -191,10 +192,11 @@ class HugoRenderer(Struct):
       self._render_page(item.page.filtered_modules(modules), item.page, filename)
 
     # Render the config file.
-    if isinstance(self.config.theme, (HugoThemePath, HugoThemeGitUrl)):
-      self.config.theme.install(os.path.join(self.build_directory, 'themes'))
-    with open(os.path.join(self.build_directory, 'config.toml'), 'w') as fp:
-      self.config.to_toml(fp)
+    if self.config is not None:
+      if isinstance(self.config.theme, (HugoThemePath, HugoThemeGitUrl)):
+        self.config.theme.install(os.path.join(self.build_directory, 'themes'))
+      with open(os.path.join(self.build_directory, 'config.toml'), 'w') as fp:
+        self.config.to_toml(fp)
 
   @override
   def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
