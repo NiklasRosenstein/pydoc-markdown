@@ -98,6 +98,8 @@ class PythonLoader(Struct):
         )
 
         for item in discovered_items:
+          if item.name in self.ignore_when_discovered:
+            continue
           if item.is_module():
             modules.append(item.name)
           elif item.is_package():
