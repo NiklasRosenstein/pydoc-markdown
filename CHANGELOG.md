@@ -1,11 +1,12 @@
 # Changelog
 
-### v3.0.3 (unreleased)
+### v3.1.0 (2020-06-04)
 
 * CLI
     * Rename `--watch-and-serve` to `--server`
     * Watch & serve mainloop now reloads the config file and does not open the
       browser on every reload
+    * Fix `pydoc-markdown.yml` generated with `--bootstrap` (#118)
 * `MarkdownRenderer`
     * Update default for `header_level_by_type` (2 -> 1 for modules, 3 -> 2 for classes)
     * Update default for `descriptive_class_title` (false -> true)
@@ -33,7 +34,7 @@
 * Added `PythonLoader.packages` which will load the specified Python package
   including all sub-packages and -modules.
 * Changed behavior of `PythonLoader.modules`, which will now only load the
-  module that was explictly specified and not sub-packages or modules (note
+  module that was explicitly specified and not sub-packages or modules (note
   that this also affects the `-m,--module` command-line option)
 * Dynamically lookup `MarkdownRenderer` configuration from the configured
   renderer such that renderers other than the `MarkdownRenderer` and

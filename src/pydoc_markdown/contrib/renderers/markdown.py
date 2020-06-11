@@ -97,7 +97,7 @@ class MarkdownRenderer(Struct):
   classdef_code_block = Field(bool, default=True)
 
   #: Render the constructor signature in the class definition code block
-  #: if it's `__init__()` member is not visible.
+  #: if its `__init__()` member is not visible.
   classdef_render_init_signature_if_needed = Field(bool, default=True)
 
   #: Render classdef and function signature blocks in the Python help()

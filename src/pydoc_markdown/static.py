@@ -29,7 +29,7 @@ processors:
   - type: smart
   - type: crossref
 renderer:
-  - type: markdown
+  type: markdown
 '''.lstrip()
 
 
