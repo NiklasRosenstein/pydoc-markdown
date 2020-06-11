@@ -27,6 +27,7 @@ With no arguments it will load the default configuration file. If the
 or a YAML formatted object for the configuration.
 """
 
+from docspec import dump_module
 from nr.databind.core import StructType
 from pydoc_markdown import __version__, PydocMarkdown, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
@@ -217,6 +218,8 @@ def error(*args):
        'for the configured renderer. This doesn\'t work for all renderers.')
 @click.option('--open', '-o', 'open_browser', is_flag=True,
   help='Open the browser after starting the server with -s,--server.')
+@click.option('--dump', is_flag=True,
+  help='Dump the loaded modules in Docspec JSON format to stdout, after the processors.')
 def cli(
     config,
     bootstrap,
@@ -229,7 +232,8 @@ def cli(
     render_toc,
     py2,
     server,
-    open_browser):
+    open_browser,
+    dump):
 
   if bootstrap and bootstrap_mkdocs:
     error('--bootstrap and --bootstrap-mkdocs are incompatible options')
@@ -282,6 +286,14 @@ def cli(
     py2=py2)
 
   pydocmd = session.load()
+
+  if dump:
+    modules = pydocmd.load_modules()
+    pydocmd.process(modules)
+    for module in modules:
+      dump_module(module, sys.stdout)
+    sys.exit(0)
+
   if server:
     session.run_server(pydocmd, open_browser)
   else:
