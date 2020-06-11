@@ -64,3 +64,17 @@
   - markdown
   description: the Markdown header level for methods is now correctly read from the
     "Method" key in `MarkdownRenderer.header_level_by_type`
+- types:
+  - change
+  issues: []
+  components:
+  - cli
+  description: remove `--bootstrap-mkdocs` in favor of `--bootstrap` option which
+    now accepts an argument
+- types:
+  - change
+  issues: []
+  components:
+  - cli
+  description: the `--bootstrap` option now requires an argument, which must be either
+    "base", "mkdocs" or "hugo" (new)
