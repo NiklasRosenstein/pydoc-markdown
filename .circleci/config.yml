@@ -44,7 +44,7 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install -q nr.shore==0.0.36
+      - run: pip install -q nr.shore==0.0.39
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
@@ -55,7 +55,7 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install -q nr.shore==0.0.36
+      - run: pip install -q nr.shore==0.0.39
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
@@ -69,7 +69,8 @@ jobs:
           fingerprints:
             - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
       - checkout
-      - run: pip install -q . mkdocs mkdocs-material
+      - run: pip install -q . mkdocs mkdocs-material nr.shore==0.0.39
+      - run: shore changelog --all --markdown >CHANGELOG.md
       - run: pydoc-markdown
       - run: |
           if [[ "$CIRCLE_TAG" != "" ]]; then
