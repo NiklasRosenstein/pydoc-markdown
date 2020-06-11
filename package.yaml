@@ -35,6 +35,7 @@ requirements:
   - docspec ~0.1.0
   - docspec-python ~0.1.0
   - nr.collections ~0.0.1
+  - nr.interface ~0.0.3
   - nr.databind.core ~0.0.10
   - nr.databind.json ~0.0.9
   - six ^1.11.0
