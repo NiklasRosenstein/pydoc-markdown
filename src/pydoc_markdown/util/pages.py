@@ -27,10 +27,10 @@ to document.
 
 from nr.databind.core import Collection, Field, ProxyType, Struct
 from pydoc_markdown.interfaces import Renderer
-from pydoc_markdown.reflection import ModuleGraph
 from typing import Iterable, Optional, List
 import collections
 import copy
+import docspec
 import fnmatch
 import logging
 import os
@@ -105,40 +105,49 @@ class Page(Struct):
     for child in self.children:
       yield from child.iter_hierarchy(parent_chain + [self])
 
-  def filtered_graph(self, graph: ModuleGraph) -> ModuleGraph:
+  def filtered_modules(self, modules: List[docspec.Module]) -> List[docspec.Module]:
     """
     Creates a copy of the module graph where only the API objects selected
     via #Page.contents are visible.
     """
 
-    def _match(node):
+    modules = copy.deepcopy(modules)
+    reverse_map = docspec.ReverseMap(modules)
+    matched_contents = set()
+
+    def _match(obj: docspec.ApiObject) -> bool:
+      if getattr(obj, 'members', []):
+        return True
       if self.contents:
-        path = node.path()
-        return any(fnmatch.fnmatch(path, x) for x in self.contents or ())
+        path = '.'.join(x.name for x in reverse_map.path(obj))
+        for x in self.contents:
+          if fnmatch.fnmatch(path, x):
+            matched_contents.add(x)
+            return True
       return False
 
-    def _update_nodes(x):
-      x.visible = x.visible and _match(x)
-      # Make sure all parents are visible as well.
-      while x and x.visible:
-        x = x.parent
-        if x:
-          x.visible = True
+    docspec.filter_visit(modules, _match, order='post')
 
-    clone = copy.deepcopy(graph)
-    clone.visit(_update_nodes)
-    return clone
+    unmatched_contents = set(self.contents) - matched_contents
+    if unmatched_contents:
+      logger.warning(
+        'Page(title=%r).contents has unmatched elements: %s. Did you spell it correctly? Does '
+          'a processor filter out this object?',
+        self.title,
+        ', '.join(unmatched_contents),
+      )
+
+    return modules
 
   def render(
       self,
       filename: str,
-      graph: ModuleGraph,
+      modules: List[docspec.ApiObject],
       renderer: Renderer
       ) -> None:
     """
-    Renders the page by either copying the *source* to the specified
-    *filename* or by rendering the *contents* from the *graph* using the
-    specified *renderer*.
+    Renders the page by either copying the *source* to the specified *filename* or by
+    rendering the *contents* from the *modules* using the specified *renderer*.
 
     Note that the *renderer* should be pre-configured to output to *filename*.
     """
@@ -149,7 +158,7 @@ class Page(Struct):
       shutil.copyfile(self.source, filename)
     else:
       logger.info('Rendering "%s"', filename)
-      renderer.render(self.filtered_graph(graph))
+      renderer.render(self.filtered_modules(modules))
 
 
 class Pages(Collection, list):

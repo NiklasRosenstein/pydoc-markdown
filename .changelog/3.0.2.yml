@@ -1,0 +1,6 @@
+- types:
+  - fix
+  issues: []
+  components:
+  - mkdocs
+  description: fix `NameError` in `MkdocsRenderer`

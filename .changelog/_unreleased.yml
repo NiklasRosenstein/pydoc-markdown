@@ -1,0 +1,58 @@
+- types:
+  - feature
+  issues: []
+  components:
+  - cli
+  description: add `--dump` and `--with-processors/--without-processors` options
+- types:
+  - docs
+  issues: []
+  components:
+  - general
+  description: add docstrings to classes defined in `pydoc_markdown.contrib.processors`
+- types:
+  - change
+  issues: []
+  components:
+  - general
+  description: use `docspec` module instead of `pydoc_markdown.reflection` to represent
+    API objects
+- types:
+  - change
+  issues: []
+  components:
+  - python
+  description: use `docspec-python` to load Python API objects
+- types:
+  - change
+  issues: []
+  components:
+  - crossref
+  description: warnings produced about references that cannot be resolved are now
+    summarized in a single log-line
+- types:
+  - change
+  issues: []
+  components:
+  - general
+  description: With the removal of `pydoc_markdown.reflection`, the `ModuleGraph`
+    class has also been removed and replaced by List[docspec.Module]`
+- types:
+  - change
+  issues: []
+  components:
+  - filter
+  description: Rename FilterProcessor.include_root_objects to .do_not_filter_modules
+- types:
+  - change
+  issues: []
+  components:
+  - general
+  description: change type signatures and some method names of interfaces in `pydoc_markdown.interfaces`
+- types:
+  - change
+  issues: []
+  components:
+  - utils
+  description: The `Page.filtered_modules()` method now warns if an element in `Page.contents`
+    did not match an API object
