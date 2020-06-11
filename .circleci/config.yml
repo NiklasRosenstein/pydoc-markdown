@@ -69,12 +69,9 @@ jobs:
           fingerprints:
             - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
       - checkout
-      - run:
-          name: Install Pydoc-Markdown
-          command: pip install -q .
-      - run:
-          name: Run Pydoc-Markdown
-          command: pydoc-markdown
+      - run: pip install -q . nr.shore==0.0.39
+      - run: shore changelog --all --markdown >CHANGELOG.md
+      - run: pydoc-markdown
       #- run: |
       #    if [[ "$CIRCLE_TAG" != "" ]]; then
       #      mkdocs gh-deploy -f docs/build/mkdocs.yml
@@ -82,7 +79,7 @@ jobs:
       - run:
           name: Download Hugo
           command: |
-            curl https://github.com/gohugoio/hugo/releases/download/v0.70.0/hugo_extended_0.70.0_Linux-64bit.tar.gz -L > hugo.tar.gz
+            curl https://github.com/gohugoio/hugo/releases/download/v0.72.0/hugo_extended_0.72.0_Linux-64bit.tar.gz -L > hugo.tar.gz
             tar -xvf hugo.tar.gz
             chmod +x hugo
       - run:
