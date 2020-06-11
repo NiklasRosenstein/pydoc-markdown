@@ -19,12 +19,11 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-""" Provides the #CrossrefProcessor that replaces cross references in
-docstrings with actual hyperlinks. """
-
 from nr.databind.core import Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor
+from pydoc_markdown.interfaces import Processor, Resolver
+from typing import Dict, List, Optional
+import docspec
 import logging
 import re
 
@@ -33,13 +32,52 @@ logger = logging.getLogger(__name__)
 
 @implements(Processor)
 class CrossrefProcessor(Struct):
+  """
+  Finds references to other objects in Markdown docstrings and produces links to other
+  pages. The links are provided by the current #Renderer via the #Resolver interface.
+
+  The syntax for cross references is as followed:
+
+  ```
+  This is a ref to another class: #PydocmdProcessor
+  You can rename a ref like #this~PydocmdProcessor
+  And you can append to the ref name like this: #PydocmdProcessor#s
+  ```
+
+  Renders as:
+
+  This is a ref to another class: #PydocmdProcessor
+  You can rename a ref like #this~PydocmdProcessor
+  And you can append to the ref name like this: #PydocmdProcessor#s
+  """
 
   @override
-  def process(self, graph, resolver):
-    graph.visit(lambda x: self._preprocess_refs(x, resolver))
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]):
+    unresolved = {}
+    if resolver:
+      reverse = docspec.ReverseMap(modules)
+      docspec.visit(modules, lambda x: self._preprocess_refs(x, resolver, reverse, unresolved))
 
-  def _preprocess_refs(self, node, resolver):
-    if not resolver or not node.docstring:
+    if unresolved:
+      summary = []
+      for uid, refs in unresolved.items():
+        summary.append('  {}: {}'.format(uid, ', '.join(refs)))
+
+      logger.warning(
+        '%s cross-reference(s) could not be resolved:\n%s',
+        sum(map(len, unresolved.values())),
+        '\n'.join(summary),
+      )
+
+
+  def _preprocess_refs(
+    self,
+    node: docspec.ApiObject,
+    resolver: Resolver,
+    reverse: docspec.ReverseMap,
+    unresolved: Dict[str, List[str]],
+  ) -> None:
+    if not node.docstring:
       return
 
     def handler(match):
@@ -59,8 +97,8 @@ class CrossrefProcessor(Struct):
       if href:
         result = '[`{}`]({})'.format(ref + parens + trailing, href)
       else:
-        logger.warning('ref "%s" could not be resolved in %s "%s" (%s)',
-          ref, type(node).__name__, node.path(), node.location)
+        uid = '.'.join(x.name for x in reverse.path(node))
+        unresolved.setdefault(uid, []).append(ref)
         result = '`{}`'.format(ref + parens)
       # Add back the dot.
       if has_trailing_dot:

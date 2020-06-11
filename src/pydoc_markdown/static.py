@@ -29,7 +29,7 @@ processors:
   - type: smart
   - type: crossref
 renderer:
-  - type: markdown
+  type: markdown
 '''.lstrip()
 
 
@@ -49,7 +49,7 @@ renderer:
       source: README.md
     - title: API Documentation
       contents:
-        - *
+        - '*'
   mkdocs_config:
     theme: readthedocs
 '''.lstrip()

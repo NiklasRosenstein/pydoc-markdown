@@ -44,7 +44,7 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install -q nr.shore==0.0.32
+      - run: pip install -q nr.shore==0.0.39
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
@@ -55,7 +55,7 @@ jobs:
       - image: python:3.6
     steps:
       - checkout
-      - run: pip install -q nr.shore==0.0.32
+      - run: pip install -q nr.shore==0.0.39
       - run: shore --version
       - run: shore verify --tag "$CIRCLE_TAG"
       - run: shore publish pypi -l
@@ -98,7 +98,8 @@ workflows:
   version: 2
   test:
     jobs:
-      - docs
+      - docs:
+          filters: { tags: { only: /.*/ } }
       - test-3.6:
           filters: { tags: { only: /.*/ } }
       - test-3.7:

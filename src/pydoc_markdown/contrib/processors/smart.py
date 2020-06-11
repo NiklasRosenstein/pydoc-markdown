@@ -20,31 +20,35 @@
 # IN THE SOFTWARE.
 
 from nr.databind.core import Field, Struct
-from nr.interface import implements
-from pydoc_markdown.interfaces import Processor
+from nr.interface import implements, override
+from pydoc_markdown.interfaces import Processor, Resolver
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
 from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
+from typing import List, Optional
+import docspec
 
 
 @implements(Processor)
 class SmartProcessor(Struct):
+  """
+  This processor picks the #GoogleProcessor, #SphinxProcessor or #PydocmdProcessor after
+  guessing which is appropriate from the syntax it finds in the docstring.
+  """
+
   google = Field(GoogleProcessor, default=GoogleProcessor)
   pydocmd = Field(PydocmdProcessor, default=PydocmdProcessor)
   sphinx = Field(SphinxProcessor, default=SphinxProcessor)
 
-  def process(self, graph, _resolver):
-    """
-    Preprocessors a given section into it's components.
-    """
+  @override
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+    docspec.visit(modules, self._process)
 
-    graph.visit(self.process_node)
-
-  def process_node(self, node):
-    if not node.docstring:
+  def _process(self, obj: docspec.ApiObject):
+    if not obj.docstring:
       return None
-    if self.sphinx.check_docstring_format(node.docstring):
-      return self.sphinx.process_node(node)
-    if self.google.check_docstring_format(node.docstring):
-      return self.google.process_node(node)
-    return self.pydocmd.process_node(node)
+    if self.sphinx.check_docstring_format(obj.docstring):
+      return self.sphinx._process(obj)
+    if self.google.check_docstring_format(obj.docstring):
+      return self.google._process(obj)
+    return self.pydocmd._process(obj)

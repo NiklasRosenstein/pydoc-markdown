@@ -19,28 +19,50 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""
-Provides the #PydocmdProcessor class which converts the Pydoc-Markdown
-highlighting syntax into Markdown.
-"""
-
-import re
-
 from nr.databind.core import Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor
+from pydoc_markdown.interfaces import Processor, Resolver
+from typing import List, Optional
+import docspec
+import re
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other
 #     objects so that they can be properly handled by the renderer.
 
 @implements(Processor)
 class PydocmdProcessor(Struct):
+  """
+  The Pydoc-Markdown processor for Markdown docstrings. This processor parses docstrings
+  formatted like the examples below and turns them into proper Markdown markup.
+
+  Examples:
+
+  ```
+  Arguments:
+    arg1 (int): The first argument.
+    kwargs (dict): Keyword arguments.
+  Raises:
+    RuntimeError: If something bad happens.
+    ValueError: If an invalid argument is specified.
+  Returns: A value.
+  ```
+
+  Renders as:
+
+  Arguments:
+    arg1 (int): The first argument.
+    kwargs (dict): Keyword arguments.
+  Raises:
+    RuntimeError: If something bad happens.
+    ValueError: If an invalid argument is specified.
+  Returns: A value.
+  """
 
   @override
-  def process(self, graph, resolver):
-    graph.visit(self.process_node)
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+    docspec.visit(modules, self._process)
 
-  def process_node(self, node):
+  def _process(self, node: docspec.ApiObject):
     if not getattr(node, 'docstring', None):
       return
     lines = []

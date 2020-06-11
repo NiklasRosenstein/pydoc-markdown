@@ -1,32 +1,33 @@
 
+from docspec_python import parse_python_module, ParserOptions
 from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from test.pydoc_markdown.utils import assert_text_equals
+import io
 import textwrap
 
 
-def assert_code_as_markdown(source_code, markdown, full=False):
+def assert_code_as_markdown(source_code, markdown, full=False, parser_options=None):
   config = PydocMarkdown()
 
   # Init the settings in which we want to run the tests.
   config.renderer.insert_header_anchors = False
   config.renderer.add_member_class_prefix = False
   config.renderer.render_toc = False
+  config.renderer.render_module_header = full
   filter_processor = next(x for x in config.processors if isinstance(x, FilterProcessor))
   filter_processor.documented_only = False
 
   # Load the source code as a module.
-  module = config.loaders[0].load_source(
-    textwrap.dedent(source_code), '_inline', '<string>')
+  modules = [parse_python_module(
+    io.StringIO(textwrap.dedent(source_code)),
+    filename='<string>',
+    module_name='_inline',
+    options=parser_options,
+  )]
 
-  if full:
-    config.graph.add_module(module)
-  else:
-    for member in module.members.values():
-      config.graph.add_module(member)
-
-  config.process()
-  result = config.renderer.render_to_string(config.graph)
+  config.process(modules)
+  result = config.renderer.render_to_string(modules)
   assert_text_equals(result, textwrap.dedent(markdown))
 
 
@@ -83,7 +84,7 @@ def test_starred_arguments():
   #### b
 
   ```python
-  b(abc, *)
+  b(abc)
   ```
 
   Docstring goes here.
@@ -132,7 +133,8 @@ def test_class():
   This is not a member docstring.
 
   #### member
-  ''')
+  ''',
+  parser_options=ParserOptions(treat_singleline_comment_blocks_as_docstrings=True))
 
   assert_code_as_markdown(
   '''
@@ -208,7 +210,8 @@ def test_module_docstring():
 
   This is the module docstring.
   ''',
-  full=True)
+  full=True,
+  parser_options=ParserOptions(treat_singleline_comment_blocks_as_docstrings=True))
 
 
   assert_code_as_markdown(

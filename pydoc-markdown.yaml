@@ -32,9 +32,6 @@ renderer:
     - title: Interfaces
       contents:
       - pydoc_markdown.interfaces.*
-    - title: Reflection
-      contents:
-      - pydoc_markdown.reflection.*
     - title: Loaders
       contents:
       - pydoc_markdown.contrib.loaders.python.PythonLoader

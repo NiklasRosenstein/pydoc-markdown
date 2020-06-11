@@ -19,27 +19,23 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""
-Provides a processor that implements various filter capabilities.
-"""
-
 from nr.databind.core import Field, Struct
-from nr.interface import implements
+from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor
-from pydoc_markdown.reflection import ModuleGraph
+import docspec
 
 
 @implements(Processor)
 class FilterProcessor(Struct):
   """
-  The `filter` processor removes module and class members based on certain
-  criteria.
+  The `filter` processor removes module and class members based on certain criteria.
 
   # Example
 
   ```py
   - type: filter
     expression: not name.startswith('_') and default()
+    documented_only: false
   ```
   """
 
@@ -47,31 +43,29 @@ class FilterProcessor(Struct):
   documented_only = Field(bool, default=True)
   exclude_private = Field(bool, default=True)
   exclude_special = Field(bool, default=True)
-  include_root_objects = Field(bool, default=True)
+  do_not_filter_modules = Field(bool, default=True)
 
   SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')
 
-  def process(self, graph, _resolver):
-    graph.visit(self._process_member)
+  @override
+  def process(self, modules, _resolver):
+    def m(obj):
+      return self._match(obj)
+    docspec.filter_visit(modules, m, order='post')
 
-  def _process_member(self, node):
-    def _check(node):
-      if self.documented_only and not node.docstring:
-        return False
-      if self.exclude_private and node.name.startswith('_') and not node.name.endswith('_'):
-        return False
-      if self.exclude_special and node.name in self.SPECIAL_MEMBERS:
-        return False
+  def _match(self, obj: docspec.ApiObject) -> bool:
+    if getattr(obj, 'members', []):
       return True
-
+    if self.do_not_filter_modules and isinstance(obj, docspec.Module):
+      return True
+    if self.documented_only and not obj.docstring:
+      return False
+    if self.exclude_private and obj.name.startswith('_') and not obj.name.endswith('_'):
+      return False
+    if self.exclude_special and obj.name in self.SPECIAL_MEMBERS:
+      return False
     if self.expression:
-      scope = {'name': node.name, 'node': node, 'default': _check}
+      scope = {'name': obj.name, 'obj': obj, 'default': _check}
       if not eval(self.expression, scope):  # pylint: disable=eval-used
-        node.visible = False
-
-    if self.include_root_objects and (
-        not node.parent or isinstance(node.parent, ModuleGraph)):
-      return
-
-    if not _check(node):
-      node.visible = False
+        return False
+    return True

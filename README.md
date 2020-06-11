@@ -5,7 +5,9 @@
 
 Pydoc-Markdown is a tool and library to create Python API documentation in
 Markdown format based on `lib2to3`, allowing it to parse your Python code
-without executing it like traditional tools like Sphinx.
+without executing it.
+
+[>> Go to the Documentation](https://niklasrosenstein.github.io/pydoc-markdown/)
 
 __Features__
 

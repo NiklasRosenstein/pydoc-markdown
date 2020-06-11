@@ -1,7 +1,7 @@
 # https://git.niklasrosenstein.com/NiklasRosenstein/shore
 
 name: "pydoc-markdown"
-version: "3.0.2"
+version: "3.1.0"
 description: "Create Python API documentation in Markdown format."
 author: "Niklas Rosenstein <rosensteinniklas@gmail.com>"
 license: "MIT"
@@ -32,7 +32,10 @@ classifiers:
 requirements:
   - python ^3.6
   - click ^7.0
+  - docspec ~0.1.0
+  - docspec-python ~0.0.4
   - nr.collections ~0.0.1
+  - nr.interface ~0.0.3
   - nr.databind.core ~0.0.10
   - nr.databind.json ~0.0.9
   - six ^1.11.0

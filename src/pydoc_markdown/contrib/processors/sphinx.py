@@ -26,7 +26,9 @@ markdown compatible syntax.
 
 from nr.databind.core import Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor
+from pydoc_markdown.interfaces import Processor, Resolver
+from typing import List, Optional
+import docspec
 import re
 
 
@@ -41,16 +43,20 @@ def generate_sections_markdown(lines, sections):
 
 @implements(Processor)
 class SphinxProcessor(Struct):
+  """
+  This processor parses ReST/Sphinx-style function documentation and converts it into
+  Markdown syntax.
+  """
 
   def check_docstring_format(self, docstring: str) -> bool:
     return ':param' in docstring or ':return' in docstring or \
       ':raise' in docstring
 
   @override
-  def process(self, graph, _resolver):
-    graph.visit(self.process_node)
+  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+    docspec.visit(modules, self._process)
 
-  def process_node(self, node):
+  def _process(self, node):
     if not node.docstring:
       return
 

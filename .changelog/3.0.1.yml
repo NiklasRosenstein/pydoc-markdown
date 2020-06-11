@@ -1,0 +1,54 @@
+- types:
+  - feature
+  issues: []
+  components:
+  - cli
+  description: added `--version` option
+- types:
+  - feature
+  issues: []
+  components:
+  - cli
+  description: added `-p,--package` option (which overrides `PythonLoader.packages`)
+- types:
+  - feature
+  issues: []
+  components:
+  - utils
+  description: added `pydoc_markdown.utils.page` module
+- types:
+  - feature
+  issues: []
+  components:
+  - cli
+  description: added `RenderSession` class to `pydoc_markdown.main` module which makes
+    the cli logic easier to maintain and re-use.
+- types:
+  - feature
+  issues: []
+  components:
+  - markdown
+  description: added hidden `MarkdownRenderer.fp` option
+- types:
+  - feature
+  issues: []
+  components:
+  - python
+  description: added `PythonLoader.packages` option
+- types:
+  - change
+  issues: []
+  components:
+  - python
+  description: changed behavior of `PythonLoader.modules` option (it will not only
+    load the module that was explicitly specified and exclude any sub-modules, if
+    applicable).
+- types:
+  - enhancement
+  issues: []
+  components:
+  - cli
+  description: dynamically lookup `MarkdownRenderer` configuration from the renderer
+    to support renderers other than `MarkdownRenderer` and `MkdocsRenderer` that supply
+    a `markdown` field that is an instance of `MarkdownRenderer` (so they can be used
+    with `--render-toc` as well).

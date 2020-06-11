@@ -27,6 +27,7 @@ With no arguments it will load the default configuration file. If the
 or a YAML formatted object for the configuration.
 """
 
+from docspec import dump_module
 from nr.databind.core import StructType
 from pydoc_markdown import __version__, PydocMarkdown, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
@@ -127,11 +128,11 @@ class RenderSession:
     Kicks off the rendering process and returns a list of files to watch.
     """
 
-    config.load_modules()
-    config.process()
-    config.render()
+    modules = config.load_modules()
+    config.process(modules)
+    config.render(modules)
 
-    watch_files = set(m.location.filename for m in config.graph.modules)
+    watch_files = set(m.location.filename for m in modules)
     if isinstance(self.config, str):
       watch_files.add(self.config)
 
@@ -217,6 +218,10 @@ def error(*args):
        'for the configured renderer. This doesn\'t work for all renderers.')
 @click.option('--open', '-o', 'open_browser', is_flag=True,
   help='Open the browser after starting the server with -s,--server.')
+@click.option('--dump', is_flag=True,
+  help='Dump the loaded modules in Docspec JSON format to stdout, after the processors.')
+@click.option('--with-processors/--without-processors', default=None,
+  help='Enable/disable processors. Only with --dump.')
 def cli(
     config,
     bootstrap,
@@ -229,7 +234,15 @@ def cli(
     render_toc,
     py2,
     server,
-    open_browser):
+    open_browser,
+    dump,
+    with_processors):
+  """
+  Command-line entrypoint for Pydoc-Markdown.
+  """
+
+  if with_processors is not None and not dump:
+    error('--with-processors/--without-processors can only be used with --dump')
 
   if bootstrap and bootstrap_mkdocs:
     error('--bootstrap and --bootstrap-mkdocs are incompatible options')
@@ -282,6 +295,15 @@ def cli(
     py2=py2)
 
   pydocmd = session.load()
+
+  if dump:
+    modules = pydocmd.load_modules()
+    if with_processors is None or with_processors is True:
+      pydocmd.process(modules)
+    for module in modules:
+      dump_module(module, sys.stdout)
+    sys.exit(0)
+
   if server:
     session.run_server(pydocmd, open_browser)
   else:

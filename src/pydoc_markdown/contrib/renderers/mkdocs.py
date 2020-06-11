@@ -26,10 +26,10 @@ from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
-from pydoc_markdown.reflection import Object, ModuleGraph
-from pydoc_markdown.util.pages import Page
+from pydoc_markdown.util.pages import Page, Pages
 from typing import Dict, Iterable, List, Optional, Tuple
 import copy
+import docspec
 import fnmatch
 import logging
 import os
@@ -96,7 +96,7 @@ class MkdocsRenderer(Struct):
   # Renderer
 
   @override
-  def render(self, graph: ModuleGraph) -> None:
+  def render(self, modules: List[docspec.Module]) -> None:
     if self.clean_render and os.path.isdir(self.content_dir):
       logger.info('Cleaning directory "%s"', self.content_dir)
       shutil.rmtree(self.content_dir)
@@ -110,7 +110,7 @@ class MkdocsRenderer(Struct):
 
       page_to_filename[id(item.page)] = filename
       self.markdown.filename = filename
-      item.page.render(filename, graph, self.markdown)
+      item.page.render(filename, modules, self.markdown)
 
     config = copy.deepcopy(self.mkdocs_config)
     if self.site_name:
@@ -127,10 +127,10 @@ class MkdocsRenderer(Struct):
         yaml.dump(config, fp)
 
   @override
-  def get_resolver(self, graph: ModuleGraph) -> Optional[Resolver]:
+  def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
     # TODO (@NiklasRosenstein): The resolver returned by the Markdown
     #   renderer does not implement linking across multiple pages.
-    return self.markdown.get_resolver(graph)
+    return self.markdown.get_resolver(modules)
 
   # Server
 

@@ -28,43 +28,54 @@ with a focus on Python source code and the Markdown output format.
 from nr.databind.core import Collect, Field, ObjectMapper, Struct, UnionType
 from nr.databind.json import JsonModule
 from nr.stream import concat
-from pydoc_markdown.interfaces import Loader, Processor, Renderer
-from pydoc_markdown.reflection import ModuleGraph
+from pydoc_markdown.interfaces import Loader, Processor, Renderer, Resolver
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from typing import Union
+from typing import List, Union
+import docspec
 import logging
 import yaml
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
-__version__ = '3.0.2'
+__version__ = '3.1.0'
 
 mapper = ObjectMapper(JsonModule())
 logger = logging.getLogger(__name__)
 
 
 class PydocMarkdown(Struct):
+  """
+  This object represents the main configuration for Pydoc-Markdown.
+  """
+
+  #: A list of loader implementations that load #docspec.Module#s.
+  #: Defaults to #PythonLoader.
   loaders = Field([Loader], default=lambda: [PythonLoader()])
+
+  #: A list of processor implementations that modify #docspec.Module#s. Defaults
+  #: to #FilterProcessor, #SmartProcessor and #CrossrefProcessor.
   processors = Field([Processor], default=lambda: [
     FilterProcessor(), SmartProcessor(), CrossrefProcessor()])
-  renderer = Field(Renderer, default=MarkdownRenderer)
-  unknown_fields = Field([str], default=[], hidden=True)
 
-  def __init__(self, *args, **kwargs):
+  #: A renderer for #docspec.Module#s. Defaults to #MarkdownRenderer.
+  renderer = Field(Renderer, default=MarkdownRenderer)
+
+  # Hidden fields are filled at a later point in time and are not (de-) serialized.
+  unknown_fields = Field([str], default=list, hidden=True)
+  resolver = Field(Resolver, default=None, hidden=True)
+
+  def __init__(self, *args, **kwargs) -> None:
     super(PydocMarkdown, self).__init__(*args, **kwargs)
-    self.graph = ModuleGraph()
     self.resolver = None
 
-  def load_config(self, data: Union[str, dict]):
+  def load_config(self, data: Union[str, dict]) -> None:
     """
     Loads a YAML configuration from *data*.
 
-    Args:
-      data (str, dict): If a string is specified, it is treated as the path
-        to a YAML file.
+    :param data: Nested structurre or the path to a YAML configuration file.
     """
 
     filename = None
@@ -81,18 +92,33 @@ class PydocMarkdown(Struct):
     self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
       for n in collector.nodes))
 
-  def load_modules(self):
+  def load_modules(self) -> List[docspec.Module]:
+    """
+    Loads modules via the #loaders.
+    """
+
+    logger.info('Loading modules.')
+    modules = []
     for loader in self.loaders:
-      loader.load(self.graph)
+      modules.extend(loader.load())
+    return modules
 
-  def process(self):
+  def process(self, modules: List[docspec.Module]) -> None:
+    """
+    Process modules via the #processors.
+    """
+
     if self.resolver is None:
-      self.resolver = self.renderer.get_resolver(self.graph)
+      self.resolver = self.renderer.get_resolver(modules)
     for processor in self.processors:
-      processor.process(self.graph, self.resolver)
+      processor.process(modules, self.resolver)
 
-  def render(self):
+  def render(self, modules: List[docspec.Module]) -> None:
+    """
+    Render modules via the #renderer.
+    """
+
     if self.resolver is None:
-      self.resolver = self.renderer.get_resolver(self.graph)
-    self.renderer.process(self.graph, self.resolver)
-    self.renderer.render(self.graph)
+      self.resolver = self.renderer.get_resolver(modules)
+    self.renderer.process(modules, self.resolver)
+    self.renderer.render(modules)
