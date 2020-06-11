@@ -13,3 +13,4 @@ Pipfile.lock
 .idea
 .pytest_cache/
 .vscode
+CHANGELOG.md
