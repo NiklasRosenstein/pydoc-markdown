@@ -138,7 +138,7 @@ class Page(Struct):
 
     docspec.filter_visit(modules, _match, order='post')
 
-    unmatched_contents = set(self.contents) - matched_contents
+    unmatched_contents = set(self.contents or ()) - matched_contents
     if unmatched_contents:
       logger.warning(
         'Page(title=%r).contents has unmatched elements: %s. Did you spell it correctly? Does '
