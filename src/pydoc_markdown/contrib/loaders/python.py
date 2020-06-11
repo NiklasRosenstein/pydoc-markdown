@@ -26,6 +26,7 @@ Loads Python source code.
 import docspec
 import docspec_python
 import logging
+import sys
 
 from nr.databind.core import Field, Struct
 from nr.interface import implements, override
