@@ -38,6 +38,7 @@ requirements:
   - nr.interface ~0.0.3
   - nr.databind.core ~0.0.10
   - nr.databind.json ~0.0.9
+  - nr.fs ^1.6.0
   - six ^1.11.0
   - PyYAML ^5.3
   - six ^1.11.0
