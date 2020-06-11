@@ -220,6 +220,8 @@ def error(*args):
   help='Open the browser after starting the server with -s,--server.')
 @click.option('--dump', is_flag=True,
   help='Dump the loaded modules in Docspec JSON format to stdout, after the processors.')
+@click.option('--with-processors/--without-processors', default=None,
+  help='Enable/disable processors. Only with --dump.')
 def cli(
     config,
     bootstrap,
@@ -233,7 +235,14 @@ def cli(
     py2,
     server,
     open_browser,
-    dump):
+    dump,
+    with_processors):
+  """
+  Command-line entrypoint for Pydoc-Markdown.
+  """
+
+  if with_processors is not None and not dump:
+    error('--with-processors/--without-processors can only be used with --dump')
 
   if bootstrap and bootstrap_mkdocs:
     error('--bootstrap and --bootstrap-mkdocs are incompatible options')
@@ -289,7 +298,8 @@ def cli(
 
   if dump:
     modules = pydocmd.load_modules()
-    pydocmd.process(modules)
+    if with_processors is None or with_processors is True:
+      pydocmd.process(modules)
     for module in modules:
       dump_module(module, sys.stdout)
     sys.exit(0)
