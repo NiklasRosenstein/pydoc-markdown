@@ -19,9 +19,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-""" Provides the #CrossrefProcessor that replaces cross references in
-docstrings with actual hyperlinks. """
-
 from nr.databind.core import Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor, Resolver
@@ -35,13 +32,32 @@ logger = logging.getLogger(__name__)
 
 @implements(Processor)
 class CrossrefProcessor(Struct):
+  """
+  Finds references to other objects in Markdown docstrings and produces links to other
+  pages. The links are provided by the current #Renderer via the #Resolver interface.
+
+  The syntax for cross references is as followed:
+
+  ```
+  This is a ref to another class: #PydocmdProcessor
+  You can rename a ref like #this~PydocmdProcessor
+  And you can append to the ref name like this: #PydocmdProcessor#s
+  ```
+
+  Renders as:
+
+  This is a ref to another class: #PydocmdProcessor
+  You can rename a ref like #this~PydocmdProcessor
+  And you can append to the ref name like this: #PydocmdProcessor#s
+  """
 
   @override
   def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]):
     if resolver:
-      docspec.visit(modules, lambda x: self._preprocess_refs(x, resolver))
+      reverse = docspec.ReverseMap(modules)
+      docspec.visit(modules, lambda x: self._preprocess_refs(x, resolver, reverse))
 
-  def _preprocess_refs(self, node: docspec.ApiObject, resolver: Resolver):
+  def _preprocess_refs(self, node: docspec.ApiObject, resolver: Resolver, reverse: docspec.ReverseMap):
     if not node.docstring:
       return
 
@@ -62,8 +78,13 @@ class CrossrefProcessor(Struct):
       if href:
         result = '[`{}`]({})'.format(ref + parens + trailing, href)
       else:
-        logger.warning('ref "%s" could not be resolved in %s "%s" (%s)',
-          ref, type(node).__name__, node.path(), node.location)
+        logger.warning(
+          'ref "%s" could not be resolved in %s "%s" (%s)',
+          ref,
+          type(node).__name__,
+          '.'.join(x.name for x in reverse.path(node)),
+          node.location,
+        )
         result = '`{}`'.format(ref + parens)
       # Add back the dot.
       if has_trailing_dot:

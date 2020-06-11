@@ -19,11 +19,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""
-Provides the #PydocmdProcessor class which converts the Pydoc-Markdown
-highlighting syntax into Markdown.
-"""
-
 from nr.databind.core import Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor, Resolver
@@ -36,6 +31,32 @@ import re
 
 @implements(Processor)
 class PydocmdProcessor(Struct):
+  """
+  The Pydoc-Markdown processor for Markdown docstrings. This processor parses docstrings
+  formatted like the examples below and turns them into proper Markdown markup.
+
+  Examples:
+
+  ```
+  Arguments:
+    arg1 (int): The first argument.
+    kwargs (dict): Keyword arguments.
+  Raises:
+    RuntimeError: If something bad happens.
+    ValueError: If an invalid argument is specified.
+  Returns: A value.
+  ```
+
+  Renders as:
+
+  Arguments:
+    arg1 (int): The first argument.
+    kwargs (dict): Keyword arguments.
+  Raises:
+    RuntimeError: If something bad happens.
+    ValueError: If an invalid argument is specified.
+  Returns: A value.
+  """
 
   @override
   def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:

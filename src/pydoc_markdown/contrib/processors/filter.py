@@ -35,6 +35,7 @@ class FilterProcessor(Struct):
   ```py
   - type: filter
     expression: not name.startswith('_') and default()
+    documented_only: false
   ```
   """
 

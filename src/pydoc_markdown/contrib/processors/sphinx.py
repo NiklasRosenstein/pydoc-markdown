@@ -43,6 +43,10 @@ def generate_sections_markdown(lines, sections):
 
 @implements(Processor)
 class SphinxProcessor(Struct):
+  """
+  This processor parses ReST/Sphinx-style function documentation and converts it into
+  Markdown syntax.
+  """
 
   def check_docstring_format(self, docstring: str) -> bool:
     return ':param' in docstring or ':return' in docstring or \
