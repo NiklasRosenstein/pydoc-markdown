@@ -23,10 +23,10 @@ from nr.databind.core import Field, ProxyType, Remainder, Struct
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
-from pydoc_markdown.reflection import ModuleGraph
 from pydoc_markdown.util.pages import Page
 from urllib.parse import urlparse, urljoin
-from typing import Optional, TextIO
+from typing import List, Optional, TextIO
+import docspec
 import logging
 import os
 import posixpath
@@ -132,7 +132,7 @@ class HugoRenderer(Struct):
   #: Hugo config.toml as YAML.
   config = Field(HugoConfig)
 
-  def _render_page(self, graph: ModuleGraph, page: HugoPage, filename: str):
+  def _render_page(self, modules: List[docspec.Module], page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     preamble = dict(**self.default_preamble, **{'title': page.title}, **page.preamble)
 
@@ -146,13 +146,13 @@ class HugoRenderer(Struct):
           shutil.copyfileobj(src, fp)
       else:
         self.markdown.fp = fp
-        self.markdown.render(graph)
+        self.markdown.render(modules)
         self.markdown.fp = None
 
   # Renderer
 
   @override
-  def render(self, graph: ModuleGraph) -> None:
+  def render(self, modules: List[docspec.Module]) -> None:
     content_dir = os.path.join(self.build_directory, self.content_directory)
 
     if self.clean_render and os.path.isdir(content_dir):
@@ -167,7 +167,7 @@ class HugoRenderer(Struct):
       if item.page.directory:
         page_content_dir = os.path.normpath(os.path.join(content_dir, item.page.directory))
       filename = item.filename(page_content_dir, '.md', index_name='_index')
-      self._render_page(item.page.filtered_graph(graph), item.page, filename)
+      self._render_page(item.page.filtered_modules(modules), item.page, filename)
 
     # Render the config file.
     if isinstance(self.config.theme, (HugoThemePath, HugoThemeGitUrl)):
@@ -176,10 +176,10 @@ class HugoRenderer(Struct):
       self.config.to_toml(fp)
 
   @override
-  def get_resolver(self, graph: ModuleGraph) -> Optional[Resolver]:
+  def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
     # TODO (@NiklasRosenstein): The resolver returned by the Markdown
     #   renderer does not implement linking across multiple pages.
-    return self.markdown.get_resolver(graph)
+    return self.markdown.get_resolver(modules)
 
   # Server
 
