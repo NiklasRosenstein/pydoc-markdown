@@ -25,13 +25,18 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
 from pydoc_markdown.util.pages import Page
 from urllib.parse import urlparse, urljoin
-from typing import List, Optional, TextIO
+from typing import Dict, Iterable, List, Optional, TextIO
 import docspec
 import logging
+import nr.fs
 import os
+import platform as _platform
 import posixpath
+import requests
 import shutil
 import subprocess
+import sys
+import tarfile
 import toml
 import yaml
 
@@ -106,31 +111,47 @@ class HugoConfig(Struct):
 
 @implements(Renderer, Server)
 class HugoRenderer(Struct):
-  #: The directory where all generated files are placed.
-  #:
-  #: Default: `build/docs`
+  #: The directory where all generated files are placed. Default: `build/docs`
   build_directory = Field(str, default='build/docs')
 
   #: The directory _inside_ the build directory where the generated
-  #: pages are written to.
-  #
-  #: Default: `content`
+  #: pages are written to. Default: `content`
   content_directory = Field(str, default='content')
 
-  #: Clean up generated directories before rendering. Defaults to True.
+  #: (Boolean) Clean up generated directories before rendering. Default: `True`
   clean_render = Field(bool, default=True)
 
   #: The pages to render.
   pages = Field(HugoPage.collection_type())
 
-  #: Default preamble applied to every page.
+  #: The default Hugo preamble that is applied to every page. Example:
+  #:
+  #: ```yml
+  #: default_preamble:
+  #:   menu: main
+  #: ```
   default_preamble = Field(dict, default=dict)
 
-  #: Markdown render configuration.
+  #: The #MarkdownRenderer configuration.
   markdown = Field(MarkdownRenderer, default=Field.DEFAULT_CONSTRUCT)
 
-  #: Hugo config.toml as YAML.
+  #: The Hugo `config.toml` file as YAML.
   config = Field(HugoConfig)
+
+  #: Options for when the Hugo binary is not present and should be downloaded
+  #: automatically. Example:
+  #:
+  #: ```yml
+  #: get_hugo:
+  #:   enabled: true
+  #:   version: '0.71'
+  #:   extended: true
+  #: ```
+  get_hugo = Field({
+    'enabled': Field(bool, default=True),
+    'version': Field(str, default=None),
+    'extended': Field(bool, default=True),
+  }, default=Field.DEFAULT_CONSTRUCT)
 
   def _render_page(self, modules: List[docspec.Module], page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -166,7 +187,7 @@ class HugoRenderer(Struct):
       page_content_dir = content_dir
       if item.page.directory:
         page_content_dir = os.path.normpath(os.path.join(content_dir, item.page.directory))
-      filename = item.filename(page_content_dir, '.md', index_name='_index')
+      filename = item.filename(page_content_dir, '.md', index_name='_index', skip_empty_pages=False)
       self._render_page(item.page.filtered_modules(modules), item.page, filename)
 
     # Render the config file.
@@ -190,4 +211,119 @@ class HugoRenderer(Struct):
 
   @override
   def start_server(self) -> subprocess.Popen:
-    return subprocess.Popen(['hugo', 'server'], cwd=self.build_directory)
+    hugo_bin = shutil.which('hugo')
+    if not hugo_bin and self.get_hugo.enabled:
+      hugo_bin = os.path.abspath(os.path.join(self.build_directory, '.bin', 'hugo'))
+      if not os.path.isfile(hugo_bin):
+        install_hugo(hugo_bin, self.get_hugo.version, self.get_hugo.extended)
+    if not hugo_bin:
+      raise RuntimeError('Hugo is not installed')
+
+    command = [hugo_bin, 'server']
+    logger.info('Running %s in "%s"', command, self.build_directory)
+    return subprocess.Popen(command, cwd=self.build_directory)
+
+
+def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
+  """
+  Downloads the latest release of *Hugo* from [Github](https://github.com/gohugoio/hugo/releases)
+  and places it at the path specified by *to*. This will install the extended version if it is
+  available and *extended* is set to `True`.
+
+  :param to: The file to write the Hugo binary to.
+  :param version: The Hugo version to get. If not specified, the latest release will be used.
+  :param extended: Whether to download the "Hugo extended" version. Defaults to True.
+  """
+
+  # TODO (@NiklasRosenstein): Support BSD platforms.
+
+  if sys.platform.startswith('linux'):
+    platform = 'Linux'
+  elif sys.pltform.startswith('win32'):
+    platform = 'Windows'
+  elif sys.platform.startswith('darwin'):
+    platform = 'macOS'
+  else:
+    raise EnvironmentError('unsure how to get a Hugo binary for platform {!r}'.format(sys.platform))
+
+  machine = _platform.machine().lower()
+  if machine in ('x86_64', 'amd64'):
+    arch = '64bit'
+  elif machine in ('i386',):
+    arch = '32bit'
+  else:
+    raise EnvironmentError('unsure whether to intepret {!r} as 32- or 64-bit.'.format(machine))
+
+  releases = get_github_releases('gohugoio/hugo')
+  if version:
+    version = version.lstrip('v')
+    for release in releases:
+      if release['tag_name'].lstrip('v') == version:
+        break
+    else:
+      raise ValueError('no Hugo release for version {!r} found'.format(version))
+  else:
+    release = next(releases)
+    version = release['tag_name'].lstrip('v')
+
+  files = {asset['name']: asset['browser_download_url'] for asset in release['assets']}
+
+  hugo_archive = 'hugo_{}_{}-{}.tar.gz'.format(version, platform, arch)
+  hugo_extended_archive = 'hugo_extended_{}_{}-{}.tar.gz'.format(version, platform, arch)
+  if extended and hugo_extended_archive in files:
+    filename = hugo_extended_archive
+  else:
+    filename = hugo_archive
+
+  logger.info('Downloading Hugo v%s from "%s"', version, files[filename])
+  os.makedirs(os.path.dirname(to), exist_ok=True)
+  with nr.fs.tempdir() as tempdir:
+    path = os.path.join(tempdir.name, filename)
+    with open(path, 'wb') as fp:
+      shutil.copyfileobj(requests.get(files[filename], stream=True).raw, fp)
+    with tarfile.open(path) as archive:
+      with open(to, 'wb') as fp:
+        shutil.copyfileobj(archive.extractfile('hugo'), fp)
+
+  nr.fs.chmod(to, '+x')
+  logger.info('Hugo v%s installed to "%s"', version, to)
+
+
+def get_github_releases(repo: str) -> Iterable[dict]:
+  """
+  Returns an iterator for all releases of a Github repository.
+  """
+
+  url = 'https://api.github.com/repos/{}/releases'.format(repo)
+  while url:
+    response = requests.get(url)
+    links = parse_links_header(response.headers.get('Link'))
+    url = links.get('next')
+    yield from response.json()
+
+
+def parse_links_header(link_header: str) -> Dict[str, str]:
+  """
+  Parses the `Link` HTTP header and returns a map of the links. Logic from
+  [PageLinks.java](https://github.com/eclipse/egit-github/blob/master/org.eclipse.egit.github.core/src/org/eclipse/egit/github/core/client/PageLinks.java#L43-75).
+  """
+
+  links = {}
+
+  for link in link_header.split(','):
+    segments = link.split(';')
+    if len(segments) < 2:
+      continue
+    link_part = segments[0].strip()
+    if not link_part.startswith('<') or not link_part.endswith('>'):
+      continue
+    link_part = link_part[1:-1]
+    for rel in (x.strip().split('=') for x in segments[1:]):
+      if len(rel) < 2 or rel[0] != 'rel':
+        continue
+      rel_value = rel[1]
+      if rel_value.startswith('"') and rel_value.endswith('"'):
+        rel_value = rel_value[1:-1]
+      links[rel_value] = link_part
+
+  return links
