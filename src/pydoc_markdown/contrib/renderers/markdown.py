@@ -179,7 +179,12 @@ class MarkdownRenderer(Struct):
   def _render_header(self, fp, level, obj):
     object_id = self._generate_object_id(obj)
     if self.use_fixed_header_levels:
-      level = self.header_level_by_type.get(type(obj).__name__, level)
+      # Read the header level based on the API object type. The default levels defined
+      # in the field will act as a first fallback, the level of the object inside it's
+      # hierarchy is the final fallback.
+      type_name = 'Method' if self._is_method(obj) else type(obj).__name__
+      level = self.header_level_by_type.get(type_name,
+        type(self).header_level_by_type.default.get(type_name, level))
     if self.insert_header_anchors and not self.html_headers:
       fp.write('<a name="{}"></a>\n'.format(object_id))
     if self.html_headers:

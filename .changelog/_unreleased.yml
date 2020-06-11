@@ -56,3 +56,11 @@
   - utils
   description: The `Page.filtered_modules()` method now warns if an element in `Page.contents`
     did not match an API object
+- types:
+  - fix
+  issues:
+  - '121'
+  components:
+  - markdown
+  description: the Markdown header level for methods is now correctly read from the
+    "Method" key in `MarkdownRenderer.header_level_by_type`
