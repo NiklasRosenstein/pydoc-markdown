@@ -113,16 +113,30 @@ class Page(Struct):
 
     modules = copy.deepcopy(modules)
     reverse_map = docspec.ReverseMap(modules)
+    matched_contents = set()
 
     def _match(obj: docspec.ApiObject) -> bool:
       if getattr(obj, 'members', []):
         return True
       if self.contents:
         path = '.'.join(x.name for x in reverse_map.path(obj))
-        return any(fnmatch.fnmatch(path, x) for x in self.contents or ())
+        for x in self.contents:
+          if fnmatch.fnmatch(path, x):
+            matched_contents.add(x)
+            return True
       return False
 
     docspec.filter_visit(modules, _match, order='post')
+
+    unmatched_contents = set(self.contents) - matched_contents
+    if unmatched_contents:
+      logger.warning(
+        'Page(title=%r).contents has unmatched elements: %s. Did you spell it correctly? Does '
+          'a processor filter out this object?',
+        self.title,
+        ', '.join(unmatched_contents),
+      )
+
     return modules
 
   def render(
