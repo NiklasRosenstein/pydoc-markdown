@@ -112,6 +112,40 @@ class HugoConfig(Struct):
 
 @implements(Renderer, Server)
 class HugoRenderer(Struct):
+  """
+  A renderer that produces Markdown files compatible with [Hugo][0].
+
+  * Adds a YAML preamble to every generated Markdown file.
+  * Produces files in a layout suitable for Hugo (e.g. `_index.md` files).
+  * Produces a `config.yaml` if #config is not set to `null`.
+  * Can be used with the Pydoc-Markdown `--server` option to live-preview the generated docs.
+  * Downloads a suitable Hugo binary from Github if Hugo is not already installed (see #get_hugo).
+
+  Example configuration:
+
+  ```yml
+  renderer:
+    type: hugo
+    config:
+      title: My Project
+      theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+    # The "book" theme only renders pages in "content/docs" into the nav.
+    content_directory: content/docs
+    default_preamble: {menu: main}
+    pages:
+      - title: Home
+        name: index
+        source: README.md
+      - title: API Documentation
+        contents:
+          - '*'
+  ```
+
+  [0]: https://gohugo.io/
+
+  ### Options
+  """
+
   #: The directory where all generated files are placed. Default: `build/docs`
   build_directory = Field(str, default='build/docs')
 
