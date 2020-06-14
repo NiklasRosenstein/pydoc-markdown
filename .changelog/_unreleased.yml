@@ -78,3 +78,12 @@
   - cli
   description: the `--bootstrap` option now requires an argument, which must be either
     "base", "mkdocs" or "hugo" (new)
+- types:
+  - feature
+  issues: []
+  components:
+  - mkdocs
+  description: The `MkdocsRenderer.clean_render` option is enabled again by default,
+    but instead of removing the whole `content_directory`, it will instead only remove
+    files that it has previously generated (it will place a `.generated-files.txt`
+    file in the `output_directory` for that).
