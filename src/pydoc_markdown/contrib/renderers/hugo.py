@@ -185,7 +185,6 @@ class HugoRenderer(Struct):
         try:
           os.remove(file_.name)
         except FileNotFoundError as exc:
-          logger.warning(exc)
           pass
 
     # Render the pages.
