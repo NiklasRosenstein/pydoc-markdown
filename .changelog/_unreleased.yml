@@ -87,3 +87,10 @@
     but instead of removing the whole `content_directory`, it will instead only remove
     files that it has previously generated (it will place a `.generated-files.txt`
     file in the `output_directory` for that).
+- types:
+  - feature
+  issues: []
+  components:
+  - cli
+  description: add `MarkdownRenderer.classdef_with_decorators` and `MarkdownRenderer.signature_with_decorators`
+    options

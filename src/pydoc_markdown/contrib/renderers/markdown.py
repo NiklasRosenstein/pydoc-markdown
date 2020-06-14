@@ -27,7 +27,7 @@ from docspec_python import format_arglist
 from nr.databind.core import Field, Struct
 from nr.interface import implements
 from pydoc_markdown.interfaces import Renderer, Resolver
-from typing import List, Optional, TextIO
+from typing import Iterable, List, Optional, TextIO
 import docspec
 import io
 import sys
@@ -100,6 +100,9 @@ class MarkdownRenderer(Struct):
   #: if its `__init__()` member is not visible.
   classdef_render_init_signature_if_needed = Field(bool, default=True)
 
+  #: Render decorators before class definitions.
+  classdef_with_decorators = Field(bool, default=True)
+
   #: Render classdef and function signature blocks in the Python help()
   #: style.
   signature_python_help_style = Field(bool, default=False)
@@ -120,6 +123,9 @@ class MarkdownRenderer(Struct):
   #: that this results in invalid Python syntax to be rendered. This is
   #: disabled by default.
   signature_class_prefix = Field(bool, default=False)
+
+  #: Render decorators before function definitions.
+  signature_with_decorators = Field(bool, default=True)
 
   #: Add the string "python" after the backticks for code blocks. This is
   #: enabled by default.
@@ -194,10 +200,14 @@ class MarkdownRenderer(Struct):
     fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
+  def _format_decorations(self, decorations: List[docspec.Decoration]) -> Iterable[str]:
+    for dec in decorations:
+      yield '@{}{}\n'.format(dec.name, dec.args or '')
+
   def _format_function_signature(self, func: docspec.Function, override_name: str = None, add_method_bar: bool = True) -> str:
     parts = []
-    for dec in func.decorations:
-      parts.append('@{}{}\n'.format(dec.name, dec.args or ''))
+    if self.signature_with_decorators:
+      parts += self._format_decorations(func.decorations)
     if self.signature_python_help_style and not self._is_method(func):
       parts.append('{} = '.format(func.path()))
     parts += [x + ' ' for x in func.modifiers or []]
@@ -224,6 +234,8 @@ class MarkdownRenderer(Struct):
     if self.classdef_render_init_signature_if_needed and '__init__' in cls.members:
       code += ':\n |  ' + self._format_function_signature(
         cls.members['__init__'], override_name=cls.name, add_method_bar=False)
+    if cls.decorations and self.classdef_with_decorators:
+      code = '\n'.join(self._format_decorations(cls.decorations)) + code
     return code
 
   def _format_data_signature(self, data: docspec.Data) -> str:
