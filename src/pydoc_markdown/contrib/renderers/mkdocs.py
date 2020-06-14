@@ -26,8 +26,8 @@ from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
+from pydoc_markdown.util.pages import Page
 from pydoc_markdown.util.knownfiles import KnownFiles
-from pydoc_markdown.util.pages import Page, Pages
 from typing import Dict, Iterable, List, Optional, Tuple
 import copy
 import docspec
@@ -62,7 +62,7 @@ class MkdocsRenderer(Struct):
   clean_render = Field(bool, default=True)
 
   #: The pages to render into the output directory.
-  pages = Field(Pages)
+  pages = Field(Page.collection_type())
 
   #: Markdown renderer settings.
   markdown = Field(CustomizedMarkdownRenderer, default=CustomizedMarkdownRenderer)
@@ -109,9 +109,9 @@ class MkdocsRenderer(Struct):
 
     with known_files:
       for item in self.pages.iter_hierarchy():
-        filename = item.filename(self.content_dir, '.md')
-        if not filename:
+        if not item.page.has_content():
           continue
+        filename = item.filename(self.docs_dir, '.md')
 
         page_to_filename[id(item.page)] = filename
         self.markdown.filename = filename

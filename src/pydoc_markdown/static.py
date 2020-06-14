@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-#: The default configuration that is rendered when using --bootstrap.
+#: The default configuration that is rendered when using --bootstrap base.
 DEFAULT_CONFIG = '''
 loaders:
   - type: python
@@ -33,7 +33,7 @@ renderer:
 '''.lstrip()
 
 
-#: The default configuration that is rendered when uing --bootstrap-mkdocs.
+#: The default configuration that is rendered when uing --bootstrap mkdocs.
 DEFAULT_MKDOCS_CONFIG = '''
 loaders:
   - type: python
@@ -51,5 +51,33 @@ renderer:
       contents:
         - '*'
   mkdocs_config:
-    theme: readthedocs
+    mkdocs_config:
+      site_name: My Project
+      theme: readthedocs
 '''.lstrip()
+
+
+#: The default configuration that is rendered when using --bootstrap hugo.
+DEFAULT_HUGO_CONFIG = '''
+loaders:
+  - type: python
+processors:
+  - type: filter
+  - type: smart
+  - type: crossref
+renderer:
+  type: hugo
+  config:
+    title: My Project
+    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+  # The "book" theme only renders pages in "content/docs" into the nav.
+  content_directory: content/docs
+  default_preamble: {menu: main}
+  pages:
+    - title: Home
+      name: index
+      source: README.md
+    - title: API Documentation
+      contents:
+        - '*'
+'''

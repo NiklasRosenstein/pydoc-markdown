@@ -39,8 +39,10 @@ requirements:
   - nr.databind.core ~0.0.10
   - nr.databind.json ~0.0.9
   - nr.fs ^1.6.0
-  - six ^1.11.0
+  - requests ^2.23.0
   - PyYAML ^5.3
+  - six ^1.11.0
+  - toml ^0.10.1
   - watchdog ^0.10.2
 
 entrypoints:
@@ -56,6 +58,7 @@ entrypoints:
     - smart = pydoc_markdown.contrib.processors.smart:SmartProcessor
     - sphinx = pydoc_markdown.contrib.processors.sphinx:SphinxProcessor
   pydoc_markdown.interfaces.Renderer:
+    - hugo = pydoc_markdown.contrib.renderers.hugo:HugoRenderer
     - markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer
     - mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer
 

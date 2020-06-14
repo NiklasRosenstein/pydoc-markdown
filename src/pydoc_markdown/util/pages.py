@@ -62,6 +62,13 @@ class IterHierarchyItem(Struct):
     return filename
 
 
+class PageCollectionMixin(list):
+
+  def iter_hierarchy(self) -> Iterable[IterHierarchyItem]:
+    for page in self:
+      yield from page.iter_hierarchy()
+
+
 @Page.implementation  # pylint: disable=function-redefined
 class Page(Struct):
   """
@@ -98,6 +105,9 @@ class Page(Struct):
     if not self.name:
       self.name = re.sub(r'\s+', '-', self.title.lower())
 
+  def has_content(self) -> bool:
+    return bool(self.source or self.contents)
+
   def iter_hierarchy(self, parent_chain: List['Page'] = None) -> Iterable[IterHierarchyItem]:
     if parent_chain is None:
       parent_chain = []
@@ -128,7 +138,7 @@ class Page(Struct):
 
     docspec.filter_visit(modules, _match, order='post')
 
-    unmatched_contents = set(self.contents) - matched_contents
+    unmatched_contents = set(self.contents or ()) - matched_contents
     if unmatched_contents:
       logger.warning(
         'Page(title=%r).contents has unmatched elements: %s. Did you spell it correctly? Does '
@@ -160,10 +170,9 @@ class Page(Struct):
       logger.info('Rendering "%s"', filename)
       renderer.render(self.filtered_modules(modules))
 
-
-class Pages(Collection, list):
-  item_type = Page
-
-  def iter_hierarchy(self) -> Iterable[IterHierarchyItem]:
-    for page in self:
-      yield from page.iter_hierarchy()
+  @classmethod
+  def collection_type(cls) -> PageCollectionMixin:
+    return type(
+      '{}Collection'.format(cls.__name__),
+      (Collection, PageCollectionMixin),
+      {'item_type': cls})

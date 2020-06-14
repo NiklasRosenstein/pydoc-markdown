@@ -1,14 +1,29 @@
 renderer:
-  type: mkdocs
+  type: hugo
+  config:
+    #baseURL: "https://niklasrosenstein.github.io/pydoc-markdown/"
+    title: "Pydoc-Markdown"
+    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+    relativeURLs: true  # For serving on CircleCI
+    uglyURLs: true  # For serving on CircleCI
+  build_directory: docs/build
+  content_directory: content/docs  # Book theme will render the pages in content/docs in the nav.
+  default_preamble:
+    menu: main
   pages:
   - title: Home
     name: index
     source: README.md
+    directory: '..'  # Put it directly into the content directory.
   - title: Changelog
     name: changelog
     source: CHANGELOG.md
+    preamble:
+      weight: 10
   - title: Getting Started
     source: docs/getting-started.md
+    preamble:
+      weight: 10
   - title: API Documentation
     children:
     - title: CLI
@@ -30,13 +45,12 @@ renderer:
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor
     - title: Renderers
       children:
+      - title: HugoRenderer
+        contents:
+        - pydoc_markdown.contrib.renderers.hugo.HugoRenderer*
       - title: MarkdownRenderer
         contents:
         - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*
       - title: MkdocsRenderer
         contents:
         - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
-  output_directory: docs/build
-  mkdocs_config:
-    site_name: Pydoc-Markdown
-    theme: material

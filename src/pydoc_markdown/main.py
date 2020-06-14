@@ -189,11 +189,8 @@ def error(*args):
 @click.command(help=__doc__)
 @click.argument('config', required=False)
 @click.version_option(__version__)
-@click.option('--bootstrap', is_flag=True,
-  help='Render the default configuration file into the current working directory and quit.')
-@click.option('--bootstrap-mkdocs', is_flag=True,
-  help='Render a template configuration file for generating MkDpcs files into the current '
-       'working directory and quit.')
+@click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo']),
+  help='Create a Pydoc-Markdown configuration file in the current working directory.')
 @click.option('--verbose', '-v', is_flag=True, help='Increase log verbosity.')
 @click.option('--quiet', '-q', is_flag=True, help='Decrease the log verbosity.')
 @click.option('--module', '-m', 'modules', metavar='MODULE', multiple=True,
@@ -225,7 +222,6 @@ def error(*args):
 def cli(
     config,
     bootstrap,
-    bootstrap_mkdocs,
     verbose,
     quiet,
     modules,
@@ -244,21 +240,21 @@ def cli(
   if with_processors is not None and not dump:
     error('--with-processors/--without-processors can only be used with --dump')
 
-  if bootstrap and bootstrap_mkdocs:
-    error('--bootstrap and --bootstrap-mkdocs are incompatible options')
-  if bootstrap or bootstrap_mkdocs:
+  if bootstrap:
     if config or modules or packages or search_path or render_toc \
-        or py2 or server or open_browser:
+        or py2 or server or open_browser or dump or with_processors is not None:
       error('--bootstrap must be used as a sole argument')
     existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
     if existing_file:
       error('file already exists: {!r}'.format(existing_file))
     filename = config_filenames[0]
+    source = {
+      'base': static.DEFAULT_CONFIG,
+      'mkdocs': static.DEFAULT_MKDOCS_CONFIG,
+      'hugo': static.DEFAULT_HUGO_CONFIG,
+    }
     with open(filename, 'w') as fp:
-      if bootstrap_mkdocs:
-        fp.write(static.DEFAULT_MKDOCS_CONFIG)
-      else:
-        fp.write(static.DEFAULT_CONFIG)
+      fp.write(source[bootstrap])
     print('created', filename)
     return
 
