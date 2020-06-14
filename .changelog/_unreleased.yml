@@ -94,3 +94,10 @@
   - cli
   description: add `MarkdownRenderer.classdef_with_decorators` and `MarkdownRenderer.signature_with_decorators`
     options
+- types:
+  - feature
+  issues:
+  - '106'
+  components:
+  - general
+  description: Add new `HugoRenderer` (YAML type name `hugo`).
