@@ -26,6 +26,7 @@ from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Renderer, Resolver, Server
+from pydoc_markdown.util.knownfiles import KnownFiles
 from pydoc_markdown.util.pages import Page, Pages
 from typing import Dict, Iterable, List, Optional, Tuple
 import copy
@@ -53,13 +54,12 @@ class MkdocsRenderer(Struct):
   #: `build/docs`.
   output_directory = Field(str, default='build/docs')
 
-  #: Name of the content directory. Defaults to "content".
+  #: Name of the content directory (inside the #output_directory). Defaults to "content".
   content_directory_name = Field(str, default='content')
 
-  #: Delete the content directory in the #output_directory before rendering.
-  #: Note that this does not play well with pre-existing content, as it will
-  #: be deleted as well. Defaults to False.
-  clean_render = Field(bool, default=False)
+  #: Remove files generated in a previous pass by the Mkdocs renderer before rendering
+  #: again. Defaults to `True`.
+  clean_render = Field(bool, default=True)
 
   #: The pages to render into the output directory.
   pages = Field(Pages)
@@ -97,34 +97,40 @@ class MkdocsRenderer(Struct):
 
   @override
   def render(self, modules: List[docspec.Module]) -> None:
-    if self.clean_render and os.path.isdir(self.content_dir):
-      logger.info('Cleaning directory "%s"', self.content_dir)
-      shutil.rmtree(self.content_dir)
+    known_files = KnownFiles(self.output_directory)
+    if self.clean_render:
+      for file_ in known_files.load():
+        try:
+          os.remove(file_.name)
+        except FileNotFoundError:
+          pass
 
     page_to_filename = {}
 
-    for item in self.pages.iter_hierarchy():
-      filename = item.filename(self.content_dir, '.md')
-      if not filename:
-        continue
+    with known_files:
+      for item in self.pages.iter_hierarchy():
+        filename = item.filename(self.content_dir, '.md')
+        if not filename:
+          continue
 
-      page_to_filename[id(item.page)] = filename
-      self.markdown.filename = filename
-      item.page.render(filename, modules, self.markdown)
+        page_to_filename[id(item.page)] = filename
+        self.markdown.filename = filename
+        item.page.render(filename, modules, self.markdown)
+        known_files.append(filename)
 
-    config = copy.deepcopy(self.mkdocs_config)
-    if self.site_name:
-      config['site_name'] = self.site_name
-    if not config.get('site_name'):
-      config['site_name'] = 'My Project'
-    config['docs_dir'] = self.content_directory_name
-    config['nav'] = self.generate_mkdocs_nav(page_to_filename)
+      config = copy.deepcopy(self.mkdocs_config)
+      if self.site_name:
+        config['site_name'] = self.site_name
+      if not config.get('site_name'):
+        config['site_name'] = 'My Project'
+      config['docs_dir'] = self.content_directory_name
+      config['nav'] = self.generate_mkdocs_nav(page_to_filename)
 
-    if self.mkdocs_config is not None:
-      filename = os.path.join(self.output_directory, 'mkdocs.yml')
-      logger.info('Rendering "%s"', filename)
-      with open(filename, 'w') as fp:
-        yaml.dump(config, fp)
+      if self.mkdocs_config is not None:
+        filename = os.path.join(self.output_directory, 'mkdocs.yml')
+        logger.info('Rendering "%s"', filename)
+        with known_files.open(filename, 'w') as fp:
+          yaml.dump(config, fp)
 
   @override
   def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
