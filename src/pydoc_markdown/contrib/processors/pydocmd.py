@@ -38,24 +38,34 @@ class PydocmdProcessor(Struct):
   Examples:
 
   ```
-  Arguments:
-    arg1 (int): The first argument.
-    kwargs (dict): Keyword arguments.
-  Raises:
-    RuntimeError: If something bad happens.
-    ValueError: If an invalid argument is specified.
-  Returns: A value.
+  # Arguments
+
+  arg1 (int): The first argument.
+  kwargs (dict): Keyword arguments.
+
+  # Raises:
+  RuntimeError: If something bad happens.
+  ValueError: If an invalid argument is specified.
+
+  # Returns
+  A value.
   ```
 
   Renders as:
 
-  Arguments:
-    arg1 (int): The first argument.
-    kwargs (dict): Keyword arguments.
-  Raises:
-    RuntimeError: If something bad happens.
-    ValueError: If an invalid argument is specified.
-  Returns: A value.
+  # Arguments
+
+  arg1 (int): The first argument.
+  kwargs (dict): Keyword arguments.
+
+  # Raises:
+  RuntimeError: If something bad happens.
+  ValueError: If an invalid argument is specified.
+
+  # Returns
+  A value.
+
+  @doc:fmt:pydocmd
   """
 
   @override

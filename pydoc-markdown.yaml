@@ -38,11 +38,17 @@ renderer:
     - title: Processors
       contents:
       - pydoc_markdown.contrib.processors.crossref.CrossrefProcessor
+      - pydoc_markdown.contrib.processors.crossref.CrossrefProcessor.*
       - pydoc_markdown.contrib.processors.filter.FilterProcessor
+      - pydoc_markdown.contrib.processors.filter.FilterProcessor.*
       - pydoc_markdown.contrib.processors.google.GoogleProcessor
+      - pydoc_markdown.contrib.processors.google.GoogleProcessor.*
       - pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor
+      - pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor.*
       - pydoc_markdown.contrib.processors.smart.SmartProcessor
+      - pydoc_markdown.contrib.processors.smart.SmartProcessor.*
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor
+      - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.*
     - title: Renderers
       children:
       - title: HugoRenderer

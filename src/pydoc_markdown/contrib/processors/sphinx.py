@@ -19,11 +19,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""
-Provides the #SphinxProcessor that converts reST/Sphinx syntax to
-markdown compatible syntax.
-"""
-
 from nr.databind.core import Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor, Resolver
@@ -46,6 +41,22 @@ class SphinxProcessor(Struct):
   """
   This processor parses ReST/Sphinx-style function documentation and converts it into
   Markdown syntax.
+
+  Example:
+
+  ```
+  :param arg1: This is the first argument.
+  :raise ValueError: If *arg1* is a bad value.
+  :return: An `int` that represents an interesting value.
+  ```
+
+  Renders as:
+
+  :param arg1: This is the first argument.
+  :raise ValueError: If *arg1* is a bad value.
+  :return: An `int` that represents an interesting value.
+
+  @doc:fmt:sphinx
   """
 
   def check_docstring_format(self, docstring: str) -> bool:

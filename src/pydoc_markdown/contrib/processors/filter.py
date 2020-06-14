@@ -30,19 +30,34 @@ class FilterProcessor(Struct):
   """
   The `filter` processor removes module and class members based on certain criteria.
 
-  # Example
+  Example configuration:
 
   ```py
   - type: filter
     expression: not name.startswith('_') and default()
     documented_only: false
   ```
+
+  ### Options
   """
 
+  #: A Python expression that is evaluated given the variables `name`, `obj` and `default`
+  #: and is expected to return a boolean to indicate whether the #docspec.ApiObject should
+  #: be kept or removed. Default: `null`
   expression = Field(str, default=None)
+
+  #: Keep only API objects that have docstrings. Default: `true`
   documented_only = Field(bool, default=True)
+
+  #: Exclude API objects that appear to be private members (i.e. their name begins with
+  #: and underscore but does not end with one). Default: `true`
   exclude_private = Field(bool, default=True)
+
+  #: Exclude special members (e.g.` __path__`, `__annotations__`, `__name__` and `__all__`).
+  #: Default: `true`
   exclude_special = Field(bool, default=True)
+
+  #: Do not filter #docspec.Module objects. Default: `true`
   do_not_filter_modules = Field(bool, default=True)
 
   SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')

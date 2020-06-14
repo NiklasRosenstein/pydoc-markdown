@@ -36,7 +36,10 @@ class CrossrefProcessor(Struct):
   Finds references to other objects in Markdown docstrings and produces links to other
   pages. The links are provided by the current #Renderer via the #Resolver interface.
 
-  The syntax for cross references is as followed:
+  > __Note__: This processor is a work in progress, and most of the time it just converts
+  > references into inline-code.
+
+  The syntax for cross references is as follows:
 
   ```
   This is a ref to another class: #PydocmdProcessor
@@ -44,11 +47,18 @@ class CrossrefProcessor(Struct):
   And you can append to the ref name like this: #PydocmdProcessor#s
   ```
 
-  Renders as:
+  Renders as
 
-  This is a ref to another class: #PydocmdProcessor
-  You can rename a ref like #this~PydocmdProcessor
-  And you can append to the ref name like this: #PydocmdProcessor#s
+  > This is a ref to another class: #PydocmdProcessor
+  > You can rename a ref like #this~PydocmdProcessor
+  > And you can append to the ref name like this: #PydocmdProcessor#s
+
+  Example configuration:
+
+  ```yml
+  processors:
+    - type: crossref
+  ```
   """
 
   @override
@@ -68,7 +78,6 @@ class CrossrefProcessor(Struct):
         sum(map(len, unresolved.values())),
         '\n'.join(summary),
       )
-
 
   def _preprocess_refs(
     self,

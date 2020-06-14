@@ -31,10 +31,47 @@ import re
 @implements(Processor)
 class GoogleProcessor(Struct):
   """
-  This class implements the preprocessor for Google and PEP 257 docstrings.
+  This class implements the preprocessor for Google and PEP 257 docstrings. It converts
+  docstrings formatted in the Google docstyle to Markdown syntax.
 
-  https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
-  https://www.python.org/dev/peps/pep-0257/
+  References:
+
+  * https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
+  * https://www.python.org/dev/peps/pep-0257/
+
+  Example:
+
+  ```
+  Attributes:
+      module_level_variable1 (int): Module level variables may be documented in
+          either the ``Attributes`` section of the module docstring, or in an
+          inline docstring immediately following the variable.
+
+          Either form is acceptable, but the two should not be mixed. Choose
+          one convention to document module level variables and be consistent
+          with it.
+
+  Todo:
+      * For module TODOs
+      * You have to also use ``sphinx.ext.todo`` extension
+  ```
+
+  Renders as:
+
+  Attributes:
+      module_level_variable1 (int): Module level variables may be documented in
+          either the ``Attributes`` section of the module docstring, or in an
+          inline docstring immediately following the variable.
+
+          Either form is acceptable, but the two should not be mixed. Choose
+          one convention to document module level variables and be consistent
+          with it.
+
+  Todo:
+      * For module TODOs
+      * You have to also use ``sphinx.ext.todo`` extension
+
+  @doc:fmt:google
   """
 
   _param_res = [
@@ -51,7 +88,7 @@ class GoogleProcessor(Struct):
     'Args:': 'Arguments',
     'Arguments:': 'Arguments',
     'Attributes:': 'Attributes',
-    'Example:': 'Examples',
+    'Example:': 'Example',
     'Examples:': 'Examples',
     'Keyword Args:': 'Arguments',
     'Keyword Arguments:': 'Arguments',
