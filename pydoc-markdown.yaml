@@ -47,7 +47,12 @@ renderer:
       children:
       - title: HugoRenderer
         contents:
-        - pydoc_markdown.contrib.renderers.hugo.HugoRenderer*
+        - pydoc_markdown.contrib.renderers.hugo.HugoPage
+        - pydoc_markdown.contrib.renderers.hugo.HugoPage.*
+        - pydoc_markdown.contrib.renderers.hugo.HugoConfig
+        - pydoc_markdown.contrib.renderers.hugo.HugoConfig.*
+        - pydoc_markdown.contrib.renderers.hugo.HugoRenderer
+        - pydoc_markdown.contrib.renderers.hugo.HugoRenderer.*
       - title: MarkdownRenderer
         contents:
         - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*

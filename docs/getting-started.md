@@ -9,7 +9,7 @@ installed.
     $ pipx install 'pydoc-markdown>=3.0.0,<4.0.0'
     $ pydoc-markdown --version
 
-## Simple Usage
+## CLI Usage
 
 The Pydoc-Markdown CLI provides a few options that make it easy to generate
 Markdown from a Python module or package.

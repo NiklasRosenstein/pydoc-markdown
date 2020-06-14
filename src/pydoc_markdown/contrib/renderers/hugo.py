@@ -47,11 +47,19 @@ HugoPage = ProxyType()
 
 @HugoPage.implementation
 class HugoPage(Page):
-  preamble = Field(dict, default=dict)
+  """
+  A subclass of #Page which adds Hugo-specific overrides.
+
+  ### Options
+  """
+
   children = Field([HugoPage], default=list)
 
+  #: The Hugo preamble of the page. This is merged with the #HugoRenderer.default_preamble.
+  preamble = Field(dict, default=dict)
+
   #: Override the directory that this page is rendered into (relative to the
-  #: content directory).
+  #: content directory). Defaults to `null`.
   directory = Field(str, default=None)
 
 
@@ -88,11 +96,35 @@ class HugoThemeGitUrl(Struct):
 
 
 class HugoConfig(Struct):
+  """
+  Represents the Hugo configuration file that is rendered into the build directory.
+
+  ### Options
+  """
+
+  #: Base URL.
   baseURL = Field(str, default=None)
+
+  #: Language code. Default: `en-us`
   languageCode = Field(str, default='en-us')
+
+  #: Title of the site. This is a mandatory field.
   title = Field(str)
+
+  #: The theme of the site. This is a mandatory field. It must be a string, a #HugoThemePath
+  #: or a #HugoThemeGitUrl object. Examples:
+  #:
+  #: ```yml
+  #: theme: antarctica
+  #: theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+  #: theme: docs/hugo-theme/
+  #: ```
   theme = Field((str, HugoThemePath, HugoThemeGitUrl))
-  additional_options = Field(dict, Remainder())  #: Filled with the remaining options.
+
+  #: This field collects all remaining options that do not match any of the above
+  #: and will be forwarded directly into the Hugo `config.yaml` when it is rendered
+  #: into the build directory.
+  additional_options = Field(dict, Remainder())
 
   def to_toml(self, fp: TextIO) -> None:
     data = self.additional_options.copy()
@@ -172,7 +204,8 @@ class HugoRenderer(Struct):
   markdown = Field(MarkdownRenderer, default=Field.DEFAULT_CONSTRUCT)
 
   #: The contents of the Hugo `config.toml` file as YAML. This can be set to `null` in
-  #: order to not produce the `config.toml` file in the #build_directory.
+  #: order to not produce the `config.toml` file in the #build_directory. Must be deserializable
+  #: into a #HugoConfig.
   config = Field(HugoConfig, nullable=True)
 
   #: Options for when the Hugo binary is not present and should be downloaded
