@@ -145,7 +145,8 @@ class HugoConfig(Struct):
 @implements(Renderer, Server)
 class HugoRenderer(Struct):
   """
-  A renderer that produces Markdown files compatible with [Hugo][0].
+  A renderer that produces Markdown files compatible with [Hugo][0]. The `--bootstrap hugo`
+  option can be used to create a Pydoc-Markdown configuration file with the Hugo template.
 
   * Adds a YAML preamble to every generated Markdown file.
   * Produces files in a layout suitable for Hugo (e.g. `_index.md` files).

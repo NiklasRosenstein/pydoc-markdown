@@ -19,10 +19,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-"""
-Implements a renderer that produces Markdown output.
-"""
-
 from docspec_python import format_arglist
 from nr.databind.core import Field, Struct
 from nr.interface import implements
@@ -35,6 +31,14 @@ import sys
 
 @implements(Renderer)
 class MarkdownRenderer(Struct):
+  """
+  Produces Markdown files. This renderer is often used by other renderers, such as
+  #MkdocsRenderer and #HugoRenderer. It provides a wide variety of options to customize
+  the generated Markdown files.
+
+  ### Options
+  """
+
   #: Can be used to explicitly specify a file object to render to.
   fp = Field(object, default=None, hidden=True)
 

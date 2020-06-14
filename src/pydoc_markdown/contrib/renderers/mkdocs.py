@@ -19,9 +19,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-""" Implements the `mkdocs` renderer. It uses the `markdown` renderer to
-produce an MkDocs-compatible folder structure. """
-
 from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
@@ -50,6 +47,32 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
 
 @implements(Renderer, Server)
 class MkdocsRenderer(Struct):
+  """
+  Produces Markdown files in a layout compatible with [MkDocs][0] and can be used with the
+  Pydoc-Markdown `--server` option for a live-preview. The `--bootstrap mkdocs` option can
+  be used to create a Pydoc-Markdown configuration file with the MkDocs template.
+
+  Example configuration:
+
+  ```yml
+  renderer:
+    type: mkdocs
+    pages:
+      - title: Home
+        name: index
+        source: README.md
+      - title: API Documentation
+        contents:
+          - '*'
+    mkdocs_config:
+      mkdocs_config:
+        site_name: My Project
+        theme: readthedocs
+  ```
+
+  ### Options
+  """
+
   #: The output directory for the generated Markdown files. Defaults to
   #: `build/docs`.
   output_directory = Field(str, default='build/docs')
