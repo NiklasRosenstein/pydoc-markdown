@@ -76,7 +76,9 @@ class KnownFiles:
         for row in reader:
           if len(row) != 3:
             continue
-          yield FilenameAndHash(*row)
+          algorithm, hash_, filename= row
+          filename = os.path.join(self._directory, filename)
+          yield FilenameAndHash(algorithm, hash_, filename)
     except FileNotFoundError:
       return; yield
 
