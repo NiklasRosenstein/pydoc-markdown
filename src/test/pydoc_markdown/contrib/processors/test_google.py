@@ -35,7 +35,7 @@ def test_google_processor(processor=None):
   ```
   ''',
   '''
-  **Examples**:
+  **Example**:
 
 
   ```py
