@@ -47,6 +47,13 @@ class SmartProcessor(Struct):
   def _process(self, obj: docspec.ApiObject):
     if not obj.docstring:
       return None
+
+    for name in ('google', 'pydocmd', 'sphinx'):
+      indicator = '@doc:fmt:' + name
+      if indicator in obj.docstring:
+        obj.docstring = obj.docstring.replace(indicator, '')
+        return getattr(self, name)._process(obj)
+
     if self.sphinx.check_docstring_format(obj.docstring):
       return self.sphinx._process(obj)
     if self.google.check_docstring_format(obj.docstring):

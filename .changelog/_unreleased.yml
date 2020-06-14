@@ -101,3 +101,11 @@
   components:
   - general
   description: Add new `HugoRenderer` (YAML type name `hugo`).
+- types:
+  - feature
+  issues: []
+  components:
+  - smart-processor
+  description: now looks for a `@doc:fmt:<formatter_name>` string in the docstring,
+    which can be used to override the style that is used in case the automatically
+    detected style is incorrect
