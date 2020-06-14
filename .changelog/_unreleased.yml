@@ -64,3 +64,12 @@
   - markdown
   description: the Markdown header level for methods is now correctly read from the
     "Method" key in `MarkdownRenderer.header_level_by_type`
+- types:
+  - feature
+  issues: []
+  components:
+  - mkdocs
+  description: The `MkdocsRenderer.clean_render` option is enabled again by default,
+    but instead of removing the whole `content_directory`, it will instead only remove
+    files that it has previously generated (it will place a `.generated-files.txt`
+    file in the `output_directory` for that).
