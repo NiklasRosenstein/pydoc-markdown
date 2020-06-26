@@ -19,7 +19,7 @@ else:
   print("warning: file \"{}\" does not exist.".format(readme_file), file=sys.stderr)
   long_description = None
 
-requirements = ['click >=7.0,<8.0.0', 'nr.collections >=0.0.1,<0.1.0', 'nr.databind.core >=0.0.10,<0.1.0', 'nr.databind.json >=0.0.9,<0.1.0', 'six >=1.11.0,<2.0.0', 'PyYAML >=5.3,<6.0.0', 'watchdog >=0.10.2,<1.0.0']
+requirements = ['click >=7.0,<8.0.0', 'nr.collections >=0.0.1,<0.1.0', 'nr.databind.core >=0.0.18,<0.1.0', 'nr.databind.json >=0.0.9,<0.1.0', 'six >=1.11.0,<2.0.0', 'PyYAML >=5.3,<6.0.0', 'watchdog >=0.10.2,<1.0.0']
 
 setuptools.setup(
   name = 'pydoc-markdown',
