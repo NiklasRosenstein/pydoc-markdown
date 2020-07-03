@@ -5,6 +5,6 @@ python:
   version: 3.7
   install:
     - method: pip
-      path: .
+      path: pydoc-markdown
     - method: pip
       path: pydoc-markdown-readthedocs-mkdocs-proxy
