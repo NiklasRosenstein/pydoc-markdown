@@ -22,7 +22,7 @@
 from nr.databind.core import Field, ProxyType, Remainder, Struct
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Renderer, Resolver, Server
+from pydoc_markdown.interfaces import Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.knownfiles import KnownFiles
 from pydoc_markdown.util.pages import Page
 from urllib.parse import urlparse, urljoin
@@ -142,7 +142,7 @@ class HugoConfig(Struct):
     fp.write(toml.dumps(data))
 
 
-@implements(Renderer, Server)
+@implements(Renderer, Server, Builder)
 class HugoRenderer(Struct):
   """
   A renderer that produces Markdown files compatible with [Hugo][0]. The `--bootstrap hugo`
@@ -241,6 +241,16 @@ class HugoRenderer(Struct):
         self.markdown.render(modules)
         self.markdown.fp = None
 
+  def _get_hugo_bin(self):
+    hugo_bin = shutil.which('hugo')
+    if not hugo_bin and self.get_hugo.enabled:
+      hugo_bin = os.path.abspath(os.path.join(self.build_directory, '.bin', 'hugo'))
+      if not os.path.isfile(hugo_bin):
+        install_hugo(hugo_bin, self.get_hugo.version, self.get_hugo.extended)
+    if not hugo_bin:
+      raise RuntimeError('Hugo is not installed')
+    return hugo_bin
+
   # Renderer
 
   @override
@@ -291,17 +301,19 @@ class HugoRenderer(Struct):
 
   @override
   def start_server(self) -> subprocess.Popen:
-    hugo_bin = shutil.which('hugo')
-    if not hugo_bin and self.get_hugo.enabled:
-      hugo_bin = os.path.abspath(os.path.join(self.build_directory, '.bin', 'hugo'))
-      if not os.path.isfile(hugo_bin):
-        install_hugo(hugo_bin, self.get_hugo.version, self.get_hugo.extended)
-    if not hugo_bin:
-      raise RuntimeError('Hugo is not installed')
-
+    hugo_bin = self._get_hugo_bin()
     command = [hugo_bin, 'server']
     logger.info('Running %s in "%s"', command, self.build_directory)
     return subprocess.Popen(command, cwd=self.build_directory)
+
+  # Builder
+
+  @override
+  def build(self, site_dir: str=None) -> None:
+    command = [self._get_hugo_bin()]
+    if site_dir:
+      command += ['--destination', os.path.abspath(site_dir)]
+    subprocess.check_call(command, cwd=self.build_directory)
 
 
 def install_hugo(to: str, version: str = None, extended: bool = True) -> None:

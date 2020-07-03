@@ -138,6 +138,9 @@ class RenderSession:
 
     return list(watch_files)
 
+  def build(self, config: PydocMarkdown, site_dir: str) -> None:
+    config.build(site_dir)
+
   def run_server(self, config: PydocMarkdown, open_browser: bool = False):
     """
     Watches files for changes and (re-) starts a server process that
@@ -189,7 +192,7 @@ def error(*args):
 @click.command(help=__doc__)
 @click.argument('config', required=False)
 @click.version_option(__version__)
-@click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo']),
+@click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo', 'readthedocs']),
   help='Create a Pydoc-Markdown configuration file in the current working directory.')
 @click.option('--verbose', '-v', is_flag=True, help='Increase log verbosity.')
 @click.option('--quiet', '-q', is_flag=True, help='Decrease the log verbosity.')
@@ -219,6 +222,10 @@ def error(*args):
   help='Dump the loaded modules in Docspec JSON format to stdout, after the processors.')
 @click.option('--with-processors/--without-processors', default=None,
   help='Enable/disable processors. Only with --dump.')
+@click.option('--build', is_flag=True,
+  help='Invoke a build after the Markdown files are produced. Note that some renderers may '
+       'not support this option (e.g. the "markdown" renderer).')
+@click.option('--site-dir', help='Set the output directory when using --build.')
 def cli(
     config,
     bootstrap,
@@ -232,34 +239,52 @@ def cli(
     server,
     open_browser,
     dump,
-    with_processors):
+    with_processors,
+    build,
+    site_dir):
   """
   Command-line entrypoint for Pydoc-Markdown.
   """
 
   if with_processors is not None and not dump:
     error('--with-processors/--without-processors can only be used with --dump')
+  if open_browser and not server:
+    error('--open can only be used with --server')
+  if server and build:
+    error('--server and --build are incompatible options')
+  if site_dir and not build:
+    error('--site-dir can only be used with --build')
 
   if bootstrap:
     if config or modules or packages or search_path or render_toc \
-        or py2 or server or open_browser or dump or with_processors is not None:
+        or py2 or server or open_browser or dump or with_processors is not None \
+        or build or site_dir:
       error('--bootstrap must be used as a sole argument')
-    existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
-    if existing_file:
-      error('file already exists: {!r}'.format(existing_file))
-    filename = config_filenames[0]
-    source = {
-      'base': static.DEFAULT_CONFIG,
-      'mkdocs': static.DEFAULT_MKDOCS_CONFIG,
-      'hugo': static.DEFAULT_HUGO_CONFIG,
-    }
-    with open(filename, 'w') as fp:
-      fp.write(source[bootstrap])
-    print('created', filename)
-    return
 
-  if open_browser and not server:
-    error('--open can only be used with --server')
+    if bootstrap == 'readthedocs':
+      for filename in static.READTHEDOCS_FILES:
+        if os.path.isfile(filename):
+          error('file already exists: {!r}'.format(filename))
+      for filename, content in static.READTHEDOCS_FILES.items():
+        with open(filename, 'w') as fp:
+          fp.write(content)
+        print('created', filename)
+
+    else:
+      existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
+      if existing_file:
+        error('file already exists: {!r}'.format(existing_file))
+      filename = config_filenames[0]
+      source = {
+        'base': static.DEFAULT_CONFIG,
+        'mkdocs': static.DEFAULT_MKDOCS_CONFIG,
+        'hugo': static.DEFAULT_HUGO_CONFIG,
+      }
+      with open(filename, 'w') as fp:
+        fp.write(source[bootstrap])
+      print('created', filename)
+
+    return
 
   load_implicit_config = not any((modules, packages, search_path, py2 is not None))
 
@@ -304,6 +329,8 @@ def cli(
     session.run_server(pydocmd, open_browser)
   else:
     session.render(pydocmd)
+    if build:
+      session.build(pydocmd, site_dir)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,3 @@
+steps:
+- shore changelog --all --markdown >CHANGELOG.md
+- pydoc-markdown --build --site-dir $SITE_DIR

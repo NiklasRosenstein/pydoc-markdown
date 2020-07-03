@@ -22,7 +22,7 @@
 from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Renderer, Resolver, Server
+from pydoc_markdown.interfaces import Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.pages import Page
 from pydoc_markdown.util.knownfiles import KnownFiles
 from typing import Dict, Iterable, List, Optional, Tuple
@@ -45,7 +45,7 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
   render_toc = Field(bool, default=False)
 
 
-@implements(Renderer, Server)
+@implements(Renderer, Server, Builder)
 class MkdocsRenderer(Struct):
   """
   Produces Markdown files in a layout compatible with [MkDocs][0] and can be used with the
@@ -176,3 +176,9 @@ class MkdocsRenderer(Struct):
     # While MkDocs does support file watching and automatic reloading,
     # it appears to be a bit quirky. Let's just restart the whole process.
     process.terminate()
+
+  # Builder
+
+  def build(self, site_dir: str=None) -> None:
+    command = ['mkdocs', 'build', '--clean', '--site-dir', site_dir]
+    subprocess.check_call(command, cwd=self.output_directory)

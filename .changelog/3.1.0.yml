@@ -1,63 +1,49 @@
-- types:
-  - change
-  issues: []
-  components:
-  - cli
+release_date: null
+changes:
+- type: change
+  component: cli
   description: rename `--watch-and-serve` option to `--server`
-- types:
-  - enhancement
-  issues: []
-  components:
-  - cli
+  fixes: []
+- type: change
+  component: cli
   description: watch and serve mainloop now reloads the config file and does not open
     the browser another time if it was already opened once.
-- types:
-  - fix
-  issues:
-  - 118
-  components:
-  - cli
+  fixes: []
+- type: fix
+  component: cli
   description: fix `pydoc-markdown.yml` generated with `--bootstrap`
-- types:
-  - change
-  issues: []
-  components:
-  - markdown
+  fixes:
+  - '118'
+- type: change
+  component: markdown
   description: '* change default for `header_level_by_type` (`2` to `1` for modules,
     `3` to `2` for classes).
 
     * change default for `descriptive_class_title` (`false` to `true`)
 
     '
-- types:
-  - feature
-  issues: []
-  components:
-  - markdown
+  fixes: []
+- type: feature
+  component: markdown
   description: added `content_directory` option (replaces hardcoded default `docs`
     value, defaults to `content` now)
-- types:
-  - change
-  issues: []
-  components:
-  - markdown
+  fixes: []
+- type: change
+  component: markdown
   description: renamed `clean_docs_directory_on_render` to `clean_render` and change
     the default from `true` to `false`.
-- types:
-  - change
-  issues: []
-  components:
-  - mkdocs
+  fixes: []
+- type: change
+  component: mkdocs
   description: '`mkdocs_config` option can now be set to `null` (the renderer will
     the refrain
 
     from writing a `mkdocs.yml` file into the output directory).
 
     '
-- types:
-  - fix
-  issues:
-  - 115
-  components:
-  - python
+  fixes: []
+- type: fix
+  component: python
   description: fix assignments with annotations being ignored by the parser
+  fixes:
+  - '115'
