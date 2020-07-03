@@ -13,7 +13,7 @@ jobs:
       - checkout
       - run:
           name: Install
-          command: pip install -q pytest pytest-cov pylint .
+          command: pip install -q pytest pytest-cov pylint ./pydoc-markdown
 
       - run:
           name: Tests
@@ -69,7 +69,7 @@ jobs:
           fingerprints:
             - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
       - checkout
-      - run: pip install -q . nr.shore==1.0.1
+      - run: pip install -q ./pydoc-markdown nr.shore==1.0.1
       - run: shore changelog --all --markdown >CHANGELOG.md
       - run: pydoc-markdown
       #- run: |
