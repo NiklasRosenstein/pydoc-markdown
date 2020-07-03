@@ -61,42 +61,10 @@ jobs:
       - run: shore publish pypi -l
       - run: shore publish pypi
 
-  docs:
-    docker:
-      - image: python:3.6
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "3b:59:4f:dc:60:58:c5:3c:85:41:c1:a1:1f:a8:6f:4d"
-      - checkout
-      - run: pip install -q ./pydoc-markdown nr.shore==1.0.1
-      - run: shore changelog --all --markdown >CHANGELOG.md
-      - run: pydoc-markdown
-      #- run: |
-      #    if [[ "$CIRCLE_TAG" != "" ]]; then
-      #      mkdocs gh-deploy -f docs/build/mkdocs.yml
-      #    fi
-      - run:
-          name: Download Hugo
-          command: |
-            curl https://github.com/gohugoio/hugo/releases/download/v0.72.0/hugo_extended_0.72.0_Linux-64bit.tar.gz -L > hugo.tar.gz
-            tar -xvf hugo.tar.gz
-            chmod +x hugo
-      - run:
-          name: Build static page with Hugo
-          command: |
-            PATH="$PATH:$PWD" && cd docs/build && hugo
-      - store_artifacts:
-          path: docs/build/public
-          destination: site
-
-
 workflows:
   version: 2
   test:
     jobs:
-      - docs:
-          filters: { tags: { only: /.*/ } }
       - test-3.6:
           filters: { tags: { only: /.*/ } }
       - test-3.7:
