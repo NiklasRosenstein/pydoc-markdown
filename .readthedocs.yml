@@ -5,6 +5,3 @@ python:
   install:
   - {method: pip, path: pydoc-markdown}
   - requirements: readthedocs-custom-steps nr.shore==1.0.1
-x-custom-steps:
-  - shore changelog --all --markdown >CHANGELOG.md
-  - pydoc-markdown --build --site-dir $SITE_DIR
