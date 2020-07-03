@@ -1,111 +1,104 @@
-- types:
-  - feature
-  issues: []
-  components:
-  - cli
+release_date: null
+changes:
+- type: feature
+  component: cli
   description: add `--dump` and `--with-processors/--without-processors` options
-- types:
-  - docs
-  issues: []
-  components:
-  - general
+  fixes: []
+- type: docs
+  component: general
   description: add docstrings to classes defined in `pydoc_markdown.contrib.processors`
-- types:
-  - change
-  issues: []
-  components:
-  - general
+  fixes: []
+- type: change
+  component: general
   description: use `docspec` module instead of `pydoc_markdown.reflection` to represent
     API objects
-- types:
-  - change
-  issues: []
-  components:
-  - python
+  fixes: []
+- type: change
+  component: python
   description: use `docspec-python` to load Python API objects
-- types:
-  - change
-  issues: []
-  components:
-  - crossref
+  fixes: []
+- type: change
+  component: crossref
   description: warnings produced about references that cannot be resolved are now
     summarized in a single log-line
-- types:
-  - change
-  issues: []
-  components:
-  - general
+  fixes: []
+- type: change
+  component: general
   description: With the removal of `pydoc_markdown.reflection`, the `ModuleGraph`
     class has also been removed and replaced by List[docspec.Module]`
-- types:
-  - change
-  issues: []
-  components:
-  - filter
+  fixes: []
+- type: change
+  component: filter
   description: Rename FilterProcessor.include_root_objects to .do_not_filter_modules
-- types:
-  - change
-  issues: []
-  components:
-  - general
+  fixes: []
+- type: change
+  component: general
   description: change type signatures and some method names of interfaces in `pydoc_markdown.interfaces`
-- types:
-  - change
-  issues: []
-  components:
-  - utils
+  fixes: []
+- type: change
+  component: utils
   description: The `Page.filtered_modules()` method now warns if an element in `Page.contents`
     did not match an API object
-- types:
-  - fix
-  issues:
-  - '121'
-  components:
-  - markdown
+  fixes: []
+- type: fix
+  component: markdown
   description: the Markdown header level for methods is now correctly read from the
     "Method" key in `MarkdownRenderer.header_level_by_type`
-- types:
-  - change
-  issues: []
-  components:
-  - cli
+  fixes:
+  - '121'
+- type: change
+  component: cli
   description: remove `--bootstrap-mkdocs` in favor of `--bootstrap` option which
     now accepts an argument
-- types:
-  - change
-  issues: []
-  components:
-  - cli
+  fixes: []
+- type: change
+  component: cli
   description: the `--bootstrap` option now requires an argument, which must be either
     "base", "mkdocs" or "hugo" (new)
-- types:
-  - feature
-  issues: []
-  components:
-  - mkdocs
+  fixes: []
+- type: feature
+  component: mkdocs
   description: The `MkdocsRenderer.clean_render` option is enabled again by default,
     but instead of removing the whole `content_directory`, it will instead only remove
     files that it has previously generated (it will place a `.generated-files.txt`
     file in the `output_directory` for that).
-- types:
-  - feature
-  issues: []
-  components:
-  - cli
+  fixes: []
+- type: feature
+  component: cli
   description: add `MarkdownRenderer.classdef_with_decorators` and `MarkdownRenderer.signature_with_decorators`
     options
-- types:
-  - feature
-  issues:
-  - '106'
-  components:
-  - general
+  fixes: []
+- type: feature
+  component: general
   description: Add new `HugoRenderer` (YAML type name `hugo`).
-- types:
-  - feature
-  issues: []
-  components:
-  - smart-processor
+  fixes:
+  - '106'
+- type: feature
+  component: smart-processor
   description: now looks for a `@doc:fmt:<formatter_name>` string in the docstring,
     which can be used to override the style that is used in case the automatically
     detected style is incorrect
+  fixes: []
+- type: feature
+  component: docs
+  description: The Pydoc-Markdown documentation is now available on Read the Docs
+    (https://pydoc-markdown.readthedocs.io/en/latest/)
+  fixes: []
+- type: feature
+  component: api
+  description: Add new `Builder` interface that is used with the new `--build` and
+    `--site-dir` options
+  fixes: []
+- type: feature
+  component: mkdocs
+  description: Implement `Builder` interface for `MkDocsRenderer`
+  fixes: []
+- type: feature
+  component: hugo
+  description: Implement `Builder` interface for `HugoRenderer`
+  fixes: []
+- type: feature
+  component: cli
+  description: Add new `--build` and `--site-dir` options as well as `--bootstrap
+    readthedocs`
+  fixes: []
