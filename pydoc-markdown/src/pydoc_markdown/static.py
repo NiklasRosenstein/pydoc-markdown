@@ -80,4 +80,15 @@ renderer:
     - title: API Documentation
       contents:
         - '*'
-'''
+'''.lstrip()
+
+
+#: Default configuration for Read the Docs to use Pydoc-Markdown.
+DEFAULT_READTHEDOCS_CONFIG = '''
+version: 2
+mkdocs: {}  # tell readthedocs to use mkdocs
+python:
+  version: 3.7
+  install:
+    - requirements: pydoc-markdown-readthedocs-mkdocs-proxy
+'''.lstrip()

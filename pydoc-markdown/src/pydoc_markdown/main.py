@@ -189,7 +189,7 @@ def error(*args):
 @click.command(help=__doc__)
 @click.argument('config', required=False)
 @click.version_option(__version__)
-@click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo']),
+@click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo', 'readthedocs']),
   help='Create a Pydoc-Markdown configuration file in the current working directory.')
 @click.option('--verbose', '-v', is_flag=True, help='Increase log verbosity.')
 @click.option('--quiet', '-q', is_flag=True, help='Decrease the log verbosity.')
@@ -244,17 +244,27 @@ def cli(
     if config or modules or packages or search_path or render_toc \
         or py2 or server or open_browser or dump or with_processors is not None:
       error('--bootstrap must be used as a sole argument')
-    existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
-    if existing_file:
-      error('file already exists: {!r}'.format(existing_file))
-    filename = config_filenames[0]
+
+    if bootstrap == 'readthedocs':
+      filename = '.readthedocs.yml'
+      if os.path.isfile(filename):
+        error('file already exists: {!r}'.format(filename))
+    else:
+      existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
+      if existing_file:
+        error('file already exists: {!r}'.format(existing_file))
+      filename = config_filenames[0]
+
     source = {
       'base': static.DEFAULT_CONFIG,
       'mkdocs': static.DEFAULT_MKDOCS_CONFIG,
       'hugo': static.DEFAULT_HUGO_CONFIG,
+      'readthedocs': static.DEFAULT_READTHEDOCS_CONFIG,
     }
+
     with open(filename, 'w') as fp:
       fp.write(source[bootstrap])
+
     print('created', filename)
     return
 
