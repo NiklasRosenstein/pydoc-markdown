@@ -24,6 +24,10 @@ renderer:
     source: docs/getting-started.md
     preamble:
       weight: 10
+  - title: Read the Docs
+    source: docs/readthedocs.md
+    preamble:
+      weight: 15
   - title: API Documentation
     children:
     - title: CLI

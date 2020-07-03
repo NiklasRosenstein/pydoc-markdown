@@ -84,11 +84,24 @@ renderer:
 
 
 #: Default configuration for Read the Docs to use Pydoc-Markdown.
-DEFAULT_READTHEDOCS_CONFIG = '''
+READTHEDOCS_FILES = {
+  '.readthedocs.yml': '''
 version: 2
 mkdocs: {}  # tell readthedocs to use mkdocs
 python:
   version: 3.7
   install:
-    - requirements: pydoc-markdown-readthedocs-mkdocs-proxy
-'''.lstrip()
+  - method: pip
+    path: .
+  - requirements: .readthedocs-requirements.txt
+'''.lstrip(),
+
+  '.readthedocs-custom-steps.yml': '''
+steps:
+- pydoc-markdown --build --site-dir $SITE_DIR
+'''.lstrip(),
+
+  '.readthedocs-requirements.txt': '''
+readthedocs-custom-steps
+'''.lstrip(),
+}

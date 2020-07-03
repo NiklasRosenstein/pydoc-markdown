@@ -1,3 +1,0 @@
-#readthedocs-custom-steps
-git+https://github.com/NiklasRosenstein/readthedocs-custom-steps.git@test#subdirectory=readthedocs-custom-steps
-nr.shore==1.0.1

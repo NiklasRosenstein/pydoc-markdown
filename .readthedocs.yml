@@ -5,4 +5,4 @@ python:
   install:
   - method: pip
     path: pydoc-markdown
-  - requirements: docs/requirements.txt
+  - requirements: .readthedocs-requirements.txt

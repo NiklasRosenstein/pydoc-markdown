@@ -1,0 +1,2 @@
+readthedocs-custom-steps
+nr.shore==1.0.1

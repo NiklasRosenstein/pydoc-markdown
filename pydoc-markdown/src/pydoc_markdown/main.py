@@ -262,26 +262,28 @@ def cli(
       error('--bootstrap must be used as a sole argument')
 
     if bootstrap == 'readthedocs':
-      filename = '.readthedocs.yml'
-      if os.path.isfile(filename):
-        error('file already exists: {!r}'.format(filename))
+      for filename in static.READTHEDOCS_FILES:
+        if os.path.isfile(filename):
+          error('file already exists: {!r}'.format(filename))
+      for filename, content in static.READTHEDOCS_FILES.items():
+        with open(filename, 'w') as fp:
+          fp.write(content)
+        print('created', filename)
+
     else:
       existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
       if existing_file:
         error('file already exists: {!r}'.format(existing_file))
       filename = config_filenames[0]
+      source = {
+        'base': static.DEFAULT_CONFIG,
+        'mkdocs': static.DEFAULT_MKDOCS_CONFIG,
+        'hugo': static.DEFAULT_HUGO_CONFIG,
+      }
+      with open(filename, 'w') as fp:
+        fp.write(source[bootstrap])
+      print('created', filename)
 
-    source = {
-      'base': static.DEFAULT_CONFIG,
-      'mkdocs': static.DEFAULT_MKDOCS_CONFIG,
-      'hugo': static.DEFAULT_HUGO_CONFIG,
-      'readthedocs': static.DEFAULT_READTHEDOCS_CONFIG,
-    }
-
-    with open(filename, 'w') as fp:
-      fp.write(source[bootstrap])
-
-    print('created', filename)
     return
 
   load_implicit_config = not any((modules, packages, search_path, py2 is not None))
