@@ -28,7 +28,7 @@ with a focus on Python source code and the Markdown output format.
 from nr.databind.core import Collect, Field, ObjectMapper, Struct, UnionType
 from nr.databind.json import JsonModule
 from nr.stream import concat
-from pydoc_markdown.interfaces import Loader, Processor, Renderer, Resolver
+from pydoc_markdown.interfaces import Loader, Processor, Renderer, Resolver, Builder
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
@@ -122,3 +122,9 @@ class PydocMarkdown(Struct):
       self.resolver = self.renderer.get_resolver(modules)
     self.renderer.process(modules, self.resolver)
     self.renderer.render(modules)
+
+  def build(self, site_dir: str=None) -> None:
+    if not Builder.provided_by(self.renderer):
+      name = type(self.renderer).__name__
+      raise NotImplementedError('Renderer "{}" does not support building'.format(name))
+    self.renderer.build(site_dir)

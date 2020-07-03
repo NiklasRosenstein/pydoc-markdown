@@ -120,3 +120,18 @@ class Server(Interface):
     """
 
     return process
+
+
+class Builder(Interface):
+  """
+  This interface can be implemented additionally to the #Renderer interface to
+  indicate that the renderer supports building another produce after the markdown
+  files have been rendered.
+  """
+
+  def build(self, site_dir: str=None) -> None:
+    """
+    Invoke the build. If *site_dir* is specified, it is the directory in which the
+    output files should be placed. Otherwise, the directory may be determined by
+    the builder.
+    """
