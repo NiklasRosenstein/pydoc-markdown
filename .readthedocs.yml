@@ -4,4 +4,7 @@ python:
   version: 3.7
   install:
   - {method: pip, path: pydoc-markdown}
-  - {method: pip, path: pydoc-markdown-readthedocs-mkdocs-proxy}
+  - requirements: readthedocs-custom-steps nr.shore==1.0.1
+x-custom-steps:
+  - shore changelog --all --markdown >CHANGELOG.md
+  - pydoc-markdown --build --site-dir $SITE_DIR
