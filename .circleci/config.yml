@@ -17,7 +17,7 @@ jobs:
 
       - run:
           name: Tests
-          command: pytest --cov=./src/pydoc_markdown && coverage html
+          command: pytest --cov=./pydoc-markdown/src/pydoc_markdown && coverage html
 
       - run:
           name: Linting
