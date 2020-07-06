@@ -11,15 +11,9 @@ import sys
 with io.open('src/pydoc_markdown/__init__.py', encoding='utf8') as fp:
   version = re.search(r"__version__\s*=\s*'(.*)'", fp.read()).group(1)
 
-readme_file = 'README.md'
-if os.path.isfile(readme_file):
-  with io.open(readme_file, encoding='utf8') as fp:
-    long_description = fp.read()
-else:
-  print("warning: file \"{}\" does not exist.".format(readme_file), file=sys.stderr)
-  long_description = None
+long_description = None
 
-requirements = ['click >=7.0,<8.0.0', 'docspec >=0.1.0,<0.2.0', 'docspec-python >=0.0.4,<0.1.0', 'nr.collections >=0.0.1,<0.1.0', 'nr.interface >=0.0.3,<0.1.0', 'nr.databind.core >=0.0.18,<0.1.0', 'nr.databind.json >=0.0.9,<0.1.0', 'nr.fs >=1.6.0,<2.0.0', 'requests >=2.23.0,<3.0.0', 'PyYAML >=5.3,<6.0.0', 'six >=1.11.0,<2.0.0', 'toml >=0.10.1,<1.0.0', 'watchdog >=0.10.2,<1.0.0']
+requirements = ['click >=7.0,<8.0.0', 'docspec >=0.2.0,<0.3.0', 'docspec-python >=0.0.4,<0.1.0', 'nr.collections >=0.0.1,<0.1.0', 'nr.interface >=0.0.3,<0.1.0', 'nr.databind.core >=0.0.18,<0.1.0', 'nr.databind.json >=0.0.9,<0.1.0', 'nr.fs >=1.6.0,<2.0.0', 'requests >=2.23.0,<3.0.0', 'PyYAML >=5.3,<6.0.0', 'six >=1.11.0,<2.0.0', 'toml >=0.10.1,<1.0.0', 'watchdog >=0.10.2,<1.0.0']
 
 setuptools.setup(
   name = 'pydoc-markdown',
@@ -28,7 +22,7 @@ setuptools.setup(
   author_email = 'rosensteinniklas@gmail.com',
   description = 'Create Python API documentation in Markdown format.',
   long_description = long_description,
-  long_description_content_type = 'text/markdown',
+  long_description_content_type = 'text/plain',
   url = 'https://github.com/NiklasRosenstein/pydoc-markdown',
   license = 'MIT',
   packages = setuptools.find_packages('src', ['test', 'test.*', 'docs', 'docs.*']),
