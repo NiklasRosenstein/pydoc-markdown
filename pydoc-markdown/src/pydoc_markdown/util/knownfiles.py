@@ -95,7 +95,6 @@ class KnownFiles:
     if 'w' in mode or 'a' in mode:
       if self._files is None:
         raise RuntimeError('KnownFiles.__enter__() was not called')
-      print(mode)
       with open(os.path.join(self._directory, filename), mode, **kwargs) as fp:
         yield fp
       self._files.append(filename)
