@@ -102,3 +102,8 @@ changes:
   description: Add new `--build` and `--site-dir` options as well as `--bootstrap
     readthedocs`
   fixes: []
+- type: fix
+  component: mkdocs
+  description: Fix error in MkDocs navigation generation if a page has no `source`
+    and no `contents`
+  fixes: []

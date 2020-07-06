@@ -132,11 +132,11 @@ class MkdocsRenderer(Struct):
 
     with known_files:
       for item in self.pages.iter_hierarchy():
+        filename = item.filename(self.content_dir, '.md')
+        page_to_filename[id(item.page)] = filename
         if not item.page.has_content():
           continue
-        filename = item.filename(self.docs_dir, '.md')
 
-        page_to_filename[id(item.page)] = filename
         self.markdown.filename = filename
         item.page.render(filename, modules, self.markdown)
         known_files.append(filename)
