@@ -1,3 +1,6 @@
+loaders:
+  - type: python
+    search_path: [pydoc-markdown/src]
 hooks:
   pre-render:
   - shut changelog -a --markdown >CHANGELOG.md
