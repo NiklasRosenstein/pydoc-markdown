@@ -1,7 +1,5 @@
-# empty
 
-
-from test.pydoc_markdown.utils import assert_text_equals
+from pydoc_markdown.test.test_utils import assert_text_equals
 import docspec
 import textwrap
 

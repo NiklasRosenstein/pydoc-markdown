@@ -1,8 +1,8 @@
 
+from .test_utils import assert_text_equals
 from docspec_python import parse_python_module, ParserOptions
 from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
-from test.pydoc_markdown.utils import assert_text_equals
 import io
 import textwrap
 
