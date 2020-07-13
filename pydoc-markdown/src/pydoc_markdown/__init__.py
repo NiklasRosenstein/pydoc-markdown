@@ -25,7 +25,7 @@ with a focus on Python source code and the Markdown output format.
 """
 
 
-from nr.databind.core import Collect, Field, ObjectMapper, Struct, UnionType
+from nr.databind.core import Collect, Field, FieldName, ObjectMapper, Struct, UnionType
 from nr.databind.json import JsonModule
 from nr.stream import concat
 from pydoc_markdown.interfaces import Loader, Processor, Renderer, Resolver, Builder
@@ -37,6 +37,7 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from typing import List, Union
 import docspec
 import logging
+import subprocess
 import yaml
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
@@ -62,6 +63,13 @@ class PydocMarkdown(Struct):
 
   #: A renderer for #docspec.Module#s. Defaults to #MarkdownRenderer.
   renderer = Field(Renderer, default=MarkdownRenderer)
+
+  #: Hooks that can be executed at certain points in the pipeline. The commands
+  #: are executed with the current `SHELL`.
+  hooks = Field({
+    'pre_render': Field([str], FieldName('pre-render'), default=list),
+    'post_render': Field([str], FieldName('post-render'), default=list),
+  }, default=Field.DEFAULT_CONSTRUCT)
 
   # Hidden fields are filled at a later point in time and are not (de-) serialized.
   unknown_fields = Field([str], default=list, hidden=True)
@@ -113,18 +121,26 @@ class PydocMarkdown(Struct):
     for processor in self.processors:
       processor.process(modules, self.resolver)
 
-  def render(self, modules: List[docspec.Module]) -> None:
+  def render(self, modules: List[docspec.Module], run_hooks: bool = True) -> None:
     """
     Render modules via the #renderer.
     """
 
+    if run_hooks:
+      self.run_hooks('pre-render')
     if self.resolver is None:
       self.resolver = self.renderer.get_resolver(modules)
     self.renderer.process(modules, self.resolver)
     self.renderer.render(modules)
+    if run_hooks:
+      self.run_hooks('post-render')
 
   def build(self, site_dir: str=None) -> None:
     if not Builder.provided_by(self.renderer):
       name = type(self.renderer).__name__
       raise NotImplementedError('Renderer "{}" does not support building'.format(name))
     self.renderer.build(site_dir)
+
+  def run_hooks(self, hook_name: str) -> None:
+    for command in getattr(self.hooks, hook_name.replace('-', '_')):
+      subprocess.check_call(command, shell=True)

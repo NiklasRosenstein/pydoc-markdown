@@ -113,3 +113,8 @@ changes:
     system to increase portability
   fixes:
   - '129'
+- type: feature
+  component: general
+  description: add new `$.hooks.pre-render` and `$.hooks.post-render` options
+  fixes:
+  - '#112'

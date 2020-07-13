@@ -1,3 +1,6 @@
+hooks:
+  pre-render:
+  - shut changelog -a --markdown >CHANGELOG.md
 renderer:
   type: hugo
   config:
