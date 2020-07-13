@@ -59,19 +59,21 @@ renderer:
       - pydoc_markdown.contrib.processors.smart.SmartProcessor.*
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.*
-    - title: Renderers
-      children:
-      - title: HugoRenderer
-        contents:
-        - pydoc_markdown.contrib.renderers.hugo.HugoPage
-        - pydoc_markdown.contrib.renderers.hugo.HugoPage.*
-        - pydoc_markdown.contrib.renderers.hugo.HugoConfig
-        - pydoc_markdown.contrib.renderers.hugo.HugoConfig.*
-        - pydoc_markdown.contrib.renderers.hugo.HugoRenderer
-        - pydoc_markdown.contrib.renderers.hugo.HugoRenderer.*
-      - title: MarkdownRenderer
-        contents:
-        - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*
-      - title: MkdocsRenderer
-        contents:
-        - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
+  - title: Renderers
+    preamble:
+      weight: 15
+    children:
+    - title: Hugo
+      contents:
+      - pydoc_markdown.contrib.renderers.hugo.HugoPage
+      - pydoc_markdown.contrib.renderers.hugo.HugoPage.*
+      - pydoc_markdown.contrib.renderers.hugo.HugoConfig
+      - pydoc_markdown.contrib.renderers.hugo.HugoConfig.*
+      - pydoc_markdown.contrib.renderers.hugo.HugoRenderer
+      - pydoc_markdown.contrib.renderers.hugo.HugoRenderer.*
+    - title: MkDocs
+      contents:
+      - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
+    - title: Markdown
+      contents:
+      - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*
