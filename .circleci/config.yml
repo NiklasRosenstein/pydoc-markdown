@@ -46,9 +46,9 @@ jobs:
       - checkout
       - run: pip install -q nr.shore==1.0.1
       - run: shore --version
-      - run: shore verify --tag "$CIRCLE_TAG"
-      - run: shore publish pypi -l
-      - run: shore publish pypi --test --skip-existing
+      - run: shore -C pydoc-markdown verify --tag "$CIRCLE_TAG"
+      - run: shore -C pydoc-markdown publish pypi -l
+      - run: shore -C pydoc-markdown publish pypi --test --skip-existing
 
   publish:
     docker:
@@ -57,9 +57,9 @@ jobs:
       - checkout
       - run: pip install -q nr.shore==1.0.1
       - run: shore --version
-      - run: shore verify --tag "$CIRCLE_TAG"
-      - run: shore publish pypi -l
-      - run: shore publish pypi
+      - run: shore -C pydoc-markdown verify --tag "$CIRCLE_TAG"
+      - run: shore -C pydoc-markdown publish pypi -l
+      - run: shore -C pydoc-markdown publish pypi
 
 workflows:
   version: 2
