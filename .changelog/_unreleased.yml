@@ -107,3 +107,9 @@ changes:
   description: Fix error in MkDocs navigation generation if a page has no `source`
     and no `contents`
   fixes: []
+- type: improvement
+  component: mkdocs
+  description: generated `mkdocs.yml` now uses forward slashes for filenames on Windows
+    system to increase portability
+  fixes:
+  - '129'

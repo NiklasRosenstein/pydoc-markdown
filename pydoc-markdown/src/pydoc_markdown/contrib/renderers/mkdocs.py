@@ -112,6 +112,9 @@ class MkdocsRenderer(Struct):
           result.append({page.title: page.href})
         else:
           filename = os.path.relpath(page_to_filename[id(page)], self.content_dir)
+          if os.name == 'nt':
+            # Make generated configuration more portable across operating systems (see #129).
+            filename = filename.replace('\\', '/')
           result.append({page.title: filename})
       return result
     return _generate(self.pages)
