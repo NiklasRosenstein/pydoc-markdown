@@ -7,11 +7,9 @@ hooks:
 renderer:
   type: hugo
   config:
-    #baseURL: "https://niklasrosenstein.github.io/pydoc-markdown/"
+    baseURL: "https://pydoc-markdown.readthedocs.io/en/latest/"
     title: "Pydoc-Markdown"
     theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
-    relativeURLs: true  # For serving on CircleCI
-    uglyURLs: true  # For serving on CircleCI
   build_directory: docs/build
   content_directory: content/docs  # Book theme will render the pages in content/docs in the nav.
   default_preamble:
