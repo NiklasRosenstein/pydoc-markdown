@@ -1,4 +1,4 @@
-release_date: null
+release_date: 2020-07-15
 changes:
 - type: fix
   component: packaging
