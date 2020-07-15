@@ -1,0 +1,9 @@
+release_date: null
+changes:
+- type: feature
+  component: general
+  description: plugin types can now be resolved by their FQN (i.e. the absolute import
+    name, such as `pydoc_markdown.contrib.loaders.python.PythonLoader`) in addition
+    to their registered entrypoint name.
+  fixes:
+  - '#131'

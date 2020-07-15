@@ -25,14 +25,23 @@ Pydoc-Markdown to implement custom loaders for documentation data,
 processors or renderers.
 """
 
+from .util.databind import ChainTypeResolver
 from nr.databind.core import  SerializeAs, UnionType
+from nr.databind.core.union import EntrypointTypeResolver, ImportTypeResolver
 from nr.interface import Interface, default
 from typing import Iterable, List, Optional
 import docspec
 import subprocess
 
 
-@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Loader'))
+def _make_union_type(entrypoint_name: str) -> UnionType:
+  return UnionType(ChainTypeResolver(
+    EntrypointTypeResolver(entrypoint_name),
+    ImportTypeResolver(),
+  ))
+
+
+@SerializeAs(_make_union_type('pydoc_markdown.interfaces.Loader'))
 class Loader(Interface):
   """
   This interface describes an object that is capable of loading documentation
@@ -59,7 +68,7 @@ class Resolver(Interface):
     pass
 
 
-@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Processor'))
+@SerializeAs(_make_union_type('pydoc_markdown.interfaces.Processor'))
 class Processor(Interface):
   """
   A processor is an object that takes a list of #docspec.Module#s as an input and
@@ -71,7 +80,7 @@ class Processor(Interface):
     pass
 
 
-@SerializeAs(UnionType.with_entrypoint_resolver('pydoc_markdown.interfaces.Renderer'))
+@SerializeAs(_make_union_type('pydoc_markdown.interfaces.Renderer'))
 class Renderer(Processor):
   """
   A renderer is an object that takes a list of #docspec.Module#s as an input and produces
