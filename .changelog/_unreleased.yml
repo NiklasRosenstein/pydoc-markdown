@@ -1,0 +1,8 @@
+release_date: null
+changes:
+- type: fix
+  component: packaging
+  description: add `$.readme` to `pydoc-markdown/package.yaml`, fixing the generated
+    `setup.py` to include the `README.md` from the parent folder.
+  fixes:
+  - '#130'
