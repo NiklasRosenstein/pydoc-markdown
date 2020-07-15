@@ -38,33 +38,8 @@ the current working directory. (Note that the configuration is not read from
 file when using the `-m,--module`, `-p,--package` and other options that
 are intended for invoking Pydoc-Markdown without a configuration file).
 
-The configuration consists of three main sections:
-
-1. `loaders`: Defines the list of loaders used to load the API objects to document.
-2. `processors`: Defines the list of processors that will be applied on the
-   loaded API objects before rendering. Processors usually apply filtering
-   and modify the docstrings to a more Markdown-suitable format (eg. to convert
-   Sphinx or Google documentation syntax)
-3. `renderer`: Defines the renderer that is responsible for writing the
-   API objects to disk in Markdown format. Some renderers can be used with
-   the `--server` option which allows you to live-preview the generated
-   Markdown documentation in a browser.
+Check out the [Configuration](configuration) section for details on the file
+structure.
 
 > __Tip__: The `--bootstrap` and `--bootstrap-mkdocs` options can be used to
 > write a template configuration file.
-
-Pydoc-Markdown comes with a default loader for Python modules/packages based
-on `lib2to3` as well as a couple of processors and renderers. Other Python
-packages can registered additional Pydoc-Markdown plugins via entrypoints.
-
-_Todo_: Link to documentation for available plugins.
-
-## lib2to3 Quirks
-
-Pydoc-Markdown doesn't execute your Python code but instead relies on the
-`lib2to3` parser. This means it also inherits any quirks of `lib2to3`.
-
-__List of known quirks__
-
-* A function argument in Python 3 cannot be called `print` even though
-  it is legal syntax

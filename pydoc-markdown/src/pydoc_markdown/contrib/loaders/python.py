@@ -45,6 +45,16 @@ class PythonLoader(Struct):
 
   With no #modules or #packages set, the #PythonLoader will discover available modules
   in the current and `src/` directory.
+
+  __lib2to3 Quirks__
+
+  Pydoc-Markdown doesn't execute your Python code but instead relies on the
+  `lib2to3` parser. This means it also inherits any quirks of `lib2to3`.
+
+  _List of known quirks_
+
+  * A function argument in Python 3 cannot be called `print` even though
+    it is legal syntax
   """
 
   #: A list of module names that this loader will search for and then parse.

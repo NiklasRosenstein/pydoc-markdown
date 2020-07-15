@@ -34,6 +34,10 @@ renderer:
     source: docs/readthedocs.md
     preamble:
       weight: 15
+  - title: Configuration
+    source: docs/configuration.md
+    preamble:
+      weight: 20
   - title: API Documentation
     children:
     - title: CLI
@@ -45,6 +49,7 @@ renderer:
     - title: Loaders
       contents:
       - pydoc_markdown.contrib.loaders.python.PythonLoader
+      - pydoc_markdown.contrib.loaders.python.PythonLoader.*
     - title: Processors
       contents:
       - pydoc_markdown.contrib.processors.crossref.CrossrefProcessor
@@ -60,8 +65,6 @@ renderer:
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.*
   - title: Renderers
-    preamble:
-      weight: 15
     children:
     - title: Hugo
       contents:
