@@ -14,7 +14,7 @@ __Features__
 * Understands multiple doc styles (Sphinx, Google, Pydoc-Markdown)
 * Supports assignment docstrings (`#:` block before or string literal after the statement)
 * Links references to other documented API objects [WIP]
-* MkDocs integration
+* [MkDocs][] and [Hugo](https://gohugo.io/) integration
 
 __Installation__
 
