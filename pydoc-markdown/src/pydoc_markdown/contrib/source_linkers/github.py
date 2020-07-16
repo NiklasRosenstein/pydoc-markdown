@@ -38,7 +38,7 @@ def _getoutput(cmd: List[str], cwd: str = None) -> str:
   if process.returncode != 0:
     raise RuntimeError('process {} exited with non-zero exit code {}'
                        .format(cmd[0], process.returncode))
-  return stdout
+  return stdout.strip()
 
 
 @implements(SourceLinker)
@@ -58,11 +58,11 @@ class GitHubSourceLinker(Struct):
   def _get_repo_root(self, dirname: str=".") -> Optional[str]:
     if hasattr(self, '_repo_root'):
       return self._repo_root
-    self._repo_root = _getoutput(['git', '-C', dirname, 'rev-parse', '--show-toplevel']).strip()
+    self._repo_root = _getoutput(['git', '-C', dirname, 'rev-parse', '--show-toplevel'])
     return self._repo_root
 
   def _get_sha(self, dirname: str=".") -> str:
-    sha = _getoutput(['git', '-C', dirname, 'rev-parse', 'HEAD']).strip()
+    sha = _getoutput(['git', '-C', dirname, 'rev-parse', 'HEAD'])
     return sha
 
   @override
