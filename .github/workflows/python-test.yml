@@ -34,7 +34,7 @@ jobs:
         pylint src || true
     - name: Test with pytest
       run: |
-        pytest --cov=.pydoc-markdown/src/pydoc_markdown && coverage html
+        pytest --cov=./pydoc-markdown/src/pydoc_markdown && coverage html
 
   trial-publish:
     if: startsWith(github.ref, 'refs/tags/v')
