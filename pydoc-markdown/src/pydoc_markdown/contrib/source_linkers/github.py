@@ -55,24 +55,25 @@ class GitHubSourceLinker(Struct):
   #: The Github hostname. Defaults to `"github.com"`.
   host = Field(str, default='github.com')
 
-  def _get_repo_root(self) -> Optional[str]:
+  def _get_repo_root(self, dirname: str=".") -> Optional[str]:
     if hasattr(self, '_repo_root'):
       return self._repo_root
-    self._repo_root = _getoutput(['git', 'rev-parse', '--show-toplevel']).strip()
+    self._repo_root = _getoutput(['git', '-C', dirname, 'rev-parse', '--show-toplevel']).strip()
     return self._repo_root
 
-  def _get_sha(self) -> str:
-    sha = _getoutput(['git', 'rev-parse', 'HEAD']).strip()
+  def _get_sha(self, dirname: str=".") -> str:
+    sha = _getoutput(['git', '-C', dirname, 'rev-parse', 'HEAD']).strip()
     return sha
 
   @override
   def get_source_url(self, obj: docspec.ApiObject) -> str:
     if not obj.location:
       return None
-    repo_root = self._get_repo_root()
+    dirname = os.path.dirname(obj.location.filename)
+    repo_root = self._get_repo_root(dirname)
     if not repo_root:
       return None
-    sha = self._get_sha()
+    sha = self._get_sha(dirname)
     rel_path = os.path.relpath(os.path.abspath(obj.location.filename), repo_root)
     return 'https://{}/{}/blob/{}/{}#L{}'.format(
       self.host, self.repo, sha, rel_path, obj.location.lineno)
