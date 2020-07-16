@@ -33,7 +33,7 @@ from pydoc_markdown import __version__, PydocMarkdown, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
-from pydoc_markdown.interfaces import Server
+from pydoc_markdown.interfaces import Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
 from typing import List, Set, Union
 import click
@@ -117,6 +117,9 @@ class RenderSession:
     if self.config:
       config.load_config(self.config)
     self._apply_overrides(config)
+
+    if isinstance(self.config, str):
+      config.init(Context(directory=os.path.dirname(os.path.abspath(self.config))))
 
     if config.unknown_fields:
       logger.warning('Unknown configuration options: %s', ', '.join(config.unknown_fields))

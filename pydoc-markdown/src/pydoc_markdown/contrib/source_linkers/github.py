@@ -21,7 +21,7 @@
 
 from nr.databind.core import Field, Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import SourceLinker
+from pydoc_markdown.interfaces import Context, SourceLinker
 from typing import List, Optional, Tuple
 import docspec
 import logging
@@ -56,34 +56,50 @@ class GitHubSourceLinker(Struct):
   #: The Github hostname. Defaults to `"github.com"`.
   host = Field(str, default='github.com')
 
-  def _get_repo_root(self) -> Optional[str]:
-    if hasattr(self, '_repo_root'):
-      return self._repo_root
-    self._repo_root = _getoutput(['git', 'rev-parse', '--show-toplevel']).strip()
-    logger.debug('repo root = %r', self._repo_root)
-    return self._repo_root
+  #: The root directory, relative to the context directory. The context directory
+  #: is usually the directory that contains Pydoc-Markdown configuration file.
+  #: If not set, the project root will be determined from the Git repository in
+  #: the context directory.
+  root = Field(str, default=None)
 
-  def _get_sha(self) -> str:
-    if hasattr(self, '_sha'):
-      return self._sha
-    self._sha = _getoutput(['git', 'rev-parse', 'HEAD']).strip()
-    logger.debug('sha = %r', self._sha)
-    return self._sha
+  URL_TEMPLATE = 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
+
+  # SourceLinker
 
   @override
   def get_source_url(self, obj: docspec.ApiObject) -> str:
+    """
+    Compute the URL in the GitHub #repo for the API object *obj*.
+    """
+
     if not obj.location:
       return None
-    repo_root = self._get_repo_root()
-    if not repo_root:
-      return None
-    sha = self._get_sha()
-    rel_path = os.path.relpath(os.path.abspath(obj.location.filename), repo_root)
+
+    # Compute the path relative to the project root.
+    rel_path = os.path.relpath(os.path.abspath(obj.location.filename), self._project_root)
     if not nr.fs.issub(rel_path):
-      # The path points outside of the repo_root. Cannot construct the URL in that case.
-      logger.debug('rel_path %r points outside of repo_root %r', rel_path, repo_root)
+      logger.debug('Ignored API object %s, path points outside of project root.', obj.name)
       return None
-    url = 'https://{}/{}/blob/{}/{}#L{}'.format(
-      self.host, self.repo, sha, rel_path, obj.location.lineno)
-    logger.debug('url for api object %r: %r (rel_path: %r)', obj.name, url, rel_path)
+
+    url = self.URL_TEMPLATE.format(
+      host=self.host, repo=self.repo, sha=self._sha, path=rel_path, lineno=obj.location.lineno)
+
+    logger.debug('Calculated URL for API object %s is %s', obj.name, url)
     return url
+
+  # PluginBase
+
+  @override
+  def init(self, context: Context) -> None:
+    """
+    This is called before the rendering process. The source linker computes the project
+    root and Git SHA at this stage before #get_source_url() is called.
+    """
+
+    if self.root:
+      self._project_root = os.path.join(context.directory, self._root)
+    else:
+      self._project_root = _getoutput(['git', 'rev-parse', '--show-toplevel'], cwd=context.directory).strip()
+    self._sha = _getoutput(['git', 'rev-parse', 'HEAD'], cwd=self._project_root).strip()
+    logger.debug('project_root = %r', self._project_root)
+    logger.debug('sha = %r', self._sha)

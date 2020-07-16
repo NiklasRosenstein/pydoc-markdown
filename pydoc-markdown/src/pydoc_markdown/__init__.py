@@ -28,7 +28,7 @@ with a focus on Python source code and the Markdown output format.
 from nr.databind.core import Collect, Field, FieldName, ObjectMapper, Struct, UnionType
 from nr.databind.json import JsonModule
 from nr.stream import concat
-from pydoc_markdown.interfaces import Loader, Processor, Renderer, Resolver, Builder
+from pydoc_markdown.interfaces import Context, Loader, Processor, Renderer, Resolver, Builder
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
@@ -78,6 +78,7 @@ class PydocMarkdown(Struct):
   def __init__(self, *args, **kwargs) -> None:
     super(PydocMarkdown, self).__init__(*args, **kwargs)
     self.resolver = None
+    self._context = None
 
   def load_config(self, data: Union[str, dict]) -> None:
     """
@@ -100,12 +101,34 @@ class PydocMarkdown(Struct):
     self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
       for n in collector.nodes))
 
+  def init(self, context: Context) -> None:
+    """
+    Initialize all plugins with the specified *context*. Cannot be called multiple times.
+    If omitted, the plugins will be initialized with a default context before the load,
+    process or render phase.
+    """
+
+    if self._context:
+      raise RuntimeError('already initialized')
+    self._context = context
+    logger.debug('Initializing plugins with context %r', context)
+    for loader in self.loaders:
+      loader.init(context)
+    for processor in self.processors:
+      processor.init(context)
+    self.renderer.init(context)
+
+  def ensure_initialized(self) -> None:
+    if not self._context:
+      self.init(Context(directory='.'))
+
   def load_modules(self) -> List[docspec.Module]:
     """
     Loads modules via the #loaders.
     """
 
     logger.info('Loading modules.')
+    self.ensure_initialized()
     modules = []
     for loader in self.loaders:
       modules.extend(loader.load())
@@ -116,6 +139,7 @@ class PydocMarkdown(Struct):
     Process modules via the #processors.
     """
 
+    self.ensure_initialized()
     if self.resolver is None:
       self.resolver = self.renderer.get_resolver(modules)
     for processor in self.processors:
@@ -126,6 +150,7 @@ class PydocMarkdown(Struct):
     Render modules via the #renderer.
     """
 
+    self.ensure_initialized()
     if run_hooks:
       self.run_hooks('pre-render')
     if self.resolver is None:
@@ -139,8 +164,9 @@ class PydocMarkdown(Struct):
     if not Builder.provided_by(self.renderer):
       name = type(self.renderer).__name__
       raise NotImplementedError('Renderer "{}" does not support building'.format(name))
+    self.ensure_initialized()
     self.renderer.build(site_dir)
 
   def run_hooks(self, hook_name: str) -> None:
     for command in getattr(self.hooks, hook_name.replace('-', '_')):
-      subprocess.check_call(command, shell=True)
+      subprocess.check_call(command, shell=True, cwd=self._context.directory)

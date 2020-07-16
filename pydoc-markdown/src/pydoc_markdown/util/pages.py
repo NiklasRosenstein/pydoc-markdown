@@ -153,7 +153,8 @@ class Page(Struct):
       self,
       filename: str,
       modules: List[docspec.ApiObject],
-      renderer: Renderer
+      renderer: Renderer,
+      context_directory: str,
       ) -> None:
     """
     Renders the page by either copying the *source* to the specified *filename* or by
@@ -164,8 +165,8 @@ class Page(Struct):
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     if self.source:
-      logger.info('Writing "%s" (source: "%s")', filename, self.source)
-      shutil.copyfile(self.source, filename)
+      logger.info('Writing "%s" (source: "%s")', filename, os.path.join(context_directory, self.source))
+      shutil.copyfile(os.path.join(context_directory, self.source), filename)
     else:
       logger.info('Rendering "%s"', filename)
       renderer.render(self.filtered_modules(modules))
