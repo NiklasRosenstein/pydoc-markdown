@@ -20,3 +20,8 @@ changes:
   description: add `MarkdownRenderer.source_linker` option
   fixes:
   - '#122'
+- type: change
+  component: cli
+  description: '`-v,--verbose` and `-q,--quiet` flags are now countable (e.g. `-vv`
+    will raise the logging verbosity to `DEBUG`)'
+  fixes: []
