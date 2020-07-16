@@ -42,7 +42,7 @@ setuptools.setup(
   install_requires = requirements,
   extras_require = {},
   tests_require = [],
-  python_requires = None, # TODO: '>=3.6,<4.0.0',
+  python_requires = None, # TODO: '>=3.5,<4.0.0',
   data_files = [],
   entry_points = {
     'console_scripts': [

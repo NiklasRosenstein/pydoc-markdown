@@ -31,7 +31,7 @@ classifiers:
   - "Programming Language :: Python :: 3.5"
 
 requirements:
-  - python ^3.6
+  - python ^3.5
   - click ^7.0
   - docspec ~0.2.0
   - docspec-python ~0.0.6
