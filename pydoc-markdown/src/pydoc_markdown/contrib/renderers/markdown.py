@@ -22,7 +22,7 @@
 from docspec_python import format_arglist
 from nr.databind.core import Field, Struct
 from nr.interface import implements
-from pydoc_markdown.interfaces import Renderer, Resolver
+from pydoc_markdown.interfaces import Renderer, Resolver, SourceLinker
 from typing import Iterable, List, Optional, TextIO
 import docspec
 import io
@@ -163,6 +163,11 @@ class MarkdownRenderer(Struct):
     'Data': 4,
   })
 
+  #: A plugin that implements the #SourceLinker interface to provide links to the
+  #: source code of API objects. If this field is specified, the renderer will
+  #: place links to the source code in the generated Markdown files.
+  source_linker = Field(SourceLinker, default=None)
+
   _reverse_map = Field(docspec.ReverseMap, default=None, hidden=True)
   def _get_parent(self, obj: docspec.ApiObject) -> Optional[docspec.ApiObject]:
     return self._reverse_map.get_parent(obj)
@@ -265,6 +270,10 @@ class MarkdownRenderer(Struct):
     if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
     self._render_signature_block(fp, obj)
+    if self.source_linker:
+      url = self.source_linker.get_source_url(obj)
+      if url:
+        fp.write('[[view source]]({})\n\n'.format(url))
     if obj.docstring:
       lines = obj.docstring.split('\n')
       if self.docstrings_as_blockquote:

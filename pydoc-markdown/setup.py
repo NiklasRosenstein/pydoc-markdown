@@ -63,6 +63,9 @@ setuptools.setup(
       'hugo = pydoc_markdown.contrib.renderers.hugo:HugoRenderer',
       'markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer',
       'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer',
+    ],
+    'pydoc_markdown.interfaces.SourceLinker': [
+      'github = pydoc_markdown.contrib.source_linkers.github:GitHubSourceLinker',
     ]
   },
   cmdclass = {},
