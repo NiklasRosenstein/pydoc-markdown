@@ -22,7 +22,7 @@
 from nr.databind.core import Field, ProxyType, Remainder, Struct
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Renderer, Resolver, Server, Builder
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.knownfiles import KnownFiles
 from pydoc_markdown.util.pages import Page
 from urllib.parse import urlparse, urljoin
@@ -224,6 +224,8 @@ class HugoRenderer(Struct):
     'extended': Field(bool, default=True),
   }, default=Field.DEFAULT_CONSTRUCT)
 
+  _context = Field(Context, default=None, hidden=True)  # Initialized in #init()
+
   def _render_page(self, modules: List[docspec.Module], page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     preamble = dict(**self.default_preamble, **{'title': page.title}, **page.preamble)
@@ -234,7 +236,7 @@ class HugoRenderer(Struct):
       fp.write('---\n\n')
 
       if page.source:
-        with open(page.source) as src:
+        with open(os.path.join(self._context.directory, page.source)) as src:
           shutil.copyfileobj(src, fp)
       else:
         self.markdown.fp = fp
@@ -314,6 +316,13 @@ class HugoRenderer(Struct):
     if site_dir:
       command += ['--destination', os.path.abspath(site_dir)]
     subprocess.check_call(command, cwd=self.build_directory)
+
+  # PluginBase
+
+  @override
+  def init(self, context: Context) -> None:
+    self._context = context
+    self.markdown.init(context)
 
 
 def install_hugo(to: str, version: str = None, extended: bool = True) -> None:

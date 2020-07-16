@@ -41,8 +41,24 @@ def _make_union_type(entrypoint_name: str) -> UnionType:
   ))
 
 
+class Context:
+  """
+  Context data that is passed to plugins when they are loaded.
+  """
+
+  def __init__(self, directory: str) -> None:
+    self.directory = directory
+
+
+class PluginBase(Interface):
+
+  @default
+  def init(self, context: Context) -> None:
+    pass
+
+
 @SerializeAs(_make_union_type('pydoc_markdown.interfaces.Loader'))
-class Loader(Interface):
+class Loader(PluginBase):
   """
   This interface describes an object that is capable of loading documentation
   data. The location from which the documentation is loaded must be defined
@@ -69,7 +85,7 @@ class Resolver(Interface):
 
 
 @SerializeAs(_make_union_type('pydoc_markdown.interfaces.Processor'))
-class Processor(Interface):
+class Processor(PluginBase):
   """
   A processor is an object that takes a list of #docspec.Module#s as an input and
   transforms it in an arbitrary way. This usually processes docstrings to convert from
@@ -81,7 +97,7 @@ class Processor(Interface):
 
 
 @SerializeAs(_make_union_type('pydoc_markdown.interfaces.Renderer'))
-class Renderer(Processor):
+class Renderer(PluginBase):
   """
   A renderer is an object that takes a list of #docspec.Module#s as an input and produces
   output files or writes to stdout. It may also expose additional command-line arguments.
@@ -147,7 +163,7 @@ class Builder(Interface):
 
 
 @SerializeAs(_make_union_type('pydoc_markdown.interfaces.SourceLinker'))
-class SourceLinker(Interface):
+class SourceLinker(PluginBase):
   """
   This interface is used to determine the URL to the source of an API object. Renderers
   can use it to place a link to the source in the generated documentation.

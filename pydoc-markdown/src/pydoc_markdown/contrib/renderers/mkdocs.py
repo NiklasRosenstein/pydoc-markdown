@@ -22,7 +22,7 @@
 from nr.databind.core import Field, Struct, ProxyType
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Renderer, Resolver, Server, Builder
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.pages import Page
 from pydoc_markdown.util.knownfiles import KnownFiles
 from typing import Dict, Iterable, List, Optional, Tuple
@@ -98,6 +98,8 @@ class MkdocsRenderer(Struct):
   #: `mkdocs.yml` file.
   mkdocs_config = Field(dict, default=dict, nullable=True)
 
+  _context = Field(Context, default=None, hidden=True)  # Initialized in #init()
+
   @property
   def content_dir(self) -> str:
     return os.path.join(self.output_directory, self.content_directory_name)
@@ -141,7 +143,7 @@ class MkdocsRenderer(Struct):
           continue
 
         self.markdown.filename = filename
-        item.page.render(filename, modules, self.markdown)
+        item.page.render(filename, modules, self.markdown, context_directory=self._context.directory)
         known_files.append(filename)
 
       config = copy.deepcopy(self.mkdocs_config)
@@ -182,6 +184,14 @@ class MkdocsRenderer(Struct):
 
   # Builder
 
+  @override
   def build(self, site_dir: str=None) -> None:
     command = ['mkdocs', 'build', '--clean', '--site-dir', site_dir]
     subprocess.check_call(command, cwd=self.output_directory)
+
+  # PluginBase
+
+  @override
+  def init(self, context: Context) -> None:
+    self._context = context
+    self.markdown.init(context)

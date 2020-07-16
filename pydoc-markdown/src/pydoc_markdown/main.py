@@ -33,7 +33,7 @@ from pydoc_markdown import __version__, PydocMarkdown, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
-from pydoc_markdown.interfaces import Server
+from pydoc_markdown.interfaces import Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
 from typing import List, Set, Union
 import click
@@ -118,6 +118,9 @@ class RenderSession:
       config.load_config(self.config)
     self._apply_overrides(config)
 
+    if isinstance(self.config, str):
+      config.init(Context(directory=os.path.dirname(os.path.abspath(self.config))))
+
     if config.unknown_fields:
       logger.warning('Unknown configuration options: %s', ', '.join(config.unknown_fields))
 
@@ -194,8 +197,8 @@ def error(*args):
 @click.version_option(__version__)
 @click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo', 'readthedocs']),
   help='Create a Pydoc-Markdown configuration file in the current working directory.')
-@click.option('--verbose', '-v', is_flag=True, help='Increase log verbosity.')
-@click.option('--quiet', '-q', is_flag=True, help='Decrease the log verbosity.')
+@click.option('--verbose', '-v', count=True, help='Increase log verbosity.')
+@click.option('--quiet', '-q', count=True, help='Decrease the log verbosity.')
 @click.option('--module', '-m', 'modules', metavar='MODULE', multiple=True,
   help='The module to parse and generated API documentation for. Can be '
        'specified multiple times. ' + default_config_notice)
@@ -289,14 +292,16 @@ def cli(
   load_implicit_config = not any((modules, packages, search_path, py2 is not None))
 
   # Initialize logging.
-  if verbose is not None:
-    if verbose:
-      level = logging.INFO
-    elif quiet:
-      level = logging.ERROR
-    else:
-      level = logging.WARNING
-    logging.basicConfig(format='[%(levelname)s - %(name)s]: %(message)s', level=level)
+  verbosity = verbose - quiet
+  if verbosity >= 2:
+    level = logging.DEBUG
+  elif verbosity >= 1:
+    level = logging.INFO
+  elif verbosity >= 0:
+    level = logging.ERROR
+  else:
+    level = logging.WARNING
+  logging.basicConfig(format='[%(levelname)s - %(name)s]: %(message)s', level=level)
 
   # Load the configuration.
   if config and (config.lstrip().startswith('{') or '\n' in config):

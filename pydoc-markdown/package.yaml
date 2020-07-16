@@ -31,10 +31,10 @@ classifiers:
   - "Programming Language :: Python :: 3.5"
 
 requirements:
-  - python ^3.6
+  - python ^3.5
   - click ^7.0
   - docspec ~0.2.0
-  - docspec-python ~0.0.4
+  - docspec-python ~0.0.7
   - nr.collections ~0.0.1
   - nr.interface ~0.0.3
   - nr.databind.core ~0.0.18

@@ -21,8 +21,8 @@
 
 from docspec_python import format_arglist
 from nr.databind.core import Field, Struct
-from nr.interface import implements
-from pydoc_markdown.interfaces import Renderer, Resolver, SourceLinker
+from nr.interface import implements, override
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
 from typing import Iterable, List, Optional, TextIO
 import docspec
 import io
@@ -344,6 +344,7 @@ class MarkdownRenderer(Struct):
 
   # Renderer
 
+  @override
   def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
     """
     Returns a simple #Resolver implementation. Finds cross-references in the same file.
@@ -375,9 +376,17 @@ class MarkdownRenderer(Struct):
 
     return resolver
 
+  @override
   def render(self, modules: List[docspec.Module]) -> None:
     if self.filename is None:
       self._render_modules(modules, self.fp or sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
         self._render_modules(modules, fp)
+
+  # PluginBase
+
+  @override
+  def init(self, context: Context) -> None:
+    if self.source_linker:
+      self.source_linker.init(context)

@@ -26,11 +26,12 @@ Loads Python source code.
 import docspec
 import docspec_python
 import logging
+import os
 import sys
 
 from nr.databind.core import Field, Struct
 from nr.interface import implements, override
-from pydoc_markdown.interfaces import Loader, LoaderError
+from pydoc_markdown.interfaces import Context, Loader, LoaderError
 from typing import Iterable, List
 
 logger = logging.getLogger(__name__)
@@ -77,6 +78,8 @@ class PythonLoader(Struct):
   #: Options for the Python parser.
   parser = Field(docspec_python.ParserOptions, default=Field.DEFAULT_CONSTRUCT)
 
+  _context = Field(Context, default=None, hidden=True)
+
   def get_effective_search_path(self) -> List[str]:
     if self.search_path is None:
       search_path = ['.', 'src'] if self.modules is None else list(sys.path)
@@ -85,7 +88,9 @@ class PythonLoader(Struct):
       if '*' in search_path:
         index = search_path.index('*')
         search_path[index:index+1] = sys.path
-    return search_path
+    return [os.path.join(self._context.directory, x) for x in search_path]
+
+  # Loader
 
   @override
   def load(self) -> Iterable[docspec.Module]:
@@ -127,3 +132,9 @@ class PythonLoader(Struct):
       search_path=search_path,
       options=self.parser
     )
+
+  # PluginBase
+
+  @override
+  def init(self, context: Context) -> None:
+    self._context = context

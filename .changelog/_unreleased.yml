@@ -20,3 +20,17 @@ changes:
   description: add `MarkdownRenderer.source_linker` option
   fixes:
   - '#122'
+- type: change
+  component: cli
+  description: '`-v,--verbose` and `-q,--quiet` flags are now countable (e.g. `-vv`
+    will raise the logging verbosity to `DEBUG`)'
+  fixes: []
+- type: improvement
+  component: internal
+  description: |
+    Ensure consistency independent of the CWD from which Pydoc-Markdown is invoked as long
+    as the same configuration file is used by introduce the `Context` object and the `init()`
+    method for plugins. The `Context.directory` is set to the parent directory of the
+    `pydoc-markdown.yml` configuration file. Plugins use that directory to interpret relative
+    paths instead of the current working directory.
+  fixes: []
