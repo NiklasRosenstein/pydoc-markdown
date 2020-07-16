@@ -59,11 +59,15 @@ class GitHubSourceLinker(Struct):
     if hasattr(self, '_repo_root'):
       return self._repo_root
     self._repo_root = _getoutput(['git', 'rev-parse', '--show-toplevel']).strip()
+    logger.debug('repo root = %r', self._repo_root)
     return self._repo_root
 
   def _get_sha(self) -> str:
-    sha = _getoutput(['git', 'rev-parse', 'HEAD']).strip()
-    return sha
+    if hasattr(self, '_sha'):
+      return self._sha
+    self._sha = _getoutput(['git', 'rev-parse', 'HEAD']).strip()
+    logger.debug('sha = %r', self._sha)
+    return self._sha
 
   @override
   def get_source_url(self, obj: docspec.ApiObject) -> str:
@@ -74,5 +78,7 @@ class GitHubSourceLinker(Struct):
       return None
     sha = self._get_sha()
     rel_path = os.path.relpath(os.path.abspath(obj.location.filename), repo_root)
-    return 'https://{}/{}/blob/{}/{}#L{}'.format(
+    url = 'https://{}/{}/blob/{}/{}#L{}'.format(
       self.host, self.repo, sha, rel_path, obj.location.lineno)
+    logger.debug('url for api object %r: %r (rel_path: %r)', obj.name, url, rel_path)
+    return url
