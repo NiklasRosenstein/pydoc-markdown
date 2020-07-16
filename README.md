@@ -1,13 +1,12 @@
   [MkDocs]: https://www.mkdocs.org/
 
 # Pydoc-Markdown
-<a href="https://circleci.com/gh/NiklasRosenstein/workflows/pydoc-markdown/tree/develop"><img align="right" src="https://circleci.com/gh/NiklasRosenstein/pydoc-markdown/tree/develop.svg?style=svg" alt="CircleCI"><img align="right" src="https://img.shields.io/badge/version-3.x-purple" alt="Version 3.x"></a>
 
 Pydoc-Markdown is a tool and library to create Python API documentation in
 Markdown format based on `lib2to3`, allowing it to parse your Python code
 without executing it.
 
-Pydoc-Markdown requires Python 3.5 or newer.
+Pydoc-Markdown requires Python 3.6 or newer.
 
 [>> Go to the Documentation](https://pydoc-markdown.readthedocs.io/en/latest/)
 
