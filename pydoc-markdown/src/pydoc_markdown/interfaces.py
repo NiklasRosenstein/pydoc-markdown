@@ -144,3 +144,14 @@ class Builder(Interface):
     output files should be placed. Otherwise, the directory may be determined by
     the builder.
     """
+
+
+@SerializeAs(_make_union_type('pydoc_markdown.interfaces.SourceLinker'))
+class SourceLinker(Interface):
+  """
+  This interface is used to determine the URL to the source of an API object. Renderers
+  can use it to place a link to the source in the generated documentation.
+  """
+
+  def get_source_url(self, obj: docspec.ApiObject) -> Optional[str]:
+    pass

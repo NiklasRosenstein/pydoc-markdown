@@ -7,3 +7,16 @@ changes:
     to their registered entrypoint name.
   fixes:
   - '#131'
+- type: feature
+  component: general
+  description: add new `SourceLinker` interface
+  fixes: []
+- type: feature
+  component: general
+  description: 'add `GitHubSourceLinker` class (entrypoint name: `github`)'
+  fixes: []
+- type: feature
+  component: markdown
+  description: add `MarkdownRenderer.source_linker` option
+  fixes:
+  - '#122'

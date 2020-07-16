@@ -14,6 +14,10 @@ renderer:
   content_directory: content/docs  # Book theme will render the pages in content/docs in the nav.
   default_preamble:
     menu: main
+  markdown:
+    source_linker:
+      type: github
+      repo: NiklasRosenstein/pydoc-markdown
   pages:
   - title: Home
     name: index
