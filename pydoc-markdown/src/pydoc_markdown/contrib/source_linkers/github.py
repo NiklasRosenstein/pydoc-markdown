@@ -26,6 +26,7 @@ from typing import List, Optional, Tuple
 import docspec
 import logging
 import os
+import nr.fs
 import subprocess
 
 logger = logging.getLogger(__name__)
@@ -78,6 +79,10 @@ class GitHubSourceLinker(Struct):
       return None
     sha = self._get_sha()
     rel_path = os.path.relpath(os.path.abspath(obj.location.filename), repo_root)
+    if nr.fs.issub(rel_path):
+      # The path points outside of the repo_root. Cannot construct the URL in that case.
+      logger.debug('rel_path %r points outside of repo_root %r', rel_path, repo_root)
+      return None
     url = 'https://{}/{}/blob/{}/{}#L{}'.format(
       self.host, self.repo, sha, rel_path, obj.location.lineno)
     logger.debug('url for api object %r: %r (rel_path: %r)', obj.name, url, rel_path)
