@@ -79,7 +79,7 @@ class GitHubSourceLinker(Struct):
       return None
     sha = self._get_sha()
     rel_path = os.path.relpath(os.path.abspath(obj.location.filename), repo_root)
-    if nr.fs.issub(rel_path):
+    if not nr.fs.issub(rel_path):
       # The path points outside of the repo_root. Cannot construct the URL in that case.
       logger.debug('rel_path %r points outside of repo_root %r', rel_path, repo_root)
       return None
