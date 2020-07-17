@@ -34,9 +34,11 @@ from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+from pydoc_markdown.util import ytemplate
 from typing import List, Union
 import docspec
 import logging
+import os
 import subprocess
 import yaml
 
@@ -91,8 +93,7 @@ class PydocMarkdown(Struct):
     if isinstance(data, str):
       filename = data
       logger.info('Loading configuration file "%s".', filename)
-      with open(data) as fp:
-        data = yaml.safe_load(fp)
+      data = ytemplate.load(filename, {'env': ytemplate.Attributor(os.environ)})
 
     collector = Collect()
     result = mapper.deserialize(data, type(self), filename=filename, decorations=[collector])

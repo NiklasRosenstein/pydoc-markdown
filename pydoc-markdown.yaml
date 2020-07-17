@@ -1,23 +1,38 @@
+
+#@ def base_url():
+#@    if env.READTHEDOCS:
+#@      return "https://pydoc-markdown.readthedocs.io/en/" + env.READTHEDOCS_VERSION + "/"
+#@    else:
+#@      return None
+#@ end
+
 loaders:
   - type: python
     search_path: [pydoc-markdown/src]
+
 hooks:
   pre-render:
   - shut changelog -a --markdown >CHANGELOG.md
+
 renderer:
   type: hugo
-  config:
-    baseURL: "https://pydoc-markdown.readthedocs.io/en/latest/"
-    title: "Pydoc-Markdown"
-    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
-  build_directory: docs/build
-  content_directory: content/docs  # Book theme will render the pages in content/docs in the nav.
-  default_preamble:
-    menu: main
+
   markdown:
     source_linker:
       type: github
       repo: NiklasRosenstein/pydoc-markdown
+
+  config:
+    baseURL: #@ base_url()
+    title: "Pydoc-Markdown"
+    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+
+  build_directory: docs/build
+  content_directory: content/docs  # Book theme will render the pages in content/docs in the nav.
+
+  default_preamble:
+    menu: main
+
   pages:
   - title: Home
     name: index
