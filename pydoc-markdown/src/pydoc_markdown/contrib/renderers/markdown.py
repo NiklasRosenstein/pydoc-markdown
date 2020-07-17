@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 from docspec_python import format_arglist
-from nr.databind.core import Field, Struct
+from nr.databind.core import Field, Struct, Validator
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
 from typing import Iterable, List, Optional, TextIO
@@ -168,6 +168,15 @@ class MarkdownRenderer(Struct):
   #: place links to the source code in the generated Markdown files.
   source_linker = Field(SourceLinker, default=None)
 
+  #: Allows you to define the position of the "view source" link in the Markdown
+  #: file if a #source_linker is configured.
+  source_position = Field(str, Validator.choices(["after signature", "before signature"]),
+                          default="after signature")
+
+  #: Allows you to override how the "view source" link is rendered into the Markdown
+  #: file if a #source_linker is configured. The default is `[[view_source]]({url})`.
+  source_format = Field(str, default='[[view_source]]({url})')
+
   _reverse_map = Field(docspec.ReverseMap, default=None, hidden=True)
   def _get_parent(self, obj: docspec.ApiObject) -> Optional[docspec.ApiObject]:
     return self._reverse_map.get_parent(obj)
@@ -269,11 +278,13 @@ class MarkdownRenderer(Struct):
   def _render_object(self, fp, level, obj):
     if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
-    if self.source_linker:
-      url = self.source_linker.get_source_url(obj)
-      if url:
-        fp.write('<span style="float: right; font-size: 75%;">\n[[view source]]({})\n</span>\n\n'.format(url))
+    url = self.source_linker.get_source_url(obj) if self.source_linker else None
+    source_string = self.source_format.replace('{url}', str(url)) if url else None
+    if source_string and self.source_position == 'before signature':
+      fp.write(source_string + '\n\n')
     self._render_signature_block(fp, obj)
+    if source_string and self.source_position == 'after signature':
+      fp.write(source_string + '\n\n')
     if obj.docstring:
       lines = obj.docstring.split('\n')
       if self.docstrings_as_blockquote:

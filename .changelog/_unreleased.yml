@@ -17,7 +17,7 @@ changes:
   fixes: []
 - type: feature
   component: markdown
-  description: add `MarkdownRenderer.source_linker` option
+  description: add `MarkdownRenderer.source_linker`, `.source_position` and `.source_format` options
   fixes:
   - '#122'
 - type: change
