@@ -97,7 +97,7 @@ class GitHubSourceLinker(Struct):
     """
 
     if self.root:
-      self._project_root = os.path.join(context.directory, self._root)
+      self._project_root = os.path.join(context.directory, self.root)
     else:
       self._project_root = _getoutput(['git', 'rev-parse', '--show-toplevel'], cwd=context.directory).strip()
     self._sha = _getoutput(['git', 'rev-parse', 'HEAD'], cwd=self._project_root).strip()
