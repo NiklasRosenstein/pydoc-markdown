@@ -269,11 +269,11 @@ class MarkdownRenderer(Struct):
   def _render_object(self, fp, level, obj):
     if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
-    self._render_signature_block(fp, obj)
     if self.source_linker:
       url = self.source_linker.get_source_url(obj)
       if url:
-        fp.write('[[view source]]({})\n\n'.format(url))
+        fp.write('<span style="float: right; font-size: 75%;">\n[[view source]]({})\n</span>\n\n'.format(url))
+    self._render_signature_block(fp, obj)
     if obj.docstring:
       lines = obj.docstring.split('\n')
       if self.docstrings_as_blockquote:
