@@ -21,11 +21,6 @@ renderer:
     source_linker:
       type: github
       repo: NiklasRosenstein/pydoc-markdown
-    source_position: after signature
-    source_format: |
-      <span style="float: right; font-size: 75%;">
-      [[view source]]({url})
-      </span>
 
   config:
     baseURL: #@ base_url()
