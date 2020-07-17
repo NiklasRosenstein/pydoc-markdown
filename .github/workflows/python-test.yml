@@ -49,7 +49,7 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        run: pip install -q git+https://git.niklasrosenstein.com/NiklasRosenstein/shore@shut
+        pip install -q git+https://git.niklasrosenstein.com/NiklasRosenstein/shore@shut
     - name: Shore test publish
       env:
         TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
@@ -72,7 +72,7 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        run: pip install -q git+https://git.niklasrosenstein.com/NiklasRosenstein/shore@shut
+        pip install -q git+https://git.niklasrosenstein.com/NiklasRosenstein/shore@shut
     - name: Shore publish
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
