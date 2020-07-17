@@ -32,7 +32,7 @@ Supportes preprocessing features:
   code into the function definition is not supported)
 * Value substitution
 
-Check out the [Read the Docs/Hugo baseURL](readthedocs#hugo-baseurl) documentation for an
+Check out the [Read the Docs/Hugo baseURL](../read-the-docs#hugo-baseurl) documentation for an
 example.
 
 ## Loaders

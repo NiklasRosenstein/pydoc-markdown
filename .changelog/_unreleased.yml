@@ -29,18 +29,13 @@ changes:
   component: internal
   description: 'Ensure consistency independent of the CWD from which Pydoc-Markdown
     is invoked as long
-
     as the same configuration file is used by introduce the `Context` object and the
     `init()`
-
     method for plugins. The `Context.directory` is set to the parent directory of
     the
-
     `pydoc-markdown.yml` configuration file. Plugins use that directory to interpret
     relative
-
     paths instead of the current working directory.
-
     '
   fixes: []
 - type: feature
