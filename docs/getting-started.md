@@ -38,7 +38,7 @@ the current working directory. (Note that the configuration is not read from
 file when using the `-m,--module`, `-p,--package` and other options that
 are intended for invoking Pydoc-Markdown without a configuration file).
 
-Check out the [Configuration](configuration) section for details on the file
+Check out the [Configuration](../configuration) section for details on the file
 structure.
 
 > __Tip__: The `--bootstrap` and `--bootstrap-mkdocs` options can be used to
