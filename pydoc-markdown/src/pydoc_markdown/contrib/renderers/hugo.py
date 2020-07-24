@@ -340,7 +340,7 @@ def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
 
   if sys.platform.startswith('linux'):
     platform = 'Linux'
-  elif sys.pltform.startswith('win32'):
+  elif sys.platform.startswith('win32'):
     platform = 'Windows'
   elif sys.platform.startswith('darwin'):
     platform = 'macOS'
