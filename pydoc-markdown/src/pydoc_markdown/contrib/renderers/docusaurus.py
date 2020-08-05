@@ -7,6 +7,7 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from typing import Any, Dict, List, Text
 import docspec
 import json
+import os.path
 
 
 @implements(Renderer)
@@ -45,8 +46,14 @@ class DocusaurusRenderer(MarkdownRenderer):
   escape_html_in_docstring = Field(bool, default=True)
 
   def _render_header(self, fp, level, obj):
-    # TODO: render docusaurus header
-    return super(DocusaurusRenderer, self)._render_header(fp, level, obj)
+    if isinstance(obj, docspec.Module):
+      fp.write('---\n')
+      fp.write(f'sidebar_label: {obj.name}\n')
+      fp.write(f'title: {obj.name}\n')
+      fp.write('---\n\n')
+      return
+
+    super(DocusaurusRenderer, self)._render_header(fp, level, obj)
 
   def _render_recursive(self, fp, level, obj):
     members = getattr(obj, 'members', [])
@@ -89,7 +96,9 @@ class DocusaurusRenderer(MarkdownRenderer):
         continue
 
       # only update the relative module tree if the file is not empty
-      relative_module_tree["edges"].append(str(filepath.relative_to(self.docs_base_path)))
+      relative_module_tree["edges"].append(
+        os.path.splitext(str(filepath.relative_to(self.docs_base_path)))[0]
+      )
 
     self._render_side_bar_config(module_tree)
 
