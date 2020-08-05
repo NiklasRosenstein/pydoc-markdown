@@ -22,7 +22,6 @@
 from docspec_python import format_arglist
 from nr.databind.core import Field, Struct, Validator
 from nr.interface import implements, override
-from pathlib import Path
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
 from typing import Iterable, List, Optional, TextIO
 import docspec
