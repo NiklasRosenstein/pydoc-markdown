@@ -156,17 +156,6 @@ class MarkdownRenderer(Struct):
   #: levels can be defined with #header_level_by_type.
   use_fixed_header_levels = Field(bool, default=True)
 
-  #: Render multiple files. Default to a single file.
-  render_multiple_files = Field(bool, default=False)
-
-  #: The path where to write the multiple docs files,
-  #: when `render_multiple_files` is True. Defaults to the
-  #: current working directory.
-  multiple_files_output_path = Field(str, default='.')
-
-  #: Skip documenting modules if empty
-  skip_empty_modules = Field(bool, default=False)
-
   #: Fixed header levels by API object type.
   header_level_by_type = Field({int}, default={
     'Module': 1,
@@ -310,13 +299,9 @@ class MarkdownRenderer(Struct):
       fp.write('\n\n')
 
   def _render_recursive(self, fp, level, obj):
-    members = getattr(obj, 'members', [])
-    if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
-      return
-
     self._render_object(fp, level, obj)
     level += 1
-    for member in members:
+    for member in getattr(obj, 'members', []):
       self._render_recursive(fp, level, member)
 
   def _render_modules(self, modules: List[docspec.Module], fp: TextIO):
@@ -410,21 +395,7 @@ class MarkdownRenderer(Struct):
 
   @override
   def render(self, modules: List[docspec.Module]) -> None:
-    if self.render_multiple_files:
-      for module in modules:
-        module_parts = module.name.split(".")
-        filepath = Path(self.multiple_files_output_path)
-        for module_part in module_parts[:-1]:
-          filepath = filepath / module_part
-
-        filepath.mkdir(parents=True, exist_ok=True)
-        filepath = filepath / f"{module_parts[-1]}.md"
-        with filepath.open('w', encoding=self.encoding) as fp:
-          self._render_modules([module], fp)
-        if self.skip_empty_modules and not filepath.read_text():
-          filepath.unlink()
-
-    elif self.filename is None:
+    if self.filename is None:
       self._render_modules(modules, self.fp or sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
