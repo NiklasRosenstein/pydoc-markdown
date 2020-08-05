@@ -1,35 +1,12 @@
 # -*- coding: utf8 -*-
-# Copyright (c) 2019 Niklas Rosenstein
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to
-# deal in the Software without restriction, including without limitation the
-# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-# sell copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-# IN THE SOFTWARE.
-
-from docspec_python import format_arglist
-from nr.databind.core import Field, Struct, Validator
+from nr.databind.core import Field
 from nr.interface import implements, override
 from pathlib import Path
-from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
+from pydoc_markdown.interfaces import Renderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from typing import Iterable, List, Optional, TextIO
+from typing import Any, Dict, List, Text
 import docspec
-import html
-import io
-import sys
+import json
 
 
 @implements(Renderer)
@@ -47,10 +24,19 @@ class DocusaurusRenderer(MarkdownRenderer):
   #: supports this automatically.
   insert_header_anchors = Field(bool, default=False)
 
-  #: The path where to write the multiple docs files,
-  #: when `render_multiple_files` is True. Defaults to the
-  #: current working directory.
-  output_path = Field(str, default='.')
+  #: The path where the docusaurus docs content is. Defaults "docs" folder.
+  docs_base_path = Field(str, default='docs')
+
+  #: The output path inside the docs_base_path folder, used to ouput the
+  #: module reference.
+  relative_output_path = Field(str, default='reference')
+
+  #: The sidebar path inside the docs_base_path folder, used to ouput the
+  #: sidebar for the module reference.
+  relative_sidebar_path = Field(str, default='sidebar.json')
+
+  #: The top-level label in the sidebar. Default to 'Reference'.
+  sidebar_top_level_label = Field(str, default='Reference')
 
   #: Skip documenting modules if empty. Defaults to True.
   skip_empty_modules = Field(bool, default=True)
@@ -71,15 +57,69 @@ class DocusaurusRenderer(MarkdownRenderer):
 
   @override
   def render(self, modules: List[docspec.Module]) -> None:
+    modules_and_paths = []
+    module_tree = {"children": {}, "edges": []}
+    output_path = Path(self.docs_base_path) / self.relative_output_path
     for module in modules:
       module_parts = module.name.split(".")
-      filepath = Path(self.output_path)
+      filepath = output_path
+      relative_module_tree = module_tree
+      intermediary_module = []
       for module_part in module_parts[:-1]:
+        # update the module tree
+        intermediary_module.append(module_part)
+        intermediary_module_name = ".".join(intermediary_module)
+        relative_module_tree["children"].setdefault(intermediary_module_name, {"children": {}, "edges": []})
+        relative_module_tree = relative_module_tree["children"][intermediary_module_name]
+
+        # descend to the file
         filepath = filepath / module_part
 
+      # create intermediary missing directories and get the full path
       filepath.mkdir(parents=True, exist_ok=True)
       filepath = filepath / f"{module_parts[-1]}.md"
+
       with filepath.open('w', encoding=self.encoding) as fp:
         self._render_modules([module], fp)
+
+      # a bit dirty to cleanup the empty files like that, but hard to
+      # hook into the rendering mechanism
       if self.skip_empty_modules and not filepath.read_text():
         filepath.unlink()
+        continue
+
+      # only update the relative module tree if the file is not empty
+      relative_module_tree["edges"].append(str(filepath.relative_to(self.docs_base_path)))
+
+    self._render_side_bar_config(module_tree)
+
+  def _render_side_bar_config(self, module_tree: Dict[Text, Any]) -> None:
+    """
+    Render sidebar configuration in a JSON file. See Docusaurus sidebar structure:
+
+    https://v2.docusaurus.io/docs/docs-introduction/#sidebar
+    """
+    sidebar = {
+      "type": 'category',
+      "label": self.sidebar_top_level_label,
+    }
+    self._build_sidebar_tree(sidebar, module_tree)
+
+    sidebar_path = Path(self.docs_base_path) / self.relative_output_path / self.relative_sidebar_path
+    with sidebar_path.open("w") as handle:
+      json.dump(sidebar, handle, indent=2, sort_keys=True)
+
+  def _build_sidebar_tree(self, sidebar: Dict[Text, Any], module_tree: Dict[Text, Any]) -> None:
+    """
+    Recursively build the sidebar tree, it follows Docusaurus sidebar structure:
+
+    https://v2.docusaurus.io/docs/docs-introduction/#sidebar
+    """
+    sidebar["items"] = module_tree.get("edges", [])
+    for child_name, child_tree in module_tree.get("children", {}).items():
+      child = {
+          "type": 'category',
+          "label": child_name,
+      }
+      self._build_sidebar_tree(child, child_tree)
+      sidebar["items"].append(child)
