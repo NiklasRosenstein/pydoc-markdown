@@ -68,10 +68,12 @@ class DocusaurusRenderer(MarkdownRenderer):
     module_tree = {"children": {}, "edges": []}
     output_path = Path(self.docs_base_path) / self.relative_output_path
     for module in modules:
-      module_parts = module.name.split(".")
       filepath = output_path
+
+      module_parts = module.name.split(".")
       relative_module_tree = module_tree
       intermediary_module = []
+
       for module_part in module_parts[:-1]:
         # update the module tree
         intermediary_module.append(module_part)
