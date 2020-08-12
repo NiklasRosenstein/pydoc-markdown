@@ -13,9 +13,8 @@ import os.path
 @implements(Renderer)
 class DocusaurusRenderer(MarkdownRenderer):
   """
-  Produces Markdown files. This renderer is often used by other renderers, such as
-  #MkdocsRenderer and #HugoRenderer. It provides a wide variety of options to customize
-  the generated Markdown files.
+  Produces Markdown files to be used with Docusaurus websites.
+  It inherits #MarkdownRenderer and provides nice defaults.
 
   ### Options
   """
