@@ -28,7 +28,7 @@ __Quickstart__
     $ pipx install mkdocs
     $ pydoc-markdown --bootstrap mkdocs
     $ pydoc-markdown --bootstrap readthedocs
-    $ pydoc-markdown --server --open-browser
+    $ pydoc-markdown --server --open
 
 What this does:
 
