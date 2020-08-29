@@ -11,6 +11,9 @@ readme: ../README.md
 release:
   tag-format: "v{version}"
 
+changelog:
+  directory: ../.changelog
+
 keywords:
   - documentation
   - docs
