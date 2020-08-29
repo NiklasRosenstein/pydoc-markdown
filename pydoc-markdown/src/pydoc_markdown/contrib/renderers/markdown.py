@@ -197,7 +197,7 @@ class MarkdownRenderer(Struct):
     object_id = self._generate_object_id(obj)
     fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
     level += 1
-    for child in obj.members.values():
+    for child in getattr(obj, 'members', []):
       self._render_toc(fp, level, child)
 
   def _render_header(self, fp, level, obj):

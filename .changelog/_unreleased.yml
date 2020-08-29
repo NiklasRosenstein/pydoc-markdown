@@ -1,0 +1,7 @@
+release_date: null
+changes:
+- type: fix
+  component: markdown
+  description: Fix "list" object has no attribute "values" in `MarkdownRenderer`
+  fixes:
+  - '#149'
