@@ -70,11 +70,10 @@ entrypoints:
   pydoc_markdown.interfaces.SourceLinker:
     - github = pydoc_markdown.contrib.source_linkers.github:GitHubSourceLinker
 
-use:
-  - type: pypi
-    repository: pypi
-    username: '__token__'
-    password: '$PYPI_TOKEN'
-    test_repository: testpypi
-    test_username: '__token__'
-    test_password: '$TEST_PYPI_TOKEN'
+publish:
+  pypi:
+    credentials:
+      username: '__token__'
+      password: '$PYPI_TOKEN'
+      test_username: '__token__'
+      test_password: '$TEST_PYPI_TOKEN'
