@@ -6,8 +6,10 @@ description: "Create Python API documentation in Markdown format."
 author: "Niklas Rosenstein <rosensteinniklas@gmail.com>"
 license: "MIT"
 url: "https://github.com/NiklasRosenstein/pydoc-markdown"
-tag-format: "v{version}"
 readme: ../README.md
+
+release:
+  tag-format: "v{version}"
 
 keywords:
   - documentation
