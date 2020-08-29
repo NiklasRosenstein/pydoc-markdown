@@ -1,2 +1,2 @@
 readthedocs-custom-steps
-shut==0.1.1
+shut==0.2.0

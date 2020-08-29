@@ -49,7 +49,7 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        pip install -q shut==0.1.1
+        pip install -q shut==0.2.0
     - name: Shut test publish
       env:
         TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
@@ -71,7 +71,7 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        pip install -q shut==0.1.1
+        pip install -q shut==0.2.0
     - name: Shut publish
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
