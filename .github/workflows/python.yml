@@ -49,15 +49,14 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        pip install -q git+https://git.niklasrosenstein.com/NiklasRosenstein/shore@shut
-    - name: Shore test publish
+        pip install -q shut==0.1.1
+    - name: Shut test publish
       env:
         TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
       run: |
-        shore --version
-        shore -C pydoc-markdown verify --tag "$CIRCLE_TAG"
-        shore -C pydoc-markdown publish pypi -l
-        shore -C pydoc-markdown publish pypi --test --skip-existing
+        cd pydoc-markdown
+        shut pkg update --verify-tag "$CIRCLE_TAG"
+        shut pkg publish warehouse:pypi --test
 
   publish:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -72,12 +71,11 @@ jobs:
         python-version: 3.6
     - name: Install dependencies
       run: |
-        pip install -q git+https://git.niklasrosenstein.com/NiklasRosenstein/shore@shut
-    - name: Shore publish
+        pip install -q shut==0.1.1
+    - name: Shut publish
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
       run: |
-        shore --version
-        shore -C pydoc-markdown verify --tag "$CIRCLE_TAG"
-        shore -C pydoc-markdown publish pypi -l
-        shore -C pydoc-markdown publish pypi
+        cd pydoc-markdown
+        shut pkg update --verify-tag "$CIRCLE_TAG"
+        shut pkg publish warehouse:pypi
