@@ -19,7 +19,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, FieldName, Struct
+from nr.databind.core import Field, Struct
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
@@ -101,7 +101,7 @@ class MkdocsRenderer(Struct):
   #: ```
   #: $ MKDOCS_PORT=8383 pydoc-markdown -so
   #: ```
-  server_port = Field(int, FieldName('server-port'), default=None)
+  server_port = Field(int, default=None)
 
   _context = Field(Context, default=None, hidden=True)  # Initialized in #init()
 
