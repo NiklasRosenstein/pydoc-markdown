@@ -1,2 +1,2 @@
 readthedocs-custom-steps
-git+https://git.niklasrosenstein.com/NiklasRosenstein/shore@shut
+shut==0.1.1
