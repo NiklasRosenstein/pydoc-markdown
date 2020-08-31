@@ -19,20 +19,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, Struct, ProxyType
+from nr.databind.core import Field, Struct
 from nr.interface import implements, override
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.pages import Page
 from pydoc_markdown.util.knownfiles import KnownFiles
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Optional
 import copy
 import docspec
-import fnmatch
 import logging
 import os
-import re
-import shutil
 import subprocess
 import yaml
 
@@ -98,6 +95,14 @@ class MkdocsRenderer(Struct):
   #: `mkdocs.yml` file.
   mkdocs_config = Field(dict, default=dict, nullable=True)
 
+  #: Port for the Mkdocs server when using the `pydoc-markdown --server` option.
+  #: Defaults to `8000`. Can be set with the `MKDOCS_PORT` environment variable:
+  #:
+  #: ```
+  #: $ MKDOCS_PORT=8383 pydoc-markdown -so
+  #: ```
+  server_port = Field(int, default=None)
+
   _context = Field(Context, default=None, hidden=True)  # Initialized in #init()
 
   @property
@@ -120,6 +125,13 @@ class MkdocsRenderer(Struct):
           result.append({page.title: filename})
       return result
     return _generate(self.pages)
+
+  def _get_addr(self) -> str:
+    if self.server_port is None:
+      port = int(os.getenv('MKDOCS_PORT', '8000'))
+    else:
+      port = self.server_port
+    return 'localhost:{}'.format(port)
 
   # Renderer
 
@@ -170,11 +182,12 @@ class MkdocsRenderer(Struct):
 
   @override
   def get_server_url(self) -> str:
-    return 'http://localhost:8000'
+    return 'http://{}'.format(self._get_addr())
 
   @override
   def start_server(self) -> subprocess.Popen:
-    return subprocess.Popen(['mkdocs', 'serve'], cwd=self.output_directory)
+    addr = self._get_addr()
+    return subprocess.Popen(['mkdocs', 'serve', '-a', addr], cwd=self.output_directory)
 
   @override
   def reload_server(self, process: subprocess.Popen):
