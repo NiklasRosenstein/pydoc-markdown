@@ -1,0 +1,13 @@
+loaders:
+- type: python
+  search_path: [../src]
+renderer:
+  type: hugo
+  config:
+    title: School Project
+    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+  pages:
+  - title: API Documentation
+    name: index
+    contents:
+    - school.*
