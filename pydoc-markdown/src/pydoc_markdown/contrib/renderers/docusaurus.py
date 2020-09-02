@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-from nr.databind.core import Field
+from nr.databind.core import Field, Struct
 from nr.interface import implements, override
 from pathlib import Path
 from pydoc_markdown.interfaces import Renderer
@@ -11,18 +11,31 @@ import os.path
 
 
 @implements(Renderer)
-class DocusaurusRenderer(MarkdownRenderer):
+class DocusaurusRenderer(Struct):
   """
   Produces Markdown files to be used with Docusaurus websites.
-  It inherits #MarkdownRenderer and provides nice defaults.
 
   ### Options
   """
 
-  #: If enabled, inserts anchors before Markdown headers to ensure that
-  #: links to the header work. This is disabled by default because Docusaurus
-  #: supports this automatically.
-  insert_header_anchors = Field(bool, default=False)
+  #: The #MarkdownRenderer configuration.
+  markdown = Field(
+    MarkdownRenderer,
+    default=Field.DEFAULT_CONSTRUCT,
+    # disabled because Docusaurus supports this automatically
+    insert_header_anchors=False,
+    # escape html in docstring, otherwise it could lead to invalid html
+    escape_html_in_docstring=True,
+    # do not generate any page for empty modules
+    skip_empty_modules=True,
+    # conforms to Docusaurus header format
+    render_module_header_template=(
+      '---\n',
+      'sidebar_label: {module_name}\n',
+      'title: {module_name}\n',
+      '---\n\n',
+    )
+  )
 
   #: The path where the docusaurus docs content is. Defaults "docs" folder.
   docs_base_path = Field(str, default='docs')
@@ -37,29 +50,6 @@ class DocusaurusRenderer(MarkdownRenderer):
 
   #: The top-level label in the sidebar. Default to 'Reference'.
   sidebar_top_level_label = Field(str, default='Reference')
-
-  #: Skip documenting modules if empty. Defaults to True.
-  skip_empty_modules = Field(bool, default=True)
-
-  #: Escape html in docstring. Default to True.
-  escape_html_in_docstring = Field(bool, default=True)
-
-  def _render_header(self, fp, level, obj):
-    if isinstance(obj, docspec.Module):
-      fp.write('---\n')
-      fp.write(f'sidebar_label: {obj.name}\n')
-      fp.write(f'title: {obj.name}\n')
-      fp.write('---\n\n')
-      return
-
-    super(DocusaurusRenderer, self)._render_header(fp, level, obj)
-
-  def _render_recursive(self, fp, level, obj):
-    members = getattr(obj, 'members', [])
-    if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
-      return
-
-    return super(DocusaurusRenderer, self)._render_recursive(fp, level, obj)
 
   @override
   def render(self, modules: List[docspec.Module]) -> None:
@@ -87,12 +77,15 @@ class DocusaurusRenderer(MarkdownRenderer):
       filepath.mkdir(parents=True, exist_ok=True)
       filepath = filepath / f"{module_parts[-1]}.md"
 
-      with filepath.open('w', encoding=self.encoding) as fp:
-        self._render_modules([module], fp)
+      with filepath.open('w') as fp:
+        # FIXME: not the cleanest way of doing this...
+        self.markdown.fp = fp
+        self.markdown.render([module])
+        self.markdown.fp = None
 
       # a bit dirty to cleanup the empty files like that, but hard to
       # hook into the rendering mechanism
-      if self.skip_empty_modules and not filepath.read_text():
+      if self.markdown.skip_empty_modules and not filepath.read_text():
         filepath.unlink()
         continue
 
