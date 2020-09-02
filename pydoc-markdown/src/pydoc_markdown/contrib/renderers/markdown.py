@@ -148,6 +148,9 @@ class MarkdownRenderer(Struct):
   #: Render module headers. This is enabled by default.
   render_module_header = Field(bool, default=True)
 
+  #: Custom template for module header.
+  render_module_header_template = Field(str, default='')
+
   #: Render docstrings as blockquotes. This is disabled by default.
   docstrings_as_blockquote = Field(bool, default=False)
 
@@ -208,6 +211,10 @@ class MarkdownRenderer(Struct):
       self._render_toc(fp, level, child)
 
   def _render_header(self, fp, level, obj):
+    if self.render_module_header_template and isinstance(obj, docspec.Module):
+      fp.write(self.render_module_header_template.format(module_name=obj.name))
+      return
+
     object_id = self._generate_object_id(obj)
     if self.use_fixed_header_levels:
       # Read the header level based on the API object type. The default levels defined
