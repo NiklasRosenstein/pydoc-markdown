@@ -21,20 +21,21 @@ class DocusaurusRenderer(Struct):
   #: The #MarkdownRenderer configuration.
   markdown = Field(
     MarkdownRenderer,
-    default=Field.DEFAULT_CONSTRUCT,
-    # disabled because Docusaurus supports this automatically
-    insert_header_anchors=False,
-    # escape html in docstring, otherwise it could lead to invalid html
-    escape_html_in_docstring=True,
-    # do not generate any page for empty modules
-    skip_empty_modules=True,
-    # conforms to Docusaurus header format
-    render_module_header_template=(
-      '---\n',
-      'sidebar_label: {module_name}\n',
-      'title: {module_name}\n',
-      '---\n\n',
-    )
+    default=MarkdownRenderer(
+      # disabled because Docusaurus supports this automatically
+      insert_header_anchors=False,
+      # escape html in docstring, otherwise it could lead to invalid html
+      escape_html_in_docstring=True,
+      # do not generate any page for empty modules
+      skip_empty_modules=True,
+      # conforms to Docusaurus header format
+      render_module_header_template=(
+        '---\n'
+        'sidebar_label: {module_name}\n'
+        'title: {module_name}\n'
+        '---\n\n'
+      )
+    ),
   )
 
   #: The path where the docusaurus docs content is. Defaults "docs" folder.
