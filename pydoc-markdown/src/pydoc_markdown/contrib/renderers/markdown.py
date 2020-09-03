@@ -372,6 +372,9 @@ class MarkdownRenderer(Struct):
     self._render_modules(modules, fp)
     return fp.getvalue()
 
+  def render_to_stream(self, modules: List[docspec.Module], stream: TextIO):
+    self._render_modules(modules, stream)
+
   # Renderer
 
   @override

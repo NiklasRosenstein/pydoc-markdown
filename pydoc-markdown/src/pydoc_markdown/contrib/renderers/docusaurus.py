@@ -79,10 +79,7 @@ class DocusaurusRenderer(Struct):
       filepath = filepath / f"{module_parts[-1]}.md"
 
       with filepath.open('w') as fp:
-        # FIXME: not the cleanest way of doing this...
-        self.markdown.fp = fp
-        self.markdown.render([module])
-        self.markdown.fp = None
+        self.markdown.render_to_stream([module], fp)
 
       # a bit dirty to cleanup the empty files like that, but hard to
       # hook into the rendering mechanism

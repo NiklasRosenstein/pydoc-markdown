@@ -239,9 +239,7 @@ class HugoRenderer(Struct):
         with open(os.path.join(self._context.directory, page.source)) as src:
           shutil.copyfileobj(src, fp)
       else:
-        self.markdown.fp = fp
-        self.markdown.render(modules)
-        self.markdown.fp = None
+        self.markdown.render_to_stream(modules, fp)
 
   def _get_hugo_bin(self):
     hugo_bin = shutil.which('hugo')
