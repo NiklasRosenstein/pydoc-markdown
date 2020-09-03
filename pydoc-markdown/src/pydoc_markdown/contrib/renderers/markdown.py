@@ -158,9 +158,6 @@ class MarkdownRenderer(Struct):
   #: levels can be defined with #header_level_by_type.
   use_fixed_header_levels = Field(bool, default=True)
 
-  #: skip documenting modules if empty. Defaults to False.
-  skip_empty_modules = Field(bool, default=False)
-
   #: Fixed header levels by API object type.
   header_level_by_type = Field({int}, default={
     'Module': 1,
@@ -308,13 +305,9 @@ class MarkdownRenderer(Struct):
       fp.write('\n\n')
 
   def _render_recursive(self, fp, level, obj):
-    members = getattr(obj, 'members', [])
-    if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
-      return
-
     self._render_object(fp, level, obj)
     level += 1
-    for member in members:
+    for member in getattr(obj, 'members', []):
       self._render_recursive(fp, level, member)
 
   def _render_modules(self, modules: List[docspec.Module], fp: TextIO):

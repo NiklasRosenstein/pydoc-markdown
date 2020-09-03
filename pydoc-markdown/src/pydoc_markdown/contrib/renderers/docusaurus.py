@@ -26,8 +26,6 @@ class DocusaurusRenderer(Struct):
       insert_header_anchors=False,
       # escape html in docstring, otherwise it could lead to invalid html
       escape_html_in_docstring=True,
-      # do not generate any page for empty modules
-      skip_empty_modules=True,
       # conforms to Docusaurus header format
       render_module_header_template=(
         '---\n'
@@ -80,12 +78,6 @@ class DocusaurusRenderer(Struct):
 
       with filepath.open('w') as fp:
         self.markdown.render_to_stream([module], fp)
-
-      # a bit dirty to cleanup the empty files like that, but hard to
-      # hook into the rendering mechanism
-      if self.markdown.skip_empty_modules and not filepath.read_text():
-        filepath.unlink()
-        continue
 
       # only update the relative module tree if the file is not empty
       relative_module_tree["edges"].append(

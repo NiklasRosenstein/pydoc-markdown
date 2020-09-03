@@ -60,6 +60,9 @@ class FilterProcessor(Struct):
   #: Do not filter #docspec.Module objects. Default: `true`
   do_not_filter_modules = Field(bool, default=True)
 
+  #: Skip modules with no content. Default: `false`.
+  skip_empty_modules = Field(bool, default=False)
+
   SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')
 
   @override
@@ -69,8 +72,12 @@ class FilterProcessor(Struct):
     docspec.filter_visit(modules, m, order='post')
 
   def _match(self, obj: docspec.ApiObject) -> bool:
-    if getattr(obj, 'members', []):
+    members = getattr(obj, 'members', [])
+
+    if members:
       return True
+    if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
+      return False
     if self.do_not_filter_modules and isinstance(obj, docspec.Module):
       return True
     if self.documented_only and not obj.docstring:

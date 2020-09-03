@@ -3,6 +3,9 @@ from pathlib import Path
 
 from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.loaders.python import PythonLoader
+from pydoc_markdown.contrib.processors.filter import FilterProcessor
+from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
+from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.docusaurus import DocusaurusRenderer
 from .test_utils import assert_text_equals
 
@@ -14,6 +17,7 @@ def test_full_processing():
             search_path=[str(Path(__file__).parent.resolve())],
             packages=['test_package']
         )],
+        processors=[FilterProcessor(skip_empty_modules=True), CrossrefProcessor(), SmartProcessor()],
         renderer=DocusaurusRenderer(
         docs_base_path=str(docs_path.resolve()),
         sidebar_top_level_label="Code reference"
