@@ -10,6 +10,24 @@ import json
 import os.path
 
 
+class CustomizedMarkdownRenderer(MarkdownRenderer):
+  """We override some defaults in this subclass. """
+
+  # disabled because Docusaurus supports this automatically
+  insert_header_anchors = Field(bool, default=False)
+
+  # escape html in docstring, otherwise it could lead to invalid html
+  escape_html_in_docstring = Field(bool, default=True)
+
+  # conforms to Docusaurus header format
+  render_module_header_template = Field(str, default=(
+    '---\n'
+    'sidebar_label: {module_name}\n'
+    'title: {module_name}\n'
+    '---\n\n'
+  ))
+
+
 @implements(Renderer)
 class DocusaurusRenderer(Struct):
   """
@@ -19,22 +37,7 @@ class DocusaurusRenderer(Struct):
   """
 
   #: The #MarkdownRenderer configuration.
-  markdown = Field(
-    MarkdownRenderer,
-    default=MarkdownRenderer(
-      # disabled because Docusaurus supports this automatically
-      insert_header_anchors=False,
-      # escape html in docstring, otherwise it could lead to invalid html
-      escape_html_in_docstring=True,
-      # conforms to Docusaurus header format
-      render_module_header_template=(
-        '---\n'
-        'sidebar_label: {module_name}\n'
-        'title: {module_name}\n'
-        '---\n\n'
-      )
-    ),
-  )
+  markdown = Field(CustomizedMarkdownRenderer, default=CustomizedMarkdownRenderer)
 
   #: The path where the docusaurus docs content is. Defaults "docs" folder.
   docs_base_path = Field(str, default='docs')
