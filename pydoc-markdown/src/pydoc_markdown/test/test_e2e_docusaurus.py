@@ -56,7 +56,7 @@ def test_full_processing():
     with suff_md.open("r") as handle:
         stuff_doc = handle.read()
 
-    assert_text_equals(stuff_doc, """---
+    assert_text_equals(stuff_doc, r"""---
 sidebar_label: test_package.module.stuff
 title: test_package.module.stuff
 ---
