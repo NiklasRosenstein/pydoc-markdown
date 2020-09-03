@@ -82,6 +82,22 @@ renderer:
         - '*'
 '''.lstrip()
 
+DEFAULT_DOCUSAURUS_CONFIG = '''
+loaders:
+  - type: python
+processors:
+  - type: filter
+    skip_empty_modules: true
+  - type: smart
+  - type: crossref
+renderer:
+  type: docusaurus
+  docs_base_path: docs
+  relative_output_path: reference
+  relative_sidebar_path: sidebar.json
+  sidebar_top_level_label: 'Reference'
+'''.lstrip()
+
 
 #: Default configuration for Read the Docs to use Pydoc-Markdown.
 READTHEDOCS_FILES = {
