@@ -83,6 +83,9 @@ renderer:
       - pydoc_markdown.contrib.processors.sphinx.SphinxProcessor.*
   - title: Renderers
     children:
+    - title: Docusaurus v2
+      contents:
+      - pydoc_markdown.contrib.renderers.docusaurus.*
     - title: Hugo
       contents:
       - pydoc_markdown.contrib.renderers.hugo.HugoPage

@@ -13,13 +13,13 @@ import os.path
 class CustomizedMarkdownRenderer(MarkdownRenderer):
   """We override some defaults in this subclass. """
 
-  # disabled because Docusaurus supports this automatically
+  #: Disabled because Docusaurus supports this automatically.
   insert_header_anchors = Field(bool, default=False)
 
-  # escape html in docstring, otherwise it could lead to invalid html
+  #: Escape html in docstring, otherwise it could lead to invalid html.
   escape_html_in_docstring = Field(bool, default=True)
 
-  # conforms to Docusaurus header format
+  #: Conforms to Docusaurus header format.
   render_module_header_template = Field(str, default=(
     '---\n'
     'sidebar_label: {module_name}\n'
@@ -31,7 +31,14 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
 @implements(Renderer)
 class DocusaurusRenderer(Struct):
   """
-  Produces Markdown files to be used with Docusaurus websites.
+  Produces Markdown files and a `sidebar.json` file for use in a [Docusaurus v2][1] websites.
+  It creates files in a fixed layout that reflects the structure of the documented packages.
+  The files will be rendered into the directory specified with the #docs_base_path option.
+
+  Check out the complete [Docusaurus example on GitHub][2].
+
+  [1]: https://v2.docusaurus.io/
+  [2]: https://github.com/NiklasRosenstein/pydoc-markdown/tree/develop/examples/docusaurus
 
   ### Options
   """
@@ -50,8 +57,9 @@ class DocusaurusRenderer(Struct):
   #: sidebar for the module reference.
   relative_sidebar_path = Field(str, default='sidebar.json')
 
-  #: The top-level label in the sidebar. Default to 'Reference'.
-  sidebar_top_level_label = Field(str, default='Reference')
+  #: The top-level label in the sidebar. Default to 'Reference'. Can be set to null to
+  #: remove the sidebar top-level all together.
+  sidebar_top_level_label = Field(str, default='Reference', nullable=True)
 
   @override
   def render(self, modules: List[docspec.Module]) -> None:
@@ -100,6 +108,8 @@ class DocusaurusRenderer(Struct):
       "label": self.sidebar_top_level_label,
     }
     self._build_sidebar_tree(sidebar, module_tree)
+    if not self.sidebar_top_level_label:
+      sidebar = sidebar['items']
 
     sidebar_path = Path(self.docs_base_path) / self.relative_output_path / self.relative_sidebar_path
     with sidebar_path.open("w") as handle:
