@@ -14,3 +14,4 @@ Pipfile.lock
 .pytest_cache/
 .vscode
 CHANGELOG.md
+pydoc-markdown/src/pydoc_markdown/test/test_package/docs/reference/

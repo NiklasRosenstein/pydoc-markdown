@@ -15,7 +15,7 @@ Pydoc-Markdown requires Python 3.6 or newer.
 * Understands multiple doc styles (Sphinx, Google, Pydoc-Markdown)
 * Supports assignment docstrings (`#:` block before or string literal after the statement)
 * Links references to other documented API objects [WIP]
-* [MkDocs][] and [Hugo](https://gohugo.io/) integration
+* [MkDocs][], [Hugo](https://gohugo.io/) and [Docusaurus](https://v2.docusaurus.io/) integration
 
 ## Installation
 

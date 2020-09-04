@@ -25,6 +25,7 @@ from nr.interface import implements, override
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
 from typing import Iterable, List, Optional, TextIO
 import docspec
+import html
 import io
 import sys
 
@@ -147,6 +148,9 @@ class MarkdownRenderer(Struct):
   #: Render module headers. This is enabled by default.
   render_module_header = Field(bool, default=True)
 
+  #: Custom template for module header.
+  render_module_header_template = Field(str, default='')
+
   #: Render docstrings as blockquotes. This is disabled by default.
   docstrings_as_blockquote = Field(bool, default=False)
 
@@ -177,6 +181,9 @@ class MarkdownRenderer(Struct):
   #: file if a #source_linker is configured. The default is `[[view_source]]({url})`.
   source_format = Field(str, default='[[view_source]]({url})')
 
+  #: Escape html in docstring. Default to False.
+  escape_html_in_docstring = Field(bool, default=False)
+
   _reverse_map = Field(docspec.ReverseMap, default=None, hidden=True)
   def _get_parent(self, obj: docspec.ApiObject) -> Optional[docspec.ApiObject]:
     return self._reverse_map.get_parent(obj)
@@ -201,6 +208,10 @@ class MarkdownRenderer(Struct):
       self._render_toc(fp, level, child)
 
   def _render_header(self, fp, level, obj):
+    if self.render_module_header_template and isinstance(obj, docspec.Module):
+      fp.write(self.render_module_header_template.format(module_name=obj.name))
+      return
+
     object_id = self._generate_object_id(obj)
     if self.use_fixed_header_levels:
       # Read the header level based on the API object type. The default levels defined
@@ -286,7 +297,8 @@ class MarkdownRenderer(Struct):
     if source_string and self.source_position == 'after signature':
       fp.write(source_string + '\n\n')
     if obj.docstring:
-      lines = obj.docstring.split('\n')
+      docstring = html.escape(obj.docstring) if self.escape_html_in_docstring else obj.docstring
+      lines = docstring.split('\n')
       if self.docstrings_as_blockquote:
         lines = ['> ' + x for x in lines]
       fp.write('\n'.join(lines))
@@ -352,6 +364,9 @@ class MarkdownRenderer(Struct):
     fp = io.StringIO()
     self._render_modules(modules, fp)
     return fp.getvalue()
+
+  def render_to_stream(self, modules: List[docspec.Module], stream: TextIO):
+    self._render_modules(modules, stream)
 
   # Renderer
 

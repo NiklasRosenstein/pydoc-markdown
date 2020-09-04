@@ -195,7 +195,7 @@ def error(*args):
 @click.command(help=__doc__)
 @click.argument('config', required=False)
 @click.version_option(__version__)
-@click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo', 'readthedocs']),
+@click.option('--bootstrap', type=click.Choice(['base', 'mkdocs', 'hugo', 'readthedocs', 'docusaurus']),
   help='Create a Pydoc-Markdown configuration file in the current working directory.')
 @click.option('--verbose', '-v', count=True, help='Increase log verbosity.')
 @click.option('--quiet', '-q', count=True, help='Decrease the log verbosity.')
@@ -282,6 +282,7 @@ def cli(
         'base': static.DEFAULT_CONFIG,
         'mkdocs': static.DEFAULT_MKDOCS_CONFIG,
         'hugo': static.DEFAULT_HUGO_CONFIG,
+        'docusaurus': static.DEFAULT_DOCUSAURUS_CONFIG,
       }
       with open(filename, 'w') as fp:
         fp.write(source[bootstrap])
