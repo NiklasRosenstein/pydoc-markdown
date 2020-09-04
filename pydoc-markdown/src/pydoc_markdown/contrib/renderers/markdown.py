@@ -349,7 +349,7 @@ class MarkdownRenderer(Struct):
 
   def render_to_string(self, modules: List[docspec.Module]) -> str:
     fp = io.StringIO()
-    self._render_modules(modules, fp)
+    self.render_to_stream(modules, fp)
     return fp.getvalue()
 
   def render_to_stream(self, modules: List[docspec.Module], stream: TextIO):
