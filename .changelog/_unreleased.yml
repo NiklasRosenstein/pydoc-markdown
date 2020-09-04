@@ -10,3 +10,16 @@ changes:
   component: markdown
   description: Remove `MarkdownRenderer.fp` option, add `MarkdownRenderer.render_to_stream()`
   fixes: []
+- type: feature
+  component: filter
+  description: add `FilterProcessor.skip_empty_modules` option
+  fixes: []
+- type: feature
+  component: markdown
+  description: Add `MarkdownRenderer.render_module_header_template` and `.escape_html_in_docstring`
+    options
+  fixes: []
+- type: feature
+  component: cli
+  description: Add `--bootstrap docusaurus` option
+  fixes: []
