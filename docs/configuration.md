@@ -37,15 +37,58 @@ example.
 
 ## Loaders
 
-(Todo. See Loaders section on the left)
+Loaders are configured in the `$.loaders` section of the Pydoc-Markdown configuration file.
+The key must be a list of loader definitions. Currently there is only the
+[Python Loader](../api-documentation/loaders#pydoc_markdown.contrib.loaders.python.PythonLoader).
+
+Example:
+
+```yml
+loaders:
+- type: loadertype1
+  key: value
+- type: loadertype2
+```
+
+If no loaders are specified, the Python loader is used by default.
 
 ## Processors
 
-(Todo. See Processors section on the left)
+Similar to the Loaders, the `$.processors` section expects a list of processor definitions.
+If no processors are defined, the `filter`, `smart` and `crossref` processors are used (in
+that order). Many processors do not have any additional options.
+
+Example:
+
+```yml
+processors:
+- type: filter
+  documented_only: false
+- type: smart
+- type: crossref
+```
 
 ## Renderer
 
-(Todo. See Renderers section on the left)
+The `$.renderer` defines the renderer to use when running `pydoc-markdown` without arguments.
+Some renderers support the `--server` option, which allows a live-preview of the documentation.
+The default renderer is the [Markdown renderer](../api-documentation/renderers/markdown) which
+will print the result to the terminal.
+
+Other renderers may produce files on disk in a layout that conforms with the static site generator
+that they aim to support.
+
+Example:
+
+```yml
+renderer:
+  type: mkdocs
+  pages:
+  - title: API Documentation
+    name: index
+    contents:
+    - school.*
+```
 
 ## Hooks
 
@@ -63,3 +106,25 @@ __Available keys__
 
 * `$.hooks.pre-render`
 * `$.hooks.post-render`
+
+## Testing your Configuration
+
+You can test the configuration of your loaders using the `pydoc-markdown --dump` option. Combine
+this with `docpspec -m --dump-tree` to get a full formatted list tree of all API objects that
+Pydoc-Markdown has discovered, after applying all processors. You can disable processors by
+adding the `--without-processors` function.
+
+```
+$ pydoc-markdown --dump | docspec -m --dump-tree
+module school._class
+| class Class
+| | data topic
+| | data teacher
+module school._person
+| class Person
+| | data name
+| | data age
+module school._pupil
+| class Pupil
+[ ... ]
+```
