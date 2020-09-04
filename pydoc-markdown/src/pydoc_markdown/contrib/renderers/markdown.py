@@ -23,7 +23,7 @@ from docspec_python import format_arglist
 from nr.databind.core import Field, Struct, Validator
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
-from typing import Iterable, List, Optional, TextIO
+from typing import cast, Iterable, List, Optional, TextIO
 import docspec
 import html
 import io
@@ -39,9 +39,6 @@ class MarkdownRenderer(Struct):
 
   ### Options
   """
-
-  #: Can be used to explicitly specify a file object to render to.
-  fp = Field(object, default=None, hidden=True)
 
   #: The name of the file to render to. If no file is specified, it will
   #: render to stdout.
@@ -234,7 +231,7 @@ class MarkdownRenderer(Struct):
       yield '@{}{}\n'.format(dec.name, dec.args or '')
 
   def _format_function_signature(self, func: docspec.Function, override_name: str = None, add_method_bar: bool = True) -> str:
-    parts = []
+    parts: List[str] = []
     if self.signature_with_decorators:
       parts += self._format_decorations(func.decorations)
     if self.signature_python_help_style and not self._is_method(func):
@@ -243,7 +240,9 @@ class MarkdownRenderer(Struct):
     if self.signature_with_def:
       parts.append('def ')
     if self.signature_class_prefix and self._is_method(func):
-      parts.append(self._get_parent(func).name + '.')
+      parent = self._get_parent(func)
+      assert parent, func
+      parts.append(parent.name + '.')
     parts.append((override_name or func.name))
     parts.append('(' + self._format_arglist(func) + ')')
     if func.return_type:
@@ -310,18 +309,6 @@ class MarkdownRenderer(Struct):
     for member in getattr(obj, 'members', []):
       self._render_recursive(fp, level, member)
 
-  def _render_modules(self, modules: List[docspec.Module], fp: TextIO):
-    self._reverse_map = docspec.ReverseMap(modules)
-
-    if self.render_toc:
-      if self.render_toc_title:
-        fp.write('# {}\n\n'.format(self.render_toc_title))
-      for m in modules:
-        self._render_toc(fp, 0, m)
-      fp.write('\n')
-    for m in modules:
-      self._render_recursive(fp, 1, m)
-
   def _get_title(self, obj):
     title = obj.name
     if (self.add_method_class_prefix and self._is_method(obj)) or \
@@ -366,7 +353,16 @@ class MarkdownRenderer(Struct):
     return fp.getvalue()
 
   def render_to_stream(self, modules: List[docspec.Module], stream: TextIO):
-    self._render_modules(modules, stream)
+    self._reverse_map = docspec.ReverseMap(modules)
+
+    if self.render_toc:
+      if self.render_toc_title:
+        stream.write('# {}\n\n'.format(self.render_toc_title))
+      for m in modules:
+        self._render_toc(stream, 0, m)
+      stream.write('\n')
+    for m in modules:
+      self._render_recursive(stream, 1, m)
 
   # Renderer
 
@@ -405,10 +401,10 @@ class MarkdownRenderer(Struct):
   @override
   def render(self, modules: List[docspec.Module]) -> None:
     if self.filename is None:
-      self._render_modules(modules, self.fp or sys.stdout)
+      self.render_to_stream(modules, sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
-        self._render_modules(modules, fp)
+        self.render_to_stream(modules, cast(TextIO, fp))
 
   # PluginBase
 

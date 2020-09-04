@@ -6,3 +6,7 @@ changes:
   fixes:
   - '#151'
   - '#147'
+- type: change
+  component: markdown
+  description: Remove `MarkdownRenderer.fp` option, add `MarkdownRenderer.render_to_stream()`
+  fixes: []
