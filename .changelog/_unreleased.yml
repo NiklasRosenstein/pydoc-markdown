@@ -1,0 +1,8 @@
+release_date: null
+changes:
+- type: feature
+  component: docusaurus
+  description: Add new `docusaurus` Renderer (contributed to by @m-vdb)
+  fixes:
+  - '#151'
+  - '#147'
