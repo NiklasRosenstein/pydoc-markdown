@@ -1,4 +1,4 @@
-release_date: null
+release_date: '2020-09-04'
 changes:
 - type: feature
   component: docusaurus
