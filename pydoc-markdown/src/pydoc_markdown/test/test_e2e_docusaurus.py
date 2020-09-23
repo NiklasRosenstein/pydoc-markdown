@@ -28,10 +28,14 @@ def test_full_processing():
     config.render(modules)
 
     sidebar = docs_path / "reference" / "sidebar.json"
+    init_md = docs_path / "reference" / "test_package" / "module" / "__init__.md"
+    wrong_module_init_md = docs_path / "reference" / "test_package" / "module.md"
     suff_md = docs_path / "reference" / "test_package" / "module" / "stuff.md"
     assert (docs_path / "reference").is_dir()
     assert sidebar.exists()
     assert suff_md.exists()
+    assert init_md.exists()
+    assert not wrong_module_init_md.exists()
     assert not (docs_path / "reference" / "test_package" / "no_docstrings.md").exists()
 
     with sidebar.open("r") as handle:
@@ -43,6 +47,7 @@ def test_full_processing():
           "items": [
             {
               "items": [
+                "reference/test_package/module/__init__",
                 "reference/test_package/module/stuff"
               ],
               "label": "test_package.module",
@@ -98,4 +103,20 @@ This is a cool attribute.
 ```
 
 Run cool stuff
+""")
+
+    with init_md.open("r") as handle:
+        init_doc = handle.read()
+
+    assert_text_equals(init_doc, r"""---
+sidebar_label: module
+title: test_package.module
+---
+
+This is module __init__.py
+
+#### CONSTANT
+
+This constant is rad
+
 """)

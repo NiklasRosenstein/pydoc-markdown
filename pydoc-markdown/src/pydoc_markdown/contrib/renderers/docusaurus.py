@@ -70,6 +70,9 @@ class DocusaurusRenderer(Struct):
       filepath = output_path
 
       module_parts = module.name.split(".")
+      if module.location.filename.endswith("__init__.py"):
+        module_parts.append("__init__")
+
       relative_module_tree = module_tree
       intermediary_module = []
 
