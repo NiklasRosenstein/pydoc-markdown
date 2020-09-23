@@ -22,7 +22,7 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
   #: Conforms to Docusaurus header format.
   render_module_header_template = Field(str, default=(
     '---\n'
-    'sidebar_label: {module_name}\n'
+    'sidebar_label: {relative_module_name}\n'
     'title: {module_name}\n'
     '---\n\n'
   ))

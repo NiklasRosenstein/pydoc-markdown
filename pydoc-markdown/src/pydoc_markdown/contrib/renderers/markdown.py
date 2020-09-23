@@ -206,7 +206,12 @@ class MarkdownRenderer(Struct):
 
   def _render_header(self, fp, level, obj):
     if self.render_module_header_template and isinstance(obj, docspec.Module):
-      fp.write(self.render_module_header_template.format(module_name=obj.name))
+      fp.write(
+        self.render_module_header_template.format(
+          module_name=obj.name,
+          relative_module_name=obj.name.rsplit(".", 1)[1]
+        )
+      )
       return
 
     object_id = self._generate_object_id(obj)

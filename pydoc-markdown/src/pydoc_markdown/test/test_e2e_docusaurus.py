@@ -61,7 +61,7 @@ def test_full_processing():
         stuff_doc = handle.read()
 
     assert_text_equals(stuff_doc, r"""---
-sidebar_label: test_package.module.stuff
+sidebar_label: stuff
 title: test_package.module.stuff
 ---
 
