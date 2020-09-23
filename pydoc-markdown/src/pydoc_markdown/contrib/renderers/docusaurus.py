@@ -61,6 +61,10 @@ class DocusaurusRenderer(Struct):
   #: remove the sidebar top-level all together. This option assumes that there is only one top-level module.
   sidebar_top_level_label = Field(str, default='Reference', nullable=True)
 
+  #: The top-level module label in the sidebar. Default to null, meaning that the actual
+  #: module name will be used. This option assumes that there is only one top-level module.
+  sidebar_top_level_module_label = Field(str, default=None, nullable=True)
+
   @override
   def render(self, modules: List[docspec.Module]) -> None:
     modules_and_paths = []
@@ -111,10 +115,15 @@ class DocusaurusRenderer(Struct):
       "label": self.sidebar_top_level_label,
     }
     self._build_sidebar_tree(sidebar, module_tree)
-    if not self.sidebar_top_level_label:
-      # it needs to be a dictionary, not a list; this assumes that
-      # there is only one top-level module
-      sidebar = sidebar['items'][0]
+
+    if sidebar.get("items"):
+      if self.sidebar_top_level_module_label:
+        sidebar['items'][0]["label"] = self.sidebar_top_level_module_label
+
+      if not self.sidebar_top_level_label:
+        # it needs to be a dictionary, not a list; this assumes that
+        # there is only one top-level module
+        sidebar = sidebar['items'][0]
 
     sidebar_path = Path(self.docs_base_path) / self.relative_output_path / self.relative_sidebar_path
     with sidebar_path.open("w") as handle:

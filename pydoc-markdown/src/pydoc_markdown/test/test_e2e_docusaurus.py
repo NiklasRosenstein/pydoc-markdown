@@ -120,3 +120,43 @@ This is module __init__.py
 This constant is rad
 
 """)
+
+
+def test_full_processing_custom_top_level_names():
+    docs_path = Path(__file__).parent / "test_package" / "docs"
+    config = PydocMarkdown(
+        loaders=[PythonLoader(
+            search_path=[str(Path(__file__).parent.resolve())],
+            packages=['test_package']
+        )],
+        processors=[FilterProcessor(skip_empty_modules=True), CrossrefProcessor(), SmartProcessor()],
+        renderer=DocusaurusRenderer(
+        docs_base_path=str(docs_path.resolve()),
+        sidebar_top_level_label=None,
+        sidebar_top_level_module_label="My test package"
+    ))
+
+    modules = config.load_modules()
+    config.process(modules)
+    config.render(modules)
+
+    sidebar = docs_path / "reference" / "sidebar.json"
+    assert sidebar.exists()
+
+    with sidebar.open("r") as handle:
+        sidebar = json.load(handle)
+
+    assert sidebar == {
+      "items": [
+        {
+          "items": [
+            "reference/test_package/module/__init__",
+            "reference/test_package/module/stuff"
+          ],
+          "label": "test_package.module",
+          "type": "category"
+        }
+      ],
+      "label": "My test package",
+      "type": "category"
+    }
