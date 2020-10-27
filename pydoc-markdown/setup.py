@@ -75,7 +75,8 @@ setuptools.setup(
       'docusaurus = pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer',
     ],
     'pydoc_markdown.interfaces.SourceLinker': [
-      'github = pydoc_markdown.contrib.source_linkers.github:BaseGitSourceLinker',
+      'github = pydoc_markdown.contrib.source_linkers.basegit:GithubSourceLinker',
+      'gitea = pydoc_markdown.contrib.source_linkers.basegit:GiteaSourceLinker',
 
     ]
   },
