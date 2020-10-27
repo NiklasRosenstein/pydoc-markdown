@@ -1,5 +1,7 @@
   [MkDocs]: https://www.mkdocs.org/
 
+<img align="right" src="https://readthedocs.org/projects/pydoc-markdown/badge/?version=latest&style=flat-square">
+
 # Pydoc-Markdown
 
 Pydoc-Markdown is a tool and library to create Python API documentation in
