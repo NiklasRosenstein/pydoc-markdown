@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+
 from nr.databind.core import Field, Struct
 from nr.interface import implements, override
 from pathlib import Path
@@ -7,7 +8,10 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from typing import Any, Dict, List, Text
 import docspec
 import json
+import logging
 import os.path
+
+logger = logging.getLogger(__name__)
 
 
 class CustomizedMarkdownRenderer(MarkdownRenderer):
@@ -95,6 +99,7 @@ class DocusaurusRenderer(Struct):
       filepath = filepath / f"{module_parts[-1]}.md"
 
       with filepath.open('w') as fp:
+        logger.info("Render file %s", filepath)
         self.markdown.render_to_stream([module], fp)
 
       # only update the relative module tree if the file is not empty
@@ -127,6 +132,7 @@ class DocusaurusRenderer(Struct):
 
     sidebar_path = Path(self.docs_base_path) / self.relative_output_path / self.relative_sidebar_path
     with sidebar_path.open("w") as handle:
+      logger.info("Render file %s", sidebar_path)
       json.dump(sidebar, handle, indent=2, sort_keys=True)
 
   def _build_sidebar_tree(self, sidebar: Dict[Text, Any], module_tree: Dict[Text, Any]) -> None:
