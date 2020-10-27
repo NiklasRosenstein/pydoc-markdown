@@ -60,8 +60,6 @@ class BaseGitSourceLinker(Struct):
   #: the context directory.
   root = Field(str, default=None)
 
-  flavor = Field(str, default="github")
-
   # SourceLinker
 
   @override
