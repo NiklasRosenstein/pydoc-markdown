@@ -76,6 +76,8 @@ setuptools.setup(
     ],
     'pydoc_markdown.interfaces.SourceLinker': [
       'github = pydoc_markdown.contrib.source_linkers.github:GitHubSourceLinker',
+      'gitea = pydoc_markdown.contrib.source_linkers.gitea:GiteaSourceLinker',
+
     ]
   },
   cmdclass = {},
