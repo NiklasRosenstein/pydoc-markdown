@@ -1,0 +1,10 @@
+release_date: null
+changes:
+- type: feature
+  component: general
+  description: 'Add `git` and `gitea` source linker (@tboulogne, #158)'
+  fixes: []
+- type: change
+  component: general
+  description: 'Update Docusaurus sidebar generation (@m-vdb, #156)'
+  fixes: []
