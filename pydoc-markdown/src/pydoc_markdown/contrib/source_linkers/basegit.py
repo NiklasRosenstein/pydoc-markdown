@@ -109,5 +109,5 @@ class GiteaSourceLinker(BaseGitSourceLinker):
 
 class GithubSourceLinker(BaseGitSourceLinker):
     host = Field(str, default='github.com')
-    URL_TEMPLATE = 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}',
+    URL_TEMPLATE = 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
     
