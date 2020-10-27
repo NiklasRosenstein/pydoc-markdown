@@ -22,7 +22,7 @@
 from nr.databind.core import Field, Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Context, SourceLinker
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 import docspec
 import logging
 import os
@@ -43,18 +43,10 @@ def _getoutput(cmd: List[str], cwd: str = None) -> str:
 
 
 @implements(SourceLinker)
-class GitHubSourceLinker(Struct):
+class BaseGitSourceLinker(Struct):
   """
-  This is a source linker for code on a GitHub repository. It calculates the URL using
-  the source filename relative to the repository root (determined from the current working
-  directory) and the ``HEAD`` commit's SHA.
+  This is the base source linker for code in a Git repository.
   """
-
-  #: The Git repository owner and name.
-  repo = Field(str)
-
-  #: The Github hostname. Defaults to `"github.com"`.
-  host = Field(str, default='github.com')
 
   #: The root directory, relative to the context directory. The context directory
   #: is usually the directory that contains Pydoc-Markdown configuration file.
@@ -62,14 +54,18 @@ class GitHubSourceLinker(Struct):
   #: the context directory.
   root = Field(str, default=None)
 
-  URL_TEMPLATE = 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
+  def get_context_vars(self) -> Dict[str, str]:
+    return {}
+
+  def get_url_template(self) -> str:
+    raise NotImplementedError
 
   # SourceLinker
 
   @override
-  def get_source_url(self, obj: docspec.ApiObject) -> str:
+  def get_source_url(self, obj: docspec.ApiObject) -> Optional[str]:
     """
-    Compute the URL in the GitHub #repo for the API object *obj*.
+    Compute the URL in the GitHub/Gitea #repo for the API object *obj*.
     """
 
     if not obj.location:
@@ -81,8 +77,12 @@ class GitHubSourceLinker(Struct):
       logger.debug('Ignored API object %s, path points outside of project root.', obj.name)
       return None
 
-    url = self.URL_TEMPLATE.format(
-      host=self.host, repo=self.repo, sha=self._sha, path=rel_path, lineno=obj.location.lineno)
+    context_vars = self.get_context_vars()
+    context_vars['path'] = rel_path
+    context_vars['sha'] = self._sha
+    context_vars['lineno'] = obj.location.lineno
+
+    url = self.get_url_template().format(**context_vars)
 
     logger.debug('Calculated URL for API object %s is %s', obj.name, url)
     return url
@@ -103,3 +103,51 @@ class GitHubSourceLinker(Struct):
     self._sha = _getoutput(['git', 'rev-parse', 'HEAD'], cwd=self._project_root).strip()
     logger.debug('project_root = %r', self._project_root)
     logger.debug('sha = %r', self._sha)
+
+
+class BaseGitServiceSourceLinker(BaseGitSourceLinker):
+
+  #: The repository name, formatted as `owner/repo`.
+  repo = Field(str)
+
+  #: The Gitea host name. Defaults to `gitea.com`.
+  host = Field(str)
+
+  def get_context_vars(self) -> Dict[str, str]:
+    return {'repo': self.repo, 'host': self.host}
+
+
+class GitSourceLinker(BaseGitSourceLinker):
+  """
+  This source linker allows you to define your own URL template to generate a permalink for
+  an API object.
+  """
+
+  #: The URL template as a Python format string. Available variables are "path", "sha" and
+  #: "lineno".
+  url_template = Field(str)
+
+  def get_url_template(self) -> str:
+    return self.url_template
+
+
+class GiteaSourceLinker(BaseGitServiceSourceLinker):
+  """
+  Source linker for Git repositories hosted on gitea.com or any self-hosted Gitea instance.
+  """
+
+  host = Field(str, default="gitea.com")
+
+  def get_url_template(self) -> str:
+    return 'https://{host}/{repo}/src/commit/{sha}/{path}#L{lineno}'
+
+
+class GithubSourceLinker(BaseGitServiceSourceLinker):
+  """
+  Source linker for Git repositories hosted on github.com or any self-hosted GitHub instance.
+  """
+
+  host = Field(str, default="github.com")
+
+  def get_url_template(self) -> str:
+    return 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
