@@ -43,9 +43,9 @@ def _getoutput(cmd: List[str], cwd: str = None) -> str:
 
 
 @implements(SourceLinker)
-class GitHubSourceLinker(Struct):
+class BaseGitSourceLinker(Struct):
   """
-  This is a source linker for code on a GitHub repository. It calculates the URL using
+  This is a source linker for code on a GitHub/Gitea repository. It calculates the URL using
   the source filename relative to the repository root (determined from the current working
   directory) and the ``HEAD`` commit's SHA.
   """
@@ -62,14 +62,18 @@ class GitHubSourceLinker(Struct):
   #: the context directory.
   root = Field(str, default=None)
 
-  URL_TEMPLATE = 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
+  flavor = Field(str, default="github")
 
+  URL_TEMPLATE = {
+    'GITHUB': 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}',
+    'GITEA': 'https://{host}/{repo}/src/commit/{sha}/{path}#L{lineno}'
+  }
   # SourceLinker
 
   @override
   def get_source_url(self, obj: docspec.ApiObject) -> str:
     """
-    Compute the URL in the GitHub #repo for the API object *obj*.
+    Compute the URL in the GitHub/Gitea #repo for the API object *obj*.
     """
 
     if not obj.location:
@@ -80,10 +84,11 @@ class GitHubSourceLinker(Struct):
     if not nr.fs.issub(rel_path):
       logger.debug('Ignored API object %s, path points outside of project root.', obj.name)
       return None
-
-    url = self.URL_TEMPLATE.format(
-      host=self.host, repo=self.repo, sha=self._sha, path=rel_path, lineno=obj.location.lineno)
-
+    
+    
+    url = self.URL_TEMPLATE[self.flavor.upper()].format(
+        host=self.host, repo=self.repo, sha=self._sha, path=rel_path, lineno=obj.location.lineno)
+    
     logger.debug('Calculated URL for API object %s is %s', obj.name, url)
     return url
 
