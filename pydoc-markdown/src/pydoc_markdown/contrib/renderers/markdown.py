@@ -272,7 +272,7 @@ class MarkdownRenderer(Struct):
     return code
 
   def _format_data_signature(self, data: docspec.Data) -> str:
-    expr = str(data.expr)
+    expr = str(data.value)
     if len(expr) > self.data_expression_maxlength:
       expr = expr[:self.data_expression_maxlength] + ' ...'
     return data.name + ' = ' + expr

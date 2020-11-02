@@ -7,7 +7,7 @@ import io
 import textwrap
 
 
-def assert_code_as_markdown(source_code, markdown, full=False, parser_options=None):
+def assert_code_as_markdown(source_code, markdown, full=False, parser_options=None, renderer_options=None):
   config = PydocMarkdown()
 
   # Init the settings in which we want to run the tests.
@@ -15,6 +15,9 @@ def assert_code_as_markdown(source_code, markdown, full=False, parser_options=No
   config.renderer.add_member_class_prefix = False
   config.renderer.render_toc = False
   config.renderer.render_module_header = full
+  for key, value in (renderer_options or {}).items():
+    assert hasattr(config.renderer, key), key
+    setattr(config.renderer, key, value)
   filter_processor = next(x for x in config.processors if isinstance(x, FilterProcessor))
   filter_processor.documented_only = False
 
@@ -279,3 +282,28 @@ def test_attribute_docstring():
 
   This is a member docstring.
   ''')
+
+
+def test_constants():
+  assert_code_as_markdown(
+  '''
+  class Dummy:
+    #: Magic number
+    a = 42
+  ''',
+  '''
+  ## Dummy Objects
+
+  ```python
+  class Dummy()
+  ```
+
+  #### a
+
+  ```python
+  a = 42
+  ```
+
+  Magic number
+  ''',
+  renderer_options={'data_code_block': True})
