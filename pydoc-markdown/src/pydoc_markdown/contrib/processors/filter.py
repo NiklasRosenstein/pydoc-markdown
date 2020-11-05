@@ -43,7 +43,9 @@ class FilterProcessor(Struct):
 
   #: A Python expression that is evaluated given the variables `name`, `obj` and `default`
   #: and is expected to return a boolean to indicate whether the #docspec.ApiObject should
-  #: be kept or removed. Default: `null`
+  #: be kept or removed. If specified, the expression is the ultimate truth for determining
+  #: the keep-or-remove state of a node. Using `'default()'` as the expression has the same
+  #: semantic as not specifying this field. Default: `null`
   expression = Field(str, default=None)
 
   #: Keep only API objects that have docstrings. Default: `true`
@@ -74,20 +76,23 @@ class FilterProcessor(Struct):
   def _match(self, obj: docspec.ApiObject) -> bool:
     members = getattr(obj, 'members', [])
 
-    if members:
+    def _check():
+      if members:
+        return True
+      if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
+        return False
+      if self.do_not_filter_modules and isinstance(obj, docspec.Module):
+        return True
+      if self.documented_only and not obj.docstring:
+        return False
+      if self.exclude_private and obj.name.startswith('_') and not obj.name.endswith('_'):
+        return False
+      if self.exclude_special and obj.name in self.SPECIAL_MEMBERS:
+        return False
       return True
-    if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
-      return False
-    if self.do_not_filter_modules and isinstance(obj, docspec.Module):
-      return True
-    if self.documented_only and not obj.docstring:
-      return False
-    if self.exclude_private and obj.name.startswith('_') and not obj.name.endswith('_'):
-      return False
-    if self.exclude_special and obj.name in self.SPECIAL_MEMBERS:
-      return False
+
     if self.expression:
       scope = {'name': obj.name, 'obj': obj, 'default': _check}
-      if not eval(self.expression, scope):  # pylint: disable=eval-used
-        return False
-    return True
+      return bool(eval(self.expression, scope))  # pylint: disable=eval-used
+
+    return _check()
