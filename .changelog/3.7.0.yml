@@ -1,4 +1,4 @@
-release_date: null
+release_date: '2020-11-05'
 changes:
 - type: change
   component: FilterProcessor
