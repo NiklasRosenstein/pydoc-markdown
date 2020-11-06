@@ -151,3 +151,14 @@ class GithubSourceLinker(BaseGitServiceSourceLinker):
 
   def get_url_template(self) -> str:
     return 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
+
+
+class BitbucketSourceLinker(BaseGitServiceSourceLinker):
+  """
+  Source linker for Git repositories hosted on bitbucket.org or any self-hosted Bitbucket instance.
+  """
+
+  host = Field(str, default="bitbucket.org")
+
+  def get_url_template(self) -> str:
+    return 'https://{host}/{repo}/src/{sha}/{path}#lines-{lineno}'
