@@ -78,6 +78,7 @@ setuptools.setup(
       'git = pydoc_markdown.contrib.source_linkers.git:GitSourceLinker',
       'github = pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker',
       'gitea = pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker',
+      'bitbucket = pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker',
     ]
   },
   cmdclass = {},
