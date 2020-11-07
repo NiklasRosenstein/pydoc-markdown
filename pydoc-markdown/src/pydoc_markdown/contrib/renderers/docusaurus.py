@@ -71,8 +71,7 @@ class DocusaurusRenderer(Struct):
 
   @override
   def render(self, modules: List[docspec.Module]) -> None:
-    modules_and_paths = []
-    module_tree = {"children": {}, "edges": []}
+    module_tree: Dict[str, Any] = {"children": {}, "edges": []}
     output_path = Path(self.docs_base_path) / self.relative_output_path
     for module in modules:
       filepath = output_path

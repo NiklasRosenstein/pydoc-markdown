@@ -35,7 +35,7 @@ from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.util import ytemplate
-from typing import List, Union
+from typing import List, Optional, Union
 import docspec
 import logging
 import os
@@ -75,12 +75,11 @@ class PydocMarkdown(Struct):
 
   # Hidden fields are filled at a later point in time and are not (de-) serialized.
   unknown_fields = Field([str], default=list, hidden=True)
-  resolver = Field(Resolver, default=None, hidden=True)
 
   def __init__(self, *args, **kwargs) -> None:
     super(PydocMarkdown, self).__init__(*args, **kwargs)
-    self.resolver = None
-    self._context = None
+    self.resolver: Optional[Resolver] = None
+    self._context: Optional[Context] = None
 
   def load_config(self, data: Union[str, dict]) -> None:
     """
@@ -161,7 +160,7 @@ class PydocMarkdown(Struct):
     if run_hooks:
       self.run_hooks('post-render')
 
-  def build(self, site_dir: str=None) -> None:
+  def build(self, site_dir: str) -> None:
     if not Builder.provided_by(self.renderer):
       name = type(self.renderer).__name__
       raise NotImplementedError('Renderer "{}" does not support building'.format(name))
@@ -169,5 +168,6 @@ class PydocMarkdown(Struct):
     self.renderer.build(site_dir)
 
   def run_hooks(self, hook_name: str) -> None:
+    assert self._context is not None
     for command in getattr(self.hooks, hook_name.replace('-', '_')):
       subprocess.check_call(command, shell=True, cwd=self._context.directory)

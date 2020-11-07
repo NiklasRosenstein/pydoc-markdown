@@ -198,7 +198,7 @@ class MkdocsRenderer(Struct):
   # Builder
 
   @override
-  def build(self, site_dir: str=None) -> None:
+  def build(self, site_dir: str) -> None:
     command = ['mkdocs', 'build', '--clean', '--site-dir', site_dir]
     subprocess.check_call(command, cwd=self.output_directory)
 

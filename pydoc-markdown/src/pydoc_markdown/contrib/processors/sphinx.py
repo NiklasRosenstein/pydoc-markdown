@@ -22,7 +22,7 @@
 from nr.databind.core import Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor, Resolver
-from typing import List, Optional
+from typing import Dict, List, Optional
 import docspec
 import re
 
@@ -74,7 +74,7 @@ class SphinxProcessor(Struct):
     lines = []
     in_codeblock = False
     keyword = None
-    components = {}
+    components: Dict[str, List[str]] = {}
 
     for line in node.docstring.split('\n'):
       line = line.strip()

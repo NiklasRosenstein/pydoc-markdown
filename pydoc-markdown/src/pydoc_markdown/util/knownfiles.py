@@ -19,7 +19,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from typing import ContextManager, Iterable, IO
+from typing import Generator, Iterable, IO, List, Optional
 import collections
 import contextlib
 import csv
@@ -51,7 +51,7 @@ class KnownFiles:
     self._directory = directory
     self._filename = filename
     self._hash_algorithm = hash_algorithm
-    self._files = None
+    self._files: Optional[List[str]] = None
 
   def __enter__(self) -> 'KnownFiles':
     assert self._files is None, 'Context already entered.'
@@ -59,6 +59,7 @@ class KnownFiles:
     return self
 
   def __exit__(self, *args) -> None:
+    assert self._files is not None
     with open(os.path.join(self._directory, self._filename), 'w') as fp:
       writer = csv.writer(fp, delimiter=' ')
       for filename in self._files:
@@ -90,7 +91,8 @@ class KnownFiles:
     return filename
 
   @contextlib.contextmanager
-  def open(self, filename: str, mode: str = 'r', **kwargs) -> ContextManager[IO]:
+  def open(self, filename: str, mode: str = 'r', **kwargs) -> Generator[IO, None, None]:
+    assert self._files is not None
     filename = self._check_filename(filename)
     if 'w' in mode or 'a' in mode:
       if self._files is None:
@@ -100,6 +102,7 @@ class KnownFiles:
       self._files.append(filename)
 
   def append(self, filename: str) -> None:
+    assert self._files is not None
     filename = self._check_filename(filename)
     open(os.path.join(self._directory, filename), 'r').close()  # Ensure the file exists.
     self._files.append(filename)

@@ -22,7 +22,7 @@ class CoolStuff:
     #: This is a cool attribute.
     cool_attr = "cool"
 
-    def run_cool_stuff():
+    def run_cool_stuff(self):
         """
         Run cool stuff
         """

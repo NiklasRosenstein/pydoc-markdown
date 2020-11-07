@@ -93,7 +93,7 @@ class PydocmdProcessor(Struct):
       line = re.sub(r'# (.*)$', r'__\1__\n', line)
 
     if current_section in ('arguments', 'parameters'):
-      style = r'- __\1__:\3'
+      style: Optional[str] = r'- __\1__:\3'
     elif current_section in ('attributes', 'members', 'raises'):
       style = r'- `\1`:\3'
     elif current_section in ('returns',):

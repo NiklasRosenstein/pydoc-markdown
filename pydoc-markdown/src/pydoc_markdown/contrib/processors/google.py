@@ -125,7 +125,7 @@ class GoogleProcessor(Struct):
       return
 
     lines = []
-    current_lines = []
+    current_lines: List[str] = []
     in_codeblock = False
     keyword = None
 

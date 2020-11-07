@@ -63,7 +63,7 @@ class CrossrefProcessor(Struct):
 
   @override
   def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]):
-    unresolved = {}
+    unresolved: Dict[str, List[str]] = {}
     if resolver:
       reverse = docspec.ReverseMap(modules)
       docspec.visit(modules, lambda x: self._preprocess_refs(x, resolver, reverse, unresolved))

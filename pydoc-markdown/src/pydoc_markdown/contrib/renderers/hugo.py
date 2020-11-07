@@ -26,7 +26,7 @@ from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Build
 from pydoc_markdown.util.knownfiles import KnownFiles
 from pydoc_markdown.util.pages import Page
 from urllib.parse import urlparse, urljoin
-from typing import Dict, Iterable, List, Optional, TextIO
+from typing import cast, Dict, Iterable, IO, Generator, List, Optional, TextIO
 import docspec
 import logging
 import nr.fs
@@ -309,10 +309,9 @@ class HugoRenderer(Struct):
   # Builder
 
   @override
-  def build(self, site_dir: str=None) -> None:
+  def build(self, site_dir: str) -> None:
     command = [self._get_hugo_bin()]
-    if site_dir:
-      command += ['--destination', os.path.abspath(site_dir)]
+    command += ['--destination', os.path.abspath(site_dir)]
     subprocess.check_call(command, cwd=self.build_directory)
 
   # PluginBase
@@ -382,21 +381,25 @@ def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
       shutil.copyfileobj(requests.get(files[filename], stream=True).raw, fp)
     with tarfile.open(path) as archive:
       with open(to, 'wb') as fp:
-        shutil.copyfileobj(archive.extractfile('hugo'), fp)
+        shutil.copyfileobj(
+          cast(IO[bytes], archive.extractfile('hugo')),
+          cast(IO[bytes], fp))
 
   nr.fs.chmod(to, '+x')
   logger.info('Hugo v%s installed to "%s"', version, to)
 
 
-def get_github_releases(repo: str) -> Iterable[dict]:
+def get_github_releases(repo: str) -> Generator[dict, None, None]:
   """
   Returns an iterator for all releases of a Github repository.
   """
 
-  url = 'https://api.github.com/repos/{}/releases'.format(repo)
+  url: Optional[str] = 'https://api.github.com/repos/{}/releases'.format(repo)
   while url:
     response = requests.get(url)
-    links = parse_links_header(response.headers.get('Link'))
+    link = response.headers.get('Link')
+    assert link
+    links = parse_links_header(link)
     url = links.get('next')
     yield from response.json()
 

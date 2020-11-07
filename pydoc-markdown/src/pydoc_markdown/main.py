@@ -35,7 +35,7 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
 from pydoc_markdown.interfaces import Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
-from typing import List, Set, Union
+from typing import List, NoReturn, Set, Union
 import click
 import logging
 import os
@@ -187,7 +187,7 @@ class RenderSession:
         process.terminate()
 
 
-def error(*args):
+def error(*args) -> NoReturn:
   print('error:', *args, file=sys.stderr)
   sys.exit(1)
 

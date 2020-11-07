@@ -182,6 +182,7 @@ class MarkdownRenderer(Struct):
   escape_html_in_docstring = Field(bool, default=False)
 
   _reverse_map = Field(docspec.ReverseMap, default=None, hidden=True)
+
   def _get_parent(self, obj: docspec.ApiObject) -> Optional[docspec.ApiObject]:
     return self._reverse_map.get_parent(obj)
 
@@ -314,7 +315,7 @@ class MarkdownRenderer(Struct):
     for member in getattr(obj, 'members', []):
       self._render_recursive(fp, level, member)
 
-  def _get_title(self, obj):
+  def _get_title(self, obj: docspec.ApiObject) -> str:
     title = obj.name
     if (self.add_method_class_prefix and self._is_method(obj)) or \
        (self.add_member_class_prefix and isinstance(obj, docspec.Data)):

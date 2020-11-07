@@ -154,11 +154,10 @@ class Builder(Interface):
   files have been rendered.
   """
 
-  def build(self, site_dir: str=None) -> None:
+  def build(self, site_dir: str) -> None:
     """
-    Invoke the build. If *site_dir* is specified, it is the directory in which the
-    output files should be placed. Otherwise, the directory may be determined by
-    the builder.
+    Invoke the build. The *site_dir* is the directory in which the output files should be
+    placed. Otherwise, the directory may be determined by the builder.
     """
 
 

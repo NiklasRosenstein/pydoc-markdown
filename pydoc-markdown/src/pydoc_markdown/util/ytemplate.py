@@ -25,7 +25,7 @@ Template language for YAML files similar to [YTT][].
   [YTT]: https://get-ytt.io/
 """
 
-from typing import Any, Dict, TextIO, Type, Union
+from typing import Any, Dict, Mapping, TextIO, Type, Union
 from nr.collections.chaindict import ChainDict
 import textwrap
 import json
@@ -35,7 +35,7 @@ import yaml
 def load(
   file_: Union[str, TextIO],
   context: Dict[str, Any],
-  Loader: Type[yaml.Loader] = None,
+  Loader: Type[yaml.Loader] = None,  # TODO(@NiklasRosenstein): Correct type annotation
 ) -> Any:
   """
   Loads a YAML template into a Python object.
@@ -51,7 +51,7 @@ def load(
       return load(fp, context, Loader)
 
   if Loader is None:
-    Loader = yaml.SafeLoader
+    Loader = yaml.SafeLoader  # type: ignore
 
   yaml_code = []
   it = iter(file_)
@@ -81,7 +81,7 @@ def load(
 
 class Attributor:
 
-  def __init__(self, data: Dict, default: Any = None) -> None:
+  def __init__(self, data: Mapping, default: Any = None) -> None:
     self._data = data
     self._default = default
 
