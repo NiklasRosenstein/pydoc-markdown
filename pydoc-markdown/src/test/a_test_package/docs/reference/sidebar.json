@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "items": [
+        "reference/a_test_package/module/__init__",
+        "reference/a_test_package/module/stuff"
+      ],
+      "label": "a_test_package.module",
+      "type": "category"
+    }
+  ],
+  "label": "My test package",
+  "type": "category"
+}
