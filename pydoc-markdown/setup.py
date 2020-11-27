@@ -7,11 +7,17 @@ import os
 import setuptools
 import sys
 
+def _tempcopy(src, dst):
+  import atexit, shutil
+  if not os.path.isfile(dst):
+    shutil.copyfile(src, dst)
+    atexit.register(lambda: os.remove(dst))
+
+
+_tempcopy('../LICENSE.txt', 'LICENSE.txt')
+
 readme_file = 'README.md'
-source_readme_file = '../README.md'
-if not os.path.isfile(readme_file) and os.path.isfile(source_readme_file):
-  import shutil; shutil.copyfile(source_readme_file, readme_file)
-  import atexit; atexit.register(lambda: os.remove(readme_file))
+_tempcopy('../README.md', readme_file)
 if os.path.isfile(readme_file):
   with io.open(readme_file, encoding='utf8') as fp:
     long_description = fp.read()

@@ -1,83 +1,75 @@
-# https://git.niklasrosenstein.com/NiklasRosenstein/shore
-
-name: "pydoc-markdown"
-version: "3.8.0"
-description: "Create Python API documentation in Markdown format."
-author: "Niklas Rosenstein <rosensteinniklas@gmail.com>"
-license: "MIT"
-url: "https://github.com/NiklasRosenstein/pydoc-markdown"
-readme: ../README.md
-
-release:
-  tag-format: "v{version}"
-
+name: pydoc-markdown
+version: 3.8.0
+author: Niklas Rosenstein <rosensteinniklas@gmail.com>
+license: MIT
+license_file: ../LICENSE.txt
+url: https://github.com/NiklasRosenstein/pydoc-markdown
 changelog:
   directory: ../.changelog
-
-keywords:
-  - documentation
-  - docs
-  - generator
-  - markdown
-  - pydoc
-
-classifiers:
-  - "Development Status :: 3 - Alpha"
-  - "Intended Audience :: Developers"
-  - "Intended Audience :: End Users/Desktop"
-  - "Topic :: Software Development :: Code Generators"
-  - "Topic :: Utilities"
-  - "License :: OSI Approved :: MIT License"
-  - "Programming Language :: Python :: 2"
-  - "Programming Language :: Python :: 2.7"
-  - "Programming Language :: Python :: 3"
-  - "Programming Language :: Python :: 3.3"
-  - "Programming Language :: Python :: 3.4"
-  - "Programming Language :: Python :: 3.5"
-
+release:
+  tag-format: v{version}
+description: Create Python API documentation in Markdown format.
+readme: ../README.md
 requirements:
-  - python ^3.5
-  - click ^7.0
-  - docspec ~0.2.0
-  - docspec-python ~0.0.7
-  - nr.collections ~0.0.1
-  - nr.interface ~0.0.3
-  - nr.databind.core ~0.0.18
-  - nr.databind.json ~0.0.9
-  - nr.fs ^1.6.0
-  - requests ^2.23.0
-  - PyYAML ^5.3
-  - six ^1.11.0
-  - toml ^0.10.1
-  - watchdog ^0.10.2
-
+- python ^3.5
+- click ^7.0
+- docspec ~0.2.0
+- docspec-python ~0.0.7
+- nr.collections ~0.0.1
+- nr.interface ~0.0.3
+- nr.databind.core ~0.0.18
+- nr.databind.json ~0.0.9
+- nr.fs ^1.6.0
+- requests ^2.23.0
+- PyYAML ^5.3
+- six ^1.11.0
+- toml ^0.10.1
+- watchdog ^0.10.2
 entrypoints:
   console_scripts:
-    - pydoc-markdown = pydoc_markdown.main:cli
+  - pydoc-markdown = pydoc_markdown.main:cli
   pydoc_markdown.interfaces.Loader:
-    - python = pydoc_markdown.contrib.loaders.python:PythonLoader
+  - python = pydoc_markdown.contrib.loaders.python:PythonLoader
   pydoc_markdown.interfaces.Processor:
-    - crossref = pydoc_markdown.contrib.processors.crossref:CrossrefProcessor
-    - filter = pydoc_markdown.contrib.processors.filter:FilterProcessor
-    - google = pydoc_markdown.contrib.processors.google:GoogleProcessor
-    - pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor
-    - smart = pydoc_markdown.contrib.processors.smart:SmartProcessor
-    - sphinx = pydoc_markdown.contrib.processors.sphinx:SphinxProcessor
+  - crossref = pydoc_markdown.contrib.processors.crossref:CrossrefProcessor
+  - filter = pydoc_markdown.contrib.processors.filter:FilterProcessor
+  - google = pydoc_markdown.contrib.processors.google:GoogleProcessor
+  - pydocmd = pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor
+  - smart = pydoc_markdown.contrib.processors.smart:SmartProcessor
+  - sphinx = pydoc_markdown.contrib.processors.sphinx:SphinxProcessor
   pydoc_markdown.interfaces.Renderer:
-    - hugo = pydoc_markdown.contrib.renderers.hugo:HugoRenderer
-    - markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer
-    - mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer
-    - docusaurus = pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer
+  - hugo = pydoc_markdown.contrib.renderers.hugo:HugoRenderer
+  - markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer
+  - mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer
+  - docusaurus = pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer
   pydoc_markdown.interfaces.SourceLinker:
-    - git = pydoc_markdown.contrib.source_linkers.git:GitSourceLinker
-    - github = pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker
-    - gitea = pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker
-    - bitbucket = pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker
-
+  - git = pydoc_markdown.contrib.source_linkers.git:GitSourceLinker
+  - github = pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker
+  - gitea = pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker
+  - bitbucket = pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker
+classifiers:
+- 'Development Status :: 3 - Alpha'
+- 'Intended Audience :: Developers'
+- 'Intended Audience :: End Users/Desktop'
+- 'Topic :: Software Development :: Code Generators'
+- 'Topic :: Utilities'
+- 'License :: OSI Approved :: MIT License'
+- 'Programming Language :: Python :: 2'
+- 'Programming Language :: Python :: 2.7'
+- 'Programming Language :: Python :: 3'
+- 'Programming Language :: Python :: 3.3'
+- 'Programming Language :: Python :: 3.4'
+- 'Programming Language :: Python :: 3.5'
+keywords:
+- documentation
+- docs
+- generator
+- markdown
+- pydoc
 publish:
   pypi:
     credentials:
-      username: '__token__'
-      password: '$PYPI_TOKEN'
-      test_username: '__token__'
-      test_password: '$TEST_PYPI_TOKEN'
+      username: __token__
+      password: $PYPI_TOKEN
+      test_username: __token__
+      test_password: $TEST_PYPI_TOKEN
