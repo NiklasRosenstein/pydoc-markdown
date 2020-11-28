@@ -25,6 +25,31 @@ def test_google_processor(processor=None):
 
   assert_processor_result(processor or GoogleProcessor(),
   '''
+  Args:
+    s (str): A string.
+              And the description
+              takes
+              multiple lines.
+    b (int): An int.
+  Returns:
+    any: Something funny.
+  ''',
+  '''
+  **Arguments**:
+
+  - `s` _str_ - A string.
+    And the description
+    takes
+    multiple lines.
+  - `b` _int_ - An int.
+
+  **Returns**:
+
+  - `any` - Something funny.
+  ''')
+
+  assert_processor_result(processor or GoogleProcessor(),
+  '''
   Example:
 
   ```py
