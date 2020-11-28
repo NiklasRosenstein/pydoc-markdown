@@ -70,3 +70,32 @@ def test_google_processor(processor=None):
       value = scanner.advance()
   ```
   ''')
+
+  assert_processor_result(processor or GoogleProcessor(),
+  '''
+  Args:
+    s (str): A string.
+    b (int): An int.
+  Examples:
+    ```
+    print("Hello World")
+    ```
+  Returns:
+    any: Something funny.
+  ''',
+  '''
+  **Arguments**:
+
+  - `s` _str_ - A string.
+  - `b` _int_ - An int.
+
+  **Examples**:
+
+  ```
+      print("Hello World")
+  ```
+  
+  **Returns**:
+
+  - `any` - Something funny.
+  ''')
