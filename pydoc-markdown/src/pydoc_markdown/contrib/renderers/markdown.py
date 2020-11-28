@@ -210,7 +210,7 @@ class MarkdownRenderer(Struct):
       fp.write(
         self.render_module_header_template.format(
           module_name=obj.name,
-          relative_module_name=obj.name.rsplit(".", 1)[1]
+          relative_module_name=obj.name.rsplit(".", 1)[-1]
         )
       )
       return

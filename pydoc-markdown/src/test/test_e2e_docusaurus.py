@@ -11,11 +11,11 @@ from .test_utils import assert_text_equals
 
 
 def test_full_processing():
-    docs_path = Path(__file__).parent / "test_package" / "docs"
+    docs_path = Path(__file__).parent / "a_test_package" / "docs"
     config = PydocMarkdown(
         loaders=[PythonLoader(
             search_path=[str(Path(__file__).parent.resolve())],
-            packages=['test_package']
+            packages=['a_test_package']
         )],
         processors=[FilterProcessor(skip_empty_modules=True), CrossrefProcessor(), SmartProcessor()],
         renderer=DocusaurusRenderer(
@@ -28,15 +28,15 @@ def test_full_processing():
     config.render(modules)
 
     sidebar = docs_path / "reference" / "sidebar.json"
-    init_md = docs_path / "reference" / "test_package" / "module" / "__init__.md"
-    wrong_module_init_md = docs_path / "reference" / "test_package" / "module.md"
-    suff_md = docs_path / "reference" / "test_package" / "module" / "stuff.md"
+    init_md = docs_path / "reference" / "a_test_package" / "module" / "__init__.md"
+    wrong_module_init_md = docs_path / "reference" / "a_test_package" / "module.md"
+    suff_md = docs_path / "reference" / "a_test_package" / "module" / "stuff.md"
     assert (docs_path / "reference").is_dir()
     assert sidebar.exists()
     assert suff_md.exists()
     assert init_md.exists()
     assert not wrong_module_init_md.exists()
-    assert not (docs_path / "reference" / "test_package" / "no_docstrings.md").exists()
+    assert not (docs_path / "reference" / "a_test_package" / "no_docstrings.md").exists()
 
     with sidebar.open("r") as handle:
         sidebar = json.load(handle)
@@ -47,14 +47,14 @@ def test_full_processing():
           "items": [
             {
               "items": [
-                "reference/test_package/module/__init__",
-                "reference/test_package/module/stuff"
+                "reference/a_test_package/module/__init__",
+                "reference/a_test_package/module/stuff"
               ],
-              "label": "test_package.module",
+              "label": "a_test_package.module",
               "type": "category"
             }
           ],
-          "label": "test_package",
+          "label": "a_test_package",
           "type": "category"
         }
       ],
@@ -67,7 +67,7 @@ def test_full_processing():
 
     assert_text_equals(stuff_doc, r"""---
 sidebar_label: stuff
-title: test_package.module.stuff
+title: a_test_package.module.stuff
 ---
 
 This is a module about stuff.
@@ -110,7 +110,7 @@ Run cool stuff
 
     assert_text_equals(init_doc, r"""---
 sidebar_label: module
-title: test_package.module
+title: a_test_package.module
 ---
 
 This is module __init__.py
@@ -123,11 +123,11 @@ This constant is rad
 
 
 def test_full_processing_custom_top_level_names():
-    docs_path = Path(__file__).parent / "test_package" / "docs"
+    docs_path = Path(__file__).parent / "a_test_package" / "docs"
     config = PydocMarkdown(
         loaders=[PythonLoader(
             search_path=[str(Path(__file__).parent.resolve())],
-            packages=['test_package']
+            packages=['a_test_package']
         )],
         processors=[FilterProcessor(skip_empty_modules=True), CrossrefProcessor(), SmartProcessor()],
         renderer=DocusaurusRenderer(
@@ -150,10 +150,10 @@ def test_full_processing_custom_top_level_names():
       "items": [
         {
           "items": [
-            "reference/test_package/module/__init__",
-            "reference/test_package/module/stuff"
+            "reference/a_test_package/module/__init__",
+            "reference/a_test_package/module/stuff"
           ],
-          "label": "test_package.module",
+          "label": "a_test_package.module",
           "type": "category"
         }
       ],
