@@ -24,7 +24,7 @@ requirements:
 - PyYAML ^5.3
 - six ^1.11.0
 - toml ^0.10.1
-- watchdog ^0.10.2
+- watchdog ^1.0.0
 entrypoints:
   console_scripts:
   - pydoc-markdown = pydoc_markdown.main:cli

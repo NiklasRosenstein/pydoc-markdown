@@ -5,3 +5,7 @@ changes:
   description: Fix `IndexError` while processing short module path (by @g6123)
   fixes:
   - '#167'
+- type: change
+  component: general
+  description: bump `watchdog` dependency to `^1.0.0`
+  fixes: []

@@ -41,7 +41,7 @@ requirements = [
   'PyYAML >=5.3.0,<6.0.0',
   'six >=1.11.0,<2.0.0',
   'toml >=0.10.1,<1.0.0',
-  'watchdog >=0.10.2,<1.0.0',
+  'watchdog >=1.0.0,<2.0.0',
 ]
 
 setuptools.setup(
