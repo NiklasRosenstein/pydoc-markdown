@@ -14,7 +14,7 @@ requirements:
 - python ^3.5
 - click ^7.0
 - docspec ~0.2.0
-- docspec-python ~0.0.7
+- docspec-python ~0.1.0
 - nr.collections ~0.0.1
 - nr.interface ~0.0.3
 - nr.databind.core ~0.0.18

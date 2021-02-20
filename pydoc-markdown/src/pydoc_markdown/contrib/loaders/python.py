@@ -78,6 +78,9 @@ class PythonLoader(Struct):
   #: Options for the Python parser.
   parser = Field(docspec_python.ParserOptions, default=Field.DEFAULT_CONSTRUCT)
 
+  #: The encoding to use when reading the Python source files.
+  encoding = Field(str, default=None)
+
   _context = Field(Context, default=None, hidden=True)
 
   def get_effective_search_path(self) -> List[str]:
@@ -130,7 +133,8 @@ class PythonLoader(Struct):
       modules=modules,
       packages=packages,
       search_path=search_path,
-      options=self.parser
+      options=self.parser,
+      encoding=self.encoding,
     )
 
   # PluginBase

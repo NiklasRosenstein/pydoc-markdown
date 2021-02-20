@@ -1,0 +1,6 @@
+release_date: null
+changes:
+- type: feature
+  component: general
+  description: add `PythonLoader.encoding` option
+  fixes: []

@@ -31,7 +31,7 @@ else:
 requirements = [
   'click >=7.0.0,<8.0.0',
   'docspec >=0.2.0,<0.3.0',
-  'docspec-python >=0.0.7,<0.1.0',
+  'docspec-python >=0.1.0,<0.2.0',
   'nr.collections >=0.0.1,<0.1.0',
   'nr.interface >=0.0.3,<0.1.0',
   'nr.databind.core >=0.0.18,<0.1.0',
