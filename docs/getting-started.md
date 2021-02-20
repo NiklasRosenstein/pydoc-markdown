@@ -14,7 +14,7 @@ installed.
 The Pydoc-Markdown CLI provides a few options that make it easy to generate
 Markdown from a Python module or package.
 
-    $ pydoc-markdown -m my_module --render-toc > my_module.md
+    $ pydoc-markdown -I src -m package_name.module_name --render-toc > module_name.md
 
 This uses the default configuration which consists of a `python` loader,
 the `filter`, `smart` and `crossref` processors and the `markdown` renderer.
@@ -29,6 +29,7 @@ exposed via CLI options.
           render_toc: true
         }
       }' > my_module.md
+
 
 ## YAML configuration
 
