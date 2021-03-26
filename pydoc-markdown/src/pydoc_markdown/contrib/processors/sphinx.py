@@ -77,14 +77,13 @@ class SphinxProcessor(Struct):
     components: Dict[str, List[str]] = {}
 
     for line in node.docstring.split('\n'):
-      line = line.strip()
-
-      if line.startswith("```"):
+      if line.strip().startswith("```"):
         in_codeblock = not in_codeblock
 
       line_codeblock = line.startswith('    ')
 
       if not in_codeblock and not line_codeblock:
+        line = line.strip()
         match = re.match(r'\s*:(?:arg|argument|param|parameter)\s+(\w+)\s*:(.*)?$', line)
         if match:
           keyword = 'Arguments'
