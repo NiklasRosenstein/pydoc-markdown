@@ -20,3 +20,32 @@ def test_sphinx_processor(processor=None):
 
   Something funny.
   ''')
+
+  # check code blocks indentation
+  assert_processor_result(processor or SphinxProcessor(),
+  '''
+  Code example:
+  ```
+  with a() as b:
+    b()
+  ```
+  Implicit block:
+      c()
+  A longer one:
+      d()
+      with e() as f:
+        f()
+  ''',
+  '''
+  Code example:
+  ```
+  with a() as b:
+    b()
+  ```
+  Implicit block:
+      c()
+  A longer one:
+      d()
+      with e() as f:
+        f()
+  ''')
