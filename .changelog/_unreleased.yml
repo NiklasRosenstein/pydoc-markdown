@@ -1,0 +1,7 @@
+release_date: null
+changes:
+- type: fix
+  component: general
+  description: fix code blocks indentation in `SphinxProcessor`
+  fixes:
+  - '#179'
