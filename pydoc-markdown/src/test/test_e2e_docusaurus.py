@@ -31,6 +31,7 @@ def test_full_processing():
     init_md = docs_path / "reference" / "a_test_package" / "module" / "__init__.md"
     wrong_module_init_md = docs_path / "reference" / "a_test_package" / "module.md"
     suff_md = docs_path / "reference" / "a_test_package" / "module" / "stuff.md"
+    other_suff_md = docs_path / "reference" / "a_test_package" / "module" / "other_stuff.md"
     assert (docs_path / "reference").is_dir()
     assert sidebar.exists()
     assert suff_md.exists()
@@ -48,6 +49,7 @@ def test_full_processing():
             {
               "items": [
                 "reference/a_test_package/module/__init__",
+                "reference/a_test_package/module/other_stuff",
                 "reference/a_test_package/module/stuff"
               ],
               "label": "a_test_package.module",
@@ -151,6 +153,7 @@ def test_full_processing_custom_top_level_names():
         {
           "items": [
             "reference/a_test_package/module/__init__",
+            "reference/a_test_package/module/other_stuff",
             "reference/a_test_package/module/stuff"
           ],
           "label": "a_test_package.module",
