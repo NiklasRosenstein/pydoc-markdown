@@ -5,7 +5,7 @@ from nr.interface import implements, override
 from pathlib import Path
 from pydoc_markdown.interfaces import Renderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from typing import Any, Dict, List, Text
+from typing import Any, Dict, List, Text, Tuple, Union
 import docspec
 import json
 import logging
@@ -151,3 +151,14 @@ class DocusaurusRenderer(Struct):
       }
       self._build_sidebar_tree(child, child_tree)
       sidebar["items"].append(child)
+
+    def _sort_items(item: Union[Text, Dict[Text, Any]]) -> Tuple[int, Text]:
+      """Sort sidebar items. Order follows:
+        1. modules containing items come first
+        2. alphanumeric order is applied
+      """
+      is_edge = int(isinstance(item, str))
+      label = item if is_edge else item.get("label")
+      return is_edge, label
+
+    sidebar["items"] = sorted(sidebar["items"], key=_sort_items)
