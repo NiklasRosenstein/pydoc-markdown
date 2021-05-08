@@ -141,6 +141,9 @@ class DocusaurusRenderer(Struct):
     https://v2.docusaurus.io/docs/docs-introduction/#sidebar
     """
     sidebar["items"] = module_tree.get("edges", [])
+    if os.name == 'nt':
+      # Make generated configuration more portable across operating systems (see #129).
+      sidebar["items"] = [x.replace('\\', '/') for x in sidebar["items"]]
     for child_name, child_tree in module_tree.get("children", {}).items():
       child = {
           "type": 'category',
