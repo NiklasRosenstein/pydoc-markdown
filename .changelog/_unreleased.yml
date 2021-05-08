@@ -5,3 +5,9 @@ changes:
   description: sort sidebar items in docusaurus
   fixes:
   - '#183'
+- type: fix
+  component: general
+  description: replace backslashes with forward slashes in docusaurus sidebar (actually
+    in 3.10.2)
+  fixes:
+  - '#129'
