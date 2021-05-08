@@ -1,0 +1,7 @@
+release_date: null
+changes:
+- type: fix
+  component: general
+  description: sort sidebar items in docusaurus
+  fixes:
+  - '#183'
