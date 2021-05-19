@@ -43,7 +43,7 @@ import subprocess
 import toml
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
-__version__ = '3.10.3'
+__version__ = '3.11.0'
 
 mapper = ObjectMapper(JsonModule())
 logger = logging.getLogger(__name__)

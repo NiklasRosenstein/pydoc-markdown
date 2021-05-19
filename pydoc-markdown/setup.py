@@ -46,7 +46,7 @@ requirements = [
 
 setuptools.setup(
   name = 'pydoc-markdown',
-  version = '3.10.3',
+  version = '3.11.0',
   author = 'Niklas Rosenstein',
   author_email = 'rosensteinniklas@gmail.com',
   description = 'Create Python API documentation in Markdown format.',

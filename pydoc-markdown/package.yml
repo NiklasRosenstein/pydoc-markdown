@@ -1,5 +1,5 @@
 name: pydoc-markdown
-version: 3.10.3
+version: 3.11.0
 author: Niklas Rosenstein <rosensteinniklas@gmail.com>
 license: MIT
 license_file: ../LICENSE.txt
