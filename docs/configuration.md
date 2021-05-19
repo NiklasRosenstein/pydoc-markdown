@@ -1,10 +1,11 @@
 # Configuration
 
 Pydoc-Markdown will read the configuration from a file called `pydoc-markdown.yml` (or `.yaml`)
-from the current working directory. Usually you would place this file in your project's root
-directory. The YAML configuration is pre-processed with a [YTT][]-like templating language.
+or from the `pyproject.toml` file under to `[tool.pydoc-markdown]` table. If you use the YAML
+configuration, the configuration file is pre-processed with a [YTT][]-like templating language
+(see [YAML Preprocessing](#yaml-preprocessing)).
 
-The file contains of four main sections:
+The configuration contains of four main sections:
 
 * `loaders`: A list of plugins that load API objects, for example from Python source files. The
   default configuration defines just a `python` loader.
@@ -16,6 +17,37 @@ The file contains of four main sections:
   `markdown` renderer (which by default will render a single file to stdout).
 * `hooks`: Configuration for commands that will be executed before and after rendering.
 
+### YAML Example
+
+```yaml
+loaders:
+- type: python
+  search_path: [../src]
+renderer:
+  type: mkdocs
+  pages:
+  - title: API Documentation
+    name: index
+    contents:
+    - school.*
+```
+
+### PyProject Example
+
+```toml
+[[tool.pydoc-markdown.loaders]]
+type = "python"
+search_path = [ "../src" ]
+
+[tool.pydoc-markdown.renderer]
+type = "mkdocs"
+
+[[tool.pydoc-markdown.renderer.pages]]
+title = "API Documentation"
+name = "index"
+contents = [ "school.*" ]
+```
+
 ## YAML Preprocessing
 
   [YTT]: https://get-ytt.io/
@@ -26,13 +58,13 @@ Pydoc-Markdown performs very basic pre-processing on the YAML configuration befo
 deserialized. The format is similar to that of [YTT][], but supports only a subset of the
 features and logic is interpreted as actual Python code.
 
-Supportes preprocessing features:
+Supports preprocessing features:
 
 * `def` blocks to define a Python function (requires an `end` keyword, encapsulating YAML
   code into the function definition is not supported)
 * Value substitution
 
-Check out the [Read the Docs/Hugo baseURL](../read-the-docs#hugo-baseurl) documentation for an
+Check out the [Read the Docs/Hugo baseURL](readthedocs#hugo-baseurl) documentation for an
 example.
 
 ## Loaders

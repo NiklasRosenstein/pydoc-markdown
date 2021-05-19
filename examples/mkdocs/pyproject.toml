@@ -1,0 +1,11 @@
+[[tool.pydoc-markdown.loaders]]
+type = "python"
+search_path = [ "../src" ]
+
+[tool.pydoc-markdown.renderer]
+type = "mkdocs"
+
+[[tool.pydoc-markdown.renderer.pages]]
+title = "API Documentation"
+name = "index"
+contents = [ "school.*" ]

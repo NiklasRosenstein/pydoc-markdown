@@ -1,0 +1,7 @@
+release_date: null
+changes:
+- type: feature
+  component: general
+  description: Add support for getting configuration from pyproject.toml under the
+    [tool.pydoc-markdown] table
+  fixes: []

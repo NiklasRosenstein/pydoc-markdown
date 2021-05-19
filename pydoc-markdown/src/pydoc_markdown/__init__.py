@@ -40,7 +40,7 @@ import docspec
 import logging
 import os
 import subprocess
-import yaml
+import toml
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
 __version__ = '3.10.3'
@@ -83,16 +83,24 @@ class PydocMarkdown(Struct):
 
   def load_config(self, data: Union[str, dict]) -> None:
     """
-    Loads a YAML configuration from *data*.
+    Loads the configuration from a nested data structure or filename as specified per the *data*
+    argument. If a filename is specified, it may be a JSON, YAML or TOML file. If the name of the
+    TOML file is `pyproject.yoml`, the configuration will be read from the `[tool.pydoc-markdown]`
+    section.
 
-    :param data: Nested structurre or the path to a YAML configuration file.
+    :param data: A nested structure or the path to a configuration file.
     """
 
     filename = None
     if isinstance(data, str):
       filename = data
       logger.info('Loading configuration file "%s".', filename)
-      data = ytemplate.load(filename, {'env': ytemplate.Attributor(os.environ)})
+      if filename.endswith('.toml'):
+        data = toml.load(filename)
+      else:
+        data = ytemplate.load(filename, {'env': ytemplate.Attributor(os.environ)})
+      if filename == 'pyproject.toml':
+        data = data['tool']['pydoc-markdown']
 
     collector = Collect()
     result = mapper.deserialize(data, type(self), filename=filename, decorations=[collector])

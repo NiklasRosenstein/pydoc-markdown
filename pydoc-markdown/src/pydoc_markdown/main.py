@@ -46,6 +46,7 @@ import yaml
 config_filenames = [
   'pydoc-markdown.yml',
   'pydoc-markdown.yaml',
+  'pyproject.toml'
 ]
 default_config_notice = (
   'Using this option will disable loading the default configuration file.')
