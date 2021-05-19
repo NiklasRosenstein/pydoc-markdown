@@ -43,7 +43,7 @@ class PydocmdProcessor(Struct):
   arg1 (int): The first argument.
   kwargs (dict): Keyword arguments.
 
-  # Raises:
+  # Raises
   RuntimeError: If something bad happens.
   ValueError: If an invalid argument is specified.
 
@@ -58,7 +58,7 @@ class PydocmdProcessor(Struct):
   arg1 (int): The first argument.
   kwargs (dict): Keyword arguments.
 
-  # Raises:
+  # Raises
   RuntimeError: If something bad happens.
   ValueError: If an invalid argument is specified.
 

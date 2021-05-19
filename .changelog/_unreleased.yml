@@ -5,3 +5,7 @@ changes:
   description: Add support for getting configuration from pyproject.toml under the
     [tool.pydoc-markdown] table
   fixes: []
+- type: fix
+  component: general
+  description: fix docstring in PydocmdPreprocessor
+  fixes: []
