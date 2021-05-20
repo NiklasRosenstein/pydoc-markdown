@@ -4,3 +4,7 @@ changes:
   component: general
   description: add missing `dataclasses` dependency for Python 3.6 compatibility
   fixes: []
+- type: fix
+  component: general
+  description: set minimum Python version in `package.yml` to `^3.6`
+  fixes: []
