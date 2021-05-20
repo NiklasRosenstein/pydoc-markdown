@@ -1,4 +1,4 @@
-release_date: null
+release_date: '2021-05-21'
 changes:
 - type: fix
   component: general
