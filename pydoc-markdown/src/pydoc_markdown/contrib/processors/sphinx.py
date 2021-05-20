@@ -19,12 +19,27 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+from dataclasses import dataclass
 from nr.databind.core import Struct
 from nr.interface import implements, override
 from pydoc_markdown.interfaces import Processor, Resolver
 from typing import Dict, List, Optional
 import docspec
 import re
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class _ParamLine:
+  """
+  Helper data class for holding details of Sphinx arguments.
+  """
+
+  name: str
+  docs: str
+  type: Optional[str] = None
 
 
 def generate_sections_markdown(lines, sections):
@@ -75,6 +90,8 @@ class SphinxProcessor(Struct):
     in_codeblock = False
     keyword = None
     components: Dict[str, List[str]] = {}
+    parameters: List[_ParamLine] = []
+    return_: Optional[_ParamLine] = None
 
     for line in node.docstring.split('\n'):
       if line.strip().startswith("```"):
@@ -84,25 +101,44 @@ class SphinxProcessor(Struct):
 
       if not in_codeblock and not line_codeblock:
         line = line.strip()
-        match = re.match(r'\s*:(?:arg|argument|param|parameter)\s+(\w+)\s*:(.*)?$', line)
+        match = re.match(r'\s*:(arg|argument|param|parameter|type)\s+(\w+)\s*:(.*)?$', line)
         if match:
           keyword = 'Arguments'
-          param = match.group(1)
-          text = match.group(2)
+          components.setdefault(keyword, [])
+          param = match.group(2)
+          text = match.group(3)
           text = text.strip()
-
-          component = components.setdefault(keyword, [])
-          component.append('- `{}`: {}'.format(param, text))
+          param_data = next((p for p in parameters if p.name == param), None)
+          if match.group(1) == 'type':
+            if param_data is None:
+              param_data = _ParamLine(param, '', text)
+              parameters.append(param_data)
+            else:
+              param_data.type = text
+          else:
+            if param_data is None:
+              param_data = _ParamLine(param, text, None)
+              parameters.append(param_data)
+            else:
+              param_data.docs = text
           continue
 
-        match = re.match(r'\s*:(?:return|returns)\s*:(.*)?$', line)
+        match = re.match(r'\s*:(return|returns|rtype)\s*:(.*)?$', line)
         if match:
           keyword = 'Returns'
-          text = match.group(1)
+          components.setdefault('Returns', [])
+          text = match.group(2)
           text = text.strip()
-
-          component = components.setdefault(keyword, [])
-          component.append(text)
+          if match.group(1) == 'rtype':
+            if return_ is None:
+              return_ = _ParamLine('return', '', text)
+            else:
+              return_.type = text
+          else:
+            if return_ is None:
+              return_ = _ParamLine('return', text, None)
+            else:
+              return_.docs = text
           continue
 
         match = re.match('\\s*:(?:raises|raise)\\s+(\\w+)\\s*:(.*)?$', line)
@@ -120,6 +156,19 @@ class SphinxProcessor(Struct):
         components[keyword].append(line)
       else:
         lines.append(line)
+
+    # Convert the parameters into actual markdown format.
+    component = components['Arguments'] if parameters else []
+    for param in parameters:
+      if param.type:
+        component.append('- `{}` (`{}`): {}'.format(param.name, param.type, param.docs))
+      else:
+        component.append('- `{}`: {}'.format(param.name, param.docs))
+
+    # Convert the return data into markdown format.
+    if return_:
+      return_fmt = f'`{return_.type}`: {return_.docs}' if return_.type else return_.docs
+      components['Returns'] = [return_fmt]
 
     generate_sections_markdown(lines, components)
     node.docstring = '\n'.join(lines)

@@ -49,3 +49,23 @@ def test_sphinx_processor(processor=None):
       with e() as f:
         f()
   ''')
+
+  assert_processor_result(processor or SphinxProcessor(),
+  '''
+  :param foo: A foo value
+  :type foo: str
+  :type bar: int
+  :param bar: A bar value
+  :returns: Some eggs from foo and bar
+  :rtype: str
+  ''',
+  '''
+  **Arguments**:
+
+  - `foo` (`str`): A foo value
+  - `bar` (`int`): A bar value
+
+  **Returns**:
+
+  `str`: Some eggs from foo and bar
+  ''')
