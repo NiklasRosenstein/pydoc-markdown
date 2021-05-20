@@ -1,7 +1,7 @@
 # Configuration
 
 Pydoc-Markdown will read the configuration from a file called `pydoc-markdown.yml` (or `.yaml`)
-or from the `pyproject.toml` file under to `[tool.pydoc-markdown]` table. If you use the YAML
+or from the `pyproject.toml` file under the `[tool.pydoc-markdown]` table. If you use the YAML
 configuration, the configuration file is pre-processed with a [YTT][]-like templating language
 (see [YAML Preprocessing](#yaml-preprocessing)).
 
