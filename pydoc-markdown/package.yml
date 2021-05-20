@@ -11,8 +11,9 @@ release:
 description: Create Python API documentation in Markdown format.
 readme: ../README.md
 requirements:
-- python ^3.5
+- python ^3.6
 - click ^7.0
+- dataclasses
 - docspec ~0.2.0
 - docspec-python ~0.1.0
 - nr.collections ~0.0.1

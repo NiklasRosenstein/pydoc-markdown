@@ -30,6 +30,7 @@ else:
 
 requirements = [
   'click >=7.0.0,<8.0.0',
+  'dataclasses',
   'docspec >=0.2.0,<0.3.0',
   'docspec-python >=0.1.0,<0.2.0',
   'nr.collections >=0.0.1,<0.1.0',
@@ -60,7 +61,7 @@ setuptools.setup(
   install_requires = requirements,
   extras_require = {},
   tests_require = [],
-  python_requires = '>=3.5.0,<4.0.0',
+  python_requires = '>=3.6.0,<4.0.0',
   data_files = [],
   entry_points = {
     'console_scripts': [
