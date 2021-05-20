@@ -1,0 +1,6 @@
+release_date: null
+changes:
+- type: fix
+  component: general
+  description: add missing `dataclasses` dependency for Python 3.6 compatibility
+  fixes: []
