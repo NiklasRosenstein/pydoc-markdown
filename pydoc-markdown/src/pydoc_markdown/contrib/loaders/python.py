@@ -111,17 +111,17 @@ class PythonLoader(Struct):
 
         logger.info(
           'Discovered Python modules %s and packages %s in %r.',
-          [x.name for x in discovered_items if x.is_module()],
-          [x.name for x in discovered_items if x.is_package()],
+          [x.name for x in discovered_items if isinstance(x, docspec_python.DiscoveryResult.Module)],
+          [x.name for x in discovered_items if isinstance(x, docspec_python.DiscoveryResult.Package)],
           path,
         )
 
         for item in discovered_items:
           if item.name in self.ignore_when_discovered:
             continue
-          if item.is_module():
+          if isinstance(item, docspec_python.DiscoveryResult.Module):
             modules.append(item.name)
-          elif item.is_package():
+          elif isinstance(item, docspec_python.DiscoveryResult.Package):
             packages.append(item.name)
 
     logger.info(

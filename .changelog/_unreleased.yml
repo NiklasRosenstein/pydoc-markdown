@@ -1,0 +1,6 @@
+release_date: null
+changes:
+- type: change
+  component: general
+  description: upgrade to `docspec-python~0.2.0`
+  fixes: []
