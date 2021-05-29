@@ -3,4 +3,4 @@ changes:
 - type: feature
   component: 'SphinxProcessor'
   description: parse `type` and `rtype`
-  fixes: [157]
+  fixes: [ '157' ]
