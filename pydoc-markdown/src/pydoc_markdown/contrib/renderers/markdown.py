@@ -117,6 +117,9 @@ class MarkdownRenderer(Struct):
   #: Render the function signature in the header. This is disabled by default.
   signature_in_header = Field(bool, default=False)
 
+  #: Render the vertical bar '|' before function signature. This is enabled by default.
+  signature_with_vertical_bar = Field(bool, default=True)
+
   #: Include the "def" keyword in the function signature. This is enabled
   #: by default.
   signature_with_def = Field(bool, default=False)
@@ -266,8 +269,14 @@ class MarkdownRenderer(Struct):
     if self.signature_python_help_style:
       code = cls.path() + ' = ' + code
     if self.classdef_render_init_signature_if_needed and '__init__' in cls.members:
-      code += ':\n |  ' + self._format_function_signature(
-        cls.members['__init__'], override_name=cls.name, add_method_bar=False)
+      code += ':\n '
+      if self.signature_with_vertical_bar:
+        code += "|  "
+      else:
+        code += "   "
+      
+      code += self._format_function_signature(cls.members['__init__'], override_name=cls.name, add_method_bar=False)
+
     if cls.decorations and self.classdef_with_decorators:
       code = '\n'.join(self._format_decorations(cls.decorations)) + code
     return code
@@ -282,7 +291,7 @@ class MarkdownRenderer(Struct):
     if self.classdef_code_block and isinstance(obj, docspec.Class):
       code = self._format_classdef_signature(obj)
     elif self.signature_code_block and isinstance(obj, docspec.Function):
-      code = self._format_function_signature(obj)
+      code = self._format_function_signature(obj, add_method_bar=self.signature_with_vertical_bar)
     elif self.data_code_block and isinstance(obj, docspec.Data):
       code = self._format_data_signature(obj)
     else:

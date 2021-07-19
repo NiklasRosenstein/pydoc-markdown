@@ -176,6 +176,45 @@ def test_class():
   - `param`: A parameter.
   ''')
 
+  assert_code_as_markdown(
+  '''
+  class Class:
+    """
+    The class documentation!
+    """
+
+    def __init__(self, param):
+      """
+      The constructor.
+
+      :param param: A parameter.
+      """
+      self.param = param
+  ''',
+  '''
+  ## Class Objects
+
+  ```python
+  class Class()
+  ```
+
+  The class documentation!
+
+  #### \\_\\_init\\_\\_
+
+  ```python
+  __init__(param)
+  ```
+
+  The constructor.
+
+  **Arguments**:
+
+  - `param`: A parameter.
+  ''',
+  renderer_options={'signature_with_vertical_bar': False})
+  
+
 
 def test_enum():
   assert_code_as_markdown(
