@@ -27,21 +27,23 @@ With no arguments it will load the default configuration file. If the
 or a YAML formatted object for the configuration.
 """
 
+import logging
+import os
+import sys
+import typing as t
+import webbrowser
+
+import click
+import yaml
+from databind.core.types import ConcreteType, from_typing
 from docspec import dump_module
-from nr.databind.core import StructType
+
 from pydoc_markdown import __version__, PydocMarkdown, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
 from pydoc_markdown.interfaces import Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
-from typing import List, NoReturn, Set, Union
-import click
-import logging
-import os
-import sys
-import webbrowser
-import yaml
 
 config_filenames = [
   'pydoc-markdown.yml',
@@ -60,11 +62,11 @@ class RenderSession:
   """
 
   def __init__(self,
-      config: Union[None, dict, str],  #: Configuration object or file
+      config: t.Union[None, dict, str],  #: Configuration object or file
       render_toc: bool = None,  #: Override the "render_toc" option in the MarkdownRenderer
-      search_path: List[str] = None,  #: Override the search path in the Python loader
-      modules: List[str] = None,  #: Override the modules in the Python loader
-      packages: List[str] = None,  #: Override the packages in the Python loader
+      search_path: t.List[str] = None,  #: Override the search path in the Python loader
+      modules: t.List[str] = None,  #: Override the modules in the Python loader
+      packages: t.List[str] = None,  #: Override the packages in the Python loader
       py2: bool = None,  #: Override Python2 compatibility in the Python loader
       ) -> None:
     self.config = config
@@ -96,10 +98,10 @@ class RenderSession:
 
     if self.render_toc is not None:
       # Find the #MarkdownRenderer field for this renderer.
-      for field in config.renderer.__fields__.values():
-        if isinstance(field.datatype, StructType) and \
-            issubclass(field.datatype.struct_cls, MarkdownRenderer):
-          markdown = getattr(config.renderer, field.name)
+      import pdb; pdb.set_trace()  # TODO
+      for field in from_typing(type(config.renderer)):
+        if field.type == ConcreteType(MarkdownRenderer):
+          markdown: MarkdownRenderer = getattr(config.renderer, field.name)
           break
       else:
         if isinstance(config.renderer, MarkdownRenderer):
@@ -127,7 +129,7 @@ class RenderSession:
 
     return config
 
-  def render(self, config: PydocMarkdown) -> List[str]:
+  def render(self, config: PydocMarkdown) -> t.List[str]:
     """
     Kicks off the rendering process and returns a list of files to watch.
     """
@@ -188,7 +190,7 @@ class RenderSession:
         process.terminate()
 
 
-def error(*args) -> NoReturn:
+def error(*args) -> t.NoReturn:
   print('error:', *args, file=sys.stderr)
   sys.exit(1)
 

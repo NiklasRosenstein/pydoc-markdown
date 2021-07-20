@@ -19,20 +19,21 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, Struct
-from nr.interface import implements, override
-from pydoc_markdown.interfaces import Context, SourceLinker
-from typing import Dict, List, Optional, Tuple
-import docspec
+import dataclasses
 import logging
 import os
-import nr.fs
 import subprocess
+import typing as t
+
+import docspec
+import nr.fs
+
+from pydoc_markdown.interfaces import Context, SourceLinker
 
 logger = logging.getLogger(__name__)
 
 
-def _getoutput(cmd: List[str], cwd: str = None) -> str:
+def _getoutput(cmd: t.List[str], cwd: str = None) -> str:
   logger.debug('running command %r (cwd: %r)', cmd, cwd)
   process = subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE)
   stdout = process.communicate()[0].decode()
@@ -42,8 +43,8 @@ def _getoutput(cmd: List[str], cwd: str = None) -> str:
   return stdout
 
 
-@implements(SourceLinker)
-class BaseGitSourceLinker(Struct):
+@dataclasses.dataclass
+class BaseGitSourceLinker(SourceLinker):
   """
   This is the base source linker for code in a Git repository.
   """
@@ -52,9 +53,9 @@ class BaseGitSourceLinker(Struct):
   #: is usually the directory that contains Pydoc-Markdown configuration file.
   #: If not set, the project root will be determined from the Git repository in
   #: the context directory.
-  root = Field(str, default=None)
+  root: t.Optional[str] = None
 
-  def get_context_vars(self) -> Dict[str, str]:
+  def get_context_vars(self) -> t.Dict[str, str]:
     return {}
 
   def get_url_template(self) -> str:
@@ -62,8 +63,7 @@ class BaseGitSourceLinker(Struct):
 
   # SourceLinker
 
-  @override
-  def get_source_url(self, obj: docspec.ApiObject) -> Optional[str]:
+  def get_source_url(self, obj: docspec.ApiObject) -> t.Optional[str]:
     """
     Compute the URL in the GitHub/Gitea #repo for the API object *obj*.
     """
@@ -89,7 +89,6 @@ class BaseGitSourceLinker(Struct):
 
   # PluginBase
 
-  @override
   def init(self, context: Context) -> None:
     """
     This is called before the rendering process. The source linker computes the project
@@ -105,18 +104,25 @@ class BaseGitSourceLinker(Struct):
     logger.debug('sha = %r', self._sha)
 
 
+@dataclasses.dataclass
 class BaseGitServiceSourceLinker(BaseGitSourceLinker):
 
   #: The repository name, formatted as `owner/repo`.
-  repo = Field(str)
+  repo: str = None  # type: ignore
 
-  #: The Gitea host name. Defaults to `gitea.com`.
-  host = Field(str)
+  #: The host name of the Git service.
+  host: str = None  # type: ignore
 
-  def get_context_vars(self) -> Dict[str, str]:
+  def __post_init__(self) -> None:
+    # To work around dataclass default order constraints.
+    if not self.repo: raise ValueError('repo must be set')
+    if not self.host: raise ValueError('host must be set')
+
+  def get_context_vars(self) -> t.Dict[str, str]:
     return {'repo': self.repo, 'host': self.host}
 
 
+@dataclasses.dataclass
 class GitSourceLinker(BaseGitSourceLinker):
   """
   This source linker allows you to define your own URL template to generate a permalink for
@@ -125,40 +131,47 @@ class GitSourceLinker(BaseGitSourceLinker):
 
   #: The URL template as a Python format string. Available variables are "path", "sha" and
   #: "lineno".
-  url_template = Field(str)
+  url_template: str = None
+
+  def __post_init__(self) -> None:
+    # To work around dataclass default order constraints.
+    if not self.url_template: raise ValueError('url_template must be set')
 
   def get_url_template(self) -> str:
     return self.url_template
 
 
+@dataclasses.dataclass
 class GiteaSourceLinker(BaseGitServiceSourceLinker):
   """
   Source linker for Git repositories hosted on gitea.com or any self-hosted Gitea instance.
   """
 
-  host = Field(str, default="gitea.com")
+  host: str = "gitea.com"
 
   def get_url_template(self) -> str:
     return 'https://{host}/{repo}/src/commit/{sha}/{path}#L{lineno}'
 
 
+@dataclasses.dataclass
 class GithubSourceLinker(BaseGitServiceSourceLinker):
   """
   Source linker for Git repositories hosted on github.com or any self-hosted GitHub instance.
   """
 
-  host = Field(str, default="github.com")
+  host: str = "github.com"
 
   def get_url_template(self) -> str:
     return 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
 
 
+@dataclasses.dataclass
 class BitbucketSourceLinker(BaseGitServiceSourceLinker):
   """
   Source linker for Git repositories hosted on bitbucket.org or any self-hosted Bitbucket instance.
   """
 
-  host = Field(str, default="bitbucket.org")
+  host: str = "bitbucket.org"
 
   def get_url_template(self) -> str:
     return 'https://{host}/{repo}/src/{sha}/{path}#lines-{lineno}'

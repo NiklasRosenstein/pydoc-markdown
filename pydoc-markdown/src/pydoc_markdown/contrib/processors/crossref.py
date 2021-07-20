@@ -19,19 +19,20 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Struct
-from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor, Resolver
-from typing import Dict, List, Optional
-import docspec
+import dataclasses
 import logging
 import re
+import typing as t
+
+import docspec
+
+from pydoc_markdown.interfaces import Processor, Resolver
 
 logger = logging.getLogger(__name__)
 
 
-@implements(Processor)
-class CrossrefProcessor(Struct):
+@dataclasses.dataclass
+class CrossrefProcessor(Processor):
   """
   Finds references to other objects in Markdown docstrings and produces links to other
   pages. The links are provided by the current #Renderer via the #Resolver interface.
@@ -61,9 +62,8 @@ class CrossrefProcessor(Struct):
   ```
   """
 
-  @override
-  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]):
-    unresolved: Dict[str, List[str]] = {}
+  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
+    unresolved: t.Dict[str, t.List[str]] = {}
     if resolver:
       reverse = docspec.ReverseMap(modules)
       docspec.visit(modules, lambda x: self._preprocess_refs(x, resolver, reverse, unresolved))
@@ -84,7 +84,7 @@ class CrossrefProcessor(Struct):
     node: docspec.ApiObject,
     resolver: Resolver,
     reverse: docspec.ReverseMap,
-    unresolved: Dict[str, List[str]],
+    unresolved: t.Dict[str, t.List[str]],
   ) -> None:
     if not node.docstring:
       return

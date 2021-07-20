@@ -19,19 +19,21 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from docspec_python import format_arglist
-from nr.databind.core import Field, Struct, Validator
-from nr.interface import implements, override
-from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
-from typing import cast, Iterable, List, Optional, TextIO
-import docspec
+import dataclasses
 import html
 import io
 import sys
+import typing as t
+
+from docspec_python import format_arglist
 
 
-@implements(Renderer)
-class MarkdownRenderer(Struct):
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
+import docspec
+
+
+@dataclasses.dataclass
+class MarkdownRenderer(Renderer):
   """
   Produces Markdown files. This renderer is often used by other renderers, such as
   #MkdocsRenderer and #HugoRenderer. It provides a wide variety of options to customize
@@ -42,124 +44,124 @@ class MarkdownRenderer(Struct):
 
   #: The name of the file to render to. If no file is specified, it will
   #: render to stdout.
-  filename = Field(str, default=None)
+  filename: t.Optional[str] = None
 
   #: The encoding of the output file. This is ignored when rendering to
   #: stdout.
-  encoding = Field(str, default='utf8')
+  encoding: str = 'utf-8'
 
   #: If enabled, inserts anchors before Markdown headers to ensure that
   #: links to the header work. This is enabled by default.
-  insert_header_anchors = Field(bool, default=True)
+  insert_header_anchors: bool = True
 
   #: Generate HTML headers instead of Mearkdown headers. This is disabled
   #: by default.
-  html_headers = Field(bool, default=False)
+  html_headers: bool = False
 
   #: Render names in headers as code (using backticks or `<code>` tags,
   #: depending on #html_headers). This is enabled by default.
-  code_headers = Field(bool, default=False)
+  code_headers: bool = False
 
   #: Generate descriptive class titles by adding the word "Objects" after
   #: the class name. This is enabled by default.
-  descriptive_class_title = Field(bool, default=True)
+  descriptive_class_title: bool = True
 
   #: Generate descriptivie module titles by adding the word "Module" before
   #: the module name. This is enabled by default.
-  descriptive_module_title = Field(bool, default=False)
+  descriptive_module_title: bool = False
 
   #: Add the class name as a prefix to method names. This class name is
   #: also rendered as code if #code_headers is enabled. This is enabled
   #: by default.
-  add_method_class_prefix = Field(bool, default=False)
+  add_method_class_prefix: bool = False
 
   #: Add the class name as a prefix to member names. This is enabled by
   #: default.
-  add_member_class_prefix = Field(bool, default=False)
+  add_member_class_prefix: bool = False
 
   #: Add the full module name as a prefix to the title of the header.
   #: This is disabled by default.
-  add_full_prefix = Field(bool, default=False)
+  add_full_prefix: bool = False
 
   #: If #add_full_prefix is enabled, this will result in the prefix to
   #: be wrapped in a `<sub>` tag.
-  sub_prefix = Field(bool, default=False)
+  sub_prefix: bool = False
 
   #: Render the definition of data members as a code block. This is disabled
   #: by default.
-  data_code_block = Field(bool, default=False)
+  data_code_block: bool = False
 
   #: Max length of expressions. If this limit is exceeded, the remaining
   #: characters will be replaced with three dots. This is set to 100 by
   #: default.
-  data_expression_maxlength = Field(int, default=100)
+  data_expression_maxlength: int = 100
 
   #: Render the class signature as a code block. This includes the "class"
   #: keyword, the class name and its bases. This is enabled by default.
-  classdef_code_block = Field(bool, default=True)
+  classdef_code_block: bool = True
 
   #: Render the constructor signature in the class definition code block
   #: if its `__init__()` member is not visible.
-  classdef_render_init_signature_if_needed = Field(bool, default=True)
+  classdef_render_init_signature_if_needed: bool = True
 
   #: Render decorators before class definitions.
-  classdef_with_decorators = Field(bool, default=True)
+  classdef_with_decorators: bool = True
 
   #: Render classdef and function signature blocks in the Python help()
   #: style.
-  signature_python_help_style = Field(bool, default=False)
+  signature_python_help_style: bool = False
 
   #: Render the function signature as a code block. This includes the "def"
   #: keyword, the function name and its arguments. This is enabled by
   #: default.
-  signature_code_block = Field(bool, default=True)
+  signature_code_block: bool = True
 
   #: Render the function signature in the header. This is disabled by default.
-  signature_in_header = Field(bool, default=False)
+  signature_in_header: bool = False
 
   #: Render the vertical bar '|' before function signature. This is enabled by default.
-  signature_with_vertical_bar = Field(bool, default=True)
+  signature_with_vertical_bar: bool = True
 
   #: Include the "def" keyword in the function signature. This is enabled
   #: by default.
-  signature_with_def = Field(bool, default=False)
+  signature_with_def: bool = False
 
   #: Render the class name in the code block for function signature. Note
   #: that this results in invalid Python syntax to be rendered. This is
   #: disabled by default.
-  signature_class_prefix = Field(bool, default=False)
+  signature_class_prefix: bool = False
 
   #: Render decorators before function definitions.
-  signature_with_decorators = Field(bool, default=True)
+  signature_with_decorators: bool = True
 
   #: Add the string "python" after the backticks for code blocks. This is
   #: enabled by default.
-  code_lang = Field(bool, default=True)
+  code_lang: bool = True
 
   #: Render a table of contents at the beginning of the file.
-  render_toc = Field(bool, default=False)
+  render_toc: bool = False
 
   #: The title of the "Table of Contents" header.
-  render_toc_title = Field(str, default='Table of Contents')
+  render_toc_title: str = 'Table of Contents'
 
   #: The maximum depth of the table of contents. Defaults to 2.
-  toc_maxdepth = Field(int, default=2)
+  toc_maxdepth: int = 2
 
   #: Render module headers. This is enabled by default.
-  render_module_header = Field(bool, default=True)
+  render_module_header: bool = True
 
   #: Custom template for module header.
-  render_module_header_template = Field(str, default='')
+  render_module_header_template: str = ''
 
   #: Render docstrings as blockquotes. This is disabled by default.
-  docstrings_as_blockquote = Field(bool, default=False)
+  docstrings_as_blockquote: bool = False
 
   #: Use a fixed header level for every kind of API object. The individual
   #: levels can be defined with #header_level_by_type.
-  use_fixed_header_levels = Field(bool, default=True)
+  use_fixed_header_levels: bool = True
 
   #: Fixed header levels by API object type.
-  header_level_by_type = Field({int}, default={
+  header_level_by_type: t.Dict[str, int] = dataclasses.field(default_factory=lambda: {
     'Module': 1,
     'Class': 2,
     'Method': 4,
@@ -170,23 +172,23 @@ class MarkdownRenderer(Struct):
   #: A plugin that implements the #SourceLinker interface to provide links to the
   #: source code of API objects. If this field is specified, the renderer will
   #: place links to the source code in the generated Markdown files.
-  source_linker = Field(SourceLinker, default=None)
+  source_linker: t.Optional[SourceLinker] = None
 
   #: Allows you to define the position of the "view source" link in the Markdown
   #: file if a #source_linker is configured.
-  source_position = Field(str, Validator.choices(["after signature", "before signature"]),
-                          default="after signature")
+  # TODO: Validator.choices(["after signature", "before signature"])
+  source_position: str = 'after signature'
 
   #: Allows you to override how the "view source" link is rendered into the Markdown
   #: file if a #source_linker is configured. The default is `[[view_source]]({url})`.
-  source_format = Field(str, default='[[view_source]]({url})')
+  source_format: str = '[[view_source]]({url})'
 
   #: Escape html in docstring. Default to False.
-  escape_html_in_docstring = Field(bool, default=False)
+  escape_html_in_docstring: bool = False
 
-  _reverse_map = Field(docspec.ReverseMap, default=None, hidden=True)
+  _reverse_map: t.Optional[docspec.ReverseMap] = dataclasses.field(default=None, init=False)
 
-  def _get_parent(self, obj: docspec.ApiObject) -> Optional[docspec.ApiObject]:
+  def _get_parent(self, obj: docspec.ApiObject) -> t.Optional[docspec.ApiObject]:
     return self._reverse_map.get_parent(obj)
 
   def _is_method(self, obj: docspec.ApiObject) -> bool:
@@ -235,12 +237,12 @@ class MarkdownRenderer(Struct):
     fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
-  def _format_decorations(self, decorations: List[docspec.Decoration]) -> Iterable[str]:
+  def _format_decorations(self, decorations: t.List[docspec.Decoration]) -> t.Iterable[str]:
     for dec in decorations:
       yield '@{}{}\n'.format(dec.name, dec.args or '')
 
   def _format_function_signature(self, func: docspec.Function, override_name: str = None, add_method_bar: bool = True) -> str:
-    parts: List[str] = []
+    parts: t.List[str] = []
     if self.signature_with_decorators:
       parts += self._format_decorations(func.decorations)
     if self.signature_python_help_style and not self._is_method(func):
@@ -274,7 +276,7 @@ class MarkdownRenderer(Struct):
         code += "|  "
       else:
         code += "   "
-      
+
       code += self._format_function_signature(cls.members['__init__'], override_name=cls.name, add_method_bar=False)
 
     if cls.decorations and self.classdef_with_decorators:
@@ -362,12 +364,12 @@ class MarkdownRenderer(Struct):
   def _escape(self, s):
     return s.replace('_', '\\_').replace('*', '\\*')
 
-  def render_to_string(self, modules: List[docspec.Module]) -> str:
+  def render_to_string(self, modules: t.List[docspec.Module]) -> str:
     fp = io.StringIO()
     self.render_to_stream(modules, fp)
     return fp.getvalue()
 
-  def render_to_stream(self, modules: List[docspec.Module], stream: TextIO):
+  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO):
     self._reverse_map = docspec.ReverseMap(modules)
 
     if self.render_toc:
@@ -381,22 +383,21 @@ class MarkdownRenderer(Struct):
 
   # Renderer
 
-  @override
-  def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
+  def get_resolver(self, modules: t.List[docspec.Module]) -> t.Optional[Resolver]:
     """
     Returns a simple #Resolver implementation. Finds cross-references in the same file.
     """
 
     reverse_map = docspec.ReverseMap(modules)
 
-    def _resolve_reference(obj: docspec.ApiObject, ref: List[str]) -> Optional[docspec.ApiObject]:
+    def _resolve_reference(obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
       for part_name in ref:
         obj = docspec.get_member(obj, part_name)
         if not obj:
           return None
       return obj
 
-    def _find_reference(obj: docspec.ApiObject, ref: List[str]) -> Optional[docspec.ApiObject]:
+    def _find_reference(obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
       while obj:
         resolved = _resolve_reference(obj, ref)
         if resolved:
@@ -413,17 +414,15 @@ class MarkdownRenderer(Struct):
 
     return resolver
 
-  @override
-  def render(self, modules: List[docspec.Module]) -> None:
+  def render(self, modules: t.List[docspec.Module]) -> None:
     if self.filename is None:
       self.render_to_stream(modules, sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
-        self.render_to_stream(modules, cast(TextIO, fp))
+        self.render_to_stream(modules, t.cast(t.TextIO, fp))
 
   # PluginBase
 
-  @override
   def init(self, context: Context) -> None:
     if self.source_linker:
       self.source_linker.init(context)

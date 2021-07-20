@@ -19,17 +19,18 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Struct
-from nr.interface import implements, override
+import dataclasses
+import re
+import typing as t
+
+import docspec
+
 from pydoc_markdown.contrib.processors.sphinx import generate_sections_markdown
 from pydoc_markdown.interfaces import Processor, Resolver
-from typing import List, Optional
-import docspec
-import re
 
 
-@implements(Processor)
-class GoogleProcessor(Struct):
+@dataclasses.dataclass
+class GoogleProcessor(Processor):
   """
   This class implements the preprocessor for Google and PEP 257 docstrings. It converts
   docstrings formatted in the Google docstyle to Markdown syntax.
@@ -116,8 +117,7 @@ class GoogleProcessor(Struct):
         return True
     return False
 
-  @override
-  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
 
   def _process(self, node: docspec.ApiObject):
@@ -125,7 +125,7 @@ class GoogleProcessor(Struct):
       return
 
     lines = []
-    current_lines: List[str] = []
+    current_lines: t.List[str] = []
     in_codeblock = False
     keyword = None
 

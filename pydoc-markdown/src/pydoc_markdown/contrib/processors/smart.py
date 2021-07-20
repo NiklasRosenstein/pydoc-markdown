@@ -19,29 +19,29 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, Struct
-from nr.interface import implements, override
+import dataclasses
+import typing as t
+
+import docspec
+
 from pydoc_markdown.interfaces import Processor, Resolver
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
 from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
-from typing import List, Optional
-import docspec
 
 
-@implements(Processor)
-class SmartProcessor(Struct):
+@dataclasses.dataclass
+class SmartProcessor(Processor):
   """
   This processor picks the #GoogleProcessor, #SphinxProcessor or #PydocmdProcessor after
   guessing which is appropriate from the syntax it finds in the docstring.
   """
 
-  google = Field(GoogleProcessor, default=GoogleProcessor)
-  pydocmd = Field(PydocmdProcessor, default=PydocmdProcessor)
-  sphinx = Field(SphinxProcessor, default=SphinxProcessor)
+  google: GoogleProcessor = dataclasses.field(default_factory=GoogleProcessor)
+  pydocmd: PydocmdProcessor = dataclasses.field(default_factory=PydocmdProcessor)
+  sphinx: SphinxProcessor = dataclasses.field(default_factory=SphinxProcessor)
 
-  @override
-  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
 
   def _process(self, obj: docspec.ApiObject):
