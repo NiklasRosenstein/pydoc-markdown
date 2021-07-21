@@ -19,12 +19,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-import dataclasses
 import logging
 import os
 import subprocess
 import typing as t
 
+import databind.core.dataclasses as dataclasses
 import docspec
 import nr.fs
 
@@ -108,15 +108,10 @@ class BaseGitSourceLinker(SourceLinker):
 class BaseGitServiceSourceLinker(BaseGitSourceLinker):
 
   #: The repository name, formatted as `owner/repo`.
-  repo: str = None  # type: ignore
+  repo: str
 
   #: The host name of the Git service.
-  host: str = None  # type: ignore
-
-  def __post_init__(self) -> None:
-    # To work around dataclass default order constraints.
-    if not self.repo: raise ValueError('repo must be set')
-    if not self.host: raise ValueError('host must be set')
+  host: str
 
   def get_context_vars(self) -> t.Dict[str, str]:
     return {'repo': self.repo, 'host': self.host}

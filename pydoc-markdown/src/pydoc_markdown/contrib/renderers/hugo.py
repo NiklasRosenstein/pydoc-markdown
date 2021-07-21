@@ -241,7 +241,8 @@ class HugoRenderer(Renderer, Server, Builder):
   #: ```
   get_hugo: GetHugo = dataclasses.field(default_factory=GetHugo)
 
-  _context: Context = dataclasses.field(default=None, init=False)  # Initialized in #init()
+  def __post_init__(self) -> None:
+    self._context: t.Optional[Context] = None
 
   def _render_page(self, modules: t.List[docspec.Module], page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)

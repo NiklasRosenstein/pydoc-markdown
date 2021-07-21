@@ -110,7 +110,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
   #: ```
   server_port: t.Optional[int] = None
 
-  _context: Context = dataclasses.field(default=None, init=False)  # Initialized in #init()
+  def __post_init__(self) -> None:
+    self._context: t.Optional[Context] = None
 
   @property
   def content_dir(self) -> str:

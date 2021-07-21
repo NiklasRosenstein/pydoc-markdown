@@ -81,7 +81,8 @@ class PythonLoader(Loader):
   #: The encoding to use when reading the Python source files.
   encoding: t.Optional[str] = None
 
-  _context: t.Optional[Context] = dataclasses.field(init=False)
+  def __post_init__(self) -> None:
+    self._context: t.Optional[Context] = None
 
   def get_effective_search_path(self) -> t.List[str]:
     if self.search_path is None:
