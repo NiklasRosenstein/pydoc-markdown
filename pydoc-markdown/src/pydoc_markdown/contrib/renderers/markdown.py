@@ -405,14 +405,14 @@ class MarkdownRenderer(Renderer):
         obj = reverse_map.get_parent(obj)
       return None
 
-    @Resolver
-    def resolver(obj: docspec.ApiObject, ref: str) -> Optional[str]:
-      target = _find_reference(obj, ref.split('.'))
-      if target:
-        return '#' + self._generate_object_id(target)
-      return None
+    class _Resolver(Resolver):
+      def resolve_ref(self, obj: docspec.ApiObject, ref: str) -> t.Optional[str]:
+        target = _find_reference(obj, ref.split('.'))
+        if target:
+          return '#' + self._generate_object_id(target)
+        return None
 
-    return resolver
+    return _Resolver()
 
   def render(self, modules: t.List[docspec.Module]) -> None:
     if self.filename is None:

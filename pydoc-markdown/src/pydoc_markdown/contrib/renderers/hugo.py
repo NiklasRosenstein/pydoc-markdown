@@ -134,7 +134,7 @@ class HugoConfig:
   #: theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
   #: theme: docs/hugo-theme/
   #: ```
-  theme: t.Union[str, HugoThemePath, HugoThemeGitUrl]
+  theme: t.Union[str, HugoThemeGitUrl, HugoThemePath]
 
   #: Base URL.
   baseURL: t.Optional[str] = None
@@ -213,7 +213,7 @@ class HugoRenderer(Renderer, Server, Builder):
   clean_render: bool = True
 
   #: The pages to render.
-  pages: Pages[HugoPage] = dataclasses.field(default_factory=list)
+  pages: Pages[HugoPage] = dataclasses.field(default_factory=Pages)
 
   #: The default Hugo preamble that is applied to every page. Example:
   #:

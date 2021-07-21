@@ -153,7 +153,7 @@ class RenderSession:
     serves an HTML page from the renderer output on the fly.
     """
 
-    if not Server.provided_by(config.renderer):
+    if not isinstance(config.renderer, Server):
       error('renderer {!r} cannot be used with --server'
             .format(type(config.renderer).__name__))
 

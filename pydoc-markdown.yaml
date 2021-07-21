@@ -10,9 +10,9 @@ loaders:
   - type: python
     search_path: [pydoc-markdown/src]
 
-hooks:
-  pre-render:
-  - shut changelog -a --markdown >CHANGELOG.md
+hooks: {}
+  #pre-render:
+  #- shut changelog -a --markdown >CHANGELOG.md
 
 renderer:
   type: hugo

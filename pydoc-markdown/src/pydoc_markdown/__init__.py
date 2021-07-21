@@ -81,8 +81,7 @@ class PydocMarkdown:
   # Hidden fields are filled at a later point in time and are not (de-) serialized.
   unknown_fields: t.List[str] = dataclasses.field(default_factory=list)
 
-  def __init__(self, *args, **kwargs) -> None:
-    super(PydocMarkdown, self).__init__(*args, **kwargs)
+  def __post_init__(self) -> None:
     self.resolver: t.Optional[Resolver] = None
     self._context: t.Optional[Context] = None
 
@@ -115,7 +114,12 @@ class PydocMarkdown:
       options=[A.enable_unknowns(lambda ctx, keys: unknowns.append((ctx, keys)))])
     vars(self).update(vars(result))
 
-    print('@@@', unknowns)  # TODO
+    if unknowns:
+      print('Found unknown keys:')
+    for ctx, keys in unknowns:
+      print('  |', ctx.location, keys)
+    if unknowns:
+      print()
 
     #self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
     #  for n in collector.nodes))
@@ -180,7 +184,7 @@ class PydocMarkdown:
       self.run_hooks('post-render')
 
   def build(self, site_dir: str) -> None:
-    if not Builder.provided_by(self.renderer):
+    if not isinstance(self.renderer, Builder):
       name = type(self.renderer).__name__
       raise NotImplementedError('Renderer "{}" does not support building'.format(name))
     self.ensure_initialized()

@@ -85,7 +85,7 @@ class MkdocsRenderer(Renderer, Server, Builder):
 
   #: The pages to render into the output directory.
   # TODO (@NiklasRosenstein): Uh what exactly is this in new databind?
-  pages: Pages[Page] = dataclasses.field(default_factory=list)
+  pages: Pages[Page] = dataclasses.field(default_factory=Pages)
 
   #: Markdown renderer settings.
   # TODO (@NiklasRosenstein): Use fieldinfo(serialize_as)
