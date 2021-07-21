@@ -196,7 +196,7 @@ class PydocMarkdown:
     # is then used to find site-packages, and thus none of the site-packages from the script's actual prefix are
     # detected.
     env = os.environ.copy()
-    env.pop('__PYVENV_LAUNCHER__')
+    env.pop('__PYVENV_LAUNCHER__', None)
 
     for command in getattr(self.hooks, hook_name.replace('-', '_')):
       subprocess.check_call(command, shell=True, cwd=self._context.directory, env=env)
