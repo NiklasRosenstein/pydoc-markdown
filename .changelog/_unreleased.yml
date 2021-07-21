@@ -1,0 +1,7 @@
+release_date: null
+changes:
+- type: breaking_change
+  component: general
+  description: Migrate to `databind.core 1.x` and `databind.json 1.x` from `nr.databind.core`
+    and `nr.databin.json`
+  fixes: []
