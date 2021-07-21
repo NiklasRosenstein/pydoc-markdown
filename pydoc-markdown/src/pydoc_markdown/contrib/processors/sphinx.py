@@ -19,19 +19,19 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from dataclasses import dataclass
-from nr.databind.core import Struct
-from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor, Resolver
-from typing import Dict, List, Optional
-import docspec
-import re
+import dataclasses
 import logging
+import re
+import typing as t
+
+import docspec
+
+from pydoc_markdown.interfaces import Processor, Resolver
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclasses.dataclass
 class _ParamLine:
   """
   Helper data class for holding details of Sphinx arguments.
@@ -39,7 +39,7 @@ class _ParamLine:
 
   name: str
   docs: str
-  type: Optional[str] = None
+  type: t.Optional[str] = None
 
 
 def generate_sections_markdown(lines, sections):
@@ -51,8 +51,8 @@ def generate_sections_markdown(lines, sections):
     lines.extend(section)
 
 
-@implements(Processor)
-class SphinxProcessor(Struct):
+@dataclasses.dataclass
+class SphinxProcessor(Processor):
   """
   This processor parses ReST/Sphinx-style function documentation and converts it into
   Markdown syntax.
@@ -78,8 +78,7 @@ class SphinxProcessor(Struct):
     return ':param' in docstring or ':return' in docstring or \
       ':raise' in docstring
 
-  @override
-  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
 
   def _process(self, node):
@@ -89,9 +88,9 @@ class SphinxProcessor(Struct):
     lines = []
     in_codeblock = False
     keyword = None
-    components: Dict[str, List[str]] = {}
-    parameters: List[_ParamLine] = []
-    return_: Optional[_ParamLine] = None
+    components: t.Dict[str, t.List[str]] = {}
+    parameters: t.List[_ParamLine] = []
+    return_: t.Optional[_ParamLine] = None
 
     for line in node.docstring.split('\n'):
       if line.strip().startswith("```"):

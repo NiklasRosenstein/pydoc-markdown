@@ -19,14 +19,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, Struct
-from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor
+import dataclasses
+import typing as t
+
 import docspec
 
+from pydoc_markdown.interfaces import Processor, Resolver
 
-@implements(Processor)
-class FilterProcessor(Struct):
+
+@dataclasses.dataclass
+class FilterProcessor(Processor):
   """
   The `filter` processor removes module and class members based on certain criteria.
 
@@ -46,29 +48,28 @@ class FilterProcessor(Struct):
   #: be kept or removed. If specified, the expression is the ultimate truth for determining
   #: the keep-or-remove state of a node. Using `'default()'` as the expression has the same
   #: semantic as not specifying this field. Default: `null`
-  expression = Field(str, default=None)
+  expression: t.Optional[str] = None
 
   #: Keep only API objects that have docstrings. Default: `true`
-  documented_only = Field(bool, default=True)
+  documented_only: bool = True
 
   #: Exclude API objects that appear to be private members (i.e. their name begins with
   #: and underscore but does not end with one). Default: `true`
-  exclude_private = Field(bool, default=True)
+  exclude_private: bool = True
 
   #: Exclude special members (e.g.` __path__`, `__annotations__`, `__name__` and `__all__`).
   #: Default: `true`
-  exclude_special = Field(bool, default=True)
+  exclude_special: bool = True
 
   #: Do not filter #docspec.Module objects. Default: `true`
-  do_not_filter_modules = Field(bool, default=True)
+  do_not_filter_modules: bool = True
 
   #: Skip modules with no content. Default: `false`.
-  skip_empty_modules = Field(bool, default=False)
+  skip_empty_modules: bool = False
 
   SPECIAL_MEMBERS = ('__path__', '__annotations__', '__name__', '__all__')
 
-  @override
-  def process(self, modules, _resolver):
+  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     def m(obj):
       return self._match(obj)
     docspec.filter_visit(modules, m, order='post')

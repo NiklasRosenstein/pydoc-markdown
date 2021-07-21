@@ -23,22 +23,22 @@
 Loads Python source code.
 """
 
-import docspec
-import docspec_python
+import dataclasses
 import logging
 import os
 import sys
+import typing as t
 
-from nr.databind.core import Field, Struct
-from nr.interface import implements, override
-from pydoc_markdown.interfaces import Context, Loader, LoaderError
-from typing import Iterable, List
+import docspec
+import docspec_python
+
+from pydoc_markdown.interfaces import Context, Loader
 
 logger = logging.getLogger(__name__)
 
 
-@implements(Loader)
-class PythonLoader(Struct):
+@dataclasses.dataclass
+class PythonLoader(Loader):
   """
   This implementation of the #Loader interface parses Python modules and packages using
   #docspec_python. See the options below to control which modules and packages are being
@@ -61,29 +61,30 @@ class PythonLoader(Struct):
   #: A list of module names that this loader will search for and then parse.
   #: The modules are searched using the #sys.path of the current Python
   # interpreter, unless the #search_path option is specified.
-  modules = Field([str], default=None)
+  modules: t.Optional[t.List[str]] = None
 
   #: A list of package names that this loader will search for and then parse,
   #: including all sub-packages and modules.
-  packages = Field([str], default=None)
+  packages: t.Optional[t.List[str]] = None
 
   #: The module search path. If not specified, the current #sys.path is
   #: used instead. If any of the elements contain a `*` (star) symbol, it
   #: will be expanded with #sys.path.
-  search_path = Field([str], default=None)
+  search_path: t.Optional[t.List[str]] = None
 
   #: List of modules to ignore when using module discovery on the #search_path.
-  ignore_when_discovered = Field([str], default=lambda: ['test', 'tests', 'setup'])
+  ignore_when_discovered: t.Optional[t.List[str]] = dataclasses.field(default_factory=lambda: ['test', 'tests', 'setup'])
 
   #: Options for the Python parser.
-  parser = Field(docspec_python.ParserOptions, default=Field.DEFAULT_CONSTRUCT)
+  parser: docspec_python.ParserOptions = dataclasses.field(default_factory=docspec_python.ParserOptions)
 
   #: The encoding to use when reading the Python source files.
-  encoding = Field(str, default=None)
+  encoding: t.Optional[str] = None
 
-  _context = Field(Context, default=None, hidden=True)
+  def __post_init__(self) -> None:
+    self._context: t.Optional[Context] = None
 
-  def get_effective_search_path(self) -> List[str]:
+  def get_effective_search_path(self) -> t.List[str]:
     if self.search_path is None:
       search_path = ['.', 'src'] if self.modules is None else list(sys.path)
     else:
@@ -95,8 +96,7 @@ class PythonLoader(Struct):
 
   # Loader
 
-  @override
-  def load(self) -> Iterable[docspec.Module]:
+  def load(self) -> t.Iterable[docspec.Module]:
     search_path = self.get_effective_search_path()
     modules = list(self.modules or [])
     packages = list(self.packages or [])
@@ -139,6 +139,5 @@ class PythonLoader(Struct):
 
   # PluginBase
 
-  @override
   def init(self, context: Context) -> None:
     self._context = context

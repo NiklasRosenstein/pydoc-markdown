@@ -19,31 +19,36 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, Struct
-from nr.interface import implements, override
-from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
-from pydoc_markdown.util.pages import Page
-from pydoc_markdown.util.knownfiles import KnownFiles
-from typing import Dict, List, Optional
+import dataclasses
 import copy
-import docspec
 import logging
 import os
 import subprocess
+import typing as t
+import typing_extensions as te
+
+import databind.core.annotations as A
+import docspec
 import yaml
+
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
+from pydoc_markdown.util.pages import Page, Pages
+from pydoc_markdown.util.knownfiles import KnownFiles
+from typing import Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
 
+@dataclasses.dataclass
 class CustomizedMarkdownRenderer(MarkdownRenderer):
   """ We override some defaults in this subclass. """
 
-  render_toc = Field(bool, default=False)
+  render_toc: bool = False
 
 
-@implements(Renderer, Server, Builder)
-class MkdocsRenderer(Struct):
+@dataclasses.dataclass
+class MkdocsRenderer(Renderer, Server, Builder):
   """
   Produces Markdown files in a layout compatible with [MkDocs][0] and can be used with the
   Pydoc-Markdown `--server` option for a live-preview. The `--bootstrap mkdocs` option can
@@ -72,28 +77,31 @@ class MkdocsRenderer(Struct):
 
   #: The output directory for the generated Markdown files. Defaults to
   #: `build/docs`.
-  output_directory = Field(str, default='build/docs')
+  output_directory: str = 'build/docs'
 
   #: Name of the content directory (inside the #output_directory). Defaults to "content".
-  content_directory_name = Field(str, default='content')
+  content_directory_name: str = 'content'
 
   #: Remove files generated in a previous pass by the Mkdocs renderer before rendering
   #: again. Defaults to `True`.
-  clean_render = Field(bool, default=True)
+  clean_render: bool = True
 
   #: The pages to render into the output directory.
-  pages = Field(Page.collection_type())
+  # TODO (@NiklasRosenstein): Uh what exactly is this in new databind?
+  pages: Pages[Page] = dataclasses.field(default_factory=Pages)
 
   #: Markdown renderer settings.
-  markdown = Field(CustomizedMarkdownRenderer, default=CustomizedMarkdownRenderer)
+  # TODO (@NiklasRosenstein): Use fieldinfo(serialize_as)
+  markdown: te.Annotated[MarkdownRenderer, A.typeinfo(deserialize_as=CustomizedMarkdownRenderer)] = \
+    dataclasses.field(default_factory=CustomizedMarkdownRenderer)
 
   #: The name of the site. This will be carried into the `site_name` key
   #: of the #mkdocs_config.
-  site_name = Field(str, default=None)
+  site_name: t.Optional[str] = None
 
   #: Arbitrary configuration values that will be rendered to an
   #: `mkdocs.yml` file.
-  mkdocs_config = Field(dict, default=dict, nullable=True)
+  mkdocs_config: t.Optional[t.Dict[str, t.Any]] = dataclasses.field(default_factory=dict)
 
   #: Port for the Mkdocs server when using the `pydoc-markdown --server` option.
   #: Defaults to `8000`. Can be set with the `MKDOCS_PORT` environment variable:
@@ -101,9 +109,10 @@ class MkdocsRenderer(Struct):
   #: ```
   #: $ MKDOCS_PORT=8383 pydoc-markdown -so
   #: ```
-  server_port = Field(int, default=None)
+  server_port: t.Optional[int] = None
 
-  _context = Field(Context, default=None, hidden=True)  # Initialized in #init()
+  def __post_init__(self) -> None:
+    self._context: t.Optional[Context] = None
 
   @property
   def content_dir(self) -> str:
@@ -135,7 +144,6 @@ class MkdocsRenderer(Struct):
 
   # Renderer
 
-  @override
   def render(self, modules: List[docspec.Module]) -> None:
     known_files = KnownFiles(self.output_directory)
     if self.clean_render:
@@ -172,7 +180,6 @@ class MkdocsRenderer(Struct):
         with known_files.open(filename, 'w') as fp:
           yaml.dump(config, fp)
 
-  @override
   def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
     # TODO (@NiklasRosenstein): The resolver returned by the Markdown
     #   renderer does not implement linking across multiple pages.
@@ -180,16 +187,13 @@ class MkdocsRenderer(Struct):
 
   # Server
 
-  @override
   def get_server_url(self) -> str:
     return 'http://{}'.format(self._get_addr())
 
-  @override
   def start_server(self) -> subprocess.Popen:
     addr = self._get_addr()
     return subprocess.Popen(['mkdocs', 'serve', '-a', addr], cwd=self.output_directory)
 
-  @override
   def reload_server(self, process: subprocess.Popen):
     # While MkDocs does support file watching and automatic reloading,
     # it appears to be a bit quirky. Let's just restart the whole process.
@@ -197,14 +201,12 @@ class MkdocsRenderer(Struct):
 
   # Builder
 
-  @override
   def build(self, site_dir: str) -> None:
     command = ['mkdocs', 'build', '--clean', '--site-dir', site_dir]
     subprocess.check_call(command, cwd=self.output_directory)
 
   # PluginBase
 
-  @override
   def init(self, context: Context) -> None:
     self._context = context
     self.markdown.init(context)

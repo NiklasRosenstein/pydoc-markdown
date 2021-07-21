@@ -24,10 +24,17 @@ Pydoc-markdown is an extensible framework for generating API documentation,
 with a focus on Python source code and the Markdown output format.
 """
 
+import dataclasses
+import logging
+import os
+import subprocess
+import toml
+import typing as t
 
-from nr.databind.core import Collect, Field, FieldName, ObjectMapper, Struct, UnionType
-from nr.databind.json import JsonModule
-from nr.stream import concat
+import databind.core.annotations as A
+import databind.json
+import docspec
+
 from pydoc_markdown.interfaces import Context, Loader, Processor, Renderer, Resolver, Builder
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
@@ -35,53 +42,50 @@ from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.util import ytemplate
-from typing import List, Optional, Union
-import docspec
-import logging
-import os
-import subprocess
-import toml
+
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
 __version__ = '3.14.0'
 
-mapper = ObjectMapper(JsonModule())
 logger = logging.getLogger(__name__)
 
 
-class PydocMarkdown(Struct):
+@dataclasses.dataclass
+class Hooks:
+  pre_render: t.List[str] = dataclasses.field(default_factory=list, metadata={'alias': 'pre-render'})
+  post_render: t.List[str] = dataclasses.field(default_factory=list, metadata={'alias': 'post-render'})
+
+
+@dataclasses.dataclass
+class PydocMarkdown:
   """
   This object represents the main configuration for Pydoc-Markdown.
   """
 
   #: A list of loader implementations that load #docspec.Module#s.
   #: Defaults to #PythonLoader.
-  loaders = Field([Loader], default=lambda: [PythonLoader()])
+  loaders: t.List[Loader] = dataclasses.field(default_factory=lambda: [PythonLoader()])
 
   #: A list of processor implementations that modify #docspec.Module#s. Defaults
   #: to #FilterProcessor, #SmartProcessor and #CrossrefProcessor.
-  processors = Field([Processor], default=lambda: [
+  processors: t.List[Processor] = dataclasses.field(default_factory=lambda: [
     FilterProcessor(), SmartProcessor(), CrossrefProcessor()])
 
   #: A renderer for #docspec.Module#s. Defaults to #MarkdownRenderer.
-  renderer = Field(Renderer, default=MarkdownRenderer)
+  renderer: Renderer = dataclasses.field(default_factory=MarkdownRenderer)
 
   #: Hooks that can be executed at certain points in the pipeline. The commands
   #: are executed with the current `SHELL`.
-  hooks = Field({
-    'pre_render': Field([str], FieldName('pre-render'), default=list),
-    'post_render': Field([str], FieldName('post-render'), default=list),
-  }, default=Field.DEFAULT_CONSTRUCT)
+  hooks: Hooks = dataclasses.field(default_factory=Hooks)
 
   # Hidden fields are filled at a later point in time and are not (de-) serialized.
-  unknown_fields = Field([str], default=list, hidden=True)
+  unknown_fields: t.List[str] = dataclasses.field(default_factory=list)
 
-  def __init__(self, *args, **kwargs) -> None:
-    super(PydocMarkdown, self).__init__(*args, **kwargs)
-    self.resolver: Optional[Resolver] = None
-    self._context: Optional[Context] = None
+  def __post_init__(self) -> None:
+    self.resolver: t.Optional[Resolver] = None
+    self._context: t.Optional[Context] = None
 
-  def load_config(self, data: Union[str, dict]) -> None:
+  def load_config(self, data: t.Union[str, dict]) -> None:
     """
     Loads the configuration from a nested data structure or filename as specified per the *data*
     argument. If a filename is specified, it may be a JSON, YAML or TOML file. If the name of the
@@ -102,12 +106,20 @@ class PydocMarkdown(Struct):
       if filename == 'pyproject.toml':
         data = data['tool']['pydoc-markdown']
 
-    collector = Collect()
-    result = mapper.deserialize(data, type(self), filename=filename, decorations=[collector])
+    unknown_keys = A.collect_unknowns()
+    result = databind.json.new_mapper().deserialize(
+      data,
+      type(self),
+      filename=filename,
+      settings=[unknown_keys()])
     vars(self).update(vars(result))
 
-    self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
-      for n in collector.nodes))
+    for loc, keys in unknown_keys:
+      for key in keys:
+        self.unknown_fields.append(str(loc.push_unknown(key).format(loc.Format.PLAIN)))
+
+    #self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
+    #  for n in collector.nodes))
 
   def init(self, context: Context) -> None:
     """
@@ -130,7 +142,7 @@ class PydocMarkdown(Struct):
     if not self._context:
       self.init(Context(directory='.'))
 
-  def load_modules(self) -> List[docspec.Module]:
+  def load_modules(self) -> t.List[docspec.Module]:
     """
     Loads modules via the #loaders.
     """
@@ -142,7 +154,7 @@ class PydocMarkdown(Struct):
       modules.extend(loader.load())
     return modules
 
-  def process(self, modules: List[docspec.Module]) -> None:
+  def process(self, modules: t.List[docspec.Module]) -> None:
     """
     Process modules via the #processors.
     """
@@ -153,7 +165,7 @@ class PydocMarkdown(Struct):
     for processor in self.processors:
       processor.process(modules, self.resolver)
 
-  def render(self, modules: List[docspec.Module], run_hooks: bool = True) -> None:
+  def render(self, modules: t.List[docspec.Module], run_hooks: bool = True) -> None:
     """
     Render modules via the #renderer.
     """
@@ -169,7 +181,7 @@ class PydocMarkdown(Struct):
       self.run_hooks('post-render')
 
   def build(self, site_dir: str) -> None:
-    if not Builder.provided_by(self.renderer):
+    if not isinstance(self.renderer, Builder):
       name = type(self.renderer).__name__
       raise NotImplementedError('Renderer "{}" does not support building'.format(name))
     self.ensure_initialized()
@@ -177,5 +189,14 @@ class PydocMarkdown(Struct):
 
   def run_hooks(self, hook_name: str) -> None:
     assert self._context is not None
+
+    # Remove the __PYVENV_LAUNCHER__ environment variable. This is needed if you are in a virtualenv and the hook
+    # tries to invoke a script installed into a _different_ virtualenv. Otherwise, that script's execution of the
+    # Python `site` module will set the `sys.prefix` the prefix of your terminal's activated virtualenv. The prefix
+    # is then used to find site-packages, and thus none of the site-packages from the script's actual prefix are
+    # detected.
+    env = os.environ.copy()
+    env.pop('__PYVENV_LAUNCHER__', None)
+
     for command in getattr(self.hooks, hook_name.replace('-', '_')):
-      subprocess.check_call(command, shell=True, cwd=self._context.directory)
+      subprocess.check_call(command, shell=True, cwd=self._context.directory, env=env)

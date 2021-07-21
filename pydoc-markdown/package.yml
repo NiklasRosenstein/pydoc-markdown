@@ -11,21 +11,21 @@ release:
 description: Create Python API documentation in Markdown format.
 readme: ../README.md
 requirements:
-- python ^3.6
+- python ^3.7
 - click ^7.0
-- dataclasses
-- docspec ~0.2.0
-- docspec-python ~0.2.0
-- nr.collections ~0.0.1
-- nr.interface ~0.0.3
-- nr.databind.core ~0.0.18
-- nr.databind.json ~0.0.9
+- databind.core ^1.0.0
+- databind.json ^1.0.0
+- docspec ^1.0.0
+- docspec-python ^1.0.0
+- nr.collections ~0.1.1
 - nr.fs ^1.6.0
+- nr.stream ^0.1.2
+- nr.pylang.utils ^0.1.1
 - requests ^2.23.0
 - PyYAML ^5.3
 - six ^1.11.0
 - toml ^0.10.1
-- watchdog ^1.0.0
+- watchdog
 entrypoints:
   console_scripts:
   - pydoc-markdown = pydoc_markdown.main:cli

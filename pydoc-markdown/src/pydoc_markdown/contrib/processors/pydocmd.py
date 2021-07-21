@@ -19,18 +19,20 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Struct
-from nr.interface import implements, override
-from pydoc_markdown.interfaces import Processor, Resolver
-from typing import List, Optional
-import docspec
+import dataclasses
 import re
+import typing as t
+
+import docspec
+
+from pydoc_markdown.interfaces import Processor, Resolver
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other
 #     objects so that they can be properly handled by the renderer.
 
-@implements(Processor)
-class PydocmdProcessor(Struct):
+
+@dataclasses.dataclass
+class PydocmdProcessor(Processor):
   """
   The Pydoc-Markdown processor for Markdown docstrings. This processor parses docstrings
   formatted like the examples below and turns them into proper Markdown markup.
@@ -68,8 +70,7 @@ class PydocmdProcessor(Struct):
   @doc:fmt:pydocmd
   """
 
-  @override
-  def process(self, modules: List[docspec.Module], resolver: Optional[Resolver]) -> None:
+  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
 
   def _process(self, node: docspec.ApiObject):
@@ -93,7 +94,7 @@ class PydocmdProcessor(Struct):
       line = re.sub(r'# (.*)$', r'__\1__\n', line)
 
     if current_section in ('arguments', 'parameters'):
-      style: Optional[str] = r'- __\1__:\3'
+      style: t.Optional[str] = r'- __\1__:\3'
     elif current_section in ('attributes', 'members', 'raises'):
       style = r'- `\1`:\3'
     elif current_section in ('returns',):

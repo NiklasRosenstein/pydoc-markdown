@@ -19,17 +19,9 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from nr.databind.core import Field, ProxyType, Remainder, Struct
-from nr.interface import implements, override
-from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
-from pydoc_markdown.util.knownfiles import KnownFiles
-from pydoc_markdown.util.pages import Page
-from urllib.parse import urlparse, urljoin
-from typing import cast, Dict, Iterable, IO, Generator, List, Optional, TextIO
-import docspec
+import abc
+import dataclasses
 import logging
-import nr.fs
 import os
 import platform as _platform
 import posixpath
@@ -38,14 +30,30 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import typing as t
+from urllib.parse import urlparse, urljoin
+
+import docspec
+import nr.fs
 import toml
 import yaml
 
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
+from pydoc_markdown.util.knownfiles import KnownFiles
+from pydoc_markdown.util.pages import Page, Pages
+
 logger = logging.getLogger(__name__)
-HugoPage = ProxyType()
 
 
-@HugoPage.implementation
+@dataclasses.dataclass
+class GetHugo:
+  enabled: bool = True
+  version: str = None
+  extended: bool = True
+
+
+@dataclasses.dataclass
 class HugoPage(Page):
   """
   A subclass of #Page which adds Hugo-specific overrides.
@@ -53,33 +61,44 @@ class HugoPage(Page):
   ### Options
   """
 
-  children = Field([HugoPage], default=list)
+  children: t.List['HugoPage'] = dataclasses.field(default_factory=list)
 
   #: The Hugo preamble of the page. This is merged with the #HugoRenderer.default_preamble.
-  preamble = Field(dict, default=dict)
+  preamble: t.Dict[str, t.Any] = dataclasses.field(default_factory=dict)
 
   #: Override the directory that this page is rendered into (relative to the
   #: content directory). Defaults to `null`.
-  directory = Field(str, default=None)
+  directory: t.Optional[str] = None
 
 
-class HugoThemePath(Struct):
-  path = Field(str)
+class HugoTheme(abc.ABC):
+
+  @abc.abstractproperty
+  def name(self) -> str: ...
+
+  @abc.abstractmethod
+  def install(self, theme_dir: str) -> None: ...
+
+
+@dataclasses.dataclass
+class HugoThemePath(HugoTheme):
+  path: str
 
   @property
   def name(self):
     return os.path.basename(self.path)
 
-  def install(self, themes_dir: str):
+  def install(self, theme_dir: str):
     # TODO (@NiklasRosenstein): Support Windows (which does not support symlinking).
-    dst = os.path.join(self.name)
+    dst = os.path.join(theme_dir, self.name)
     if not os.path.lexists(dst):
       os.symlink(self.path, dst)
 
 
-class HugoThemeGitUrl(Struct):
-  clone_url = Field(str)
-  postinstall = Field([str], default=list)
+@dataclasses.dataclass
+class HugoThemeGitUrl(HugoTheme):
+  clone_url: str
+  postinstall: t.List[str] = dataclasses.field(default_factory=list)
 
   @property
   def name(self):
@@ -95,21 +114,16 @@ class HugoThemeGitUrl(Struct):
         subprocess.check_call(command, shell=True, cwd=dst)
 
 
-class HugoConfig(Struct):
+@dataclasses.dataclass
+class HugoConfig:
   """
   Represents the Hugo configuration file that is rendered into the build directory.
 
   ### Options
   """
 
-  #: Base URL.
-  baseURL = Field(str, default=None)
-
-  #: Language code. Default: `en-us`
-  languageCode = Field(str, default='en-us')
-
   #: Title of the site. This is a mandatory field.
-  title = Field(str)
+  title: str
 
   #: The theme of the site. This is a mandatory field. It must be a string, a #HugoThemePath
   #: or a #HugoThemeGitUrl object. Examples:
@@ -119,21 +133,28 @@ class HugoConfig(Struct):
   #: theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
   #: theme: docs/hugo-theme/
   #: ```
-  theme = Field((str, HugoThemePath, HugoThemeGitUrl))
+  theme: t.Union[str, HugoThemeGitUrl, HugoThemePath]
+
+  #: Base URL.
+  baseURL: t.Optional[str] = None
+
+  #: Language code. Default: `en-us`
+  languageCode: t.Optional[str] = 'en-us'
 
   #: This field collects all remaining options that do not match any of the above
   #: and will be forwarded directly into the Hugo `config.yaml` when it is rendered
   #: into the build directory.
-  additional_options = Field(dict, Remainder())
+  # TODO (@NiklasRosenstein): use wildcard/remainder concept
+  additional_options: t.Dict[str, t.Any] = dataclasses.field(default_factory=dict)
 
-  def to_toml(self, fp: TextIO) -> None:
+  def to_toml(self, fp: t.TextIO) -> None:
     data = self.additional_options.copy()
-    for field in self.__fields__:
-      if field in ('additional_options', 'theme'):
+    for field in dataclasses.fields(self):
+      if field.name in ('additional_options', 'theme'):
         continue
-      value = getattr(self, field)
+      value = getattr(self, field.name)
       if value:
-        data[field] = value
+        data[field.name] = value
     if isinstance(self.theme, str):
       data['theme'] = self.theme
     elif isinstance(self.theme, (HugoThemePath, HugoThemeGitUrl)):
@@ -142,8 +163,8 @@ class HugoConfig(Struct):
     fp.write(toml.dumps(data))
 
 
-@implements(Renderer, Server, Builder)
-class HugoRenderer(Struct):
+@dataclasses.dataclass
+class HugoRenderer(Renderer, Server, Builder):
   """
   A renderer that produces Markdown files compatible with [Hugo][0]. The `--bootstrap hugo`
   option can be used to create a Pydoc-Markdown configuration file with the Hugo template.
@@ -180,18 +201,18 @@ class HugoRenderer(Struct):
   """
 
   #: The directory where all generated files are placed. Default: `build/docs`
-  build_directory = Field(str, default='build/docs')
+  build_directory: str = 'build/docs'
 
   #: The directory _inside_ the build directory where the generated
   #: pages are written to. Default: `content`
-  content_directory = Field(str, default='content')
+  content_directory: str = 'content'
 
   #: Clean up files that were previously generated by the renderer before the next
   #: render pass. Defaults to `True`.
-  clean_render = Field(bool, default=True)
+  clean_render: bool = True
 
   #: The pages to render.
-  pages = Field(HugoPage.collection_type())
+  pages: Pages[HugoPage] = dataclasses.field(default_factory=Pages)
 
   #: The default Hugo preamble that is applied to every page. Example:
   #:
@@ -199,15 +220,15 @@ class HugoRenderer(Struct):
   #: default_preamble:
   #:   menu: main
   #: ```
-  default_preamble = Field(dict, default=dict)
+  default_preamble: t.Dict[str, t.Any] = dataclasses.field(default_factory=dict)
 
   #: The #MarkdownRenderer configuration.
-  markdown = Field(MarkdownRenderer, default=Field.DEFAULT_CONSTRUCT)
+  markdown: MarkdownRenderer = dataclasses.field(default_factory=MarkdownRenderer)
 
   #: The contents of the Hugo `config.toml` file as YAML. This can be set to `null` in
   #: order to not produce the `config.toml` file in the #build_directory. Must be deserializable
   #: into a #HugoConfig.
-  config = Field(HugoConfig, nullable=True)
+  config: t.Optional[HugoConfig] = None
 
   #: Options for when the Hugo binary is not present and should be downloaded
   #: automatically. Example:
@@ -218,15 +239,12 @@ class HugoRenderer(Struct):
   #:   version: '0.71'
   #:   extended: true
   #: ```
-  get_hugo = Field({
-    'enabled': Field(bool, default=True),
-    'version': Field(str, default=None),
-    'extended': Field(bool, default=True),
-  }, default=Field.DEFAULT_CONSTRUCT)
+  get_hugo: GetHugo = dataclasses.field(default_factory=GetHugo)
 
-  _context = Field(Context, default=None, hidden=True)  # Initialized in #init()
+  def __post_init__(self) -> None:
+    self._context: t.Optional[Context] = None
 
-  def _render_page(self, modules: List[docspec.Module], page: HugoPage, filename: str):
+  def _render_page(self, modules: t.List[docspec.Module], page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     preamble = dict(**self.default_preamble, **{'title': page.title}, **page.preamble)
 
@@ -253,8 +271,7 @@ class HugoRenderer(Struct):
 
   # Renderer
 
-  @override
-  def render(self, modules: List[docspec.Module]) -> None:
+  def render(self, modules: t.List[docspec.Module]) -> None:
     known_files = KnownFiles(self.build_directory)
     content_dir = os.path.join(self.build_directory, self.content_directory)
 
@@ -286,20 +303,17 @@ class HugoRenderer(Struct):
         with known_files.open(filename, 'w') as fp:
           self.config.to_toml(fp)
 
-  @override
-  def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
+  def get_resolver(self, modules: t.List[docspec.Module]) -> t.Optional[Resolver]:
     # TODO (@NiklasRosenstein): The resolver returned by the Markdown
     #   renderer does not implement linking across multiple pages.
     return self.markdown.get_resolver(modules)
 
   # Server
 
-  @override
   def get_server_url(self) -> str:
     urlinfo = urlparse(self.config.baseURL or '')
     return urljoin('http://localhost:1313/', urlinfo.path)
 
-  @override
   def start_server(self) -> subprocess.Popen:
     hugo_bin = self._get_hugo_bin()
     command = [hugo_bin, 'server']
@@ -308,7 +322,6 @@ class HugoRenderer(Struct):
 
   # Builder
 
-  @override
   def build(self, site_dir: str) -> None:
     command = [self._get_hugo_bin()]
     command += ['--destination', os.path.abspath(site_dir)]
@@ -316,7 +329,6 @@ class HugoRenderer(Struct):
 
   # PluginBase
 
-  @override
   def init(self, context: Context) -> None:
     self._context = context
     self.markdown.init(context)
@@ -382,19 +394,19 @@ def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
     with tarfile.open(path) as archive:
       with open(to, 'wb') as fp:
         shutil.copyfileobj(
-          cast(IO[bytes], archive.extractfile('hugo')),
-          cast(IO[bytes], fp))
+          t.cast(t.IO[bytes], archive.extractfile('hugo')),
+          t.cast(t.IO[bytes], fp))
 
   nr.fs.chmod(to, '+x')
   logger.info('Hugo v%s installed to "%s"', version, to)
 
 
-def get_github_releases(repo: str) -> Generator[dict, None, None]:
+def get_github_releases(repo: str) -> t.Generator[dict, None, None]:
   """
   Returns an iterator for all releases of a Github repository.
   """
 
-  url: Optional[str] = 'https://api.github.com/repos/{}/releases'.format(repo)
+  url: t.Optional[str] = 'https://api.github.com/repos/{}/releases'.format(repo)
   while url:
     response = requests.get(url)
     link = response.headers.get('Link')
@@ -404,7 +416,7 @@ def get_github_releases(repo: str) -> Generator[dict, None, None]:
     yield from response.json()
 
 
-def parse_links_header(link_header: str) -> Dict[str, str]:
+def parse_links_header(link_header: str) -> t.Dict[str, str]:
   """
   Parses the `Link` HTTP header and returns a map of the links. Logic from
   [PageLinks.java](https://github.com/eclipse/egit-github/blob/master/org.eclipse.egit.github.core/src/org/eclipse/egit/github/core/client/PageLinks.java#L43-75).

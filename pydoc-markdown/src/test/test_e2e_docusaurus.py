@@ -19,9 +19,10 @@ def test_full_processing():
         )],
         processors=[FilterProcessor(skip_empty_modules=True), CrossrefProcessor(), SmartProcessor()],
         renderer=DocusaurusRenderer(
-        docs_base_path=str(docs_path.resolve()),
-        sidebar_top_level_label="Code reference"
-    ))
+            docs_base_path=str(docs_path.resolve()),
+            sidebar_top_level_label="Code reference",
+        ),
+    )
 
     modules = config.load_modules()
     config.process(modules)

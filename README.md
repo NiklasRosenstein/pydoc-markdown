@@ -8,7 +8,7 @@ Pydoc-Markdown is a tool and library to create Python API documentation in
 Markdown format based on `lib2to3`, allowing it to parse your Python code
 without executing it.
 
-Pydoc-Markdown requires Python 3.6 or newer, however the code that you want to
+Pydoc-Markdown requires Python 3.7 or newer, however the code that you want to
 generate API documentation for can be for any Python version.
 
 [>> Go to the Documentation](https://pydoc-markdown.readthedocs.io/en/latest/)
@@ -24,7 +24,7 @@ generate API documentation for can be for any Python version.
 
 Install Pydoc-Markdown from PyPI:
 
-    $ pipx install 'pydoc-markdown>=3.0.0,<4.0.0'
+    $ pipx install 'pydoc-markdown>=4.0.0,<5.0.0'
 
 ## Quickstart (MkDocs)
 
@@ -38,7 +38,7 @@ What this does:
 1. Install [MkDocs][]
 2. Create a `pydoc-markdown.yml` file in the current directory
 3. Create files to render your documentation on [readthedocs.org](https://readthedocs.org/)
-3. Render Markdown files from the Python modules/packages in your current
+4. Render Markdown files from the Python modules/packages in your current
    working directory and run MkDocs to open a live-preview of the page.
 
 ## Quickstart (Hugo)

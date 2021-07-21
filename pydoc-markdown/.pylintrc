@@ -13,12 +13,6 @@ disable =
   unidiomatic-typecheck,
   wrong-import-order,
 
-  # Because of nr.databind
-  no-member,
-  not-an-iterable,
-  unsubscriptable-object,
-  unsupported-assignment-operation,
-
 indent-string='  '
 
 [TYPECHECK]

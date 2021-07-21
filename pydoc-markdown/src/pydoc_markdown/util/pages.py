@@ -25,32 +25,34 @@ output files and allow the user to define the pages with the API objects
 to document.
 """
 
-from nr.databind.core import Collection, Field, ProxyType, Struct
-from pydoc_markdown.interfaces import Renderer
-from typing import Iterable, Optional, List
-import collections
+import dataclasses
 import copy
-import docspec
 import fnmatch
 import logging
 import os
 import re
 import shutil
+import typing as t
 
+import docspec
+
+from pydoc_markdown.interfaces import Renderer
+
+T_Page = t.TypeVar('T_Page', bound='Page')
 logger = logging.getLogger(__name__)
-Page = ProxyType()
 
 
-class IterHierarchyItem(Struct):
-  page = Field(Page)
-  parent_chain = Field([Page])
+@dataclasses.dataclass
+class IterHierarchyItem:
+  page: 'Page'
+  parent_chain: t.List['Page']
 
   def filename(self,
-      parent_dir: Optional[str],  #: Parent directory to join with
+      parent_dir: t.Optional[str],  #: Parent directory to join with
       suffix_with_dot: str,  #: Suffix of the generated filename
       index_name: str = 'index',
       skip_empty_pages: bool = True,
-      ) -> Optional[str]:
+      ) -> t.Optional[str]:
     path = [p.name for p in self.parent_chain] + [self.page.name]
     if self.page.children:
       if skip_empty_pages and not self.page.contents and not self.page.source:
@@ -62,60 +64,59 @@ class IterHierarchyItem(Struct):
     return filename
 
 
-class PageCollectionMixin(list):
+class Pages(t.List[T_Page]):
 
-  def iter_hierarchy(self) -> Iterable[IterHierarchyItem]:
+  def iter_hierarchy(self) -> t.Iterable[IterHierarchyItem]:
     for page in self:
       yield from page.iter_hierarchy()
 
 
-@Page.implementation  # pylint: disable=function-redefined
-class Page(Struct):
+@dataclasses.dataclass
+class Page:
   """
   Metadata for a page that a renderer implementation should understand
   in order to produce multiple output files. The page hierarchy defines
   the site navigation as well as the generated files.
   """
 
+  #: The title of the page.
+  title: str
+
   #: The name of the page. This is usually the filename without the suffix.
   #: It may have additional meaning depending on the renderer. If it is
   #: not specified, it will fall back to a slug version of the #title.
-  name = Field(str, default=None)
-
-  #: The title of the page.
-  title = Field(str)
+  name: t.Optional[str] = None
 
   #: If set, the page does not generate a file but instead is rendered as
   #: a link to the specified URL in the site navigation.
-  href = Field(str, default=None)
+  href: t.Optional[str] = None
 
   #: If set, the page is rendered using the contents of the specified
   #: file. Some renderers may modify the source or add a preamble.
-  source = Field(str, default=None)
+  source: t.Optional[str] = None
 
   #: A list of glob patterns that match the absolute unique names of API
   #: objects to include for rendering in the page.
-  contents = Field([str], default=None)
+  contents: t.Optional[t.List[str]] = None
 
   #: A list of pages that are children of this page.
-  children = Field([Page], default=list)
+  children: t.List['Page'] = dataclasses.field(default_factory=list)
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+  def __post_init__(self) -> None:
     if not self.name:
       self.name = re.sub(r'\s+', '-', self.title.lower())
 
   def has_content(self) -> bool:
     return bool(self.source or self.contents)
 
-  def iter_hierarchy(self, parent_chain: List['Page'] = None) -> Iterable[IterHierarchyItem]:
+  def iter_hierarchy(self, parent_chain: t.List['Page'] = None) -> t.Iterable[IterHierarchyItem]:
     if parent_chain is None:
       parent_chain = []
     yield IterHierarchyItem(self, parent_chain)
     for child in self.children:
       yield from child.iter_hierarchy(parent_chain + [self])
 
-  def filtered_modules(self, modules: List[docspec.Module]) -> List[docspec.Module]:
+  def filtered_modules(self, modules: t.List[docspec.Module]) -> t.List[docspec.Module]:
     """
     Creates a copy of the module graph where only the API objects selected
     via #Page.contents are visible.
@@ -126,14 +127,14 @@ class Page(Struct):
     matched_contents = set()
 
     def _match(obj: docspec.ApiObject) -> bool:
-      if getattr(obj, 'members', []):
-        return True
       if self.contents:
         path = '.'.join(x.name for x in reverse_map.path(obj))
         for x in self.contents:
           if fnmatch.fnmatch(path, x):
             matched_contents.add(x)
             return True
+      if getattr(obj, 'members', []):
+        return True
       return False
 
     docspec.filter_visit(modules, _match, order='post')
@@ -152,7 +153,7 @@ class Page(Struct):
   def render(
       self,
       filename: str,
-      modules: List[docspec.ApiObject],
+      modules: t.List[docspec.ApiObject],
       renderer: Renderer,
       context_directory: str,
       ) -> None:
@@ -170,10 +171,3 @@ class Page(Struct):
     else:
       logger.info('Rendering "%s"', filename)
       renderer.render(self.filtered_modules(modules))
-
-  @classmethod
-  def collection_type(cls) -> PageCollectionMixin:
-    return type(
-      '{}Collection'.format(cls.__name__),
-      (Collection, PageCollectionMixin),
-      {'item_type': cls})

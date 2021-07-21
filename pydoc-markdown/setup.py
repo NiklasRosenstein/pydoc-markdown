@@ -30,19 +30,19 @@ else:
 
 requirements = [
   'click >=7.0.0,<8.0.0',
-  'dataclasses',
-  'docspec >=0.2.0,<0.3.0',
-  'docspec-python >=0.2.0,<0.3.0',
-  'nr.collections >=0.0.1,<0.1.0',
-  'nr.interface >=0.0.3,<0.1.0',
-  'nr.databind.core >=0.0.18,<0.1.0',
-  'nr.databind.json >=0.0.9,<0.1.0',
+  'databind.core >=1.0.0,<2.0.0',
+  'databind.json >=1.0.0,<2.0.0',
+  'docspec >=1.0.0,<2.0.0',
+  'docspec-python >=1.0.0,<2.0.0',
+  'nr.collections >=0.1.1,<0.2.0',
   'nr.fs >=1.6.0,<2.0.0',
+  'nr.stream >=0.1.2,<1.0.0',
+  'nr.pylang.utils >=0.1.1,<1.0.0',
   'requests >=2.23.0,<3.0.0',
   'PyYAML >=5.3.0,<6.0.0',
   'six >=1.11.0,<2.0.0',
   'toml >=0.10.1,<1.0.0',
-  'watchdog >=1.0.0,<2.0.0',
+  'watchdog',
 ]
 
 setuptools.setup(
@@ -61,7 +61,7 @@ setuptools.setup(
   install_requires = requirements,
   extras_require = {},
   tests_require = [],
-  python_requires = '>=3.6.0,<4.0.0',
+  python_requires = '>=3.7.0,<4.0.0',
   data_files = [],
   entry_points = {
     'console_scripts': [
