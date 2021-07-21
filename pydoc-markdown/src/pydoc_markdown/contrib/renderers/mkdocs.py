@@ -25,7 +25,9 @@ import logging
 import os
 import subprocess
 import typing as t
+import typing_extensions as te
 
+import databind.core.annotations as A
 import docspec
 import yaml
 
@@ -89,7 +91,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
 
   #: Markdown renderer settings.
   # TODO (@NiklasRosenstein): Use fieldinfo(serialize_as)
-  markdown: CustomizedMarkdownRenderer = dataclasses.field(default_factory=CustomizedMarkdownRenderer)
+  markdown: te.Annotated[MarkdownRenderer, A.typeinfo(deserialize_as=CustomizedMarkdownRenderer)] = \
+    dataclasses.field(default_factory=CustomizedMarkdownRenderer)
 
   #: The name of the site. This will be carried into the `site_name` key
   #: of the #mkdocs_config.
