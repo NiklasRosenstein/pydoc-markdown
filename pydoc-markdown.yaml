@@ -55,6 +55,11 @@ renderer:
     source: docs/configuration.md
     preamble:
       weight: 20
+  - title: Migrate from 3.x to 4.x
+    name: migrate-from-3x-to-4x
+    source: docs/migrate-from-3x-to-4x.md
+    preamble:
+      weight: 20
   - title: API Documentation
     children:
     - title: CLI
