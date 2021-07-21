@@ -28,3 +28,8 @@ changes:
     invokes a script installed into a different Python virtualenv than the virtualenv
     that is currently active in the terminal
   fixes: []
+- type: change
+  component: general
+  description: Pydoc-Markdown now requires Python 3.7 or newer (before it was 3.6
+    or newer). This is due to `databind.core` having that minimum version requirement
+  fixes: []
