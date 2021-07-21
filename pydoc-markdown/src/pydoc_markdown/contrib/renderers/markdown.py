@@ -227,7 +227,7 @@ class MarkdownRenderer(Renderer):
       # hierarchy is the final fallback.
       type_name = 'Method' if self._is_method(obj) else type(obj).__name__
       level = self.header_level_by_type.get(type_name,
-        type(self).header_level_by_type.default.get(type_name, level))
+        type(self).__dataclass_fields__['header_level_by_type'].default_factory().get(type_name, level))
     if self.insert_header_anchors and not self.html_headers:
       fp.write('<a name="{}"></a>\n'.format(object_id))
     if self.html_headers:

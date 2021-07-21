@@ -102,8 +102,7 @@ class Page:
   #: A list of pages that are children of this page.
   children: t.List['Page'] = dataclasses.field(default_factory=list)
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+  def __post_init__(self) -> None:
     if not self.name:
       self.name = re.sub(r'\s+', '-', self.title.lower())
 
@@ -128,14 +127,14 @@ class Page:
     matched_contents = set()
 
     def _match(obj: docspec.ApiObject) -> bool:
-      if getattr(obj, 'members', []):
-        return True
       if self.contents:
         path = '.'.join(x.name for x in reverse_map.path(obj))
         for x in self.contents:
           if fnmatch.fnmatch(path, x):
             matched_contents.add(x)
             return True
+      if getattr(obj, 'members', []):
+        return True
       return False
 
     docspec.filter_visit(modules, _match, order='post')

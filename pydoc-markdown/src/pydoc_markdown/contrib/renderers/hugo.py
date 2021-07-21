@@ -33,7 +33,6 @@ import tarfile
 import typing as t
 from urllib.parse import urlparse, urljoin
 
-import databind.core.annotations as A
 import docspec
 import nr.fs
 import toml
@@ -150,12 +149,12 @@ class HugoConfig:
 
   def to_toml(self, fp: t.TextIO) -> None:
     data = self.additional_options.copy()
-    for field in self.__fields__:
-      if field in ('additional_options', 'theme'):
+    for field in dataclasses.fields(self):
+      if field.name in ('additional_options', 'theme'):
         continue
-      value = getattr(self, field)
+      value = getattr(self, field.name)
       if value:
-        data[field] = value
+        data[field.name] = value
     if isinstance(self.theme, str):
       data['theme'] = self.theme
     elif isinstance(self.theme, (HugoThemePath, HugoThemeGitUrl)):
