@@ -1,4 +1,4 @@
-release_date: null
+release_date: '2021-07-22'
 changes:
 - type: breaking_change
   component: general
