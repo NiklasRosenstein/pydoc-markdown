@@ -2,14 +2,29 @@ release_date: null
 changes:
 - type: breaking_change
   component: general
-  description: |
-    Migrate to `databind.core 1.x` and `databind.json 1.x` from `nr.databind.core` and `nr.databin.json` and
-    uses of `nr.interface` are replaced with ABCs. If you developed plugins for Pydoc-Markdown, please follow
+  description: 'Migrate to `databind.core 1.x` and `databind.json 1.x` from `nr.databind.core`
+    and `nr.databin.json` and
+
+    uses of `nr.interface` are replaced with ABCs. If you developed plugins for Pydoc-Markdown,
+    please follow
+
     the guide at https://pydoc-markdown.readthedocs.io/en/latest/docs/migrate-from-3x-to-4x/.
+
+    '
   fixes: []
 - type: fix
   component: docusaurus
-  description: |
-    Insert an additional newline after header anchors (`<a id=".."></a>`) when `MarkdownRenderer.insert_header_anchors`
+  description: 'Insert an additional newline after header anchors (`<a id=".."></a>`)
+    when `MarkdownRenderer.insert_header_anchors`
+
     is enabled to fix Docusaurus header rendering.
+
+    '
+  fixes: []
+- type: fix
+  component: general
+  description: unset `__PYENV_LAUNCHER__` environment variable for commands invoked
+    via `$.hooks.pre-render` and `$.hooks.post-render` to avoid issues when the hook
+    invokes a script installed into a different Python virtualenv than the virtualenv
+    that is currently active in the terminal
   fixes: []

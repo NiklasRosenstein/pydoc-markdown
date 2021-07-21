@@ -189,5 +189,14 @@ class PydocMarkdown:
 
   def run_hooks(self, hook_name: str) -> None:
     assert self._context is not None
+
+    # Remove the __PYVENV_LAUNCHER__ environment variable. This is needed if you are in a virtualenv and the hook
+    # tries to invoke a script installed into a _different_ virtualenv. Otherwise, that script's execution of the
+    # Python `site` module will set the `sys.prefix` the prefix of your terminal's activated virtualenv. The prefix
+    # is then used to find site-packages, and thus none of the site-packages from the script's actual prefix are
+    # detected.
+    env = os.environ.copy()
+    env.pop('__PYVENV_LAUNCHER__')
+
     for command in getattr(self.hooks, hook_name.replace('-', '_')):
-      subprocess.check_call(command, shell=True, cwd=self._context.directory)
+      subprocess.check_call(command, shell=True, cwd=self._context.directory, env=env)
