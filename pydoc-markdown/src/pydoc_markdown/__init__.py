@@ -106,20 +106,17 @@ class PydocMarkdown:
       if filename == 'pyproject.toml':
         data = data['tool']['pydoc-markdown']
 
-    unknowns = []
+    unknown_keys = A.collect_unknowns()
     result = databind.json.new_mapper().deserialize(
       data,
       type(self),
       filename=filename,
-      options=[A.enable_unknowns(lambda ctx, keys: unknowns.append((ctx, keys)))])
+      settings=[unknown_keys()])
     vars(self).update(vars(result))
 
-    if unknowns:
-      print('Found unknown keys:')
-    for ctx, keys in unknowns:
-      print('  |', ctx.location, keys)
-    if unknowns:
-      print()
+    for loc, keys in unknown_keys:
+      for key in keys:
+        self.unknown_fields.append(str(loc.push_unknown(key).format(loc.Format.PLAIN)))
 
     #self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
     #  for n in collector.nodes))
