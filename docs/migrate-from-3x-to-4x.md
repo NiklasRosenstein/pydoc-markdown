@@ -4,6 +4,8 @@ In version 4.x, Pydoc-Markdown migrated from using the `nr.databind.core` and `n
 config deserialization to the `databind.core 1.x` and `databind.json 1.x` packages. It also dropped use of the
 `nr.interface` library and all interfaces are now defined as ABCs. **This change does not affect the requirements
 for your Pydoc-Markdown configuration files**, but it will require a change if you have developed your own plugins.
+Note also that starting with version 4.x, Pydoc-Markdown requires Python 3.7 or newer (before it was Python 3.6
+or newer), but it is still capable of parsing older Python source code (incl. Python 2).
 
 This is how your plugin may be defined for compatibility with Pydoc-Markdown 3.x where you use `nr.databind.core`:
 
