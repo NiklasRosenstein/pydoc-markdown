@@ -302,9 +302,13 @@ def cli(
   elif verbosity >= 1:
     level = logging.INFO
   elif verbosity >= 0:
-    level = logging.ERROR
-  else:
     level = logging.WARNING
+  elif verbosity >= -1:
+    level = logging.ERROR
+  elif verbosity >= -2:
+    level = logging.CRITICAL
+  else:
+    level = 0
   logging.basicConfig(format='[%(levelname)s - %(name)s]: %(message)s', level=level)
 
   # Load the configuration.
