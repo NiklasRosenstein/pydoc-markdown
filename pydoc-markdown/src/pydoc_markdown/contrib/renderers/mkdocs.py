@@ -40,6 +40,7 @@ from typing import Dict, List, Optional
 logger = logging.getLogger(__name__)
 
 
+@dataclasses.dataclass
 class CustomizedMarkdownRenderer(MarkdownRenderer):
   """ We override some defaults in this subclass. """
 

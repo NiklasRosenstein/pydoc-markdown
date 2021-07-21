@@ -51,7 +51,7 @@ class FilterProcessor(Processor):
   expression: t.Optional[str] = None
 
   #: Keep only API objects that have docstrings. Default: `true`
-  documented_only: bool = False
+  documented_only: bool = True
 
   #: Exclude API objects that appear to be private members (i.e. their name begins with
   #: and underscore but does not end with one). Default: `true`

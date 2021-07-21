@@ -17,6 +17,7 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 logger = logging.getLogger(__name__)
 
 
+@dataclasses.dataclass
 class CustomizedMarkdownRenderer(MarkdownRenderer):
   """We override some defaults in this subclass. """
 
