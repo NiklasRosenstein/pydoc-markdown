@@ -3,6 +3,4 @@ mkdocs: {}  # tell readthedocs to use mkdocs
 python:
   version: 3.7
   install:
-  - method: pip
-    path: pydoc-markdown
   - requirements: .readthedocs-requirements.txt
