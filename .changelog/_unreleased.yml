@@ -8,3 +8,7 @@ changes:
   component: MarkdownRenderer
   description: add MarkdownReferenceResolver helper class
   fixes: []
+- type: feature
+  component: general
+  description: Add `jinja2` renderer
+  fixes: []

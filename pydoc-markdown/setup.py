@@ -83,6 +83,7 @@ setuptools.setup(
       'markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer',
       'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer',
       'docusaurus = pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer',
+      'jinja2 = pydoc_markdown.contrib.renderers.jinja2:Jinja2Renderer',
     ],
     'pydoc_markdown.interfaces.SourceLinker': [
       'git = pydoc_markdown.contrib.source_linkers.git:GitSourceLinker',
