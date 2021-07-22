@@ -108,7 +108,7 @@ class CrossrefProcessor(Processor):
       else:
         uid = '.'.join(x.name for x in reverse.path(node))
         unresolved.setdefault(uid, []).append(ref)
-        result = '`{}`'.format(ref + parens)
+        result = '`{}`'.format(ref + parens + trailing)
       # Add back the dot.
       if has_trailing_dot:
         result += '.'

@@ -1,0 +1,6 @@
+release_date: null
+changes:
+- type: fix
+  component: CrossrefProcessor
+  description: missing trailing characters for unresolved crossref
+  fixes: []
