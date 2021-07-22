@@ -1,6 +1,5 @@
   [MkDocs]: https://www.mkdocs.org/
-
-<img src="https://github.com/NiklasRosenstein/pydoc-markdown/workflows/Python%20package/badge.svg"> <img src="https://readthedocs.org/projects/pydoc-markdown/badge/?version=latest&style=flat">
+<img src="https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge"> <img src="https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge"> <img src="https://github.com/NiklasRosenstein/pydoc-markdown/workflows/Python%20package/badge.svg"> <img src="https://readthedocs.org/projects/pydoc-markdown/badge/?version=latest&style=style=for-the-badge"> 
 
 # Pydoc-Markdown
 
