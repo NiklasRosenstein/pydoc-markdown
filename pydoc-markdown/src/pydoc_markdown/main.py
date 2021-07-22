@@ -34,14 +34,14 @@ import typing as t
 import webbrowser
 
 import click
+from databind.core.types import ConcreteType
 import yaml
-from databind.core.types import ConcreteType, from_typing
+from databind.core.default.dataclasses import dataclass_to_schema
 from docspec import dump_module
 
 from pydoc_markdown import __version__, PydocMarkdown, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
 from pydoc_markdown.interfaces import Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
 
@@ -98,8 +98,8 @@ class RenderSession:
 
     if self.render_toc is not None:
       # Find the #MarkdownRenderer field for this renderer.
-      import pdb; pdb.set_trace()  # TODO
-      for field in from_typing(type(config.renderer)):
+      schema = dataclass_to_schema(type(config.renderer))
+      for field in schema.fields.values():
         if field.type == ConcreteType(MarkdownRenderer):
           markdown: MarkdownRenderer = getattr(config.renderer, field.name)
           break
