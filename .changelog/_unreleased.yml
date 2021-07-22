@@ -4,3 +4,7 @@ changes:
   component: general
   description: fix `--render-toc` option
   fixes: []
+- type: feature
+  component: Jinja2Renderer
+  description: add `blockquote` and `describe` built-in filters
+  fixes: []
