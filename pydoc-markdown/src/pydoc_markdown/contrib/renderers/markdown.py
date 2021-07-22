@@ -255,7 +255,7 @@ class MarkdownRenderer(Renderer):
       assert parent, func
       parts.append(parent.name + '.')
     parts.append((override_name or func.name))
-    parts.append(format_function_signature(func))
+    parts.append(format_function_signature(func, self._is_method(func)))
     result = ''.join(parts)
     if add_method_bar and self._is_method(func):
       result = '\n'.join(' | ' + l for l in result.split('\n'))
