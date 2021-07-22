@@ -186,14 +186,15 @@ class MarkdownRenderer(Renderer):
   #: Escape html in docstring. Default to False.
   escape_html_in_docstring: bool = False
 
-  _reverse_map: t.Optional[docspec.ReverseMap] = dataclasses.field(default=None, init=False)
+  def __post_init__(self) -> None:
+    self._resolver: t.Optional[MarkdownReferenceResolver] = MarkdownReferenceResolver([])
 
   def _get_parent(self, obj: docspec.ApiObject) -> t.Optional[docspec.ApiObject]:
-    return self._reverse_map.get_parent(obj)
+    return self._resolver.reverse_map.get_parent(obj)
 
   def _is_method(self, obj: docspec.ApiObject) -> bool:
     return isinstance(obj, docspec.Function) and \
-      isinstance(self._reverse_map.get_parent(obj), docspec.Class)
+      isinstance(self._get_parent(obj), docspec.Class)
 
   def _format_arglist(self, func: docspec.Function) -> str:
     args = func.args[:]
@@ -204,7 +205,7 @@ class MarkdownRenderer(Renderer):
   def _render_toc(self, fp, level, obj):
     if level > self.toc_maxdepth:
       return
-    object_id = self._generate_object_id(obj)
+    object_id = self._resolver.generate_object_id(obj)
     fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
     level += 1
     for child in getattr(obj, 'members', []):
@@ -220,7 +221,7 @@ class MarkdownRenderer(Renderer):
       )
       return
 
-    object_id = self._generate_object_id(obj)
+    object_id = self._resolver.generate_object_id(obj)
     if self.use_fixed_header_levels:
       # Read the header level based on the API object type. The default levels defined
       # in the field will act as a first fallback, the level of the object inside it's
@@ -354,13 +355,6 @@ class MarkdownRenderer(Renderer):
       title += ' Objects'
     return title
 
-  def _generate_object_id(self, obj):
-    parts = []
-    while obj:
-      parts.append(obj.name)
-      obj = self._get_parent(obj)
-    return '.'.join(reversed(parts))
-
   def _escape(self, s):
     return s.replace('_', '\\_').replace('*', '\\*')
 
@@ -370,7 +364,7 @@ class MarkdownRenderer(Renderer):
     return fp.getvalue()
 
   def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO):
-    self._reverse_map = docspec.ReverseMap(modules)
+    self._resolver = MarkdownReferenceResolver(modules)
 
     if self.render_toc:
       if self.render_toc_title:
@@ -388,33 +382,10 @@ class MarkdownRenderer(Renderer):
     Returns a simple #Resolver implementation. Finds cross-references in the same file.
     """
 
-    reverse_map = docspec.ReverseMap(modules)
-
-    def _resolve_reference(obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
-      for part_name in ref:
-        obj = docspec.get_member(obj, part_name)
-        if not obj:
-          return None
-      return obj
-
-    def _find_reference(obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
-      while obj:
-        resolved = _resolve_reference(obj, ref)
-        if resolved:
-          return resolved
-        obj = reverse_map.get_parent(obj)
-      return None
-
-    class _Resolver(Resolver):
-      def resolve_ref(self, obj: docspec.ApiObject, ref: str) -> t.Optional[str]:
-        target = _find_reference(obj, ref.split('.'))
-        if target:
-          return '#' + self._generate_object_id(target)
-        return None
-
-    return _Resolver()
+    return MarkdownReferenceResolver(modules)
 
   def render(self, modules: t.List[docspec.Module]) -> None:
+    self._resolver.update(modules)
     if self.filename is None:
       self.render_to_stream(modules, sys.stdout)
     else:
@@ -426,3 +397,37 @@ class MarkdownRenderer(Renderer):
   def init(self, context: Context) -> None:
     if self.source_linker:
       self.source_linker.init(context)
+
+
+class MarkdownReferenceResolver(Resolver):
+
+  def __init__(self, modules: t.List[docspec.ApiObject]) -> None:
+    self.reverse_map = docspec.ReverseMap(modules)
+
+  def generate_object_id(self, obj):
+    parts = []
+    while obj:
+      parts.append(obj.name)
+      obj = self.reverse_map.get_parent(obj)
+    return '.'.join(reversed(parts))
+
+  def _resolve_reference(self, obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
+    for part_name in ref:
+      obj = docspec.get_member(obj, part_name)
+      if not obj:
+        return None
+    return obj
+
+  def _find_reference(self, obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
+    while obj:
+      resolved = self._resolve_reference(obj, ref)
+      if resolved:
+        return resolved
+      obj = self.reverse_map.get_parent(obj)
+    return None
+
+  def resolve_ref(self, obj: docspec.ApiObject, ref: str) -> t.Optional[str]:
+    target = self._find_reference(obj, ref.split('.'))
+    if target:
+      return '#' + self.generate_object_id(target)
+    return None

@@ -4,3 +4,7 @@ changes:
   component: CrossrefProcessor
   description: missing trailing characters for unresolved crossref
   fixes: []
+- type: change
+  component: MarkdownRenderer
+  description: add MarkdownReferenceResolver helper class
+  fixes: []
