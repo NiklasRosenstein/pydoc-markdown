@@ -8,11 +8,10 @@ import typing as t
 import docspec
 from docspec_python import format_arglist
 import jinja2
-from nr.stream import Stream
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownReferenceResolver
 from pydoc_markdown.interfaces import Renderer, Resolver
-from pydoc_markdown.util.knownfiles import KnownFiles
+from pydoc_markdown.util.docspec import format_function_signature, get_members_of_type
 
 T = t.TypeVar('T')
 log = logging.getLogger(__name__)
@@ -76,21 +75,13 @@ class Jinja2Renderer(Renderer):
 
 
 def setup_env(env: jinja2.Environment) -> None:
-  env.filters['classes'] = lambda modules: _object_member_filter(modules, docspec.Class)
-  env.filters['functions'] = lambda objs: _object_member_filter(objs, docspec.Function)
-  env.filters['attrs'] = lambda objs: _object_member_filter(objs, docspec.Data)
+  env.filters['classes'] = lambda modules: get_members_of_type(modules, docspec.Class)
+  env.filters['functions'] = lambda objs: get_members_of_type(objs, docspec.Function)
+  env.filters['attrs'] = lambda objs: get_members_of_type(objs, docspec.Data)
   env.filters['indent'] = _indent_filter
   env.filters['first_line'] = _first_line_filter
   env.filters['format_arglist'] = format_arglist
-
-
-def _object_member_filter(objs: t.Union[docspec.ApiObject, t.List[docspec.ApiObject]], type_: t.Type[T]) -> t.List[T]:
-  if isinstance(objs, docspec.ApiObject):
-    if hasattr(objs, 'members'):
-      return [x for x in objs.members if isinstance(x, type_)]
-    return []
-  else:
-    return Stream(_object_member_filter(x, type_) for x in objs).concat().collect()
+  env.filters['format_function_signature'] = format_function_signature
 
 
 def _indent_filter(text: str, level: int = 1) -> str:

@@ -25,11 +25,11 @@ import io
 import sys
 import typing as t
 
+import docspec
 from docspec_python import format_arglist
 
-
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
-import docspec
+from pydoc_markdown.util.docspec import format_function_signature, is_method
 
 
 @dataclasses.dataclass
@@ -193,8 +193,7 @@ class MarkdownRenderer(Renderer):
     return self._resolver.reverse_map.get_parent(obj)
 
   def _is_method(self, obj: docspec.ApiObject) -> bool:
-    return isinstance(obj, docspec.Function) and \
-      isinstance(self._get_parent(obj), docspec.Class)
+    return is_method(obj, self._resolver.reverse_map)
 
   def _format_arglist(self, func: docspec.Function) -> str:
     args = func.args[:]
@@ -256,9 +255,7 @@ class MarkdownRenderer(Renderer):
       assert parent, func
       parts.append(parent.name + '.')
     parts.append((override_name or func.name))
-    parts.append('(' + self._format_arglist(func) + ')')
-    if func.return_type:
-      parts.append(' -> {}'.format(func.return_type))
+    parts.append(format_function_signature(func))
     result = ''.join(parts)
     if add_method_bar and self._is_method(func):
       result = '\n'.join(' | ' + l for l in result.split('\n'))
