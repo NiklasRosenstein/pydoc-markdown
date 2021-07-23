@@ -382,7 +382,6 @@ class MarkdownRenderer(Renderer):
     return MarkdownReferenceResolver(modules)
 
   def render(self, modules: t.List[docspec.Module]) -> None:
-    self._resolver.update(modules)
     if self.filename is None:
       self.render_to_stream(modules, sys.stdout)
     else:
