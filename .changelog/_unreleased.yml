@@ -1,0 +1,6 @@
+release_date: null
+changes:
+- type: fix
+  component: general
+  description: remove unused dependency on `nr.collections`
+  fixes: []

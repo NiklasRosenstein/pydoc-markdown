@@ -26,7 +26,6 @@ Template language for YAML files similar to [YTT][].
 """
 
 from typing import Any, Dict, Mapping, TextIO, Type, Union
-from nr.collections.chaindict import ChainDict
 import textwrap
 import json
 import yaml

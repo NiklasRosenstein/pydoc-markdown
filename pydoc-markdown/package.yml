@@ -17,7 +17,6 @@ requirements:
 - databind.json ^1.0.0
 - docspec ^1.0.0
 - docspec-python ^1.0.0
-- nr.collections ~0.1.1
 - nr.fs ^1.6.0
 - nr.stream ^0.1.2
 - nr.pylang.utils ^0.1.1
