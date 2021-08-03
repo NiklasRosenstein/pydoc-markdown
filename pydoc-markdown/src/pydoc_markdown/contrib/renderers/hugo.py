@@ -30,6 +30,7 @@ import shutil
 import subprocess
 import sys
 import tarfile
+import tempfile
 import typing as t
 from urllib.parse import urlparse, urljoin
 
@@ -387,8 +388,8 @@ def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
 
   logger.info('Downloading Hugo v%s from "%s"', version, files[filename])
   os.makedirs(os.path.dirname(to), exist_ok=True)
-  with nr.fs.tempdir() as tempdir:
-    path = os.path.join(tempdir.name, filename)
+  with tempfile.TemporaryDirectory() as tempdir:
+    path = os.path.join(tempdir, filename)
     with open(path, 'wb') as fp:
       shutil.copyfileobj(requests.get(files[filename], stream=True).raw, fp)
     with tarfile.open(path) as archive:

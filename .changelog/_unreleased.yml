@@ -4,3 +4,7 @@ changes:
   component: general
   description: remove unused dependency on `nr.collections`
   fixes: []
+- type: improvement
+  component: general
+  description: Use `tempfile` instead of `nr.fs`
+  fixes: []
