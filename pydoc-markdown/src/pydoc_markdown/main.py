@@ -34,9 +34,8 @@ import typing as t
 import webbrowser
 
 import click
-from databind.core.types import ConcreteType
 import yaml
-from databind.core.default.dataclasses import dataclass_to_schema
+from databind.core import ConcreteType, dataclass_to_schema
 from docspec import dump_module
 
 from pydoc_markdown import __version__, PydocMarkdown, static
