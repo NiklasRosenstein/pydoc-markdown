@@ -32,8 +32,10 @@ import sys
 import tarfile
 import tempfile
 import typing as t
+import typing_extensions as te
 from urllib.parse import urlparse, urljoin
 
+import databind.core.annotations as A
 import docspec
 import nr.fs
 import toml
@@ -145,8 +147,7 @@ class HugoConfig:
   #: This field collects all remaining options that do not match any of the above
   #: and will be forwarded directly into the Hugo `config.yaml` when it is rendered
   #: into the build directory.
-  # TODO (@NiklasRosenstein): use wildcard/remainder concept
-  additional_options: t.Dict[str, t.Any] = dataclasses.field(default_factory=dict)
+  additional_options: te.Annotated[t.Dict[str, t.Any], A.fieldinfo(flat=True)] = dataclasses.field(default_factory=dict)
 
   def to_toml(self, fp: t.TextIO) -> None:
     data = self.additional_options.copy()
