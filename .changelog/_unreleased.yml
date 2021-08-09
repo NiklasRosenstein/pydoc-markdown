@@ -5,3 +5,9 @@ changes:
   description: Enable Hugo `markup.goldmark.renderer.unsafe` option by default
   fixes:
   - '#198'
+- type: fix
+  component: MarkdownRenderer
+  description: Markdown renderer produces header anchors with `name` attribute instead
+    of `id`
+  fixes:
+  - '#200'

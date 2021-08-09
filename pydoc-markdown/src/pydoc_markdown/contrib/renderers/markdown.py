@@ -229,7 +229,7 @@ class MarkdownRenderer(Renderer):
       level = self.header_level_by_type.get(type_name,
         type(self).__dataclass_fields__['header_level_by_type'].default_factory().get(type_name, level))
     if self.insert_header_anchors and not self.html_headers:
-      fp.write('<a name="{}"></a>\n\n'.format(object_id))
+      fp.write('<a id="{}"></a>\n\n'.format(object_id))
     if self.html_headers:
       header_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
     else:
