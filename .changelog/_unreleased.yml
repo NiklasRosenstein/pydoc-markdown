@@ -1,0 +1,7 @@
+release_date: null
+changes:
+- type: fix
+  component: HugoRenderer
+  description: Enable Hugo `markup.goldmark.renderer.unsafe` option by default
+  fixes:
+  - '#198'

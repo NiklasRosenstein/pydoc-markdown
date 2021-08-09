@@ -162,6 +162,12 @@ class HugoConfig:
     elif isinstance(self.theme, (HugoThemePath, HugoThemeGitUrl)):
       data['theme'] = self.theme.name
     else: assert False
+
+    # We want to enable the Hugo "markup.goldmark.renderer.unsafe" option by default because we
+    # generate HTML code with #MarkdownRenderer.insert_header_anchors that should be
+    # included in the generated site.
+    data.setdefault('markup', {}).setdefault('goldmark', {}).setdefault('renderer', {}).setdefault('unsafe', True)
+
     fp.write(toml.dumps(data))
 
 
