@@ -7,14 +7,16 @@ from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.docusaurus import DocusaurusRenderer
-from .test_utils import assert_text_equals
+from ..utils import assert_text_equals
+
+DOCUSAURUS_TESTCASES_DIR = Path(__file__).parent.parent / 'testcases' / 'renderers' / 'docusaurus'
 
 
 def test_full_processing():
-    docs_path = Path(__file__).parent / "a_test_package" / "docs"
+    docs_path = DOCUSAURUS_TESTCASES_DIR / "docs"
     config = PydocMarkdown(
         loaders=[PythonLoader(
-            search_path=[str(Path(__file__).parent.resolve())],
+            search_path=[str(DOCUSAURUS_TESTCASES_DIR)],
             packages=['a_test_package']
         )],
         processors=[FilterProcessor(skip_empty_modules=True), CrossrefProcessor(), SmartProcessor()],
@@ -126,10 +128,10 @@ This constant is rad
 
 
 def test_full_processing_custom_top_level_names():
-    docs_path = Path(__file__).parent / "a_test_package" / "docs"
+    docs_path = DOCUSAURUS_TESTCASES_DIR / "a_test_package" / "docs"
     config = PydocMarkdown(
         loaders=[PythonLoader(
-            search_path=[str(Path(__file__).parent.resolve())],
+            search_path=[str(DOCUSAURUS_TESTCASES_DIR)],
             packages=['a_test_package']
         )],
         processors=[FilterProcessor(skip_empty_modules=True), CrossrefProcessor(), SmartProcessor()],

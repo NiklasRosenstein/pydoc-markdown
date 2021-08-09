@@ -1,5 +1,5 @@
 
-from test.test_utils import assert_text_equals
+from test.utils import assert_text_equals
 import docspec
 import textwrap
 

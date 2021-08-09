@@ -1,0 +1,30 @@
+----
+renderer:
+  render_module_header: false
+----
+def func(s: str) -> List[str]:
+  """ Docstring goes here.
+
+  # Arguments
+  s (str): Some string value.
+
+  # Returns
+  List[str]: Some more strings. """
+----
+<a name="func_01.func"></a>
+
+#### func
+
+```python
+func(s: str) -> List[str]
+```
+
+Docstring goes here.
+
+__Arguments__
+
+- __s__ (`str`): Some string value.
+
+__Returns__
+
+`List[str]`: Some more strings.

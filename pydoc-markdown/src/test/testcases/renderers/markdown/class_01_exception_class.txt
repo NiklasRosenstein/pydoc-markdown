@@ -1,0 +1,16 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+----
+class MyError(RuntimeError):
+  """ Error raised when my thing happens. """
+  pass
+----
+## MyError Objects
+
+```python
+class MyError(RuntimeError)
+```
+
+Error raised when my thing happens.

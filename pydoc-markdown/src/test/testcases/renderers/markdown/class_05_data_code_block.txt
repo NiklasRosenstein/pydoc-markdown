@@ -1,0 +1,34 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+  data_code_block: true
+filter:
+  documented_only: false
+----
+val: t.Optional[str] = None
+
+class Constants:
+  #: Magic number
+  a = 42
+----
+
+#### val
+
+```python
+val = None
+```
+
+## Constants Objects
+
+```python
+class Constants()
+```
+
+#### a
+
+```python
+a = 42
+```
+
+Magic number

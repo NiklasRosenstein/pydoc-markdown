@@ -1,0 +1,60 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+----
+class MyClass:
+
+  def __init__(self):
+    self._my_read_only_var = 1
+
+  # this is rendered by the markdown processor because it is a class method
+  def get_my_read_only_var(self) -> int:
+    """
+    returns the my_read_only_var variable but is accessed like a method
+
+    Ex:
+      myclass_instance.my_read_only_var()
+    """
+    return self._my_read_only_var
+
+
+  # this is not rendered by the markdown processor because it is a class property
+  @property
+  def my_read_only_var(self) -> int:
+    """
+    also returns my_read_only_var but is accessed like a normal property
+
+    Ex:
+      myclass_instance.my_read_only_var
+    """
+    return self._my_read_only_var
+----
+## MyClass Objects
+
+```python
+class MyClass()
+```
+
+#### get\_my\_read\_only\_var
+
+```python
+ | get_my_read_only_var() -> int
+```
+
+returns the my_read_only_var variable but is accessed like a method
+
+Ex:
+  myclass_instance.my_read_only_var()
+
+#### my\_read\_only\_var
+
+```python
+ | @property
+ | my_read_only_var() -> int
+```
+
+also returns my_read_only_var but is accessed like a normal property
+
+Ex:
+  myclass_instance.my_read_only_var

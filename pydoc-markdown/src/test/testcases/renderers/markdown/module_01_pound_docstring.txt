@@ -1,0 +1,11 @@
+----
+----
+"""
+This is the module docstring.
+"""
+----
+<a name="module_01_pound_docstring"></a>
+
+# module\_01\_pound\_docstring
+
+This is the module docstring.

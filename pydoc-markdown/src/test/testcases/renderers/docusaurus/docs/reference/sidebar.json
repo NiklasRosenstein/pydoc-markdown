@@ -1,0 +1,21 @@
+{
+  "items": [
+    {
+      "items": [
+        {
+          "items": [
+            "reference/a_test_package/module/__init__",
+            "reference/a_test_package/module/other_stuff",
+            "reference/a_test_package/module/stuff"
+          ],
+          "label": "a_test_package.module",
+          "type": "category"
+        }
+      ],
+      "label": "a_test_package",
+      "type": "category"
+    }
+  ],
+  "label": "Code reference",
+  "type": "category"
+}

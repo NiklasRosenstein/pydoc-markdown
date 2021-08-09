@@ -1,0 +1,7 @@
+----
+----
+# This is the module docstring.
+----
+<a name="module_02_real_docstring"></a>
+
+# module\_02\_real\_docstring
