@@ -70,6 +70,11 @@ class MarkdownRenderer(Renderer):
   #: the module name. This is enabled by default.
   descriptive_module_title: bool = False
 
+  #: Add the module name as a prefix to class & method names. This module name is
+  #: also rendered as code if #code_headers is enabled. This is enabled
+  #: by default.
+  add_module_prefix: bool = True
+
   #: Add the class name as a prefix to method names. This class name is
   #: also rendered as code if #code_headers is enabled. This is enabled
   #: by default.
@@ -205,7 +210,11 @@ class MarkdownRenderer(Renderer):
     if level > self.toc_maxdepth:
       return
     object_id = self._resolver.generate_object_id(obj)
-    fp.write('  ' * level + '* [{}](#{})\n'.format(self._escape(obj.name), object_id))
+    title = self._escape(obj.name)
+    if not self.add_module_prefix and isinstance(obj, docspec.Module):
+      object_id = ".".join(object_id.split('.')[1:])
+      title = ".".join(title.split('.')[1:])
+    fp.write('  ' * level + '* [{}](#{})\n'.format(title, object_id))
     level += 1
     for child in getattr(obj, 'members', []):
       self._render_toc(fp, level, child)
@@ -331,7 +340,8 @@ class MarkdownRenderer(Renderer):
       title = self._get_parent(obj).name + '.' + title
     elif self.add_full_prefix and not self._is_method(obj):
       title = obj.path()
-
+    if (not self.add_module_prefix and isinstance(obj, docspec.Module)):
+      title = ".".join(title.split('.')[1:])
     if isinstance(obj, docspec.Function):
       if self.signature_in_header:
         title += '(' + self._format_arglist(obj) + ')'
