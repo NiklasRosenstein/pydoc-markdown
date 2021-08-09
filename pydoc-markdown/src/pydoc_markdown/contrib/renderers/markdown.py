@@ -212,7 +212,6 @@ class MarkdownRenderer(Renderer):
     object_id = self._resolver.generate_object_id(obj)
     title = self._escape(obj.name)
     if not self.add_module_prefix and isinstance(obj, docspec.Module):
-      object_id = ".".join(object_id.split('.')[1:])
       title = ".".join(title.split('.')[1:])
     fp.write('  ' * level + '* [{}](#{})\n'.format(title, object_id))
     level += 1
