@@ -13,8 +13,8 @@ readme: ../README.md
 requirements:
 - python ^3.7
 - click ^7.0
-- databind.core ^1.0.0
-- databind.json ^1.0.0
+- databind.core ^1.1.2
+- databind.json ^1.1.2
 - docspec ^1.0.0
 - docspec-python ^1.0.0
 - nr.fs ^1.6.0

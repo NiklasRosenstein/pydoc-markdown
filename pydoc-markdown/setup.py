@@ -30,8 +30,8 @@ else:
 
 requirements = [
   'click >=7.0.0,<8.0.0',
-  'databind.core >=1.0.0,<2.0.0',
-  'databind.json >=1.0.0,<2.0.0',
+  'databind.core >=1.1.2,<2.0.0',
+  'databind.json >=1.1.2,<2.0.0',
   'docspec >=1.0.0,<2.0.0',
   'docspec-python >=1.0.0,<2.0.0',
   'nr.fs >=1.6.0,<2.0.0',
