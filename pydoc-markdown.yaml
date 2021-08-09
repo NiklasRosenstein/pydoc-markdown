@@ -26,6 +26,10 @@ renderer:
     baseURL: #@ base_url()
     title: "Pydoc-Markdown"
     theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+    markup:
+      goldmark:
+        renderer:
+          unsafe: true
 
   build_directory: docs/build
   content_directory: content/docs  # Book theme will render the pages in content/docs in the nav.
