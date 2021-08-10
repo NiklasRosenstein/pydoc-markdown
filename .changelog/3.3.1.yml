@@ -1,4 +1,4 @@
-release_date: 2020-08-29
+release_date: '2020-08-29'
 changes:
 - type: fix
   component: markdown
