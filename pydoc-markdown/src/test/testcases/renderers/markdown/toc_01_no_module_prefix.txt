@@ -21,7 +21,7 @@ class Spam:
 
 <a id="toc_01_no_module_prefix"></a>
 
-#
+# toc\_01\_no\_module\_prefix
 
 My module docstring.
 

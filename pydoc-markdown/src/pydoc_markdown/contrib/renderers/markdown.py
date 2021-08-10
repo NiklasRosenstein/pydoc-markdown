@@ -340,7 +340,7 @@ class MarkdownRenderer(Renderer):
     elif self.add_full_prefix and not self._is_method(obj):
       title = obj.path()
     if (not self.add_module_prefix and isinstance(obj, docspec.Module)):
-      title = ".".join(title.split('.')[1:])
+      title = title.split('.')[-1]
     if isinstance(obj, docspec.Function):
       if self.signature_in_header:
         title += '(' + self._format_arglist(obj) + ')'
