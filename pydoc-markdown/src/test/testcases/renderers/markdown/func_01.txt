@@ -11,7 +11,7 @@ def func(s: str) -> List[str]:
   # Returns
   List[str]: Some more strings. """
 ----
-<a name="func_01.func"></a>
+<a id="func_01.func"></a>
 
 #### func
 

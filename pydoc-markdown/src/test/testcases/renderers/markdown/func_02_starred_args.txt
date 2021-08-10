@@ -7,11 +7,11 @@ def b(abc, *,):
 def c(abc, *, defg):
   """Docstring goes here."""
 ----
-<a name="func_02_starred_args"></a>
+<a id="func_02_starred_args"></a>
 
 # func\_02\_starred\_args
 
-<a name="func_02_starred_args.a"></a>
+<a id="func_02_starred_args.a"></a>
 
 #### a
 
@@ -21,7 +21,7 @@ a(*args, **kwargs)
 
 Docstring goes here.
 
-<a name="func_02_starred_args.b"></a>
+<a id="func_02_starred_args.b"></a>
 
 #### b
 
@@ -31,7 +31,7 @@ b(abc)
 
 Docstring goes here.
 
-<a name="func_02_starred_args.c"></a>
+<a id="func_02_starred_args.c"></a>
 
 #### c
 
