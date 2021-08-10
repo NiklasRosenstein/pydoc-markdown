@@ -1,0 +1,44 @@
+----
+renderer:
+  add_module_prefix: false
+  render_toc: true
+filter:
+  documented_only: false
+----
+" My module docstring. "
+
+def foo():
+  " Do bar "
+
+class Spam:
+  pass
+----
+# Table of Contents
+
+* [toc\_01\_no\_module\_prefix](#toc_01_no_module_prefix)
+  * [foo](#toc_01_no_module_prefix.foo)
+  * [Spam](#toc_01_no_module_prefix.Spam)
+
+<a id="toc_01_no_module_prefix"></a>
+
+#
+
+My module docstring.
+
+<a id="toc_01_no_module_prefix.foo"></a>
+
+#### foo
+
+```python
+foo()
+```
+
+Do bar
+
+<a id="toc_01_no_module_prefix.Spam"></a>
+
+## Spam Objects
+
+```python
+class Spam()
+```
