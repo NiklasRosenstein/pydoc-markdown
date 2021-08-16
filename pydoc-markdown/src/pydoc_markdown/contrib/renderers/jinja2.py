@@ -1,4 +1,9 @@
 
+"""
+__Important__: The Jinja2 renderer API and configuration is not stable. Your config/templates may break
+at any point on future Pydoc-Markdown versions.
+"""
+
 import dataclasses as D
 import fnmatch
 import logging
