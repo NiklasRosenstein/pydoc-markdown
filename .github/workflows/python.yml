@@ -21,7 +21,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install ./pydoc-markdown --upgrade pip
+        python -m pip install . --upgrade pip
         pip install flake8 pytest pytest-cov pylint
     #- name: Lint with flake8
     #  run: |
@@ -34,7 +34,7 @@ jobs:
         pylint src || true
     - name: Test with pytest
       run: |
-        pytest --cov=./pydoc-markdown/src/pydoc_markdown && coverage html
+        pytest --cov=./src/pydoc_markdown && coverage html
 
   trial-publish:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -54,7 +54,6 @@ jobs:
       env:
         TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
       run: |
-        cd pydoc-markdown
         shut pkg update --verify-tag "$CIRCLE_TAG"
         shut pkg publish warehouse:pypi --test
 
@@ -76,6 +75,5 @@ jobs:
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
       run: |
-        cd pydoc-markdown
         shut pkg update --verify-tag "$CIRCLE_TAG"
         shut pkg publish warehouse:pypi
