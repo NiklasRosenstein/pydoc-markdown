@@ -2,10 +2,8 @@ name: pydoc-markdown
 version: 4.1.6
 author: Niklas Rosenstein <rosensteinniklas@gmail.com>
 license: MIT
-license_file: ../LICENSE.txt
+license_file: LICENSE.txt
 url: https://github.com/NiklasRosenstein/pydoc-markdown
-changelog:
-  directory: ../.changelog
 release:
   tag-format: v{version}
 description: Create Python API documentation in Markdown format.
