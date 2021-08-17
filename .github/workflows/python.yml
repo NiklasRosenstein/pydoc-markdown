@@ -36,7 +36,7 @@ jobs:
       run: |
         pytest --cov=./src/pydoc_markdown && coverage html
 
-  trial-publish:
+  publish:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: test
 
@@ -49,31 +49,12 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        pip install -q shut==0.14.0
-    - name: Shut test publish
+        pip install -q shut==0.17.2
+    - name: Shut publish
       env:
+        PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
       run: |
         shut pkg update --verify-tag "$CIRCLE_TAG"
         shut pkg publish warehouse:pypi --test
-
-  publish:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: trial-publish
-
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-        pip install -q shut==0.14.0
-    - name: Shut publish
-      env:
-        PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-      run: |
-        shut pkg update --verify-tag "$CIRCLE_TAG"
         shut pkg publish warehouse:pypi
