@@ -7,7 +7,7 @@ steps:
   echo
   echo "pwd: $PWD"
   echo
-  .venv/bin/pydoc-markdown --build --site-dir "$pwd/_build/html" -vv
+  .venv/bin/pydoc-markdown --build --site-dir "$PWD/_build/html" -vv
   echo
   echo ls
   echo
