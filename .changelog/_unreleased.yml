@@ -15,3 +15,15 @@ changes:
   description: '@melMass added the `MarkdownRenderer.add_module_prefix` option'
   fixes:
   - '#199'
+- type: docs
+  component: general
+  description: switch Pydoc-Markdown to generated its docs with MkDocs
+  fixes: []
+- type: docs
+  component: general
+  description: add Jinja2 renderer documentation in generated docs
+  fixes: []
+- type: improvement
+  component: general
+  description: update template for `--bootstrap readthedocs` and related documentation
+  fixes: []

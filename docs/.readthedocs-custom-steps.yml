@@ -1,0 +1,14 @@
+steps:
+# We install Pydoc-Markdown into a separate Virtualenv to avoid dependency conflicts with `shut`.
+- |
+  "$PYTHON" -m virtualenv .venv
+  .venv/bin/python -m pip install .
+
+  echo
+  echo "pwd: $PWD"
+  echo
+  .venv/bin/pydoc-markdown --build --site-dir "$PWD/_build/html" -vv
+  echo
+  echo ls
+  echo
+  echo ls _build/html

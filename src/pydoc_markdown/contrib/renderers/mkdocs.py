@@ -67,9 +67,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
         contents:
           - '*'
     mkdocs_config:
-      mkdocs_config:
-        site_name: My Project
-        theme: readthedocs
+      site_name: My Project
+      theme: readthedocs
   ```
 
   ### Options

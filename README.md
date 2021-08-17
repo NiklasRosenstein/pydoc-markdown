@@ -56,6 +56,14 @@ What this does:
    and run Hugo to open a live-preview of the page. If Hugo is not available on your system,
    it will be downloaded automatically.
 
+## Contributing to Pydoc-Markdown
+
+All contributions are welcome!
+
+## Questions / Need help?
+
+Feel free to open a topic on [GitHub Discussions](https://github.com/NiklasRosenstein/pydoc-markdown/discussions)!
+
 ---
 
-<p align="center">Copyright &copy; 2020 Niklas Rosenstein</p>
+<p align="center">Copyright &copy; 2021 Niklas Rosenstein</p>
