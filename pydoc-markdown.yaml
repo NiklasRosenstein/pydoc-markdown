@@ -15,51 +15,31 @@ hooks:
   - shut changelog -a --markdown >CHANGELOG.md
 
 renderer:
-  type: hugo
-
+  type: mkdocs
+  mkdocs_config:
+    site_name: Pydoc-Markdown
+    theme: readthedocs
+  output_directory: docs/build
   markdown:
     source_linker:
       type: github
       repo: NiklasRosenstein/pydoc-markdown
-
-  config:
-    baseURL: #@ base_url()
-    title: "Pydoc-Markdown"
-    theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
-
-  build_directory: docs/build
-  content_directory: content/docs  # Book theme will render the pages in content/docs in the nav.
-
-  default_preamble:
-    menu: main
-
   pages:
   - title: Home
     name: index
     source: README.md
-    directory: '..'  # Put it directly into the content directory.
   - title: Changelog
     name: changelog
     source: CHANGELOG.md
-    preamble:
-      weight: 10
   - title: Getting Started
     source: docs/getting-started.md
-    preamble:
-      weight: 10
   - title: Read the Docs
     source: docs/readthedocs.md
-    preamble:
-      weight: 15
   - title: Configuration
     source: docs/configuration.md
-    preamble:
-      weight: 20
   - title: Migrate from 3.x to 4.x
     name: migrate-from-3x-to-4x
     source: docs/migrate-from-3x-to-4x.md
-    preamble:
-      weight: 20
   - title: API Documentation
     children:
     - title: CLI

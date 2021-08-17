@@ -5,12 +5,6 @@
 Projects that use Pydoc-Markdown can be built on __Read the Docs__ by using the
 [readthedocs-custom-steps][] package. A couple of files are needed to make this work.
 
-__.readthedocs-requirements.txt__
-
-```
-readthedocs-custom-steps
-```
-
 __.readthedocs.yml__
 
 ```yml
@@ -20,11 +14,16 @@ python:
   version: 3.7
   install:
   - method: pip
-    path: pydoc-markdown  # replace with the path to your package
-  - requirements: .readthedocs-requirements.txt
+  - requirements: docs/.readthedocs-requirements.txt
 ```
 
-__.readthedocs-custom-steps.yml__
+__docs/.readthedocs-requirements.txt__
+
+```
+readthedocs-custom-steps==0.5.1
+```
+
+__docs/.readthedocs-custom-steps.yml__
 
 ```yml
 steps:
