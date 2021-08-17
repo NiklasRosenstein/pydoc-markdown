@@ -58,4 +58,4 @@ What this does:
 
 ---
 
-<p align="center">Copyright &copy; 2020 Niklas Rosenstein</p>
+<p align="center">Copyright &copy; 2021 Niklas Rosenstein</p>
