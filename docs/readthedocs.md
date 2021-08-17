@@ -2,6 +2,8 @@
 
   [readthedocs-custom-steps]: https://pypi.org/project/readthedocs-custom-steps/
 
+## Using custom steps
+
 Projects that use Pydoc-Markdown can be built on __Read the Docs__ by using the
 [readthedocs-custom-steps][] package. A couple of files are needed to make this work.
 
