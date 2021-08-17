@@ -8,7 +8,7 @@
 
 loaders:
   - type: python
-    search_path: [pydoc-markdown/src]
+    search_path: [src]
 
 hooks:
   pre-render:
@@ -90,18 +90,26 @@ renderer:
     children:
     - title: Docusaurus v2
       contents:
+      - pydoc_markdown.contrib.renderers.docusaurus
       - pydoc_markdown.contrib.renderers.docusaurus.*
     - title: Hugo
       contents:
+      - pydoc_markdown.contrib.renderers.hugo
       - pydoc_markdown.contrib.renderers.hugo.HugoPage
       - pydoc_markdown.contrib.renderers.hugo.HugoPage.*
       - pydoc_markdown.contrib.renderers.hugo.HugoConfig
       - pydoc_markdown.contrib.renderers.hugo.HugoConfig.*
       - pydoc_markdown.contrib.renderers.hugo.HugoRenderer
       - pydoc_markdown.contrib.renderers.hugo.HugoRenderer.*
+    - title: Jinja2
+      contents:
+      - pydoc_markdown.contrib.renderers.jinja2
+      - pydoc_markdown.contrib.renderers.jinja2.Jinja2Renderer*
     - title: MkDocs
       contents:
+      - pydoc_markdown.contrib.renderers.mkdocs
       - pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer*
     - title: Markdown
       contents:
+      - pydoc_markdown.contrib.renderers.markdown
       - pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer*
