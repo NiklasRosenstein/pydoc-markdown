@@ -3,4 +3,4 @@ steps:
 - |
   "$PYTHON" -m virtualenv .venv
   .venv/bin/python -m pip install .
-  .venv/bin/pydoc-markdown --build --site-dir $SITE_DIR -vv
+  .venv/bin/pydoc-markdown --build --site-dir _build/html -vv

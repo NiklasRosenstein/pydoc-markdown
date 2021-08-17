@@ -29,7 +29,7 @@ __docs/.readthedocs-custom-steps.yml__
 
 ```yml
 steps:
-- pydoc-markdown --build --site-dir $SITE_DIR
+- pydoc-markdown --build --site-dir _build/html
 ```
 
 You can use the `pydoc-markdown --bootstrap readthedocs` command as a shortcut to create
