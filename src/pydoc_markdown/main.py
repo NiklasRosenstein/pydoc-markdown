@@ -32,6 +32,7 @@ import os
 import sys
 import typing as t
 import webbrowser
+from pathlib import Path
 
 import click
 import yaml
@@ -271,6 +272,7 @@ def cli(
         if os.path.isfile(filename):
           error('file already exists: {!r}'.format(filename))
       for filename, content in static.READTHEDOCS_FILES.items():
+        Path(filename).parent.mkdir(exist_ok=True, parents=True)
         with open(filename, 'w') as fp:
           fp.write(content)
         print('created', filename)

@@ -109,15 +109,16 @@ python:
   install:
   - method: pip
     path: .
-  - requirements: .readthedocs-requirements.txt
+  - requirements: docs/requirements.txt
 '''.lstrip(),
 
-  '.readthedocs-custom-steps.yml': '''
+  'docs/.readthedocs-custom-steps.yml': '''
 steps:
-- pydoc-markdown --build --site-dir $SITE_DIR
+- |
+  pydoc-markdown --build --site-dir "$PWD/_build/html"
 '''.lstrip(),
 
-  '.readthedocs-requirements.txt': '''
-readthedocs-custom-steps
+  'docs/requirements.txt': '''
+readthedocs-custom-steps==0.5.1
 '''.lstrip(),
 }
