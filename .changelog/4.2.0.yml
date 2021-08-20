@@ -32,3 +32,4 @@ changes:
   description: fix `mkdocs` bootstrap configuration, update mkdocs and hugo bootstrap
     config to include example on how to select parts of the API docs
   fixes: []
+release_date: '2021-08-20'
