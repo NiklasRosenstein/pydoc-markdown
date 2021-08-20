@@ -48,12 +48,13 @@ renderer:
       name: index
       source: README.md
     - title: API Documentation
-      contents:
-        - '*'
+      children:
+        - title: my_project
+          content: [ my_project, my_project.* ]
   mkdocs_config:
-    mkdocs_config:
-      site_name: My Project
-      theme: readthedocs
+    site_name: My Project
+    theme: readthedocs
+    repo_url: https://github.com/Me/my-project
 '''.lstrip()
 
 
@@ -78,8 +79,9 @@ renderer:
       name: index
       source: README.md
     - title: API Documentation
-      contents:
-        - '*'
+      children:
+        - title: my_project
+          content: [ my_project, my_project.* ]
 '''.lstrip()
 
 DEFAULT_DOCUSAURUS_CONFIG = '''

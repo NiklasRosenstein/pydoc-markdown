@@ -27,3 +27,8 @@ changes:
   component: general
   description: update template for `--bootstrap readthedocs` and related documentation
   fixes: []
+- type: fix
+  component: general
+  description: fix `mkdocs` bootstrap configuration, update mkdocs and hugo bootstrap
+    config to include example on how to select parts of the API docs
+  fixes: []
