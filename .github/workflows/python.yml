@@ -3,7 +3,12 @@
 
 name: Python package
 
-on: [ push ]
+on:
+  push:
+    branches: [ develop ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ develop ]
 
 jobs:
   test:
