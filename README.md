@@ -58,7 +58,7 @@ What this does:
 
 ## Contributing to Pydoc-Markdown
 
-All contributions are welcome!
+All contributions are welcome! Check out the [Contributing](.github/CONTRIBUTING.md) guidelines.
 
 ## Questions / Need help?
 
