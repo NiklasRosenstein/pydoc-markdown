@@ -1,0 +1,6 @@
+changes:
+- type: fix
+  component: general
+  description: fix use of `docspec.ApiObject.path` after we migrated away from using
+    deprecated `docspec.ReverseMap`
+  fixes: []
