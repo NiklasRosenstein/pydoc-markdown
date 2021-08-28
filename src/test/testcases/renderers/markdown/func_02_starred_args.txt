@@ -16,7 +16,7 @@ def c(abc, *, defg):
 #### a
 
 ```python
-a(*args, **kwargs)
+def a(*args, **kwargs)
 ```
 
 Docstring goes here.
@@ -26,7 +26,7 @@ Docstring goes here.
 #### b
 
 ```python
-b(abc)
+def b(abc)
 ```
 
 Docstring goes here.
@@ -36,7 +36,7 @@ Docstring goes here.
 #### c
 
 ```python
-c(abc, *, defg)
+def c(abc, *, defg)
 ```
 
 Docstring goes here.

@@ -39,7 +39,7 @@ class MyClass()
 #### get\_my\_read\_only\_var
 
 ```python
- | get_my_read_only_var() -> int
+def get_my_read_only_var() -> int
 ```
 
 returns the my_read_only_var variable but is accessed like a method
@@ -50,8 +50,8 @@ Ex:
 #### my\_read\_only\_var
 
 ```python
- | @property
- | my_read_only_var() -> int
+@property
+def my_read_only_var() -> int
 ```
 
 also returns my_read_only_var but is accessed like a normal property

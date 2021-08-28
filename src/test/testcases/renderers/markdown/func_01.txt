@@ -16,7 +16,7 @@ def func(s: str) -> List[str]:
 #### func
 
 ```python
-func(s: str) -> List[str]
+def func(s: str) -> List[str]
 ```
 
 Docstring goes here.

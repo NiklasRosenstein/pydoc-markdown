@@ -12,7 +12,7 @@ from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
-from ..utils import Case, assert_text_equals, load_testcase, testcases_for
+from ..utils import Case, assert_text_equals, load_testcase, get_testcases_for
 
 
 @dataclasses.dataclass
@@ -58,7 +58,7 @@ def assert_code_as_markdown(source_code, markdown, full=False, parser_options=No
   assert_text_equals(result, textwrap.dedent(markdown))
 
 
-@pytest.mark.parametrize('filename', testcases_for('renderers/markdown'))
+@pytest.mark.parametrize('filename', get_testcases_for('renderers/markdown'))
 def test_markdown_renderer(filename: str) -> None:
   case = load_testcase('renderers/markdown', filename)
   config = databind.json.load(case.config, MarkdownTestConfig)

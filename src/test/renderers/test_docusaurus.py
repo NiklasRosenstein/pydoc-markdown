@@ -84,7 +84,7 @@ this is a constant about stuff
 #### my\_funct
 
 ```python
-my_funct()
+def my_funct()
 ```
 
 Do something, or nothing.
@@ -104,7 +104,7 @@ This is a cool attribute.
 #### run\_cool\_stuff
 
 ```python
- | run_cool_stuff()
+def run_cool_stuff()
 ```
 
 Run cool stuff

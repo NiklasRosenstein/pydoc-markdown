@@ -30,7 +30,7 @@ My module docstring.
 #### foo
 
 ```python
-foo()
+def foo()
 ```
 
 Do bar

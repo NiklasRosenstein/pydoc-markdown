@@ -20,7 +20,7 @@ def assert_text_equals(a: str, b: str) -> None:
          '\n'.join([x.rstrip() for x in b.strip().split('\n')])
 
 
-def testcases_for(folder_name: str) -> t.List[str]:
+def get_testcases_for(folder_name: str) -> t.List[str]:
   return [f.name for f in (Path(__file__).parent / 'testcases' / folder_name).iterdir() if f.suffix == '.txt']
 
 
