@@ -10,3 +10,4 @@ changes:
     = False` (many people seemed to dislike that) and `signature_with_def = True`
     (for consistency with the included `class` keyword for classes))
   fixes: []
+release_date: '2021-08-28'
