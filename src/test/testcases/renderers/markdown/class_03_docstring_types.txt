@@ -70,7 +70,7 @@ The class documentation!
 #### \_\_init\_\_
 
 ```python
- | __init__(param)
+def __init__(param)
 ```
 
 The constructor.

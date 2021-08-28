@@ -20,13 +20,13 @@ def assert_text_equals(a: str, b: str) -> None:
          '\n'.join([x.rstrip() for x in b.strip().split('\n')])
 
 
-def load_testcases(folder_name: str) -> t.List[Case]:
-  files = [f for f in (Path(__file__).parent / 'testcases' / folder_name).iterdir() if f.suffix == '.txt']
-  result: t.List[Case] = []
-  for path in files:
-    parts = re.split(r'-{4,}\n', path.read_text())
-    assert parts[0] == ''
-    config, code, output = parts[1:]
-    config = yaml.safe_load(config) if config.strip() else {}
-    result.append(Case(path, config, code, output))
-  return result
+def get_testcases_for(folder_name: str) -> t.List[str]:
+  return [f.name for f in (Path(__file__).parent / 'testcases' / folder_name).iterdir() if f.suffix == '.txt']
+
+
+def load_testcase(folder_name: str, testcase_name: str) -> Case:
+  path = Path(__file__).parent / 'testcases' / folder_name / testcase_name
+  parts = re.split(r'-{4,}\n', path.read_text())
+  assert parts[0] == ''
+  config, code, output = parts[1:]
+  return Case(path, yaml.safe_load(config) if config.strip() else {}, code, output)

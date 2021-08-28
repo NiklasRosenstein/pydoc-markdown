@@ -32,6 +32,10 @@ from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
 from pydoc_markdown.util.docspec import format_function_signature, is_method
 
 
+def dotted_name(obj: docspec.ApiObject) -> str:
+  return '.'.join(x.name for x in obj.path)
+
+
 @dataclasses.dataclass
 class MarkdownRenderer(Renderer):
   """
@@ -125,11 +129,11 @@ class MarkdownRenderer(Renderer):
   signature_in_header: bool = False
 
   #: Render the vertical bar '|' before function signature. This is enabled by default.
-  signature_with_vertical_bar: bool = True
+  signature_with_vertical_bar: bool = False
 
   #: Include the "def" keyword in the function signature. This is enabled
   #: by default.
-  signature_with_def: bool = False
+  signature_with_def: bool = True
 
   #: Render the class name in the code block for function signature. Note
   #: that this results in invalid Python syntax to be rendered. This is
@@ -254,7 +258,7 @@ class MarkdownRenderer(Renderer):
     if self.signature_with_decorators:
       parts += self._format_decorations(func.decorations)
     if self.signature_python_help_style and not self._is_method(func):
-      parts.append('{} = '.format(func.path()))
+      parts.append('{} = '.format(dotted_name(func)))
     parts += [x + ' ' for x in func.modifiers or []]
     if self.signature_with_def:
       parts.append('def ')
@@ -275,7 +279,7 @@ class MarkdownRenderer(Renderer):
       bases += ', metaclass=' + str(cls.metaclass)
     code = 'class {}({})'.format(cls.name, bases)
     if self.signature_python_help_style:
-      code = cls.path() + ' = ' + code
+      code = dotted_name(cls) + ' = ' + code
     if self.classdef_render_init_signature_if_needed and '__init__' in cls.members:
       code += ':\n '
       if self.signature_with_vertical_bar:
@@ -338,7 +342,7 @@ class MarkdownRenderer(Renderer):
        (self.add_member_class_prefix and isinstance(obj, docspec.Data)):
       title = self._get_parent(obj).name + '.' + title
     elif self.add_full_prefix and not self._is_method(obj):
-      title = obj.path()
+      title = dotted_name(obj)
     if (not self.add_module_prefix and isinstance(obj, docspec.Module)):
       title = title.split('.')[-1]
     if isinstance(obj, docspec.Function):
