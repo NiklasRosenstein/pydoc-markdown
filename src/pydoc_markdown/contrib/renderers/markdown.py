@@ -129,11 +129,11 @@ class MarkdownRenderer(Renderer):
   signature_in_header: bool = False
 
   #: Render the vertical bar '|' before function signature. This is enabled by default.
-  signature_with_vertical_bar: bool = True
+  signature_with_vertical_bar: bool = False
 
   #: Include the "def" keyword in the function signature. This is enabled
   #: by default.
-  signature_with_def: bool = False
+  signature_with_def: bool = True
 
   #: Render the class name in the code block for function signature. Note
   #: that this results in invalid Python syntax to be rendered. This is
