@@ -4,3 +4,4 @@ changes:
   description: Calling pydoc-markdown with `--render-toc` option causes an exception
   fixes:
   - '#213'
+release_date: '2021-09-01'
