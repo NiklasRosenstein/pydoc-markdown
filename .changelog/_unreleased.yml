@@ -1,0 +1,6 @@
+changes:
+- type: fix
+  component: general
+  description: Calling pydoc-markdown with `--render-toc` option causes an exception
+  fixes:
+  - '#213'

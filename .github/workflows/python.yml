@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.x']
+        python-version: [ '3.7', '3.8', '3.9', '3.x' ]
 
     steps:
     - uses: actions/checkout@v2
@@ -48,7 +48,7 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        pip install -q shut==0.17.2
+        pip install -q shut==0.18.1
     - name: Shut publish
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}

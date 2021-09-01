@@ -27,6 +27,7 @@ With no arguments it will load the default configuration file. If the
 or a YAML formatted object for the configuration.
 """
 
+import dataclasses
 import logging
 import os
 import sys
@@ -98,9 +99,8 @@ class RenderSession:
 
     if self.render_toc is not None:
       # Find the #MarkdownRenderer field for this renderer.
-      schema = dataclass_to_schema(type(config.renderer))
-      for field in schema.fields.values():
-        if field.type == ConcreteType(MarkdownRenderer):
+      for field in dataclass_to_schema(type(config.renderer)).fields.values():
+        if isinstance(field.type, ConcreteType) and field.type.type == MarkdownRenderer:
           markdown: MarkdownRenderer = getattr(config.renderer, field.name)
           break
       else:
