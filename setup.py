@@ -33,7 +33,7 @@ else:
   long_description = None
 
 requirements = [
-  'click >=7.0.0,<8.0.0',
+  'click >=7.1,<9.0',
   'databind.core >=1.2.2,<2.0.0',
   'databind.json >=1.2.2,<2.0.0',
   'docspec >=1.0.0,<2.0.0',
