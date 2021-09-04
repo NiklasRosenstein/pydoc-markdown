@@ -40,10 +40,8 @@ requirements = [
   'docspec-python >=1.0.0,<2.0.0',
   'nr.fs >=1.6.0,<2.0.0',
   'nr.stream >=0.1.2,<1.0.0',
-  'nr.pylang.utils >=0.1.1,<1.0.0',
   'requests >=2.23.0,<3.0.0',
   'PyYAML >=5.3.0,<6.0.0',
-  'six >=1.11.0,<2.0.0',
   'toml >=0.10.1,<1.0.0',
   'watchdog',
 ]

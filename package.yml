@@ -17,10 +17,8 @@ requirements:
 - docspec-python ^1.0.0
 - nr.fs ^1.6.0
 - nr.stream ^0.1.2
-- nr.pylang.utils ^0.1.1
 - requests ^2.23.0
 - PyYAML ^5.3
-- six ^1.11.0
 - toml ^0.10.1
 - watchdog
 entrypoints:
