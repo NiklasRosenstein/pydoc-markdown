@@ -404,7 +404,7 @@ class MarkdownRenderer(Renderer):
 
     return MarkdownReferenceResolver(modules)
 
-  def render(self, modules: t.List[docspec.Module], page_title:str) -> None:
+  def render(self, modules: t.List[docspec.Module], page_title: str) -> None:
     if self.filename is None:
       self.render_to_stream(modules, sys.stdout, page_title)
     else:
