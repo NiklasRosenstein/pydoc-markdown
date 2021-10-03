@@ -170,4 +170,4 @@ class Page:
       shutil.copyfile(os.path.join(context_directory, self.source), filename)
     else:
       logger.info('Rendering "%s"', filename)
-      renderer.render(self.filtered_modules(modules))
+      renderer.render(self.filtered_modules(modules), self.title)
