@@ -376,7 +376,7 @@ class MarkdownRenderer(Renderer):
     self.render_to_stream(modules, fp)
     return fp.getvalue()
 
-  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO, page_title:str="API documentation"):
+  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO, page_title: str = "API documentation"):
     self._resolver = MarkdownReferenceResolver(modules)
     if self.render_page_title:
       stream.write('# {}\n\n'.format(page_title))
