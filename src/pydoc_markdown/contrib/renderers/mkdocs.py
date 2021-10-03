@@ -25,17 +25,17 @@ import logging
 import os
 import subprocess
 import typing as t
-import typing_extensions as te
+from typing import Dict, List, Optional
 
 import databind.core.annotations as A
 import docspec
+import typing_extensions as te
 import yaml
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.pages import Page, Pages
 from pydoc_markdown.util.knownfiles import KnownFiles
-from typing import Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

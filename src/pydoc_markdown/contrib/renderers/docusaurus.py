@@ -5,11 +5,11 @@ import json
 import logging
 import os
 import typing as t
-import typing_extensions as te
 from pathlib import Path
 
 import databind.core.annotations as A
 import docspec
+import typing_extensions as te
 
 from pydoc_markdown.interfaces import Renderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer

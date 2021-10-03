@@ -10,8 +10,7 @@ disable =
   no-else-continue,
   no-else-return,
   too-few-public-methods,
-  unidiomatic-typecheck,
-  wrong-import-order,
+  unidiomatic-typecheck
 
 indent-string='  '
 

@@ -21,12 +21,13 @@
 
 """ Utils for Pydoc-Markdown using the Watchdog library. """
 
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
-from typing import List, Tuple
 import logging
 import os
 import threading
+from typing import List, Tuple
+
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 logger = logging.getLogger(__name__)
 

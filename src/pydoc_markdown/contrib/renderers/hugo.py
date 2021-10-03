@@ -25,20 +25,20 @@ import logging
 import os
 import platform as _platform
 import posixpath
-import requests
 import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
 import typing as t
-import typing_extensions as te
 from urllib.parse import urlparse, urljoin
 
 import databind.core.annotations as A
 import docspec
 import nr.fs
+import requests
 import toml
+import typing_extensions as te
 import yaml
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer

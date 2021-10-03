@@ -28,12 +28,12 @@ import dataclasses
 import logging
 import os
 import subprocess
-import toml
 import typing as t
 
 import databind.core.annotations as A
 import databind.json
 import docspec
+import toml
 
 from pydoc_markdown.interfaces import Context, Loader, Processor, Renderer, Resolver, Builder
 from pydoc_markdown.contrib.loaders.python import PythonLoader
