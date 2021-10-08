@@ -8,7 +8,12 @@ def test_google_style():
 
 
 def test_sphinx_style():
-  test_sphinx.test_sphinx_processor(SmartProcessor())
+  # Dynamically call all tests within the test_sphinx module
+  test_sphinx_attr_names = dir(test_sphinx)
+  for attr_name in test_sphinx_attr_names:
+    sphinx_attr = getattr(test_sphinx, attr_name)
+    if callable(sphinx_attr) and attr_name.startswith("test"):
+      sphinx_attr(SmartProcessor())
 
 
 def test_pydocmd_style():
