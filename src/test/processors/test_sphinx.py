@@ -88,22 +88,30 @@ md_with_param = \
   - `bar`: The value of bar
   '''
 
-def test_sphinx_with_param_return(processor=SphinxProcessor()):
+
+def test_sphinx_with_param_return(processor=None):
   """Test sphinx processor with param and return keywords."""
+  if processor is None:
+    processor = SphinxProcessor()
   assert_processor_result(processor, docstring_with_param_return, md_with_param_return)
 
 
-def test_sphinx_with_codeblocks(processor=SphinxProcessor()):
+def test_sphinx_with_codeblocks(processor=None):
   """Test sphinx processor with codeblocks"""
+  if processor is None:
+    processor = SphinxProcessor()
   assert_processor_result(processor, docstring_with_codeblocks, md_with_codeblocks)
 
 
-def test_sphinx_with_param_type_returns_rtype(processor=SphinxProcessor()):
+def test_sphinx_with_param_type_returns_rtype(processor=None):
   """Test sphinx processor with param, type, returns, rtype keywords"""
+  if processor is None:
+    processor = SphinxProcessor()
   assert_processor_result(processor, docstring_with_param_type_returns_rtype, md_with_param_type_returns_rtype)
 
 
-def test_sphinx_with_param(processor=SphinxProcessor()):
+def test_sphinx_with_param(processor=None):
   """Test sphinx processor with only param keyword."""
+  if processor is None:
+    processor = SphinxProcessor()
   assert_processor_result(processor, docstring_with_param, md_with_param)
-
