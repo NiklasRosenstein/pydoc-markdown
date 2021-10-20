@@ -76,7 +76,7 @@ class SphinxProcessor(Processor):
 
   def check_docstring_format(self, docstring: str) -> bool:
     return ':param' in docstring or ':return' in docstring or \
-      ':raise' in docstring
+      ':raise' in docstring or ':arg' in docstring
 
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
