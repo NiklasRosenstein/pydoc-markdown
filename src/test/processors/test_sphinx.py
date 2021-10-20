@@ -1,26 +1,9 @@
+import pytest
 
 from . import assert_processor_result
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
+from pydoc_markdown.contrib.processors.smart import SmartProcessor
 
-
-docstring_with_param_return = \
-  '''
-  :param s: A string.
-  :param b: An int.
-  :return: Something funny.
-  '''
-
-md_with_param_return = \
-  '''
-  **Arguments**:
-
-  - `s`: A string.
-  - `b`: An int.
-
-  **Returns**:
-
-  Something funny.
-  '''
 
 docstring_with_codeblocks = \
   '''
@@ -74,12 +57,6 @@ md_with_param_type_returns_rtype = \
   `str`: Some eggs from foo and bar
   '''
 
-docstring_with_param = \
-  '''
-  :param foo: The value of foo
-  :param bar: The value of bar
-  '''
-
 md_with_param = \
   '''
   **Arguments**:
@@ -88,30 +65,112 @@ md_with_param = \
   - `bar`: The value of bar
   '''
 
+doc_with_param_tmp = \
+  '''
+  :{pkey} foo: The value of foo
+  :{pkey} bar: The value of bar
+  '''
 
-def test_sphinx_with_param_return(processor=None):
-  """Test sphinx processor with param and return keywords."""
-  if processor is None:
-    processor = SphinxProcessor()
-  assert_processor_result(processor, docstring_with_param_return, md_with_param_return)
+doc_with_param_type_adjacent_tmp = \
+  '''
+  :{pkey} foo: The value of foo
+  :type foo: str
+  :{pkey} bar: The value of bar
+  :type bar: int
+  '''
+
+doc_with_param_type_mixed_tmp = \
+  '''
+  :{pkey} foo: The value of foo
+  :type bar: int
+  :type foo: str
+  :{pkey} bar: The value of bar
+  '''
+
+md_with_param_type = \
+  '''
+  **Arguments**:
+  
+  - `foo` (`str`): The value of foo
+  - `bar` (`int`): The value of bar
+  '''
+
+doc_with_param_return_tmp = \
+  '''
+  :param foo: Another value of foo
+  :{rkey}: A description of return value
+  '''
+
+md_with_param_return = \
+  '''
+  **Arguments**:
+  
+  - `foo`: Another value of foo
+  
+  **Returns**:
+  
+  A description of return value
+  '''
+
+doc_with_raise_tmp = \
+  '''
+  :{rkey} KeyError: A key is missing
+  '''
+
+md_with_raise = \
+  '''
+  **Raises**:
+  
+  - `KeyError`: A key is missing
+  '''
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+@pytest.mark.parametrize("keyword", ["arg", "argument", "param", "parameter"])
+def test_sphinx_with_param(processor, keyword):
+  """Test sphinx docstrings with valid param keywords"""
+  docstring = doc_with_param_tmp.format(pkey=keyword)
+  assert_processor_result(processor, docstring, md_with_param)
 
 
-def test_sphinx_with_codeblocks(processor=None):
-  """Test sphinx processor with codeblocks"""
-  if processor is None:
-    processor = SphinxProcessor()
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+@pytest.mark.parametrize("keyword", ["arg", "argument", "param", "parameter"])
+def test_sphinx_with_param_type_adjacent(processor, keyword):
+  """Test sphinx docstrings with valid param keywords with types"""
+  docstring = doc_with_param_type_adjacent_tmp.format(pkey=keyword)
+  assert_processor_result(processor, docstring, md_with_param_type)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+@pytest.mark.parametrize("keyword", ["arg", "argument", "param", "parameter"])
+def test_sphinx_with_param_type_mixed(processor, keyword):
+  """Test sphinx docstrings with valid param keywords with types out of order"""
+  docstring = doc_with_param_type_mixed_tmp.format(pkey=keyword)
+  assert_processor_result(processor, docstring, md_with_param_type)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+@pytest.mark.parametrize("keyword", ["return", "returns"])
+def test_sphinx_with_param_return(processor, keyword):
+  """Test sphinx docstrings with valid return keywords"""
+  docstring = doc_with_param_return_tmp.format(rkey=keyword)
+  assert_processor_result(processor, docstring, md_with_param_return)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+@pytest.mark.parametrize("keyword", ["raise", "raises"])
+def test_sphinx_with_raise(processor, keyword):
+  """Test sphinx docstrings with valid raise keywords"""
+  docstring = doc_with_raise_tmp.format(rkey=keyword)
+  assert_processor_result(processor, docstring, md_with_raise)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_sphinx_with_codeblocks(processor):
+  """Test sphinx docstrings with codeblocks"""
   assert_processor_result(processor, docstring_with_codeblocks, md_with_codeblocks)
 
 
-def test_sphinx_with_param_type_returns_rtype(processor=None):
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_sphinx_with_param_type_returns_rtype(processor):
   """Test sphinx processor with param, type, returns, rtype keywords"""
-  if processor is None:
-    processor = SphinxProcessor()
   assert_processor_result(processor, docstring_with_param_type_returns_rtype, md_with_param_type_returns_rtype)
-
-
-def test_sphinx_with_param(processor=None):
-  """Test sphinx processor with only param keyword."""
-  if processor is None:
-    processor = SphinxProcessor()
-  assert_processor_result(processor, docstring_with_param, md_with_param)
