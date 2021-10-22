@@ -76,7 +76,7 @@ class SphinxProcessor(Processor):
 
   def check_docstring_format(self, docstring: str) -> bool:
     return ':param' in docstring or ':return' in docstring or \
-      ':raise' in docstring
+      ':raise' in docstring or ':arg' in docstring
 
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
@@ -93,6 +93,7 @@ class SphinxProcessor(Processor):
     return_: t.Optional[_ParamLine] = None
 
     for line in node.docstring.split('\n'):
+      keyword = None
       if line.strip().startswith("```"):
         in_codeblock = not in_codeblock
 
