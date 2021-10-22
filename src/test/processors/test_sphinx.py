@@ -69,3 +69,18 @@ def test_sphinx_processor(processor=None):
 
   `str`: Some eggs from foo and bar
   ''')
+
+  assert_processor_result(processor or SphinxProcessor(),
+  '''
+  Find something
+
+  :arg name: The name to find
+  ''',
+  '''
+  Find something
+
+  **Arguments**:
+
+
+  - `name`: The name to find
+  ''')
