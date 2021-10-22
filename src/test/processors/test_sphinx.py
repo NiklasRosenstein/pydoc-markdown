@@ -18,11 +18,13 @@ docstring_with_codeblocks = \
       d()
       with e() as f:
         f()
+  :return: A value
   '''
 
 md_with_codeblocks = \
   '''
   Code example:
+
   ```
   with a() as b:
     b()
@@ -33,6 +35,10 @@ md_with_codeblocks = \
       d()
       with e() as f:
         f()
+
+  **Returns**:
+
+  A value
   '''
 
 docstring_with_param_type_returns_rtype = \
@@ -123,6 +129,25 @@ md_with_raise = \
   
   - `KeyError`: A key is missing
   '''
+
+doc_with_multiline_param = \
+  '''
+  :param foolong: This parameter has a particularly long description
+  that requires multiple lines.
+  '''
+
+md_with_multiline_param = \
+  '''
+  **Arguments**:
+
+  - `foolong`: This parameter has a particularly long description
+  that requires multiple lines.
+  '''
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_sphinx_with_multiline_param(processor):
+  assert_processor_result(processor, doc_with_multiline_param, md_with_multiline_param)
+
 
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
 @pytest.mark.parametrize("keyword", ["arg", "argument", "param", "parameter"])
