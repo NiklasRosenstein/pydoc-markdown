@@ -111,6 +111,7 @@ class SphinxProcessor(Processor):
     return_: t.Optional[_ParamLine] = None
 
     for line in node.docstring.split('\n'):
+      keyword = None
       if line.strip().startswith("```"):
         in_codeblock = not in_codeblock
 
