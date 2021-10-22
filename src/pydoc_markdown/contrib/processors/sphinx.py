@@ -74,9 +74,27 @@ class SphinxProcessor(Processor):
   @doc:fmt:sphinx
   """
 
+  _KEYWORDS = {
+    'Arguments': [
+      'arg',
+      'argument',
+      'param',
+      'parameter',
+      'type',
+    ],
+    'Returns': [
+      'return',
+      'returns',
+      'rtype',
+    ],
+    'Raises': [
+      'raises',
+      'raise',
+    ]
+  }
+
   def check_docstring_format(self, docstring: str) -> bool:
-    return ':param' in docstring or ':return' in docstring or \
-      ':raise' in docstring or ':arg' in docstring
+    return any(f':{k}' in docstring for _, value in self._KEYWORDS.items() for k in value)
 
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
@@ -101,7 +119,7 @@ class SphinxProcessor(Processor):
 
       if not in_codeblock and not line_codeblock:
         line = line.strip()
-        match = re.match(r'\s*:(arg|argument|param|parameter|type)\s+(\w+)\s*:(.*)?$', line)
+        match = re.match(rf'\s*:({"|".join(self._KEYWORDS["Arguments"])})\s+(\w+)\s*:(.*)?$', line)
         if match:
           keyword = 'Arguments'
           components.setdefault(keyword, [])
@@ -123,7 +141,7 @@ class SphinxProcessor(Processor):
               param_data.docs = text
           continue
 
-        match = re.match(r'\s*:(return|returns|rtype)\s*:(.*)?$', line)
+        match = re.match(rf'\s*:({"|".join(self._KEYWORDS["Returns"])})\s*:(.*)?$', line)
         if match:
           keyword = 'Returns'
           components.setdefault('Returns', [])
@@ -141,7 +159,7 @@ class SphinxProcessor(Processor):
               return_.docs = text
           continue
 
-        match = re.match('\\s*:(?:raises|raise)\\s+(\\w+)\\s*:(.*)?$', line)
+        match = re.match(f'\\s*:(?:{"|".join(self._KEYWORDS["Raises"])})\\s+(\\w+)\\s*:(.*)?$', line)
         if match:
           keyword = 'Raises'
           exception = match.group(1)

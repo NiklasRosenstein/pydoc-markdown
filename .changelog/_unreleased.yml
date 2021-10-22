@@ -1,5 +1,11 @@
 changes:
-  - type: refactor
-    component: tests
-    description: Refactor sphinx processor tests and add new test for param keyword only. Fixes minor issue with argument only docstring. @gmarks2149
-    fixes: []
+- type: fix
+  component: general
+  description: Sphinx processor now triggers when `:arg` or other Sphinx keywords
+    are encountered in a docstring
+  fixes:
+  - '#221'
+- type: refactor
+  component: tests
+  description: Refactor sphinx processor tests and add new test for param keyword only. Fixes minor issue with argument only docstring. @gmarks2149
+  fixes: []
