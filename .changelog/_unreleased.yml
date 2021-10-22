@@ -1,0 +1,7 @@
+changes:
+- type: fix
+  component: general
+  description: Sphinx processor now triggers when `:arg` or other Sphinx keywords
+    are encountered in a docstring
+  fixes:
+  - '#221'
