@@ -21,10 +21,10 @@
 
 import dataclasses
 import logging
-import re
 import typing as t
 
 import docspec
+import docstring_parser
 
 from pydoc_markdown.interfaces import Processor, Resolver
 
@@ -44,11 +44,12 @@ class _ParamLine:
 
 def generate_sections_markdown(lines, sections):
   for key, section in sections.items():
-    if lines and lines[-1]:
-      lines.append('')
+    if section:
+      if lines and lines[-1]:
+        lines.append('')
+      lines.extend(['**{}**:'.format(key), ''])
+      lines.extend(section)
 
-    lines.extend(['**{}**:'.format(key), ''])  # add an extra line because of markdown syntax
-    lines.extend(section)
 
 
 @dataclasses.dataclass
@@ -99,94 +100,70 @@ class SphinxProcessor(Processor):
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     docspec.visit(modules, self._process)
 
+  def _convert_raises(self, raises: t.List[docstring_parser.common.DocstringRaises]) -> list:
+    """Convert a list of DocstringRaises from docstring_parser to markdown lines
+
+    :return: A list of markdown formatted lines
+    """
+    converted_lines = []
+    for entry in raises:
+      converted_lines.append('- `{}`: {}'.format(entry.type_name, entry.description))
+    return converted_lines
+
+  def _convert_params(self, params: t.List[docstring_parser.common.DocstringParam]) -> list:
+    """Convert a list of DocstringParam to markdown lines.
+
+    :return: A list of markdown formatted lines
+    """
+    converted = []
+    for param in params:
+      if param.type_name is None:
+        converted.append(
+          '- `{name}`: {description}'.format(name=param.arg_name, description=param.description)
+        )
+      else:
+        converted.append(
+          '- `{name}` (`{type}`): {description}'.format(name=param.arg_name,
+                                                        type=param.type_name,
+                                                        description=param.description)
+        )
+    return converted
+
+  def _convert_returns(self, returns: docstring_parser.common.DocstringReturns) -> str:
+    """Convert a DocstringReturns object to a markdown string.
+
+    :return: A markdown formatted string
+    """
+    if returns is not None:
+      if returns.type_name:
+        type_data = '`{}`: '.format(returns.type_name)
+      else:
+        type_data = ''
+      return_data = type_data + returns.description
+    else:
+      return_data = ''
+    return return_data
+
   def _process(self, node):
     if not node.docstring:
       return
 
     lines = []
-    in_codeblock = False
-    keyword = None
     components: t.Dict[str, t.List[str]] = {}
-    parameters: t.List[_ParamLine] = []
-    return_: t.Optional[_ParamLine] = None
 
-    for line in node.docstring.split('\n'):
-      keyword = None
-      if line.strip().startswith("```"):
-        in_codeblock = not in_codeblock
+    parsed_docstring = docstring_parser.parse(node.docstring, docstring_parser.DocstringStyle.REST)
+    components['Arguments'] = self._convert_params(parsed_docstring.params)
+    components['Raises'] = self._convert_raises(parsed_docstring.raises)
+    return_doc = self._convert_returns(parsed_docstring.returns)
+    if return_doc:
+      components['Returns'] = [return_doc]
 
-      line_codeblock = line.startswith('    ')
-
-      if not in_codeblock and not line_codeblock:
-        line = line.strip()
-        match = re.match(rf'\s*:({"|".join(self._KEYWORDS["Arguments"])})\s+(\w+)\s*:(.*)?$', line)
-        if match:
-          keyword = 'Arguments'
-          components.setdefault(keyword, [])
-          param = match.group(2)
-          text = match.group(3)
-          text = text.strip()
-          param_data = next((p for p in parameters if p.name == param), None)
-          if match.group(1) == 'type':
-            if param_data is None:
-              param_data = _ParamLine(param, '', text)
-              parameters.append(param_data)
-            else:
-              param_data.type = text
-          else:
-            if param_data is None:
-              param_data = _ParamLine(param, text, None)
-              parameters.append(param_data)
-            else:
-              param_data.docs = text
-          continue
-
-        match = re.match(rf'\s*:({"|".join(self._KEYWORDS["Returns"])})\s*:(.*)?$', line)
-        if match:
-          keyword = 'Returns'
-          components.setdefault('Returns', [])
-          text = match.group(2)
-          text = text.strip()
-          if match.group(1) == 'rtype':
-            if return_ is None:
-              return_ = _ParamLine('return', '', text)
-            else:
-              return_.type = text
-          else:
-            if return_ is None:
-              return_ = _ParamLine('return', text, None)
-            else:
-              return_.docs = text
-          continue
-
-        match = re.match(f'\\s*:(?:{"|".join(self._KEYWORDS["Raises"])})\\s+(\\w+)\\s*:(.*)?$', line)
-        if match:
-          keyword = 'Raises'
-          exception = match.group(1)
-          text = match.group(2)
-          text = text.strip()
-
-          component = components.setdefault(keyword, [])
-          component.append('- `{}`: {}'.format(exception, text))
-          continue
-
-      if keyword is not None:
-        components[keyword].append(line)
-      else:
-        lines.append(line)
-
-    # Convert the parameters into actual markdown format.
-    component = components['Arguments'] if parameters else []
-    for param in parameters:
-      if param.type:
-        component.append('- `{}` (`{}`): {}'.format(param.name, param.type, param.docs))
-      else:
-        component.append('- `{}`: {}'.format(param.name, param.docs))
-
-    # Convert the return data into markdown format.
-    if return_:
-      return_fmt = f'`{return_.type}`: {return_.docs}' if return_.type else return_.docs
-      components['Returns'] = [return_fmt]
+    if parsed_docstring.short_description:
+      lines.append(parsed_docstring.short_description)
+      lines.append('')
+    if parsed_docstring.long_description:
+      lines.append(parsed_docstring.long_description)
+      lines.append('')
 
     generate_sections_markdown(lines, components)
     node.docstring = '\n'.join(lines)
