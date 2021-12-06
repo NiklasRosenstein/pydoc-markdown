@@ -14,3 +14,7 @@ changes:
   description: Fix multi-line parameter sphinx docstring rendering issue by switching to docstring-parser to parse the docstrings. @gmarks2149
   fixes:
   - '#195'
+- type: feature
+  component: general
+  description: 'add `GitlabSourceLinker` class (entrypoint name: `gitlab`). @Heiss'
+  fixes: []
