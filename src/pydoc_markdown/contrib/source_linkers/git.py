@@ -158,6 +158,18 @@ class GithubSourceLinker(BaseGitServiceSourceLinker):
 
   def get_url_template(self) -> str:
     return 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
+  
+  
+@dataclasses.dataclass
+class GitlabSourceLinker(BaseGitServiceSourceLinker):
+  """
+  Source linker for Git repositories hosted on gitlab.com or any self-hosted Gitlab instance.
+  """
+
+  host: str = "gitlab.com"
+
+  def get_url_template(self) -> str:
+    return 'https://{host}/{repo}/-/blob/{sha}/{path}#L{lineno}'
 
 
 @dataclasses.dataclass
