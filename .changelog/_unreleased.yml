@@ -7,10 +7,16 @@ changes:
   - '#221'
 - type: refactor
   component: tests
-  description: Refactor sphinx processor tests and add new test for param keyword only. Fixes minor issue with argument only docstring. @gmarks2149
-  fixes: []
+  description: Refactor sphinx processor tests and add new test for param keyword
+    only. Fixes minor issue with argument only docstring. @gmarks2149
 - type: fix
   component: sphinx_processor
-  description: Fix multi-line parameter sphinx docstring rendering issue by switching to docstring-parser to parse the docstrings. @gmarks2149
+  description: Fix multi-line parameter sphinx docstring rendering issue by switching
+    to docstring-parser to parse the docstrings. @gmarks2149
   fixes:
   - '#195'
+- type: fix
+  component: general
+  description: Fix configuration generated with `--bootstrap mkdocs` (@gethvi)
+  fixes:
+  - '#230'
