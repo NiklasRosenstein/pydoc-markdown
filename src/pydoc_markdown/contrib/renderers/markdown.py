@@ -355,6 +355,8 @@ class MarkdownRenderer(Renderer):
     if isinstance(obj, docspec.Data) and obj.datatype and self.render_typehint_in_data_header:
       if self.code_headers:
         title += f': {obj.datatype}'
+      elif self.html_headers:
+        title += f': <code>{obj.datatype}</code>'
       else:
         title += f': `{obj.datatype}`'
 
