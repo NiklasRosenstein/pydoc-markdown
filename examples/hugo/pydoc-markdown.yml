@@ -8,6 +8,8 @@ renderer:
     theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
     serverURL: localhost
     serverPort: 7000
+  markdown:
+    render_typehint_in_data_header: true
   pages:
   - title: API Documentation
     name: index

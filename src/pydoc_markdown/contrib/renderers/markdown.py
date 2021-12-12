@@ -143,6 +143,9 @@ class MarkdownRenderer(Renderer):
   #: Render decorators before function definitions.
   signature_with_decorators: bool = True
 
+  #: Render type hints for data elements in the header.
+  render_typehint_in_data_header: bool = False
+
   #: Add the string "python" after the backticks for code blocks. This is
   #: enabled by default.
   code_lang: bool = True
@@ -348,6 +351,12 @@ class MarkdownRenderer(Renderer):
     if isinstance(obj, docspec.Function):
       if self.signature_in_header:
         title += '(' + self._format_arglist(obj) + ')'
+
+    if isinstance(obj, docspec.Data) and obj.datatype and self.render_typehint_in_data_header:
+      if self.code_headers:
+        title += f': {obj.datatype}'
+      else:
+        title += f': `{obj.datatype}`'
 
     if self.code_headers:
       if self.html_headers or self.sub_prefix:

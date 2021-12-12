@@ -1,0 +1,6 @@
+changes:
+- type: feature
+  component: MarkdownRenderer
+  description: add `render_typehint_in_data_header` option to `MarkdownRenderer`
+  fixes:
+  - '#229'
