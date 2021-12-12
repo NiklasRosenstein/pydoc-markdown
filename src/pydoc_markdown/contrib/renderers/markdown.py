@@ -26,9 +26,10 @@ import sys
 import typing as t
 
 import docspec
+from deprecated import deprecated
 from docspec_python import format_arglist
 
-from pydoc_markdown.interfaces import Context, Renderer, Resolver, SourceLinker
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, SinglePageRenderer, SourceLinker
 from pydoc_markdown.util.docspec import format_function_signature, is_method
 
 
@@ -37,7 +38,7 @@ def dotted_name(obj: docspec.ApiObject) -> str:
 
 
 @dataclasses.dataclass
-class MarkdownRenderer(Renderer):
+class MarkdownRenderer(Renderer, SinglePageRenderer):
   """
   Produces Markdown files. This renderer is often used by other renderers, such as
   #MkdocsRenderer and #HugoRenderer. It provides a wide variety of options to customize
@@ -384,27 +385,33 @@ class MarkdownRenderer(Renderer):
 
   def render_to_string(self, modules: t.List[docspec.Module]) -> str:
     fp = io.StringIO()
-    self.render_to_stream(modules, fp)
+    self.render_single_page(fp, modules)
     return fp.getvalue()
 
-  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO, page_title: str = "API documentation"):
+  @deprecated(reason='use render_single_page() instead')
+  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO):
+    return self.render_single_page(stream, modules)
+
+  # SinglePageRenderer
+
+  def render_single_page(self, fp: t.TextIO, modules: t.List[docspec.Module], page_title: t.Optional[str] = None) -> None:
     self._resolver = MarkdownReferenceResolver(modules)
     if self.render_page_title:
-      stream.write('# {}\n\n'.format(page_title))
+      fp.write('# {}\n\n'.format(page_title))
 
     if self.render_toc:
       if self.render_toc_title:
         if self.render_page_title:
           # set to level2 since level1 is page title
-          stream.write('## {}\n\n'.format(self.render_toc_title))
+          fp.write('## {}\n\n'.format(self.render_toc_title))
         else:
-          stream.write('# {}\n\n'.format(self.render_toc_title))
+          fp.write('# {}\n\n'.format(self.render_toc_title))
 
       for m in modules:
-        self._render_toc(stream, 0, m)
-      stream.write('\n')
+        self._render_toc(fp, 0, m)
+      fp.write('\n')
     for m in modules:
-      self._render_recursive(stream, 1, m)
+      self._render_recursive(fp, 1, m)
 
   # Renderer
 
@@ -415,12 +422,12 @@ class MarkdownRenderer(Renderer):
 
     return MarkdownReferenceResolver(modules)
 
-  def render(self, modules: t.List[docspec.Module], page_title: str) -> None:
+  def render(self, modules: t.List[docspec.Module]) -> None:
     if self.filename is None:
-      self.render_to_stream(modules, sys.stdout, page_title)
+      self.render_to_stream(modules, sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
-        self.render_to_stream(modules, t.cast(t.TextIO, fp), page_title)
+        self.render_to_stream(modules, t.cast(t.TextIO, fp))
 
   # PluginBase
 
