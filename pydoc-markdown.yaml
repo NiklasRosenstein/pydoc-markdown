@@ -12,7 +12,7 @@ loaders:
 
 hooks:
   pre-render:
-  - shut changelog -a --markdown >CHANGELOG.md
+  - ( echo "# Changelog" >CHANGELOG.md && shut changelog -a --markdown >>CHANGELOG.md )
 
 renderer:
   type: mkdocs
@@ -22,7 +22,6 @@ renderer:
     repo_url: https://github.com/NiklasRosenstein/pydoc-markdown
   output_directory: docs/build
   markdown:
-    render_page_title: true
     source_linker:
       type: github
       repo: NiklasRosenstein/pydoc-markdown
