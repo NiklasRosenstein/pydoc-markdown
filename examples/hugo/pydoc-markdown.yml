@@ -6,6 +6,8 @@ renderer:
   config:
     title: School Project
     theme: {clone_url: "https://github.com/alex-shpak/hugo-book.git"}
+    serverURL: localhost
+    serverPort: 7000
   pages:
   - title: API Documentation
     name: index

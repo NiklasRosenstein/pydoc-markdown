@@ -20,3 +20,10 @@ changes:
   description: Fix configuration generated with `--bootstrap mkdocs` (@gethvi)
   fixes:
   - '#230'
+- type: feature
+  component: HugoRenderer
+  description: add `serverURL` and `serverPort` options to `$.renderer.config` block
+    to allow overwriting the URL where the local Hugo server serves from (@melMass)
+  fixes:
+  - '#202'
+  - '#231'
