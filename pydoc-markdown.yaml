@@ -22,6 +22,7 @@ renderer:
     repo_url: https://github.com/NiklasRosenstein/pydoc-markdown
   output_directory: docs/build
   markdown:
+    render_page_title: true
     source_linker:
       type: github
       repo: NiklasRosenstein/pydoc-markdown
