@@ -12,7 +12,7 @@ loaders:
 
 hooks:
   pre-render:
-  - shut changelog -a --markdown >CHANGELOG.md
+  - ( echo "# Changelog" >CHANGELOG.md && shut changelog -a --markdown >>CHANGELOG.md )
 
 renderer:
   type: mkdocs

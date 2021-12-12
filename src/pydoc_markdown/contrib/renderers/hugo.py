@@ -262,16 +262,12 @@ class HugoRenderer(Renderer, Server, Builder):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     preamble = dict(**self.default_preamble, **{'title': page.title}, **page.preamble)
 
-    with open(filename, 'w') as fp:
+    def _write_prefix(fp: t.TextIO) -> None:
       fp.write('---\n')
       fp.write(yaml.safe_dump(preamble))
       fp.write('---\n\n')
 
-      if page.source:
-        with open(os.path.join(self._context.directory, page.source)) as src:
-          shutil.copyfileobj(src, fp)
-      else:
-        self.markdown.render_to_stream(modules, fp)
+    page.render(filename, modules, self.markdown, self._context.directory, _write_prefix)
 
   def _get_hugo_bin(self):
     hugo_bin = shutil.which('hugo')

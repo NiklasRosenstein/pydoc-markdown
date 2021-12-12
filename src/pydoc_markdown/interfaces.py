@@ -110,6 +110,16 @@ class Renderer(PluginBase):
   def render(self, modules: t.List[docspec.Module]) -> None: ...
 
 
+class SinglePageRenderer(abc.ABC):
+  """
+  Interface for rendering a single page.
+  """
+
+  @abc.abstractmethod
+  def render_single_page(self, fp: t.TextIO, modules: t.List[docspec.Module],
+                         page_title: t.Optional[str] = None) -> None: ...
+
+
 class Server(abc.ABC):
   """
   This interface describes an object that can start a server process for

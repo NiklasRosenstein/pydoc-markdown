@@ -103,7 +103,7 @@ class DocusaurusRenderer(Renderer):
 
       with filepath.open('w') as fp:
         logger.info("Render file %s", filepath)
-        self.markdown.render_to_stream([module], fp)
+        self.markdown.render_single_page(fp, [module])
 
       # only update the relative module tree if the file is not empty
       relative_module_tree["edges"].append(

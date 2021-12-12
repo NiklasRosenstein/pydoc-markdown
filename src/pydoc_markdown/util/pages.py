@@ -36,7 +36,7 @@ import typing as t
 
 import docspec
 
-from pydoc_markdown.interfaces import Renderer
+from pydoc_markdown.interfaces import SinglePageRenderer
 
 T_Page = t.TypeVar('T_Page', bound='Page')
 logger = logging.getLogger(__name__)
@@ -154,8 +154,9 @@ class Page:
       self,
       filename: str,
       modules: t.List[docspec.ApiObject],
-      renderer: Renderer,
+      renderer: SinglePageRenderer,
       context_directory: str,
+      write_prefix: t.Optional[t.Callable[[t.TextIO], None]] = None,
       ) -> None:
     """
     Renders the page by either copying the *source* to the specified *filename* or by
@@ -165,9 +166,14 @@ class Page:
     """
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    if self.source:
-      logger.info('Writing "%s" (source: "%s")', filename, os.path.join(context_directory, self.source))
-      shutil.copyfile(os.path.join(context_directory, self.source), filename)
-    else:
-      logger.info('Rendering "%s"', filename)
-      renderer.render(self.filtered_modules(modules))
+    with open(filename, 'w') as fp:
+      if write_prefix:
+        write_prefix(fp)
+      if self.source:
+        src_path = os.path.join(context_directory, self.source)
+        logger.info('Writing "%s" (source: "%s")', filename, src_path)
+        with open(src_path, 'rb') as src:
+          shutil.copyfileobj(src, fp.buffer)
+      else:
+        logger.info('Rendering "%s"', filename)
+        renderer.render_single_page(fp, self.filtered_modules(modules), self.title)

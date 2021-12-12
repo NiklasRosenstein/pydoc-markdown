@@ -161,8 +161,7 @@ class MkdocsRenderer(Renderer, Server, Builder):
         if not item.page.has_content():
           continue
 
-        self.markdown.filename = filename
-        item.page.render(filename, modules, self.markdown, context_directory=self._context.directory)
+        item.page.render(filename, modules, self.markdown, self._context.directory)
         known_files.append(filename)
 
       config = copy.deepcopy(self.mkdocs_config)
