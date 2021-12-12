@@ -27,3 +27,7 @@ changes:
   fixes:
   - '#202'
   - '#231'
+- type: feature
+  component: general
+  description: 'add `GitlabSourceLinker` class (entrypoint name: `gitlab`). @Heiss'
+  fixes: []

@@ -90,6 +90,7 @@ setuptools.setup(
     'pydoc_markdown.interfaces.SourceLinker': [
       'git = pydoc_markdown.contrib.source_linkers.git:GitSourceLinker',
       'github = pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker',
+      'gitlab = pydoc_markdown.contrib.source_linkers.git:GitlabSourceLinker',
       'gitea = pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker',
       'bitbucket = pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker',
     ]
