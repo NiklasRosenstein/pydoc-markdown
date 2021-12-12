@@ -368,7 +368,7 @@ class MarkdownRenderer(Renderer):
         title = '<code>{}</code>'.format(title)
       else:
         title = '`{}`'.format(title)
-    else:
+    elif not self.html_headers:
       title = self._escape(title)
     if isinstance(obj, docspec.Module) and self.descriptive_module_title:
       title = 'Module ' + title
