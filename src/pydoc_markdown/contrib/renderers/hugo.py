@@ -141,6 +141,12 @@ class HugoConfig:
   #: Base URL.
   baseURL: t.Optional[str] = None
 
+  #: Server URL. Default: `127.0.0.1` aka `localhost`
+  serverURL: t.Optional[str] = "127.0.0.1"
+
+  #: Server Port. Default: `1313`
+  serverPort: t.Optional[int] = 1313
+
   #: Language code. Default: `en-us`
   languageCode: t.Optional[str] = 'en-us'
 
@@ -152,7 +158,7 @@ class HugoConfig:
   def to_toml(self, fp: t.TextIO) -> None:
     data = self.additional_options.copy()
     for field in dataclasses.fields(self):
-      if field.name in ('additional_options', 'theme'):
+      if field.name in ('additional_options', 'theme', 'serverURL', 'serverPort'):
         continue
       value = getattr(self, field.name)
       if value:
@@ -320,11 +326,11 @@ class HugoRenderer(Renderer, Server, Builder):
 
   def get_server_url(self) -> str:
     urlinfo = urlparse(self.config.baseURL or '')
-    return urljoin('http://localhost:1313/', urlinfo.path)
+    return urljoin(f"http://{self.config.serverURL}:{self.config.serverPort}/", urlinfo.path)
 
   def start_server(self) -> subprocess.Popen:
     hugo_bin = self._get_hugo_bin()
-    command = [hugo_bin, 'server']
+    command = [hugo_bin, 'server', '--bind', self.config.serverURL, '--port', str(self.config.serverPort)]
     logger.info('Running %s in "%s"', command, self.build_directory)
     return subprocess.Popen(command, cwd=self.build_directory)
 
