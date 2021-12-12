@@ -30,4 +30,4 @@ changes:
 - type: feature
   component: general
   description: 'add `GitlabSourceLinker` class (entrypoint name: `gitlab`). @Heiss'
-  fixes: []
+release_date: '2021-12-12'
