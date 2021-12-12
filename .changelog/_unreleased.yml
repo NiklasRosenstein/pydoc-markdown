@@ -5,3 +5,10 @@ changes:
   fixes:
   - '#214'
   - '#216'
+- type: feature
+  component: git
+  description: Git source linkers now have a `use_branch` option to use the current
+    branch name instead of the current commit SHA when generating links to the source
+    code
+  fixes:
+  - '#218'

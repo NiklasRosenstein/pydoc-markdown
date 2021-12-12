@@ -43,6 +43,19 @@ def _getoutput(cmd: t.List[str], cwd: str = None) -> str:
   return stdout
 
 
+def git_get_toplevel(cwd: str) -> str:
+  return _getoutput(['git', 'rev-parse', '--show-toplevel'], cwd=cwd).strip()
+
+
+def git_get_current_commit_sha(cwd: str) -> str:
+  return _getoutput(['git', 'rev-parse', 'HEAD'], cwd=cwd).strip()
+
+
+def git_get_current_branch(cwd: str) -> str:
+  branches = _getoutput(['git', 'branch'], cwd=cwd).strip().splitlines()
+  return next(b for b in branches if b.startswith('*')).split()[1]
+
+
 @dataclasses.dataclass
 class BaseGitSourceLinker(SourceLinker):
   """
@@ -54,6 +67,9 @@ class BaseGitSourceLinker(SourceLinker):
   #: If not set, the project root will be determined from the Git repository in
   #: the context directory.
   root: t.Optional[str] = None
+
+  #: Use the branch name instead of the current SHA to generate URLs.
+  use_branch: bool = False
 
   def get_context_vars(self) -> t.Dict[str, str]:
     return {}
@@ -79,7 +95,7 @@ class BaseGitSourceLinker(SourceLinker):
 
     context_vars = self.get_context_vars()
     context_vars['path'] = rel_path
-    context_vars['sha'] = self._sha
+    context_vars['sha'] = self._branch if self.use_branch else self._sha
     context_vars['lineno'] = obj.location.lineno
 
     url = self.get_url_template().format(**context_vars)
@@ -98,10 +114,12 @@ class BaseGitSourceLinker(SourceLinker):
     if self.root:
       self._project_root = os.path.join(context.directory, self.root)
     else:
-      self._project_root = _getoutput(['git', 'rev-parse', '--show-toplevel'], cwd=context.directory).strip()
-    self._sha = _getoutput(['git', 'rev-parse', 'HEAD'], cwd=self._project_root).strip()
+      self._project_root = git_get_toplevel(context.directory)
+    self._sha = git_get_current_commit_sha(self._project_root)
+    self._branch = git_get_current_branch(self._project_root)
     logger.debug('project_root = %r', self._project_root)
     logger.debug('sha = %r', self._sha)
+    logger.debug('branch = %r', self._branch)
 
 
 @dataclasses.dataclass
@@ -158,8 +176,8 @@ class GithubSourceLinker(BaseGitServiceSourceLinker):
 
   def get_url_template(self) -> str:
     return 'https://{host}/{repo}/blob/{sha}/{path}#L{lineno}'
-  
-  
+
+
 @dataclasses.dataclass
 class GitlabSourceLinker(BaseGitServiceSourceLinker):
   """
