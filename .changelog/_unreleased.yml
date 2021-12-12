@@ -1,0 +1,7 @@
+changes:
+- type: feature
+  component: MarkdownRenderer
+  description: Add `render_page_title` option. (@t6847kimo)
+  fixes:
+  - '#214'
+  - '#216'
