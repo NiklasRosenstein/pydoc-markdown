@@ -150,6 +150,9 @@ class MarkdownRenderer(Renderer):
   #: enabled by default.
   code_lang: bool = True
 
+  #: Render title of page at the beginning of the file.
+  render_page_title: bool = False
+
   #: Render a table of contents at the beginning of the file.
   render_toc: bool = False
 
@@ -384,12 +387,19 @@ class MarkdownRenderer(Renderer):
     self.render_to_stream(modules, fp)
     return fp.getvalue()
 
-  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO):
+  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO, page_title: str = "API documentation"):
     self._resolver = MarkdownReferenceResolver(modules)
+    if self.render_page_title:
+      stream.write('# {}\n\n'.format(page_title))
 
     if self.render_toc:
       if self.render_toc_title:
-        stream.write('# {}\n\n'.format(self.render_toc_title))
+        if self.render_page_title:
+          # set to level2 since level1 is page title
+          stream.write('## {}\n\n'.format(self.render_toc_title))
+        else:
+          stream.write('# {}\n\n'.format(self.render_toc_title))
+
       for m in modules:
         self._render_toc(stream, 0, m)
       stream.write('\n')
@@ -405,12 +415,12 @@ class MarkdownRenderer(Renderer):
 
     return MarkdownReferenceResolver(modules)
 
-  def render(self, modules: t.List[docspec.Module]) -> None:
+  def render(self, modules: t.List[docspec.Module], page_title: str) -> None:
     if self.filename is None:
-      self.render_to_stream(modules, sys.stdout)
+      self.render_to_stream(modules, sys.stdout, page_title)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
-        self.render_to_stream(modules, t.cast(t.TextIO, fp))
+        self.render_to_stream(modules, t.cast(t.TextIO, fp), page_title)
 
   # PluginBase
 
