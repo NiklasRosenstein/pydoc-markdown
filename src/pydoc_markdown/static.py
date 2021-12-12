@@ -50,7 +50,7 @@ renderer:
     - title: API Documentation
       children:
         - title: my_project
-          content: [ my_project, my_project.* ]
+          contents: [ my_project, my_project.* ]
   mkdocs_config:
     site_name: My Project
     theme: readthedocs
@@ -81,7 +81,7 @@ renderer:
     - title: API Documentation
       children:
         - title: my_project
-          content: [ my_project, my_project.* ]
+          contents: [ my_project, my_project.* ]
 '''.lstrip()
 
 DEFAULT_DOCUSAURUS_CONFIG = '''
