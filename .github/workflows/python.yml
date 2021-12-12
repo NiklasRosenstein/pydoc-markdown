@@ -48,7 +48,7 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        pip install -q shut==0.18.1
+        pip install -q shut==0.21.1
     - name: Shut publish
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
