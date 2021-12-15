@@ -1,0 +1,4 @@
+changes:
+- type: fix
+  component: hugo
+  description: 'Hugo now respects the baseUrl option @Heiss'
