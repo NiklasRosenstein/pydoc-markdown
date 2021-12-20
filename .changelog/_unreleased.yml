@@ -1,0 +1,5 @@
+changes:
+- type: docs
+  component: docusaurus
+  description: 'Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores. (@chrisstetter)'
+  fixes: [ '#189' ]
