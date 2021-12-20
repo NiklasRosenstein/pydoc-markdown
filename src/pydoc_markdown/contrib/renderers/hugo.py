@@ -327,6 +327,10 @@ class HugoRenderer(Renderer, Server, Builder):
   def start_server(self) -> subprocess.Popen:
     hugo_bin = self._get_hugo_bin()
     command = [hugo_bin, 'server', '--bind', self.config.serverURL, '--port', str(self.config.serverPort)]
+    
+    if self.config.baseURL is not None:
+        command.extend(["--baseUrl", self.get_server_url()])
+    
     logger.info('Running %s in "%s"', command, self.build_directory)
     return subprocess.Popen(command, cwd=self.build_directory)
 
