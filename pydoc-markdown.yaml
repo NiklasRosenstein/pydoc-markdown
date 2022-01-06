@@ -19,6 +19,7 @@ renderer:
   mkdocs_config:
     site_name: Pydoc-Markdown
     theme: readthedocs
+    edit_uri: https://github.com/NiklasRosenstein/pydoc-markdown/tree/develop/docs
     repo_url: https://github.com/NiklasRosenstein/pydoc-markdown
   output_directory: docs/build
   markdown:
