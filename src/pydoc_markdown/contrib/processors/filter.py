@@ -64,6 +64,9 @@ class FilterProcessor(Processor):
   #: Do not filter #docspec.Module objects. Default: `true`
   do_not_filter_modules: bool = True
 
+  #: Do not filter #docspec.Module objects. Default: `true`
+  do_not_filter_import: bool = True
+
   #: Skip modules with no content. Default: `false`.
   skip_empty_modules: bool = False
 
@@ -83,6 +86,8 @@ class FilterProcessor(Processor):
       if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
         return False
       if self.do_not_filter_modules and isinstance(obj, docspec.Module):
+        return True
+      if self.do_not_filter_import and isinstance(obj, docspec.Indirection):
         return True
       if self.documented_only and not obj.docstring:
         return False
