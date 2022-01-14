@@ -315,8 +315,8 @@ class HugoRenderer(Renderer, Server, Builder):
 
   def get_resolver(self, modules: t.List[docspec.Module]) -> t.Optional[Resolver]:
     # TODO (@NiklasRosenstein): The resolver returned by the Markdown
-    #   renderer does not implement linking across multiple pages.
-    return self.markdown.get_resolver(modules)
+    #   HugoRenderer now has implemented linking across multiple pages.
+    return self.markdown.get_resolver(modules, self)
 
   # Server
 

@@ -22,6 +22,7 @@
 import dataclasses
 import html
 import io
+import logging
 import sys
 import typing as t
 
@@ -31,6 +32,7 @@ from docspec_python import format_arglist
 
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, SinglePageRenderer, SourceLinker
 from pydoc_markdown.util.docspec import format_function_signature, is_method
+from pydoc_markdown.util.pages import Page, Pages
 
 
 def dotted_name(obj: docspec.ApiObject) -> str:
@@ -415,12 +417,12 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
 
   # Renderer
 
-  def get_resolver(self, modules: t.List[docspec.Module]) -> t.Optional[Resolver]:
+  def get_resolver(self, modules: t.List[docspec.Module], renderer: Renderer = None) -> t.Optional[Resolver]:
     """
-    Returns a simple #Resolver implementation. Finds cross-references in the same file.
+    Returns a simple #Resolver implementation. Finds cross-references in all included pages.
     """
 
-    return MarkdownReferenceResolver(modules)
+    return MultiplePagesReferenceResolver(renderer, modules) if renderer else MarkdownReferenceResolver(modules)
 
   def render(self, modules: t.List[docspec.Module]) -> None:
     if self.filename is None:
@@ -468,3 +470,231 @@ class MarkdownReferenceResolver(Resolver):
     if target:
       return '#' + self.generate_object_id(target)
     return None
+
+class MultiplePagesReferenceResolver(MarkdownReferenceResolver):
+  
+  def __init__(self, renderer: Renderer, modules: t.List[docspec.Module]) -> None:
+    self.reverse_map = docspec.ReverseMap(modules)
+    self.renderer = renderer
+    self.modules = modules.copy()
+    self.pages : Pages[Page] = renderer.pages
+    self.markdown : MarkdownRenderer = self.renderer.markdown
+
+  def _find_page(self, pages : Pages[Page], target : str) -> Pages[Page]:
+
+    for page in pages:
+
+      if page.contents:
+        for content in page.contents:
+          
+          if content == target or content == "*":
+            return [page]
+
+          elif content[-2:] == ".*":
+            if target.startswith(content[:-2]):
+              return [page]
+              
+          elif content == "*":
+            return
+
+      if len(page.children) > 0:
+        result = self._find_page(page.children, target)
+        if result: return [page] + result
+      
+    return None
+
+  def FindRefLocal(self, obj: docspec.ApiObject, ref: str, excpt: docspec.ApiObject = None, inherited = False) -> t.Optional[docspec.ApiObject]:
+    """
+    Find the reference in the current object
+    """
+    refNames = ref.split(".")
+
+    localModule = obj
+    backcheck = len(refNames) - (0 if isinstance(obj, docspec.Function) else 1)
+    for i in range(backcheck):
+      localModule = localModule.parent
+      if localModule == None: return None
+
+    for partName in refNames:
+      localModule = self._getmember(localModule, partName)
+      if not localModule:
+        return None
+      
+    return localModule
+
+  def _getmodule(self, obj: docspec.ApiObject) -> docspec.Module:
+
+    module = obj
+
+    while not isinstance(module, docspec.Module):
+      module = self.reverse_map.get_parent(module)
+    
+    return module
+
+  def _getmember(self, obj: docspec.ApiObject, memberName : str) -> t.Optional[docspec.ApiObject]:
+
+    if hasattr(obj, "members"):
+
+      for member in obj.members:
+        if not isinstance(member, docspec.Indirection) and member.name == memberName:
+          return member
+
+    return None
+
+  def FindModuleByRelativePath(self, currentModule : docspec.Module, _import : docspec.Indirection):
+    
+    target = _import.target
+    name = _import.name
+    dotCount = len(target)-len(target.lstrip('.'))
+    relativeCount = dotCount - 1
+    if relativeCount < 0: relativeCount = 0
+
+    isImportAll = name == "*"
+    
+    if isImportAll: importName = target[dotCount:].split('.')[:-1]
+    else: importName = target[dotCount:].split('.')
+
+    objectName = importName[-1]
+    isImportAs = not isImportAll and (name != objectName)
+    
+    if isImportAs and len(importName) == 1:
+      relativeCount -= 1
+
+    fullPath = currentModule.name
+    if "."  in fullPath:
+      relativeCount += 1
+    else:
+      relativeCount -= 1
+    path = '.'.join(fullPath.split(".")[:-relativeCount] + importName)
+    
+    isImportModule = True
+
+    for module in self.modules:
+      if module.name == path:
+        return module, objectName, isImportModule, isImportAs, isImportAll
+    
+    if isImportAll:
+      relativeCount += 1
+    else:
+      importName = importName[:-1]
+    isImportModule = False
+    path = '.'.join(fullPath.split(".")[:-relativeCount] + importName)
+
+    for module in self.modules:
+      if module.name == path:
+        return module, objectName, isImportModule, isImportAs, isImportAll
+    
+
+    return None
+
+
+  def FindRefFromImports(self, module: docspec.Module, refNames: t.List[str]) -> docspec.Module:
+
+    if not isinstance(module, docspec.Module):
+      module = self._getmodule(module)
+
+    
+    obj = module
+    count = 0 
+
+    for partName in refNames:
+      obj = self._getmember(obj, partName)
+      if obj == None: break
+      count += 1
+    
+    if count == len(refNames): return obj # found it
+
+    # looking in imports
+
+    _imports : t.List[docspec.Indirection] = []
+    for _import in module.members:
+      if isinstance(_import, docspec.Indirection):
+        _imports.append(_import)
+
+    
+    _imports_all : t.List[docspec.Indirection] = []
+
+    if len(refNames) == 1:
+
+
+      parent = module.parent
+      if parent == None: parent = self.modules
+      
+      for _import in _imports:
+        if _import.name == refNames[0]:
+          # resolved = self.FindRefInModule()
+          search = self.FindModuleByRelativePath(module, _import)
+          if search != None:
+            importedModule, objectName, isImportModule, isImportAs, isImportAll = search
+
+            # We can not use a module as a class, function, or variable, right? But we'll accept it anyway - as a reference to a module
+            if isImportModule:
+              return importedModule
+
+            return self.FindRefFromImports(importedModule, [objectName])
+
+        elif _import.name == "*":
+          _imports_all.append(_import)
+
+      for _import in _imports_all:
+        search = self.FindModuleByRelativePath(module, _import)
+        
+        if search != None:
+          importedModule, objectName, isImportModule, isImportAs, isImportAll = search
+
+          result =  self.FindRefFromImports(importedModule, refNames)
+          if result: return result
+        
+    else:
+      
+      for _import in _imports:
+        if _import.name == refNames[0]:
+          
+          search = self.FindModuleByRelativePath(module, _import)
+          if search != None:
+            importedModule, objectName, isImportModule, isImportAs, isImportAll = search
+
+            if  isImportModule:
+              refNames = refNames[1:]
+            return self.FindRefFromImports(importedModule, refNames)
+
+        elif _import.name == "*":
+          _imports_all.append(_import)
+      
+      
+      for _import in _imports_all:
+        search = self.FindModuleByRelativePath(module, _import)
+        
+        if search != None:
+          importedModule, objectName, isImportModule, isImportAs, isImportAll = search
+
+          result =  self.FindRefFromImports(importedModule, refNames)
+          if result: return result
+          
+        
+  def resolve_ref(self, obj: docspec.ApiObject, ref: str) -> t.Optional[str]:
+
+    ref_filter = ref.split('(')[0]
+
+    target = self.FindRefLocal(obj, ref_filter) or self.FindRefFromImports(obj, ref.split("."))
+    if target == None: return False
+
+    obj_id = self.generate_object_id(obj)
+    target_id = self.generate_object_id(target)
+    this_page = self._find_page(self.pages, obj_id)
+    target_page = self._find_page(self.pages, target_id)
+
+    if target_page == None or this_page == None: return None
+
+    parent_index = -1
+    while this_page[parent_index + 1].title == target_page[parent_index + 1].title:
+
+      parent_index += 1
+      if parent_index + 1 >= len(this_page) or parent_index + 1 >= len(target_page): break
+      
+    relative_index = len(this_page) - parent_index - 1
+    relative_path = "../" * relative_index
+
+    url = relative_path + "/".join(page.title for page in target_page[parent_index+1:relative_index+1]) + "#" + target_id
+    
+    return url

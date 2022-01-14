@@ -180,8 +180,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
 
   def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
     # TODO (@NiklasRosenstein): The resolver returned by the Markdown
-    #   renderer does not implement linking across multiple pages.
-    return self.markdown.get_resolver(modules)
+    #   MkdocsRenderer now has implemented linking across multiple pages.
+    return self.markdown.get_resolver(modules, self)
 
   # Server
 
