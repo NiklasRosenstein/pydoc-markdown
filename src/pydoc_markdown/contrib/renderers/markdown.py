@@ -686,15 +686,12 @@ class MultiplePagesReferenceResolver(MarkdownReferenceResolver):
 
     if target_page == None or this_page == None: return None
 
-    parent_index = -1
-    while this_page[parent_index + 1].title == target_page[parent_index + 1].title:
+    for parent_index in range(len(this_page)):
+        if parent_index >= len(target_page): break
+        if this_page[parent_index].title != target_page[parent_index].title: break
 
-      parent_index += 1
-      if parent_index + 1 >= len(this_page) or parent_index + 1 >= len(target_page): break
-      
-    relative_index = len(this_page) - parent_index - 1
-    relative_path = "../" * relative_index
+    relative_path = "../" * (len(this_page) - parent_index)
 
-    url = relative_path + "/".join(page.title for page in target_page[parent_index+1:relative_index+1]) + "#" + target_id
+    url = relative_path + "/".join(page.title.replace(" ", "-") for page in target_page[parent_index:]) + "#" + target_id
     
     return url
