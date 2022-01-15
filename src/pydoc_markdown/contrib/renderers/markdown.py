@@ -692,6 +692,6 @@ class MultiplePagesReferenceResolver(MarkdownReferenceResolver):
 
     relative_path = "../" * (len(this_page) - parent_index)
 
-    url = relative_path + "/".join(page.title.replace(" ", "-") for page in target_page[parent_index:]) + "#" + target_id
+    url = relative_path + "/".join(page.title.replace(" ", "-").lower() for page in target_page[parent_index:]) + "#" + target_id
     
     return url
