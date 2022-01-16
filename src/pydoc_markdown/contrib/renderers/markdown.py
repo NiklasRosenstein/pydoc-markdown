@@ -178,6 +178,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
   #: levels can be defined with #header_level_by_type.
   use_fixed_header_levels: bool = True
 
+
+  build_for_github: bool = False
+
+
   #: Fixed header levels by API object type.
   header_level_by_type: t.Dict[str, int] = dataclasses.field(default_factory=lambda: {
     'Module': 1,
@@ -199,7 +203,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
 
   #: Allows you to override how the "view source" link is rendered into the Markdown
   #: file if a #source_linker is configured. The default is `[[view_source]]({url})`.
-  source_format: str = '[[view_source]]({url})'
+  source_format: str = '[[source]]({url})'
 
   #: Escape html in docstring. Default to False.
   escape_html_in_docstring: bool = False
@@ -220,14 +224,20 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     return format_arglist(args)
 
   def _render_toc(self, fp, level, obj):
+    
     if level > self.toc_maxdepth:
       return
     object_id = self._resolver.generate_object_id(obj)
-    title = self._escape(obj.name)
-    if not self.add_module_prefix and isinstance(obj, docspec.Module):
-      title = title.split('.')[-1]
-    fp.write('  ' * level + '* [{}](#{})\n'.format(title, object_id))
-    level += 1
+    
+    
+    if not isinstance(obj, docspec.Indirection):
+      if (not self.render_module_header and not isinstance(obj, docspec.Module)) or self.render_module_header:
+        title = self._escape(obj.name)
+        if not self.add_module_prefix and isinstance(obj, docspec.Module):
+          title = title.split('.')[-1]
+        fp.write('  ' * level + '* [{}](#{})\n'.format(title, object_id))
+        level += 1
+      
     for child in getattr(obj, 'members', []):
       self._render_toc(fp, level, child)
 
@@ -322,8 +332,12 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     fp.write('\n```\n\n')
 
   def _render_object(self, fp, level, obj):
+    
+    if isinstance(obj, docspec.Indirection): return
+
     if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
+
     url = self.source_linker.get_source_url(obj) if self.source_linker else None
     source_string = self.source_format.replace('{url}', str(url)) if url else None
     if source_string and self.source_position == 'before signature':
@@ -398,6 +412,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
 
   def render_single_page(self, fp: t.TextIO, modules: t.List[docspec.Module], page_title: t.Optional[str] = None) -> None:
     self._resolver = MarkdownReferenceResolver(modules)
+
+    if self.build_for_github != None:
+      fp.write('<!-- vim: syntax=Markdown -->\n\n')
+
     if self.render_page_title:
       fp.write('# {}\n\n'.format(page_title))
 
@@ -502,6 +520,32 @@ class MultiplePagesReferenceResolver(MarkdownReferenceResolver):
         if result: return [page] + result
       
     return None
+
+  def FindAllReference(self, obj: docspec.ApiObject, refNames: str, excpt: docspec.ApiObject = None, inherited = False) -> t.Optional[docspec.ApiObject]:
+    """
+    Find all the references in all files 
+    """
+    resolved = self._getmember(obj, refNames)
+    results = [resolved] if resolved != None else []
+    
+    if hasattr(obj, "members"):
+      for member in obj.members:
+        if member != excpt:
+          results.extend(self.FindAllReference(member, refNames, None, True))
+      
+    if not inherited:
+      
+      parent = obj.parent
+
+      if parent == None:
+        for module in self.modules:
+          if module != excpt:
+            results.extend(self.FindAllReference(module, refNames, None, True))
+      else:
+        results.extend(self.FindAllReference(parent, refNames, obj, False))
+
+      
+    return results
 
   def FindRefLocal(self, obj: docspec.ApiObject, ref: str, excpt: docspec.ApiObject = None, inherited = False) -> t.Optional[docspec.ApiObject]:
     """
@@ -676,7 +720,12 @@ class MultiplePagesReferenceResolver(MarkdownReferenceResolver):
 
     ref_filter = ref.split('(')[0]
 
-    target = self.FindRefLocal(obj, ref_filter) or self.FindRefFromImports(obj, ref.split("."))
+    target = self.FindRefLocal(obj, ref_filter) or self.FindRefFromImports(obj, ref.split(".")) or self.FindAllReference(obj, ref.split('.')[-1])
+
+    if isinstance(target, list):
+      if len(target) == 0: return False
+      target = target[0]
+
     if target == None: return False
 
     obj_id = self.generate_object_id(obj)
@@ -690,8 +739,42 @@ class MultiplePagesReferenceResolver(MarkdownReferenceResolver):
         if parent_index >= len(target_page): break
         if this_page[parent_index].title != target_page[parent_index].title: break
 
-    relative_path = "../" * (len(this_page) - parent_index)
+    if self.renderer.markdown.build_for_github == False:
 
-    url = relative_path + "/".join(page.title.replace(" ", "-").lower() for page in target_page[parent_index:]) + "#" + target_id
+      relative_path = "../" * (len(this_page) - parent_index)
+      url = relative_path + "/".join(page.title.replace(" ", "-").lower() for page in target_page[parent_index:]) + "#" + target_id
+    else:
+      
+      markdown : MarkdownRenderer = self.renderer.markdown
+
+      title = target.name
+
+      if (markdown.add_method_class_prefix and markdown._is_method(target)) or \
+        (markdown.add_member_class_prefix and isinstance(target, docspec.Data)):
+        title = markdown._get_parent(target).name + '.' + title
+
+      elif markdown.add_full_prefix and not markdown._is_method(target):
+        title = dotted_name(target)
+
+      if (not markdown.add_module_prefix and isinstance(target, docspec.Module)):
+        title = title.split('.')[-1]
+
+      if isinstance(target, docspec.Function):
+        if markdown.signature_in_header:
+          title += '(' + markdown._format_arglist(target) + ')'
+
+      if isinstance(target, docspec.Data) and target.datatype and markdown.render_typehint_in_data_header:
+        if markdown.code_headers:
+          title += f': {target.datatype}'
+
+      if isinstance(target, docspec.Module) and markdown.descriptive_module_title:
+        title = 'Module ' + title
+      if isinstance(target, docspec.Class) and markdown.descriptive_class_title:
+        title += ' Objects'
+
+      title = title.replace(".", "").replace("(", "").replace(")", "").replace(" ", "-").lower()
+
+      relative_path = "../" * (len(this_page) - parent_index)
+      url = relative_path + "/".join(page.title.replace(" ", "-").lower() for page in target_page[parent_index-1:]) + "#" + title
     
-    return url
+    return url, target
