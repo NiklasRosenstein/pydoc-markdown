@@ -10,8 +10,8 @@ does not already exists in your fork, create it using the below template:
 
 ```yml
 changes:
-- type: fix|improvement|change|breaking_change|refactor|feature|docs|tests
-  component: general|docusaurus|hugo|markdown|something else applicable
+- type: fix  # or one of improvement, change, breaking_change, refactor, feature, docs, tests
+  component: general  # or docusaurus, hugo, markdown, or something else applicable
   description: 'Description here, supports `backticks` for monospace rendering. (@YourGithubUsername)'
   fixes: [ '#XYZ' ]  # A list of GitHub issues resolved by this changelog, can be empty. Can point to another GitHub repository, e.g. NiklasRosenstein/databind#12
 ```
