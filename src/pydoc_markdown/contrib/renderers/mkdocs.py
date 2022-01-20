@@ -36,6 +36,7 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.pages import Page, Pages
 from pydoc_markdown.util.knownfiles import KnownFiles
+from pydoc_markdown.contrib.renderers.advancedresolver import SmartReferenceResolver
 
 logger = logging.getLogger(__name__)
 
@@ -110,6 +111,27 @@ class MkdocsRenderer(Renderer, Server, Builder):
   #: ```
   server_port: t.Optional[int] = None
 
+  #: Find local cross-reference in the current file.
+  #: Works like the default resolver but with a little bit enhancement.
+  #: Default to `True`.
+  crossref_local: bool = True
+  
+  #: Find imported cross-reference
+  #: The resolver will looks for any references in all of the imported modules.
+  #: This option requires you to give it the exact name of the reference
+  #: For example, if you `import typing` to use `typing.List`, then referencing #typing.List is valid, but #List is not.
+  #: This also works for `from typing import *`
+  #: Default to `True`.
+  crossref_import: bool = True
+
+  #: Find global cross-reference
+  #: The resolver will takes a look in all modules of the project and fine the reference.
+  #: It will returns the closest, top matched reference.
+  #: The `crossref_import` option requires you to give it the exact module and name of the reference.
+  #: But this is not, you only need to give it the name of the reference.
+  #: Default to `False`.
+  crossref_global: bool = False
+  
   def __post_init__(self) -> None:
     self._context: t.Optional[Context] = None
 
@@ -179,9 +201,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
           yaml.dump(config, fp)
 
   def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
-    # TODO (@NiklasRosenstein): The resolver returned by the Markdown
-    #   renderer does not implement linking across multiple pages.
-    return self.markdown.get_resolver(modules)
+    #   MkdocsRenderer now has implemented linking across multiple pages.
+    return SmartReferenceResolver(self, modules)
 
   # Server
 
