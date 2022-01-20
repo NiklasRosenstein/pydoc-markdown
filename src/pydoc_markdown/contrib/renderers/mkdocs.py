@@ -36,7 +36,7 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
 from pydoc_markdown.util.pages import Page, Pages
 from pydoc_markdown.util.knownfiles import KnownFiles
-from pydoc_markdown.contrib.renderers.advancedresolver import SmartReferenceResolver
+from pydoc_markdown.contrib.renderers.smartresolver import SmartReferenceResolver
 
 logger = logging.getLogger(__name__)
 
