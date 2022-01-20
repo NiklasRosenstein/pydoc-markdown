@@ -32,7 +32,7 @@ class SmartReferenceResolver(Resolver):
         self.modules = modules.copy()
         self.pages : Pages[Page] = renderer.pages
         self.markdown = self.renderer.markdown
-        self.dummyClass = docspec.Class("dummy_class", None, None, None, None, None, None, None, None)
+        
         super().__init__()
 
     def GetObjectID(self, obj: docspec.ApiObject) -> str:
@@ -175,7 +175,7 @@ class SmartReferenceResolver(Resolver):
 
                     if _import.module == previousModule:
                         # recursive, won't be any good
-                        return self.dummyClass
+                        return None
 
                     newRefNames = refNames
                     if _import.isImportModule:
@@ -186,7 +186,7 @@ class SmartReferenceResolver(Resolver):
                     result = self.FindRefFromImport(_import.module, newRefNames, typeFilter, module)
                     if result: return result
                 else:
-                    return self.dummyClass
+                    return None
         
 
 
@@ -196,12 +196,12 @@ class SmartReferenceResolver(Resolver):
 
                 if _import.module == previousModule:
                     # recursive, won't be any good
-                    return self.dummyClass
+                    return None
 
                 result = self.FindRefFromImport(_import.module, refNames, typeFilter, module)
                 if result: return result
             else:
-                return self.dummyClass
+                return None
         
         return None
 
