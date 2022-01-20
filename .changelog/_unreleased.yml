@@ -1,4 +1,4 @@
 changes:
-- type: docs 
-  component: [ 'mkdocs', 'smartcrossref' ]
+- type: feature 
+  component: mkdocs
   description: 'Implement multiple pages cross-reference for MkdocsRenderer'
