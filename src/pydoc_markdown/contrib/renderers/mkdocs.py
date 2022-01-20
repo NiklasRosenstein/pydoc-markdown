@@ -202,7 +202,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
 
   def get_resolver(self, modules: List[docspec.Module]) -> Optional[Resolver]:
     #   MkdocsRenderer now has implemented linking across multiple pages.
-    return SmartReferenceResolver(self, modules)
+    return self.markdown.get_resolver(modules)
+    return SmartReferenceResolver(modules, self)
 
   # Server
 

@@ -27,7 +27,8 @@ from pydoc_markdown.interfaces import Renderer, Resolver
 from pydoc_markdown.util.pages import Page, Pages
 
 class SmartReferenceResolver(Resolver):
-    def __init__(self, renderer: Renderer, modules: t.List[docspec.Module]) -> None:
+    def __init__(self, modules: t.List[docspec.Module], renderer: Renderer = None) -> None:
+        
         self.renderer = renderer
         self.modules = modules.copy()
         self.pages : Pages[Page] = renderer.pages
