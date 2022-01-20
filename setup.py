@@ -84,6 +84,7 @@ setuptools.setup(
       'hugo = pydoc_markdown.contrib.renderers.hugo:HugoRenderer',
       'markdown = pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer',
       'mkdocs = pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer',
+      'smartresolver = pydoc_markdown.contrib.renderers.smartresolver:SmartReferenceResolver',
       'docusaurus = pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer',
       'jinja2 = pydoc_markdown.contrib.renderers.jinja2:Jinja2Renderer',
     ],
