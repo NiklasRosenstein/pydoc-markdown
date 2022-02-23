@@ -23,7 +23,7 @@ jobs:
       uses: actions/setup-python@v2
       with: { python-version: "3.10" }
     - name: Installing tooling
-      run: pipx install $(cat .github/slam-cli.txt)
+      run: pip install pipx -q && pipx install $(cat .github/slam-cli.txt)
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with: { python-version: "${{ matrix.python-version }}" }
