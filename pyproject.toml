@@ -66,6 +66,13 @@ gitlab = "pydoc_markdown.contrib.source_linkers.git:GitlabSourceLinker"
 gitea = "pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker"
 bitbucket = "pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker"
 
+[tool.slam]
+typed = true
+
+[tool.slam.test]
+pytest = "pytest src/"
+mypy = "mypy src/ --check-untyped-defs"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

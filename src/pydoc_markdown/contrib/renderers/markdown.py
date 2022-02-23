@@ -214,7 +214,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
       args.pop(0)
     return format_arglist(args)
 
-  def _render_toc(self, fp, level, obj):
+  def _render_toc(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
     if level > self.toc_maxdepth:
       return
     object_id = self._resolver.generate_object_id(obj)
@@ -226,7 +226,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     for child in getattr(obj, 'members', []):
       self._render_toc(fp, level, child)
 
-  def _render_header(self, fp, level, obj):
+  def _render_header(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
     if self.render_module_header_template and isinstance(obj, docspec.Module):
       fp.write(
         self.render_module_header_template.format(
@@ -304,7 +304,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
       expr = expr[:self.data_expression_maxlength] + ' ...'
     return data.name + ' = ' + expr
 
-  def _render_signature_block(self, fp, obj):
+  def _render_signature_block(self, fp: t.TextIO, obj: docspec.ApiObject):
     if self.classdef_code_block and isinstance(obj, docspec.Class):
       code = self._format_classdef_signature(obj)
     elif self.signature_code_block and isinstance(obj, docspec.Function):
@@ -317,7 +317,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     fp.write(code)
     fp.write('\n```\n\n')
 
-  def _render_object(self, fp, level, obj):
+  def _render_object(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
     if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
     url = self.source_linker.get_source_url(obj) if self.source_linker else None
@@ -328,14 +328,14 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     if source_string and self.source_position == 'after signature':
       fp.write(source_string + '\n\n')
     if obj.docstring:
-      docstring = html.escape(obj.docstring) if self.escape_html_in_docstring else obj.docstring
+      docstring = html.escape(obj.docstring.content) if self.escape_html_in_docstring else obj.docstring.content
       lines = docstring.split('\n')
       if self.docstrings_as_blockquote:
         lines = ['> ' + x for x in lines]
       fp.write('\n'.join(lines))
       fp.write('\n\n')
 
-  def _render_recursive(self, fp, level, obj):
+  def _render_recursive(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
     self._render_object(fp, level, obj)
     level += 1
     for member in getattr(obj, 'members', []):
@@ -435,12 +435,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
 
 class MarkdownReferenceResolver(Resolver):
 
-  def generate_object_id(self, obj):
-    parts = []
-    while obj:
-      parts.append(obj.name)
-      obj = obj.parent
-    return '.'.join(reversed(parts))
+  def generate_object_id(self, obj: docspec.ApiObject) -> str:
+    return '.'.join(o.name for o in obj.path)
 
   def _resolve_reference(self, obj: t.Optional[docspec.ApiObject], ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
     if not obj:
