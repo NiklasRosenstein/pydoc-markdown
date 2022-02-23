@@ -2,10 +2,10 @@
 name = "pydoc-markdown"
 version = "4.5.0"
 description = "Create Python API documentation in Markdown format."
-readme = "README.md"
-license = "MIT"
 authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
-keywords = [ "docs", "markdown" ]
+license = "MIT"
+readme = "readme.md"
+packages = [{include = "pydoc_markdown", from = "src"}]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
@@ -18,7 +18,7 @@ classifiers = [
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
 ]
-packages = [{include = "pydoc_markdown", from="src"}]
+keywords = [ 'documentation', 'docs', 'generator', 'markdown', 'pydoc' ]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -35,16 +35,21 @@ PyYAML = "^5.3"
 toml = "^0.10.1"
 watchdog = "*"
 
-[project.urls]
+[tool.poetry.urls]
 Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
 
-[project.scripts]
+[tool.poetry.dev-dependencies]
+pytest = "*"
+mypy = "*"
+types-PyYAML = "*"
+
+[tool.poetry.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"
 
-[project.entry-points."pydoc_markdown.interfaces.Loader"]
+[tool.poetry.plugins."pydoc_markdown.interfaces.Loader"]
 python = "pydoc_markdown.contrib.loaders.python:PythonLoader"
 
-[project.entry-points."pydoc_markdown.interfaces.Processor"]
+[tool.poetry.plugins."pydoc_markdown.interfaces.Processor"]
 crossref = "pydoc_markdown.contrib.processors.crossref:CrossrefProcessor"
 filter = "pydoc_markdown.contrib.processors.filter:FilterProcessor"
 google = "pydoc_markdown.contrib.processors.google:GoogleProcessor"
@@ -52,19 +57,23 @@ pydocmd = "pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor"
 smart = "pydoc_markdown.contrib.processors.smart:SmartProcessor"
 sphinx = "pydoc_markdown.contrib.processors.sphinx:SphinxProcessor"
 
-[project.entry-points."pydoc_markdown.interfaces.Renderer"]
+[tool.poetry.plugins."pydoc_markdown.interfaces.Renderer"]
 hugo = "pydoc_markdown.contrib.renderers.hugo:HugoRenderer"
 markdown = "pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer"
 mkdocs = "pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer"
 docusaurus = "pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer"
 jinja2 = "pydoc_markdown.contrib.renderers.jinja2:Jinja2Renderer"
 
-[project.entry-points."pydoc_markdown.interfaces.SourceLinker"]
+[tool.poetry.plugins."pydoc_markdown.interfaces.SourceLinker"]
 git = "pydoc_markdown.contrib.source_linkers.git:GitSourceLinker"
 github = "pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker"
 gitlab = "pydoc_markdown.contrib.source_linkers.git:GitlabSourceLinker"
 gitea = "pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker"
 bitbucket = "pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.slam]
 typed = true
@@ -72,7 +81,3 @@ typed = true
 [tool.slam.test]
 pytest = "pytest src/"
 mypy = "mypy src/ --check-untyped-defs"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
