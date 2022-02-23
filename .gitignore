@@ -16,3 +16,6 @@ Pipfile.lock
 CHANGELOG.md
 pydoc-markdown/src/pydoc_markdown/test/test_package/docs/reference/
 poetry.lock
+
+/.coverage
+/htmlcov

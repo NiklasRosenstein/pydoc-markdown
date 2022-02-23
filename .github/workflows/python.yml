@@ -5,55 +5,52 @@ name: Python package
 
 on:
   push:
-    branches: [ develop ]
-    tags: [ '*' ]
+    branches: [ "develop" ]
+    tags: [ "*" ]
   pull_request:
-    branches: [ develop ]
+    branches: [ "develop" ]
 
 jobs:
   test:
-
+    fail-fast: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ '3.7', '3.8', '3.9', '3.x' ]
-
+        python-version: [ "3.7", "3.8", "3.9", "3.10", "3.x" ]
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with: { python-version: "3.10" }
+    - name: Installing tooling
+      run: pipx install $(cat .github/slam-cli.txt)
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install . --upgrade pip
-        pip install flake8 pytest pytest-cov pylint
-    - name: Lint with pylint (allow errors)
-      run: |
-        pylint src || true
-    - name: Test with pytest
-      run: |
-        pytest --cov=./src/pydoc_markdown && coverage html
+      with: { python-version: "${{ matrix.python-version }}" }
+    - name: Install
+      run: slam install --no-venv-check
+    - name: Test
+      run: slam test
 
-  publish:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: test
+  # publish:
+  #   if: startsWith(github.ref, 'refs/tags/v')
+  #   needs: test
 
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-        pip install -q shut==0.21.1
-    - name: Shut publish
-      env:
-        PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
-      run: |
-        shut pkg update --verify-tag "$GITHUB_REF"
-        shut pkg publish warehouse:pypi --test
-        shut pkg publish warehouse:pypi
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Set up Python 3.8
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: 3.8
+  #   - name: Install dependencies
+  #     run: |
+  #       pip install -q shut==0.21.1
+  #   - name: Shut publish
+  #     env:
+  #       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+  #       TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+  #     run: |
+  #       shut pkg update --verify-tag "$GITHUB_REF"
+  #       shut pkg publish warehouse:pypi --test
+  #       shut pkg publish warehouse:pypi

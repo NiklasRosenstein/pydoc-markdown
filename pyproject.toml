@@ -40,6 +40,7 @@ Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
+pytest-coverage = "*"
 mypy = "*"
 types-PyYAML = "*"
 
@@ -79,5 +80,5 @@ build-backend = "poetry.core.masonry.api"
 typed = true
 
 [tool.slam.test]
-pytest = "pytest src/"
+pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov"
 mypy = "mypy src/ --check-untyped-defs"
