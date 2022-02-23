@@ -35,6 +35,7 @@ def assert_code_as_markdown(source_code, markdown, full=False, parser_options=No
   config = PydocMarkdown()
 
   # Init the settings in which we want to run the tests.
+  assert isinstance(config.render, MarkdownRenderer)
   config.renderer.insert_header_anchors = False
   config.renderer.add_member_class_prefix = False
   config.renderer.render_toc = False

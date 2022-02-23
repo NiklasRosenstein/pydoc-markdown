@@ -5,6 +5,8 @@ import textwrap
 
 
 def assert_processor_result(processor, docstring, expected_output):
-  module = docspec.Module(name='test', location=None, docstring=textwrap.dedent(docstring), members=[])
+  loc = docspec.Location('<string>', 0)
+  module = docspec.Module(name='test', location=loc, docstring=docspec.Docstring(loc, textwrap.dedent(docstring)), members=[])
   processor.process([module], None)
-  assert_text_equals(module.docstring, textwrap.dedent(expected_output))
+  assert module.docstring
+  assert_text_equals(module.docstring.content, textwrap.dedent(expected_output))
