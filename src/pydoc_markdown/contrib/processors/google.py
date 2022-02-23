@@ -136,7 +136,7 @@ class GoogleProcessor(Processor):
         lines.extend(current_lines)
       current_lines.clear()
 
-    for line in node.docstring.split('\n'):
+    for line in node.docstring.content.split('\n'):
       if line.startswith("```"):
         in_codeblock = not in_codeblock
         current_lines.append(line)
@@ -171,4 +171,4 @@ class GoogleProcessor(Processor):
         current_lines.append('  {line}'.format(line=line))
 
     _commit()
-    node.docstring = '\n'.join(lines)
+    node.docstring.content = '\n'.join(lines)

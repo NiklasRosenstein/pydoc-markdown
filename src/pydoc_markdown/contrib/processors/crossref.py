@@ -65,8 +65,7 @@ class CrossrefProcessor(Processor):
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     unresolved: t.Dict[str, t.List[str]] = {}
     if resolver:
-      reverse = docspec.ReverseMap(modules)
-      docspec.visit(modules, lambda x: self._preprocess_refs(x, resolver, reverse, unresolved))
+      docspec.visit(modules, lambda x: self._preprocess_refs(x, t.cast(Resolver, resolver), unresolved))
 
     if unresolved:
       summary = []
@@ -83,13 +82,12 @@ class CrossrefProcessor(Processor):
     self,
     node: docspec.ApiObject,
     resolver: Resolver,
-    reverse: docspec.ReverseMap,
     unresolved: t.Dict[str, t.List[str]],
   ) -> None:
     if not node.docstring:
       return
 
-    def handler(match):
+    def handler(match: re.Match) -> str:
       ref = match.group('ref')
       parens = match.group('parens') or ''
       trailing = (match.group('trailing') or '').lstrip('#')
@@ -106,7 +104,7 @@ class CrossrefProcessor(Processor):
       if href:
         result = '[`{}`]({})'.format(ref + parens + trailing, href)
       else:
-        uid = '.'.join(x.name for x in reverse.path(node))
+        uid = '.'.join(x.name for x in node.path)
         unresolved.setdefault(uid, []).append(ref)
         result = '`{}`'.format(ref + parens + trailing)
       # Add back the dot.
@@ -114,7 +112,7 @@ class CrossrefProcessor(Processor):
         result += '.'
       return result
 
-    node.docstring = re.sub(
+    node.docstring.content = re.sub(
       r'\B#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?(?P<trailing>#[\w\d\._]+)?',
       handler,
-      node.docstring)
+      node.docstring.content)

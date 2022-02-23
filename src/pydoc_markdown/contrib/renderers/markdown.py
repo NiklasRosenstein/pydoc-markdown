@@ -203,13 +203,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
   escape_html_in_docstring: bool = False
 
   def __post_init__(self) -> None:
-    self._resolver: t.Optional[MarkdownReferenceResolver] = MarkdownReferenceResolver([])
-
-  def _get_parent(self, obj: docspec.ApiObject) -> t.Optional[docspec.ApiObject]:
-    return self._resolver.reverse_map.get_parent(obj)
+    self._resolver = MarkdownReferenceResolver()
 
   def _is_method(self, obj: docspec.ApiObject) -> bool:
-    return is_method(obj, self._resolver.reverse_map)
+    return is_method(obj)
 
   def _format_arglist(self, func: docspec.Function) -> str:
     args = func.args[:]
@@ -263,14 +260,14 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
   def _format_function_signature(self, func: docspec.Function, override_name: str = None, add_method_bar: bool = True) -> str:
     parts: t.List[str] = []
     if self.signature_with_decorators:
-      parts += self._format_decorations(func.decorations)
+      parts += self._format_decorations(func.decorations or [])
     if self.signature_python_help_style and not self._is_method(func):
       parts.append('{} = '.format(dotted_name(func)))
     parts += [x + ' ' for x in func.modifiers or []]
     if self.signature_with_def:
       parts.append('def ')
     if self.signature_class_prefix and self._is_method(func):
-      parent = self._get_parent(func)
+      parent = func.parent
       assert parent, func
       parts.append(parent.name + '.')
     parts.append((override_name or func.name))
@@ -281,26 +278,27 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     return result
 
   def _format_classdef_signature(self, cls: docspec.Class) -> str:
-    bases = ', '.join(map(str, cls.bases))
+    bases = ', '.join(map(str, cls.bases or []))
     if cls.metaclass:
       bases += ', metaclass=' + str(cls.metaclass)
     code = 'class {}({})'.format(cls.name, bases)
     if self.signature_python_help_style:
       code = dotted_name(cls) + ' = ' + code
-    if self.classdef_render_init_signature_if_needed and '__init__' in cls.members:
-      code += ':\n '
-      if self.signature_with_vertical_bar:
-        code += "|  "
-      else:
-        code += "   "
-
-      code += self._format_function_signature(cls.members['__init__'], override_name=cls.name, add_method_bar=False)
+    if self.classdef_render_init_signature_if_needed:
+      init_member = docspec.get_member(cls, '__init__')
+      if init_member and isinstance(init_member, docspec.Function):
+        code += ':\n '
+        if self.signature_with_vertical_bar:
+          code += "|  "
+        else:
+          code += "   "
+        code += self._format_function_signature(init_member, override_name=cls.name, add_method_bar=False)
 
     if cls.decorations and self.classdef_with_decorators:
       code = '\n'.join(self._format_decorations(cls.decorations)) + code
     return code
 
-  def _format_data_signature(self, data: docspec.Data) -> str:
+  def _format_data_signature(self, data: docspec.Variable) -> str:
     expr = str(data.value)
     if len(expr) > self.data_expression_maxlength:
       expr = expr[:self.data_expression_maxlength] + ' ...'
@@ -311,7 +309,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
       code = self._format_classdef_signature(obj)
     elif self.signature_code_block and isinstance(obj, docspec.Function):
       code = self._format_function_signature(obj, add_method_bar=self.signature_with_vertical_bar)
-    elif self.data_code_block and isinstance(obj, docspec.Data):
+    elif self.data_code_block and isinstance(obj, docspec.Variable):
       code = self._format_data_signature(obj)
     else:
       return
@@ -346,8 +344,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
   def _get_title(self, obj: docspec.ApiObject) -> str:
     title = obj.name
     if (self.add_method_class_prefix and self._is_method(obj)) or \
-       (self.add_member_class_prefix and isinstance(obj, docspec.Data)):
-      title = self._get_parent(obj).name + '.' + title
+       (self.add_member_class_prefix and isinstance(obj, docspec.Variable)):
+      title = (obj.parent.name + '.' + title) if obj.parent else title
     elif self.add_full_prefix and not self._is_method(obj):
       title = dotted_name(obj)
     if (not self.add_module_prefix and isinstance(obj, docspec.Module)):
@@ -356,7 +354,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
       if self.signature_in_header:
         title += '(' + self._format_arglist(obj) + ')'
 
-    if isinstance(obj, docspec.Data) and obj.datatype and self.render_typehint_in_data_header:
+    if isinstance(obj, docspec.Variable) and obj.datatype and self.render_typehint_in_data_header:
       if self.code_headers:
         title += f': {obj.datatype}'
       elif self.html_headers:
@@ -395,7 +393,6 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
   # SinglePageRenderer
 
   def render_single_page(self, fp: t.TextIO, modules: t.List[docspec.Module], page_title: t.Optional[str] = None) -> None:
-    self._resolver = MarkdownReferenceResolver(modules)
     if self.render_page_title:
       fp.write('# {}\n\n'.format(page_title))
 
@@ -420,7 +417,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     Returns a simple #Resolver implementation. Finds cross-references in the same file.
     """
 
-    return MarkdownReferenceResolver(modules)
+    return self._resolver
 
   def render(self, modules: t.List[docspec.Module]) -> None:
     if self.filename is None:
@@ -438,29 +435,28 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
 
 class MarkdownReferenceResolver(Resolver):
 
-  def __init__(self, modules: t.List[docspec.ApiObject]) -> None:
-    self.reverse_map = docspec.ReverseMap(modules)
-
   def generate_object_id(self, obj):
     parts = []
     while obj:
       parts.append(obj.name)
-      obj = self.reverse_map.get_parent(obj)
+      obj = obj.parent
     return '.'.join(reversed(parts))
 
-  def _resolve_reference(self, obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
+  def _resolve_reference(self, obj: t.Optional[docspec.ApiObject], ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
+    if not obj:
+      return None
     for part_name in ref:
       obj = docspec.get_member(obj, part_name)
       if not obj:
         return None
     return obj
 
-  def _find_reference(self, obj: docspec.ApiObject, ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
+  def _find_reference(self, obj: t.Optional[docspec.ApiObject], ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
     while obj:
       resolved = self._resolve_reference(obj, ref)
       if resolved:
         return resolved
-      obj = self.reverse_map.get_parent(obj)
+      obj = obj.parent
     return None
 
   def resolve_ref(self, obj: docspec.ApiObject, ref: str) -> t.Optional[str]:

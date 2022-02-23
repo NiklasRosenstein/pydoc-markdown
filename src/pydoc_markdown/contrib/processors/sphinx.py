@@ -129,7 +129,7 @@ class SphinxProcessor(Processor):
         )
     return converted
 
-  def _convert_returns(self, returns: docstring_parser.common.DocstringReturns) -> str:
+  def _convert_returns(self, returns: docstring_parser.common.DocstringReturns | None) -> str:
     """Convert a DocstringReturns object to a markdown string.
 
     :return: A markdown formatted string
@@ -139,19 +139,19 @@ class SphinxProcessor(Processor):
         type_data = '`{}`: '.format(returns.type_name)
       else:
         type_data = ''
-      return_data = type_data + returns.description
+      return_data = type_data + (returns.description or '')
     else:
       return_data = ''
     return return_data
 
-  def _process(self, node):
+  def _process(self, node: docspec.ApiObject) -> None:
     if not node.docstring:
       return
 
     lines = []
     components: t.Dict[str, t.List[str]] = {}
 
-    parsed_docstring = docstring_parser.parse(node.docstring, docstring_parser.DocstringStyle.REST)
+    parsed_docstring = docstring_parser.parse(node.docstring.content, docstring_parser.DocstringStyle.REST)
     components['Arguments'] = self._convert_params(parsed_docstring.params)
     components['Raises'] = self._convert_raises(parsed_docstring.raises)
     return_doc = self._convert_returns(parsed_docstring.returns)
@@ -166,4 +166,4 @@ class SphinxProcessor(Processor):
       lines.append('')
 
     generate_sections_markdown(lines, components)
-    node.docstring = '\n'.join(lines)
+    node.docstring.content = '\n'.join(lines)

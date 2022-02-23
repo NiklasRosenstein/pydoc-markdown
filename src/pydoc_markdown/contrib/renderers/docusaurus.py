@@ -118,7 +118,7 @@ class DocusaurusRenderer(Renderer):
 
     https://v2.docusaurus.io/docs/docs-introduction/#sidebar
     """
-    sidebar = {
+    sidebar: t.Dict[str, t.Any] = {
       "type": 'category',
       "label": self.sidebar_top_level_label,
     }
@@ -162,7 +162,7 @@ class DocusaurusRenderer(Renderer):
         2. alphanumeric order is applied
       """
       is_edge = int(isinstance(item, str))
-      label = item if is_edge else item.get("label")
-      return is_edge, label
+      label = item if is_edge else item.get("label")  # type: ignore
+      return is_edge, str(label)
 
     sidebar["items"] = sorted(sidebar["items"], key=_sort_items)

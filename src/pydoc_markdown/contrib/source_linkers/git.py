@@ -23,10 +23,10 @@ import logging
 import os
 import subprocess
 import typing as t
+from pathlib import Path
 
 import databind.core.dataclasses as dataclasses
 import docspec
-import nr.fs
 
 from pydoc_markdown.interfaces import Context, SourceLinker
 
@@ -84,19 +84,20 @@ class BaseGitSourceLinker(SourceLinker):
     Compute the URL in the GitHub/Gitea #repo for the API object *obj*.
     """
 
-    if not obj.location:
+    if not obj.location or not obj.location.filename:
       return None
 
     # Compute the path relative to the project root.
-    rel_path = os.path.relpath(os.path.abspath(obj.location.filename), self._project_root)
-    if not nr.fs.issub(rel_path):
+    try:
+      rel_path = Path(obj.location.filename).relative_to(self._project_root)
+    except ValueError:
       logger.debug('Ignored API object %s, path points outside of project root.', obj.name)
       return None
 
     context_vars = self.get_context_vars()
-    context_vars['path'] = rel_path
+    context_vars['path'] = str(rel_path)
     context_vars['sha'] = self._branch if self.use_branch else self._sha
-    context_vars['lineno'] = obj.location.lineno
+    context_vars['lineno'] = str(obj.location.lineno)
 
     url = self.get_url_template().format(**context_vars)
 
@@ -142,13 +143,8 @@ class GitSourceLinker(BaseGitSourceLinker):
   an API object.
   """
 
-  #: The URL template as a Python format string. Available variables are "path", "sha" and
-  #: "lineno".
-  url_template: str = None
-
-  def __post_init__(self) -> None:
-    # To work around dataclass default order constraints.
-    if not self.url_template: raise ValueError('url_template must be set')
+  #: The URL template as a Python format string. Available variables are "path", "sha" and "lineno".
+  url_template: str
 
   def get_url_template(self) -> str:
     return self.url_template

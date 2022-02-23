@@ -73,7 +73,7 @@ class PythonLoader(Loader):
   search_path: t.Optional[t.List[str]] = None
 
   #: List of modules to ignore when using module discovery on the #search_path.
-  ignore_when_discovered: t.Optional[t.List[str]] = dataclasses.field(default_factory=lambda: ['test', 'tests', 'setup'])
+  ignore_when_discovered: t.List[str] = dataclasses.field(default_factory=lambda: ['test', 'tests', 'setup'])
 
   #: Options for the Python parser.
   parser: docspec_python.ParserOptions = dataclasses.field(default_factory=docspec_python.ParserOptions)
@@ -92,6 +92,7 @@ class PythonLoader(Loader):
       if '*' in search_path:
         index = search_path.index('*')
         search_path[index:index+1] = sys.path
+    assert self._context is not None
     return [os.path.join(self._context.directory, x) for x in search_path]
 
   # Loader

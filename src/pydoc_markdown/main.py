@@ -95,7 +95,7 @@ class RenderSession:
       if self.search_path:
         loader.search_path = self.search_path
       if self.py2 is not None:
-        loader.print_function = not self.py2
+        loader.parser.print_function = not self.py2
 
     if self.render_toc is not None:
       # Find the #MarkdownRenderer field for this renderer.

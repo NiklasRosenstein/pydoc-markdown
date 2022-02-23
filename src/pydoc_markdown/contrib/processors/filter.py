@@ -72,7 +72,7 @@ class FilterProcessor(Processor):
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     def m(obj):
       return self._match(obj)
-    docspec.filter_visit(modules, m, order='post')
+    docspec.filter_visit(t.cast(t.List[docspec.ApiObject], modules), m, order='post')
 
   def _match(self, obj: docspec.ApiObject) -> bool:
     members = getattr(obj, 'members', [])

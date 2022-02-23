@@ -100,7 +100,7 @@ class MkdocsRenderer(Renderer, Server, Builder):
 
   #: Arbitrary configuration values that will be rendered to an
   #: `mkdocs.yml` file.
-  mkdocs_config: t.Optional[t.Dict[str, t.Any]] = dataclasses.field(default_factory=dict)
+  mkdocs_config: t.Dict[str, t.Any] = dataclasses.field(default_factory=dict)
 
   #: Port for the Mkdocs server when using the `pydoc-markdown --server` option.
   #: Defaults to `8000`. Can be set with the `MKDOCS_PORT` environment variable:
@@ -117,7 +117,7 @@ class MkdocsRenderer(Renderer, Server, Builder):
   def content_dir(self) -> str:
     return os.path.join(self.output_directory, self.content_directory_name)
 
-  def generate_mkdocs_nav(self, page_to_filename: Dict[Page, str]) -> Dict:
+  def generate_mkdocs_nav(self, page_to_filename: Dict[int, str]) -> Dict:
     def _generate(pages):
       result = []
       for page in pages:
@@ -144,6 +144,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
   # Renderer
 
   def render(self, modules: List[docspec.Module]) -> None:
+    assert self._context
+
     known_files = KnownFiles(self.output_directory)
     if self.clean_render:
       for file_ in known_files.load():
@@ -152,11 +154,13 @@ class MkdocsRenderer(Renderer, Server, Builder):
         except FileNotFoundError:
           pass
 
-    page_to_filename = {}
+    page_to_filename: t.Dict[int, str] = {}
 
     with known_files:
       for item in self.pages.iter_hierarchy():
         filename = item.filename(self.content_dir, '.md')
+        if not filename:
+          continue
         page_to_filename[id(item.page)] = filename
         if not item.page.has_content():
           continue

@@ -50,12 +50,12 @@ class SmartProcessor(Processor):
 
     for name in ('google', 'pydocmd', 'sphinx'):
       indicator = '@doc:fmt:' + name
-      if indicator in obj.docstring:
-        obj.docstring = obj.docstring.replace(indicator, '')
+      if indicator in obj.docstring.content:
+        obj.docstring.content = obj.docstring.content.replace(indicator, '')
         return getattr(self, name)._process(obj)
 
-    if self.sphinx.check_docstring_format(obj.docstring):
+    if self.sphinx.check_docstring_format(obj.docstring.content):
       return self.sphinx._process(obj)
-    if self.google.check_docstring_format(obj.docstring):
+    if self.google.check_docstring_format(obj.docstring.content):
       return self.google._process(obj)
     return self.pydocmd._process(obj)

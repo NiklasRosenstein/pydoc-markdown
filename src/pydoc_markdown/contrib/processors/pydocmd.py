@@ -74,18 +74,18 @@ class PydocmdProcessor(Processor):
     docspec.visit(modules, self._process)
 
   def _process(self, node: docspec.ApiObject):
-    if not getattr(node, 'docstring', None):
+    if not node.docstring:
       return
     lines = []
     codeblock_opened = False
     current_section = None
-    for line in node.docstring.split('\n'):
+    for line in node.docstring.content.split('\n'):
       if line.startswith("```"):
         codeblock_opened = (not codeblock_opened)
       if not codeblock_opened:
         line, current_section = self._preprocess_line(line, current_section)
       lines.append(line)
-    node.docstring = '\n'.join(lines)
+    node.docstring.content = '\n'.join(lines)
 
   def _preprocess_line(self, line, current_section):
     match = re.match(r'# (.*)$', line)

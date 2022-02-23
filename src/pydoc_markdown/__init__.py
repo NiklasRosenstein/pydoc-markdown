@@ -27,13 +27,14 @@ with a focus on Python source code and the Markdown output format.
 import dataclasses
 import logging
 import os
+from pathlib import Path
 import subprocess
 import typing as t
 
 import databind.core.annotations as A
 import databind.json
 import docspec
-import toml
+import tomli
 
 from pydoc_markdown.interfaces import Context, Loader, Processor, Renderer, Resolver, Builder
 from pydoc_markdown.contrib.loaders.python import PythonLoader
@@ -85,7 +86,7 @@ class PydocMarkdown:
     self.resolver: t.Optional[Resolver] = None
     self._context: t.Optional[Context] = None
 
-  def load_config(self, data: t.Union[str, dict]) -> None:
+  def load_config(self, arg: t.Union[str, dict]) -> None:
     """
     Loads the configuration from a nested data structure or filename as specified per the *data*
     argument. If a filename is specified, it may be a JSON, YAML or TOML file. If the name of the
@@ -96,15 +97,17 @@ class PydocMarkdown:
     """
 
     filename = None
-    if isinstance(data, str):
-      filename = data
+    if isinstance(arg, str):
+      filename = arg
       logger.info('Loading configuration file "%s".', filename)
       if filename.endswith('.toml'):
-        data = toml.load(filename)
+        data = tomli.loads(Path(filename).read_text())
       else:
         data = ytemplate.load(filename, {'env': ytemplate.Attributor(os.environ)})
       if filename == 'pyproject.toml':
         data = data['tool']['pydoc-markdown']
+    else:
+      data = arg
 
     unknown_keys = A.collect_unknowns()
     result = databind.json.new_mapper().deserialize(
@@ -116,7 +119,7 @@ class PydocMarkdown:
 
     for loc, keys in unknown_keys:
       for key in keys:
-        self.unknown_fields.append(str(loc.push_unknown(key).format(loc.Format.PLAIN)))
+        self.unknown_fields.append(str(loc.push_unknown(key).format()))
 
     #self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
     #  for n in collector.nodes))
@@ -149,7 +152,7 @@ class PydocMarkdown:
 
     logger.info('Loading modules.')
     self.ensure_initialized()
-    modules = []
+    modules: list[docspec.Module] = []
     for loader in self.loaders:
       modules.extend(loader.load())
     return modules

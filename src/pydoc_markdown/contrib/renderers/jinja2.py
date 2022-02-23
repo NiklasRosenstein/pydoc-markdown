@@ -61,12 +61,12 @@ class Jinja2Renderer(Renderer):
   def render(self, modules: t.List[docspec.Module]) -> None:
     # TODO (@NiklasRosenstein): Clean render support
 
-    resolver = MarkdownReferenceResolver(modules)
+    resolver = MarkdownReferenceResolver()
     os.makedirs(self.build_directory, exist_ok=True)
 
     for render in self.renders:
       env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'), **render.jinja2_environment_settings)
-      setup_env(env, resolver.reverse_map)
+      setup_env(env)
       env.filters['uid'] = resolver.generate_object_id
       template = env.get_template(render.template)
       for filename, args in render.produces.items():
@@ -76,19 +76,19 @@ class Jinja2Renderer(Renderer):
           fp.write(template.render(**Args(args).get_render_args(modules)))  # TODO
 
   def get_resolver(self, modules: t.List[docspec.Module]) -> t.Optional[Resolver]:
-    return MarkdownReferenceResolver(modules)
+    return MarkdownReferenceResolver()
 
 
-def setup_env(env: jinja2.Environment, reverse_map: docspec.ReverseMap) -> None:
+def setup_env(env: jinja2.Environment) -> None:
   env.filters['classes'] = lambda modules: get_members_of_type(modules, docspec.Class)
   env.filters['functions'] = lambda objs: get_members_of_type(objs, docspec.Function)
-  env.filters['attrs'] = lambda objs: get_members_of_type(objs, docspec.Data)
+  env.filters['attrs'] = lambda objs: get_members_of_type(objs, docspec.Variable)
   env.filters['indent'] = _indent_filter
   env.filters['blockquote'] = _blockquote_filter
   env.filters['first_line'] = _first_line_filter
   env.filters['format_arglist'] = format_arglist
   env.filters['format_function_signature'] = format_function_signature
-  env.filters['describe'] = lambda obj: get_object_description(obj, reverse_map)
+  env.filters['describe'] = lambda obj: get_object_description(obj)
 
 
 def _indent_filter(text: t.Optional[str], level: int = 1, ) -> str:

@@ -43,9 +43,9 @@ logger = logging.getLogger(__name__)
 
 
 @dataclasses.dataclass
-class IterHierarchyItem:
-  page: 'Page'
-  parent_chain: t.List['Page']
+class IterHierarchyItem(t.Generic[T_Page]):
+  page: 'T_Page'
+  parent_chain: t.List['T_Page']
 
   def filename(self,
       parent_dir: t.Optional[str],  #: Parent directory to join with
@@ -53,7 +53,8 @@ class IterHierarchyItem:
       index_name: str = 'index',
       skip_empty_pages: bool = True,
       ) -> t.Optional[str]:
-    path = [p.name for p in self.parent_chain] + [self.page.name]
+    path = t.cast(t.List[str], [p.name for p in self.parent_chain] + [self.page.name])
+    assert all(path), path
     if self.page.children:
       if skip_empty_pages and not self.page.contents and not self.page.source:
         return None
@@ -66,13 +67,13 @@ class IterHierarchyItem:
 
 class Pages(t.List[T_Page]):
 
-  def iter_hierarchy(self) -> t.Iterable[IterHierarchyItem]:
+  def iter_hierarchy(self) -> t.Iterable[IterHierarchyItem[T_Page]]:
     for page in self:
       yield from page.iter_hierarchy()
 
 
 @dataclasses.dataclass
-class Page:
+class Page(t.Generic[T_Page]):
   """
   Metadata for a page that a renderer implementation should understand
   in order to produce multiple output files. The page hierarchy defines
@@ -100,7 +101,7 @@ class Page:
   contents: t.Optional[t.List[str]] = None
 
   #: A list of pages that are children of this page.
-  children: t.List['Page'] = dataclasses.field(default_factory=list)
+  children: t.List['T_Page'] = dataclasses.field(default_factory=list)
 
   def __post_init__(self) -> None:
     if not self.name:
@@ -123,12 +124,11 @@ class Page:
     """
 
     modules = copy.deepcopy(modules)
-    reverse_map = docspec.ReverseMap(modules)
     matched_contents = set()
 
     def _match(obj: docspec.ApiObject) -> bool:
       if self.contents:
-        path = '.'.join(x.name for x in reverse_map.path(obj))
+        path = '.'.join(x.name for x in obj.path)
         for x in self.contents:
           if fnmatch.fnmatch(path, x):
             matched_contents.add(x)
@@ -137,7 +137,7 @@ class Page:
         return True
       return False
 
-    docspec.filter_visit(modules, _match, order='post')
+    docspec.filter_visit(t.cast(t.List[docspec.ApiObject], modules), _match, order='post')
 
     unmatched_contents = set(self.contents or ()) - matched_contents
     if unmatched_contents:
@@ -153,7 +153,7 @@ class Page:
   def render(
       self,
       filename: str,
-      modules: t.List[docspec.ApiObject],
+      modules: t.List[docspec.Module],
       renderer: SinglePageRenderer,
       context_directory: str,
       write_prefix: t.Optional[t.Callable[[t.TextIO], None]] = None,

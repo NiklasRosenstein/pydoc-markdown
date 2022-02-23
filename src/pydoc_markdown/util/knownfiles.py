@@ -19,13 +19,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-from typing import Generator, Iterable, IO, List, Optional
 import collections
 import contextlib
 import csv
 import hashlib
-import nr.fs
 import os
+import typing as t
+from pathlib import Path
 
 FilenameAndHash = collections.namedtuple('FilenameAndHash', 'algorithm,hash,name')
 
@@ -51,7 +51,7 @@ class KnownFiles:
     self._directory = directory
     self._filename = filename
     self._hash_algorithm = hash_algorithm
-    self._files: Optional[List[str]] = None
+    self._files: t.Optional[t.List[str]] = None
 
   def __enter__(self) -> 'KnownFiles':
     assert self._files is None, 'Context already entered.'
@@ -70,7 +70,7 @@ class KnownFiles:
         writer.writerow([self._hash_algorithm, hash_, filename])
     self._files = None
 
-  def load(self) -> Iterable[FilenameAndHash]:
+  def load(self) -> t.Iterable[FilenameAndHash]:
     try:
       with open(os.path.join(self._directory, self._filename), 'r') as fp:
         reader = csv.reader(fp, delimiter=' ')
@@ -84,21 +84,21 @@ class KnownFiles:
       return; yield
 
   def _check_filename(self, filename: str) -> str:
-    filename = os.path.relpath(os.path.abspath(filename), self._directory)
-    if not nr.fs.issub(filename):
+    if not Path(filename).is_relative_to(self._directory):
       raise ValueError('filename must point inside directory {!r}, got {!r}'
                        .format(self._directory, filename))
-    return filename
+    return str(Path(filename).relative_to(self._directory))
 
   @contextlib.contextmanager
-  def open(self, filename: str, mode: str = 'r', **kwargs) -> Generator[IO, None, None]:
+  def open(self, filename: str, mode: str = 'r', **kwargs) -> t.Generator[t.TextIO, None, None]:
     assert self._files is not None
     filename = self._check_filename(filename)
+    assert 'b' not in mode, 'does not support binary file modes'
     if 'w' in mode or 'a' in mode:
       if self._files is None:
         raise RuntimeError('KnownFiles.__enter__() was not called')
       with open(os.path.join(self._directory, filename), mode, **kwargs) as fp:
-        yield fp
+        yield t.cast(t.TextIO, fp)
       self._files.append(filename)
 
   def append(self, filename: str) -> None:

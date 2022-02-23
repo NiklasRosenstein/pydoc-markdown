@@ -35,11 +35,11 @@ from urllib.parse import urlparse, urljoin
 
 import databind.core.annotations as A
 import docspec
-import nr.fs
 import requests
-import toml
+import tomli_w
 import typing_extensions as te
 import yaml
+from nr.util.fs import chmod
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, Server, Builder
@@ -52,12 +52,12 @@ logger = logging.getLogger(__name__)
 @dataclasses.dataclass
 class GetHugo:
   enabled: bool = True
-  version: str = None
+  version: t.Optional[str] = None
   extended: bool = True
 
 
 @dataclasses.dataclass
-class HugoPage(Page):
+class HugoPage(Page['HugoPage']):
   """
   A subclass of #Page which adds Hugo-specific overrides.
 
@@ -113,8 +113,8 @@ class HugoThemeGitUrl(HugoTheme):
       command = ['git', 'clone', self.clone_url, dst, '--depth', '1',
                  '--recursive', '--shallow-submodules']
       subprocess.check_call(command)
-      for command in self.postinstall:
-        subprocess.check_call(command, shell=True, cwd=dst)
+      for postinstall_command in self.postinstall:
+        subprocess.check_call(postinstall_command, shell=True, cwd=dst)
 
 
 @dataclasses.dataclass
@@ -174,7 +174,7 @@ class HugoConfig:
     # included in the generated site.
     data.setdefault('markup', {}).setdefault('goldmark', {}).setdefault('renderer', {}).setdefault('unsafe', True)
 
-    fp.write(toml.dumps(data))
+    fp.write(tomli_w.dumps(data))
 
 
 @dataclasses.dataclass
@@ -256,7 +256,7 @@ class HugoRenderer(Renderer, Server, Builder):
   get_hugo: GetHugo = dataclasses.field(default_factory=GetHugo)
 
   def __post_init__(self) -> None:
-    self._context: t.Optional[Context] = None
+    self._context: Context
 
   def _render_page(self, modules: t.List[docspec.Module], page: HugoPage, filename: str):
     os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -301,6 +301,8 @@ class HugoRenderer(Renderer, Server, Builder):
         if item.page.directory:
           page_content_dir = os.path.normpath(os.path.join(content_dir, item.page.directory))
         filename = item.filename(page_content_dir, '.md', index_name='_index', skip_empty_pages=False)
+        if not filename:
+          continue
         self._render_page(item.page.filtered_modules(modules), item.page, filename)
         known_files.append(filename)
 
@@ -321,16 +323,18 @@ class HugoRenderer(Renderer, Server, Builder):
   # Server
 
   def get_server_url(self) -> str:
+    assert self.config
     urlinfo = urlparse(self.config.baseURL or '')
     return urljoin(f"http://{self.config.serverURL}:{self.config.serverPort}/", urlinfo.path)
 
   def start_server(self) -> subprocess.Popen:
+    assert self.config
     hugo_bin = self._get_hugo_bin()
     command = [hugo_bin, 'server', '--bind', self.config.serverURL, '--port', str(self.config.serverPort)]
-    
+
     if self.config.baseURL is not None:
         command.extend(["--baseUrl", self.get_server_url()])
-    
+
     logger.info('Running %s in "%s"', command, self.build_directory)
     return subprocess.Popen(command, cwd=self.build_directory)
 
@@ -411,7 +415,7 @@ def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
           t.cast(t.IO[bytes], archive.extractfile('hugo')),
           t.cast(t.IO[bytes], fp))
 
-  nr.fs.chmod(to, '+x')
+  chmod.update(to, '+x')
   logger.info('Hugo v%s installed to "%s"', version, to)
 
 

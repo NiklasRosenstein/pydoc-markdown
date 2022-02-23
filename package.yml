@@ -20,7 +20,7 @@ requirements:
 - nr.stream ^0.1.2
 - requests ^2.23.0
 - PyYAML ^5.3
-- toml ^0.10.1
+- tomli ^2.0.0
 - watchdog
 entrypoints:
   console_scripts:
