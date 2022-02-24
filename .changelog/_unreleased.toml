@@ -3,6 +3,7 @@ id = "363e049b-c6b5-405a-b6f6-b1728fb99275"
 type = "fix"
 description = "hugo: Hugo now respects the baseUrl option @Heiss"
 author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/233"
 
 [[entries]]
 id = "57b68994-1c11-43da-991e-6531a2cc725f"
@@ -12,6 +13,7 @@ author = "@chrisstetter"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/189",
 ]
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/235"
 
 [[entries]]
 id = "072f60b0-1f4e-4075-a22a-242980b9f555"
