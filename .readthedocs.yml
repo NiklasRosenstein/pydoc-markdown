@@ -1,6 +1,0 @@
-version: 2
-mkdocs: {}  # tell readthedocs to use mkdocs
-python:
-  version: 3.7
-  install:
-  - requirements: docs/.readthedocs-requirements.txt
