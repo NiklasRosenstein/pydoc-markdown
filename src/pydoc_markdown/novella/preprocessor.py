@@ -1,5 +1,4 @@
 
-from ast import AnnAssign
 import logging
 import re
 import typing as t
