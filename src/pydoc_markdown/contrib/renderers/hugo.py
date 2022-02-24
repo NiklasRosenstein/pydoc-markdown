@@ -371,7 +371,7 @@ def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
     raise EnvironmentError('unsure how to get a Hugo binary for platform {!r}'.format(sys.platform))
 
   machine = _platform.machine().lower()
-  if machine in ('x86_64', 'amd64'):
+  if machine in ('x86_64', 'amd64', 'arm64'):
     arch = '64bit'
   elif machine in ('i386',):
     arch = '32bit'

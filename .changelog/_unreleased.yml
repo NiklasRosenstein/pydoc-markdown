@@ -6,3 +6,6 @@ changes:
   component: docusaurus
   description: 'Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores. (@chrisstetter)'
   fixes: [ '#189' ]
+- type: fix
+  component: hugo
+  description: 'Adds Apple Silicon to Hugo's recognized architectures. (@MilesCranmer)'
