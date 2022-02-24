@@ -27,6 +27,8 @@ import os
 import typing as t
 from pathlib import Path
 
+from nr.util.fs import is_relative_to
+
 FilenameAndHash = collections.namedtuple('FilenameAndHash', 'algorithm,hash,name')
 
 
@@ -84,7 +86,7 @@ class KnownFiles:
       return; yield
 
   def _check_filename(self, filename: str) -> str:
-    if not Path(filename).is_relative_to(self._directory):
+    if not is_relative_to(filename, self._directory):
       raise ValueError('filename must point inside directory {!r}, got {!r}'
                        .format(self._directory, filename))
     return str(Path(filename).relative_to(self._directory))
