@@ -39,8 +39,8 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with: { python-version: "3.10" }
-    - name: Installing
-      run: pip install -r docs/requirements.txt && pipx install .
+    - name: Installing tooling
+      run: pip install pipx -q && pipx install $(cat .github/slam-cli.txt) && slam install --extras docs
     - name: Build documentation
       run: cd docs && novella
     - name: Publish docs

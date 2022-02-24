@@ -28,7 +28,6 @@ click = ">=7.1,<9.0"
 docspec = "^2.0.0a1"
 docspec-python = "^2.0.0a1"
 docstring-parser = "^0.11"
-novella = "^0.1.5"
 "nr.util" = ">=0.7.4,<1.0.0"
 jinja2 = "^3.0.0"
 requests = "^2.23.0"
@@ -47,6 +46,10 @@ mypy = "*"
 types-deprecated = "*"
 types-requests = "*"
 types-PyYAML = "*"
+
+[tool.poetry.extras]
+novella = ["novella ^0.1.5""]
+docs = ["novella ^0.1.5", "mkdocs", "mkdocs-material"]
 
 [tool.poetry.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"

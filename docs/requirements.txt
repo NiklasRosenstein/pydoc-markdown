@@ -1,4 +1,0 @@
-mkdocs
-mkdocs-material
-novella==0.1.5
--r ../.github/slam-cli.txt
