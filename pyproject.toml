@@ -91,4 +91,4 @@ typed = true
 
 [tool.slam.test]
 pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov"
-mypy = "mypy src/ --check-untyped-defs --namespace-packages"
+mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_markdown/novella"
