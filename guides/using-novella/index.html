@@ -617,7 +617,7 @@
 
 
 <h1 id="using-novella">Using Novella</h1>
-<p><a href="https://niklasrosenstein.github.io/novella/">Novella</a> it the new backend for Pydoc-Markdown and most development will be focused on improving the integration. The
+<p><a href="https://niklasrosenstein.github.io/novella/">Novella</a> is the new backend for Pydoc-Markdown and most development will be focused on improving the integration. The
 Pydoc-Markdown CLI and YAML-style configuration that has been available for a while will stay for a while (written
 on Feb 24, 2022).</p>
 <p>Documentation builds with Novella are slightly different from Pydoc-Markdown. In essence, it is an agnostic linear
@@ -652,31 +652,40 @@ shortcomings of the template's configurability.</p>
    <code>@pydoc</code> tags to be recognized in your Markdown files. </p>
 </li>
 </ol>
-<p>!!! note</p>
-<div class="highlight"><pre><span></span><code>* The `content/` directory is the default so it does not need to be set explicitly and it is sufficient to write
-  `template &quot;mkdocs&quot;` (without an empty configuration block).
-
-* The `mkdocs` template will apply a default configuration delivered with Novella to your MkDocs configuration. If
-  you don&#39;t want this, set `apply_default = False` inside the configuration block. Note that you can also have no
-  MkDocs configuration file and the template will create a default file for you.
-
-* The `pydoc` tag is implemented in {@link pydoc:pydoc_markdown.novella.preprocessor}. Look it up to understand
-  how it can be configured further.
-
-* The `pydoc` tag processor makes applies a heuristic to populate the default search path for your Python source
-  code. If the directory in which the build is executed is called `docs` or `documentation`, it will default to
-  `[ &quot;../src&quot;, &quot;..&quot; ]`, otherwise it will default to `[ &quot;src&quot;, &quot;.&quot; ]`.
-</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li>
+<p>The <code>content/</code> directory is the default so it does not need to be set explicitly and it is sufficient to write
+  <code>template "mkdocs"</code> (without an empty configuration block).</p>
+</li>
+<li>
+<p>The <code>mkdocs</code> template will apply a default configuration delivered with Novella to your MkDocs configuration. If
+  you don't want this, set <code>apply_default = False</code> inside the configuration block. Note that you can also have no
+  MkDocs configuration file and the template will create a default file for you.</p>
+</li>
+<li>
+<p>The <code>pydoc</code> tag is implemented in {@link pydoc:pydoc_markdown.novella.preprocessor}. Look it up to understand
+  how it can be configured further.</p>
+</li>
+<li>
+<p>The <code>pydoc</code> tag processor makes applies a heuristic to populate the default search path for your Python source
+  code. If the directory in which the build is executed is called <code>docs</code> or <code>documentation</code>, it will default to
+  <code>[ "../src", ".." ]</code>, otherwise it will default to <code>[ "src", "." ]</code>.</p>
+</li>
+</ul>
+</div>
 <p>Now you can run Novella to build your site with MkDocs. The MkDocs template provides a <code>--serve</code> option which makes
 the pipeline run <code>mkdocs serve</code> instead of <code>mkdocs build</code>. It also supports automatically rebuilding the pipeline if
 a Markdown source file changes.</p>
 <div class="highlight"><pre><span></span><code>$ novella
 </code></pre></div>
-<p>!!! note</p>
-<div class="highlight"><pre><span></span><code>You need to install Pydoc-Markdown with the `novella` extra or install Novella separately for this to work.
-
-    $ pip install pydoc-markdown[novella]
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You need to install Pydoc-Markdown with the <code>novella</code> extra or install Novella separately for this to work.</p>
+<div class="highlight"><pre><span></span><code>$ pip install pydoc-markdown[novella]
 </code></pre></div>
+</div>
 
               
             </article>

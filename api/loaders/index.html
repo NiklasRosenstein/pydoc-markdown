@@ -622,6 +622,7 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">PythonLoader</span><span class="p">(</span><span class="n">Loader</span><span class="p">)</span>
 </code></pre></div>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/loaders/python.py#L41)</p>
 <p>This implementation of the #Loader interface parses Python modules and packages using</p>
 <h1 id="docspec_python-see-the-options-below-to-control-which-modules-and-packages-are-being">docspec_python. See the options below to control which modules and packages are being</h1>
 <p>loaded and how to configure the parser.</p>
@@ -637,21 +638,26 @@ in the current and <code>src/</code> directory.</p>
 </ul>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.packages"></a></p>
 <h4 id="packages">packages</h4>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/loaders/python.py#L68)</p>
 <p>A list of package names that this loader will search for and then parse,
 including all sub-packages and modules.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.search_path"></a></p>
 <h4 id="search_path">search_path</h4>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/loaders/python.py#L73)</p>
 <p>The module search path. If not specified, the current #sys.path is
 used instead. If any of the elements contain a <code>*</code> (star) symbol, it
 will be expanded with #sys.path.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.ignore_when_discovered"></a></p>
 <h4 id="ignore_when_discovered">ignore_when_discovered</h4>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/loaders/python.py#L76)</p>
 <p>List of modules to ignore when using module discovery on the #search_path.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.parser"></a></p>
 <h4 id="parser">parser</h4>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/loaders/python.py#L79)</p>
 <p>Options for the Python parser.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.encoding"></a></p>
 <h4 id="encoding">encoding</h4>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/loaders/python.py#L82)</p>
 <p>The encoding to use when reading the Python source files.</p>
 
               
