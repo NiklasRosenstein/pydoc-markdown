@@ -1,3 +1,7 @@
 template "mkdocs" {
   site_name = "Pydoc Markdown"
 }
+
+action "mkdocs-preprocess-markdown" {
+  use "pydoc"
+}

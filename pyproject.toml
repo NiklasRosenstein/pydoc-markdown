@@ -28,6 +28,7 @@ click = ">=7.1,<9.0"
 docspec = "^2.0.0a1"
 docspec-python = "^2.0.0a1"
 docstring-parser = "^0.11"
+novella = "^0.1.5"
 "nr.util" = ">=0.7.4,<1.0.0"
 jinja2 = "^3.0.0"
 requests = "^2.23.0"
@@ -74,6 +75,9 @@ github = "pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker"
 gitlab = "pydoc_markdown.contrib.source_linkers.git:GitlabSourceLinker"
 gitea = "pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker"
 bitbucket = "pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker"
+
+[tool.poetry.plugins."novella.markdown.preprocessors"]
+pydoc = "pydoc_markdown.novella.preprocessor:PydocTagPreprocessor"
 
 [build-system]
 requires = ["poetry-core"]
