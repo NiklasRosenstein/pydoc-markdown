@@ -1,6 +1,6 @@
 # Using Novella
 
-[Novella] it the new backend for Pydoc-Markdown and most development will be focused on improving the integration. The
+[Novella] is the new backend for Pydoc-Markdown and most development will be focused on improving the integration. The
 Pydoc-Markdown CLI and YAML-style configuration that has been available for a while will stay for a while (written
 on Feb 24, 2022).
 
