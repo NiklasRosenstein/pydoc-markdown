@@ -1228,6 +1228,12 @@ HugoRenderer: add `serverURL` and `serverPort` options to `$.renderer.config` bl
   <tr><td>Feature</td><td>
 
 add `GitlabSourceLinker` class (entrypoint name: `gitlab`). @Heiss</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+MarkdownRenderer: add `render_typehint_in_data_header` option to `MarkdownRenderer`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/229">229</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+MarkdownRenderer: no longer escape markdown in headers when `html_headers` is enabled (used to result in additional backslashes when interpreted by most Markdown to HTML renderers)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
 </table>
 
 <h2 id="432-2021-09-04">4.3.2 (2021-09-04)</h2>
