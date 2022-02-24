@@ -116,7 +116,7 @@ class CrossrefProcessor(Processor):
           opt = tomli_w.dumps({"text": text})
           result = f'{{@link pydoc:{".".join(x.name for x in target.path)} :with {opt}}}'
 
-      else:
+      elif resolver:
         href = resolver.resolve_ref(node, ref)
         if href:
           result = '[`{}`]({})'.format(text, href)

@@ -452,10 +452,19 @@ class MarkdownReferenceResolver(Resolver, ResolverV2):
         return None
     return obj
 
+  def _resolve_local_reference(self, scope: docspec.ApiObject, ref_split: t.List[str]) -> t.Optional[docspec.ApiObject]:
+    obj: t.Optional[docspec.ApiObject] = scope
+    while obj:
+      resolved = self._resolve_reference_in_members(obj, ref_split)
+      if resolved:
+        return resolved
+      obj = obj.parent
+    return None
+
   # Resolver
 
   def resolve_ref(self, scope: docspec.ApiObject, ref: str) -> t.Optional[str]:
-    target = self.resolve_reference(scope, ref)
+    target = self._resolve_local_reference(scope, ref.split('.'))
     if target:
       return '#' + self.generate_object_id(target)
     return None
@@ -469,12 +478,9 @@ class MarkdownReferenceResolver(Resolver, ResolverV2):
 
     ref_split = ref.split('.')
 
-    obj = scope
-    while obj:
-      resolved = self._resolve_reference_in_members(obj, ref_split)
-      if resolved:
-        return resolved
-      obj = obj.parent
+    resolved = self._resolve_local_reference(scope, ref_split)
+    if resolved:
+      return resolved
 
     if self.global_:
       def _recurse(obj: docspec.ApiObject) -> t.Optional[docspec.ApiObject]:
@@ -486,6 +492,7 @@ class MarkdownReferenceResolver(Resolver, ResolverV2):
             resolved = _recurse(member)
             if resolved:
               return resolved
+        return None
 
       for module in suite:
         resolved = _recurse(module)
@@ -493,3 +500,4 @@ class MarkdownReferenceResolver(Resolver, ResolverV2):
           return resolved
 
     return None
+
