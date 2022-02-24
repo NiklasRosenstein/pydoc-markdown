@@ -1178,6 +1178,15 @@ remove `MarkdownRenderer.render_to_stream()` from public api</td><td></td><td></
   <tr><td>Feature</td><td>
 
 add `pydoc_markdown.interfaces.SingleObjectRenderer` and use it in Novella `@pydoc` tag processor</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+add `ApiSuite` class and `ResolverV2` which is used by the new `@pydoc` tag preprocessor when using Novella</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+`MarkdownReferenceResolver` now implements the new `ResolverV2` interface and can resolve references globally</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+`CrossRefProcessor` now accepts a `resolver_v2` argument to use instead of the `resolver` object passed through the `Processor` API</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
 </table>
 
 <h2 id="450-2021-12-12">4.5.0 (2021-12-12)</h2>

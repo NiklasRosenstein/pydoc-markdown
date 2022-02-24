@@ -369,6 +369,19 @@
     CrossrefProcessor Objects
   </a>
   
+    <nav class="md-nav" aria-label="CrossrefProcessor Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolver_v2" class="md-nav__link">
+    resolver_v2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -692,6 +705,19 @@
     CrossrefProcessor Objects
   </a>
   
+    <nav class="md-nav" aria-label="CrossrefProcessor Objects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolver_v2" class="md-nav__link">
+    resolver_v2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -814,28 +840,33 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">CrossrefProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L35)</p>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L36)</p>
 <p>Finds references to other objects in Markdown docstrings and produces links to other
-pages. The links are provided by the current #Renderer via the #Resolver interface.</p>
+pages. The links are provided by the current <a href="/api/interfaces#renderer objects">Renderer</a> via the <a href="/api/interfaces#resolver objects">Resolver</a> interface.</p>
 <blockquote>
 <p><strong>Note</strong>: This processor is a work in progress, and most of the time it just converts
 references into inline-code.</p>
 </blockquote>
 <p>The syntax for cross references is as follows:</p>
-<div class="highlight"><pre><span></span><code>This is a ref to another class: #PydocmdProcessor
-You can rename a ref like #this~PydocmdProcessor
-And you can append to the ref name like this: #PydocmdProcessor#s
+<div class="highlight"><pre><span></span><code>This is a ref to another class: &lt;a href=&quot;#pydocmdprocessor objects&quot;&gt;PydocmdProcessor&lt;/a&gt;
+You can rename a ref like `this`~PydocmdProcessor
+And you can append to the ref name like this: &lt;a href=&quot;#pydocmdprocessor objects&quot;&gt;PydocmdProcessors&lt;/a&gt;
 </code></pre></div>
 <p>Renders as</p>
 <blockquote>
-<p>This is a ref to another class: #PydocmdProcessor
-You can rename a ref like #this~PydocmdProcessor
-And you can append to the ref name like this: #PydocmdProcessor#s</p>
+<p>This is a ref to another class: <a href="#pydocmdprocessor objects">PydocmdProcessor</a>
+You can rename a ref like <code>this</code>~PydocmdProcessor
+And you can append to the ref name like this: <a href="#pydocmdprocessor objects">PydocmdProcessors</a></p>
 </blockquote>
 <p>Example configuration:</p>
 <div class="highlight"><pre><span></span><code>processors:
   - type: crossref
 </code></pre></div>
+<p><a id="pydoc_markdown.contrib.processors.crossref.CrossrefProcessor.resolver_v2"></a></p>
+<h4 id="resolver_v2">resolver_v2</h4>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L68)</p>
+<p>If specified, it will be used instead of the resolver passed to {@link pydoc:pydoc_markdown.PydocMarkdown.process} and the generated Markdown
+code for the reference uses Novella <code>{@link }</code> syntax.</p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor"></a></p>
 <h2 id="filterprocessor-objects">FilterProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
@@ -853,7 +884,7 @@ And you can append to the ref name like this: #PydocmdProcessor#s</p>
 <h4 id="expression">expression</h4>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L51)</p>
 <p>A Python expression that is evaluated given the variables <code>name</code>, <code>obj</code> and <code>default</code>
-and is expected to return a boolean to indicate whether the #docspec.ApiObject should
+and is expected to return a boolean to indicate whether the <code>docspec.ApiObject</code> should
 be kept or removed. If specified, the expression is the ultimate truth for determining
 the keep-or-remove state of a node. Using <code>'default()'</code> as the expression has the same
 semantic as not specifying this field. Default: <code>null</code></p>
@@ -874,7 +905,7 @@ Default: <code>true</code></p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.do_not_filter_modules"></a></p>
 <h4 id="do_not_filter_modules">do_not_filter_modules</h4>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L65)</p>
-<p>Do not filter #docspec.Module objects. Default: <code>true</code></p>
+<p>Do not filter <code>docspec.Module</code> objects. Default: <code>true</code></p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.skip_empty_modules"></a></p>
 <h4 id="skip_empty_modules">skip_empty_modules</h4>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L68)</p>
@@ -961,7 +992,7 @@ A value.
 <span class="k">class</span> <span class="nc">SmartProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/smart.py#L34)</p>
-<p>This processor picks the #GoogleProcessor, #SphinxProcessor or #PydocmdProcessor after
+<p>This processor picks the <a href="#googleprocessor objects">GoogleProcessor</a>, <a href="#sphinxprocessor objects">SphinxProcessor</a> or <a href="#pydocmdprocessor objects">PydocmdProcessor</a> after
 guessing which is appropriate from the syntax it finds in the docstring.</p>
 <p><a id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor"></a></p>
 <h2 id="sphinxprocessor-objects">SphinxProcessor Objects</h2>
