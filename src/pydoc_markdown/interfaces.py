@@ -110,7 +110,7 @@ class Renderer(PluginBase):
   def render(self, modules: t.List[docspec.Module]) -> None: ...
 
 
-class SinglePageRenderer(abc.ABC):
+class SinglePageRenderer(PluginBase):
   """
   Interface for rendering a single page.
   """

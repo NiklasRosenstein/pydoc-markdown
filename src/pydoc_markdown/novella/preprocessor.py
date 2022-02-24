@@ -1,20 +1,44 @@
 
+from ast import AnnAssign
 import logging
+import re
 import typing as t
 from pathlib import Path
 
 import docspec
+from nr.util.functional import assure
 from nr.util.plugins import load_entrypoint
 from novella.markdown.preprocessor import MarkdownFile, MarkdownFiles, MarkdownPreprocessor
 from novella.markdown.tagparser import parse_block_tags, replace_tags, Tag
+from novella.repository import RepositoryType, detect_repository
+from pydoc_markdown.contrib.source_linkers import git as git_source_linkers
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
-from pydoc_markdown.interfaces import Context, Loader, Processor, SinglePageRenderer
+from pydoc_markdown.interfaces import Context, Loader, Processor, SinglePageRenderer, SourceLinker
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 
 logger = logging.getLogger(__name__)
+
+
+def autodetect_source_linker() -> t.Optional[SourceLinker]:
+  repo = detect_repository(Path.cwd())
+  if not repo or repo.type != RepositoryType.GIT:
+    return None
+
+  if 'github.com' in repo.url:
+    name = assure(re.search(r'github.com/([^/]+/[^/]+)', repo.url)).group(1)
+    return git_source_linkers.GithubSourceLinker(root=repo.root, repo=name, use_branch=True)
+  elif 'gitlab.com' in repo.url:
+    name = assure(re.search(r'gitlab.com/(.*)', repo.url)).group(1)
+    return git_source_linkers.GitlabSourceLinker(root=repo.root, repo=name, use_branch=True)
+  elif 'gitea.com' in repo.url:
+    name = assure(re.search(r'gitea.com/([^/]+/[^/]+)', repo.url)).group(1)
+    return git_source_linkers.GiteaSourceLinker(root=repo.root, repo=name, use_branch=True)
+
+  # TODO (@NiklasRosenstein): BitBucket
+  return None
 
 
 class PydocTagPreprocessor(MarkdownPreprocessor):
@@ -31,9 +55,10 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     else:
       search_path = ['src', '.']
 
+    source_linker = autodetect_source_linker()
     self._loader = PythonLoader(search_path=search_path)
     self._processors = [FilterProcessor(), SmartProcessor(), CrossrefProcessor()]
-    self._renderer = MarkdownRenderer()
+    self._renderer = MarkdownRenderer(source_linker=source_linker)
 
   @t.overload
   def loader(self) -> Loader: ...
@@ -74,6 +99,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
   def process_files(self, files: MarkdownFiles) -> None:
     context = Context(str(Path.cwd()))
     self._loader.init(context)
+    self._renderer.init(context)
 
     modules = list(self._loader.load())
     for processor in self._processors:
