@@ -3,3 +3,9 @@ id = "072f60b0-1f4e-4075-a22a-242980b9f555"
 type = "hygiene"
 description = "remove `MarkdownRenderer.classdef_render_init_signature_if_needed` option because it never worked to begin with"
 author = "@NiklasRosenstein"
+
+[[entries]]
+id = "f0c733c1-d6db-45ed-a471-3ddd1dc688bb"
+type = "breaking change"
+description = "remove `MarkdownRenderer.render_to_stream()` from public api"
+author = "@NiklasRosenstein"

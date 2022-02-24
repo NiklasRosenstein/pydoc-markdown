@@ -379,8 +379,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     self.render_single_page(fp, modules)
     return fp.getvalue()
 
-  @deprecated(reason='use render_single_page() instead')
-  def render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO):
+  def _render_to_stream(self, modules: t.List[docspec.Module], stream: t.TextIO):
     return self.render_single_page(stream, modules)
 
   # SinglePageRenderer
@@ -414,10 +413,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
 
   def render(self, modules: t.List[docspec.Module]) -> None:
     if self.filename is None:
-      self.render_to_stream(modules, sys.stdout)
+      self._render_to_stream(modules, sys.stdout)
     else:
       with io.open(self.filename, 'w', encoding=self.encoding) as fp:
-        self.render_to_stream(modules, t.cast(t.TextIO, fp))
+        self._render_to_stream(modules, t.cast(t.TextIO, fp))
 
   # PluginBase
 
