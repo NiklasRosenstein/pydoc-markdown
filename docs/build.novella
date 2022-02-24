@@ -1,0 +1,3 @@
+template "mkdocs" {
+  site_name = "Pydoc Markdown"
+}

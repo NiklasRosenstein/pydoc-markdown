@@ -1,2 +1,0 @@
-readthedocs-custom-steps==0.5.1
-shut==0.21.1

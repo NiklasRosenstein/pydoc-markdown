@@ -32,6 +32,25 @@ jobs:
     - name: Test
       run: slam test
 
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with: { python-version: "3.10" }
+    - name: Installing
+      run: pip install -r docs/requirements.txt
+    - name: Build documentation
+      run: cd docs && novella
+    - name: Publish docs
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      if: github.ref == 'refs/heads/develop'
+      with:
+        branch: gh-pages
+        folder: docs/_site
+        ssh-key: ${{ secrets.DEPLOY_KEY }}
+
   # publish:
   #   if: startsWith(github.ref, 'refs/tags/v')
   #   needs: test

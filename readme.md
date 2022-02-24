@@ -1,5 +1,3 @@
-  [MkDocs]: https://www.mkdocs.org/
-
 ![Python versions](https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge)
 [![Pypi version](https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge)](https://pypi.org/project/pydoc-markdown/)
 [![Build status](https://img.shields.io/github/workflow/status/NiklasRosenstein/pydoc-markdown/Python%20package?style=for-the-badge)](https://github.com/NiklasRosenstein/pydoc-markdown/actions)
@@ -22,6 +20,8 @@ generate API documentation for can be for any Python version.
 * Supports assignment docstrings (`#:` block before or string literal after the statement)
 * Links references to other documented API objects [WIP]
 * [MkDocs][], [Hugo](https://gohugo.io/) and [Docusaurus](https://v2.docusaurus.io/) integration
+
+[MkDocs]: https://www.mkdocs.org/
 
 ## Installation
 
