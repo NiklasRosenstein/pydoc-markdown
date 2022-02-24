@@ -43,6 +43,8 @@ Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
 pytest = "*"
 pytest-coverage = "*"
 mypy = "*"
+types-deprecated = "*"
+types-requests = "*"
 types-PyYAML = "*"
 
 [tool.poetry.scripts]
