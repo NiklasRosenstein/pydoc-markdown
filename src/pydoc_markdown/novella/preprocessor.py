@@ -14,7 +14,7 @@ from pydoc_markdown.contrib.source_linkers import git as git_source_linkers
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
-from pydoc_markdown.interfaces import Context, Loader, Processor, SinglePageRenderer, SourceLinker
+from pydoc_markdown.interfaces import Context, Loader, Processor, SingleObjectRenderer, SourceLinker
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 
@@ -45,7 +45,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
 
   _loader: Loader
   _processors: t.List[Processor]
-  _renderer: SinglePageRenderer
+  _renderer: SingleObjectRenderer
 
   def __init__(self) -> None:
     # Heuristic to provide a sensible default configuration of the plugin.
@@ -78,7 +78,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
       return self._loader
 
   @t.overload
-  def renderer(self) -> SinglePageRenderer: ...
+  def renderer(self) -> SingleObjectRenderer: ...
 
   @t.overload
   def renderer(self, renderer: str | Loader, closure: t.Callable[[Loader], t.Any] | None) -> None: ...
@@ -87,8 +87,8 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     if renderer is not None:
       if isinstance(renderer, str):
         renderer = load_entrypoint('pydoc_markdown.interfaces.Renderer', renderer)()
-        if not isinstance(renderer, SinglePageRenderer):
-          raise RuntimeError(f'not a single page renderer: {type(renderer).__name__}')
+        if not isinstance(renderer, SingleObjectRenderer):
+          raise RuntimeError(f'not a SingleObjectRenderer: {type(renderer).__name__}')
       if closure is not None:
         closure(renderer)
       self._renderer = renderer
@@ -119,7 +119,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
 
     import io
     fp = io.StringIO()
-    self._renderer.render_single_page(fp, [objects[0]])  # type: ignore  # TODO (@NiklasRosenstein): New interface to render single API objects?
+    self._renderer.render_object(fp, objects[0], tag.options)
     return fp.getvalue()
 
 

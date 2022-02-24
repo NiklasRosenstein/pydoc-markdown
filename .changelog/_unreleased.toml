@@ -10,10 +10,10 @@ id = "57b68994-1c11-43da-991e-6531a2cc725f"
 type = "docs"
 description = "docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores."
 author = "@chrisstetter"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/235"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/189",
 ]
-pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/235"
 
 [[entries]]
 id = "072f60b0-1f4e-4075-a22a-242980b9f555"
@@ -25,4 +25,10 @@ author = "@NiklasRosenstein"
 id = "f0c733c1-d6db-45ed-a471-3ddd1dc688bb"
 type = "breaking change"
 description = "remove `MarkdownRenderer.render_to_stream()` from public api"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "56ad7f3e-b0f2-4a96-8066-64249bc18a47"
+type = "feature"
+description = "add `pydoc_markdown.interfaces.SingleObjectRenderer` and use it in Novella `@pydoc` tag processor"
 author = "@NiklasRosenstein"

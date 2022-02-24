@@ -120,6 +120,15 @@ class SinglePageRenderer(PluginBase):
                          page_title: t.Optional[str] = None) -> None: ...
 
 
+class SingleObjectRenderer(PluginBase):
+  """
+  Interface for rendering a single #docspec.ApiObject.
+  """
+
+  @abc.abstractmethod
+  def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None: ...
+
+
 class Server(abc.ABC):
   """
   This interface describes an object that can start a server process for

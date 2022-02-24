@@ -29,7 +29,7 @@ import docspec
 from deprecated import deprecated
 from docspec_python import format_arglist
 
-from pydoc_markdown.interfaces import Context, Renderer, Resolver, SinglePageRenderer, SourceLinker
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, SingleObjectRenderer, SinglePageRenderer, SourceLinker
 from pydoc_markdown.util.docspec import format_function_signature, is_method
 
 
@@ -38,7 +38,7 @@ def dotted_name(obj: docspec.ApiObject) -> str:
 
 
 @dataclasses.dataclass
-class MarkdownRenderer(Renderer, SinglePageRenderer):
+class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
   """
   Produces Markdown files. This renderer is often used by other renderers, such as
   #MkdocsRenderer and #HugoRenderer. It provides a wide variety of options to customize
@@ -401,6 +401,11 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
       fp.write('\n')
     for m in modules:
       self._render_recursive(fp, 1, m)
+
+  # SingleObjectRenderer
+
+  def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None:
+    self._render_recursive(fp, 0, obj)
 
   # Renderer
 
