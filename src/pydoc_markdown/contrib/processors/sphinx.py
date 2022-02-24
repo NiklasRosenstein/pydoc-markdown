@@ -129,7 +129,7 @@ class SphinxProcessor(Processor):
         )
     return converted
 
-  def _convert_returns(self, returns: docstring_parser.common.DocstringReturns | None) -> str:
+  def _convert_returns(self, returns: t.Optional[docstring_parser.common.DocstringReturns]) -> str:
     """Convert a DocstringReturns object to a markdown string.
 
     :return: A markdown formatted string
