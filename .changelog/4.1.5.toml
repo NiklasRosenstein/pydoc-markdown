@@ -1,0 +1,7 @@
+release-date = "2021-08-04"
+
+[[entries]]
+id = "cd34fb98-af72-4ae3-b92f-97eb28ec4a34"
+type = "fix"
+description = "fix import from `databind.core`"
+author = "@NiklasRosenstein"

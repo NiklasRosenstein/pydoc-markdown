@@ -1,0 +1,10 @@
+release-date = "2020-06-26"
+
+[[entries]]
+id = "720ef091-a57c-4a20-80a3-cac24e1ba04a"
+type = "improvement"
+description = "dependencies: bump dependency on `nr.databind.core` to `~0.0.18` to avoid picking up the bad `0.0.17` version"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/126",
+]

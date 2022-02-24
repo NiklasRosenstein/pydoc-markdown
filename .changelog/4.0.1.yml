@@ -1,6 +1,0 @@
-release_date: '2021-07-22'
-changes:
-- type: fix
-  component: general
-  description: fix Python version classifiers
-  fixes: []

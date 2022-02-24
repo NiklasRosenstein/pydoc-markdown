@@ -1,0 +1,50 @@
+release-date = "2021-12-12"
+
+[[entries]]
+id = "459049d8-44b9-40f8-80f1-0e2e0989deac"
+type = "fix"
+description = "Sphinx processor now triggers when `:arg` or other Sphinx keywords are encountered in a docstring"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/221",
+]
+
+[[entries]]
+id = "ca133433-2ac2-41fd-9e37-e63157b46ce4"
+type = "tests"
+description = "Refactor sphinx processor tests and add new test for param keyword only. Fixes minor issue with argument only docstring. @gmarks2149"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "9fe61f46-9786-4ab3-b761-258865eb09c5"
+type = "fix"
+description = "sphinx_processor: Fix multi-line parameter sphinx docstring rendering issue by switching to docstring-parser to parse the docstrings. @gmarks2149"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/195",
+]
+
+[[entries]]
+id = "2e865f7e-bf59-4cca-be94-78e733c5d965"
+type = "fix"
+description = "Fix configuration generated with `--bootstrap mkdocs`"
+author = "@gethvi"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/230",
+]
+
+[[entries]]
+id = "e1994297-0a2c-4366-b5cf-82600dd9fdd1"
+type = "feature"
+description = "HugoRenderer: add `serverURL` and `serverPort` options to `$.renderer.config` block to allow overwriting the URL where the local Hugo server serves from"
+author = "@melMass"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/202",
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/231",
+]
+
+[[entries]]
+id = "a783b7e4-efcf-487b-a069-5be522079e77"
+type = "feature"
+description = "add `GitlabSourceLinker` class (entrypoint name: `gitlab`). @Heiss"
+author = "@NiklasRosenstein"

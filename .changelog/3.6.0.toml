@@ -1,0 +1,13 @@
+release-date = "2020-10-28"
+
+[[entries]]
+id = "2a649596-3074-404d-afa4-14641710e661"
+type = "feature"
+description = "Add `git` and `gitea` source linker (@tboulogne, #158)"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "281033b4-5e1d-43eb-8d82-7d9d10110d0a"
+type = "improvement"
+description = "Update Docusaurus sidebar generation (@m-vdb, #156)"
+author = "@NiklasRosenstein"

@@ -1,0 +1,13 @@
+release-date = "2021-08-28"
+
+[[entries]]
+id = "e7da0ea5-cd76-4d7f-9c59-ae87f506641c"
+type = "fix"
+description = "fix use of `docspec.ApiObject.path` after we migrated away from using deprecated `docspec.ReverseMap`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "b9425967-42da-41bd-a017-9b06bc5fa1b9"
+type = "improvement"
+description = "change default configuration of `MarkdownRenderer` (`signature_with_vertical_bar = False` (many people seemed to dislike that) and `signature_with_def = True` (for consistency with the included `class` keyword for classes))"
+author = "@NiklasRosenstein"

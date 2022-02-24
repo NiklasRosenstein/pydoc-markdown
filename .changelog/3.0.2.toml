@@ -1,0 +1,7 @@
+release-date = "2020-05-16"
+
+[[entries]]
+id = "c1dd833e-d301-44e4-a84b-06b679b2e878"
+type = "fix"
+description = "mkdocs: fix `NameError` in `MkdocsRenderer`"
+author = "@NiklasRosenstein"

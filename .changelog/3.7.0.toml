@@ -1,0 +1,10 @@
+release-date = "2020-11-05"
+
+[[entries]]
+id = "149fbab0-b5c1-46ce-a80c-bd16412ad299"
+type = "improvement"
+description = "FilterProcessor: Fix `NameError: name _check is not defined`, slightly alter behaviour of `FilterProcessor.expression` field`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/161",
+]

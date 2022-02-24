@@ -1,8 +1,0 @@
-release_date: '2021-08-09'
-changes:
-- type: fix
-  component: HugoRenderer
-  description: Restore old behaviour for `HugoConfig.additional_options`, which should
-    be deserialized flat (i.e. it takes on any additional options in the same object
-    that can not be mapped to any other fields of the config object)
-  fixes: []

@@ -1,0 +1,10 @@
+release-date = "2020-08-29"
+
+[[entries]]
+id = "54a233e0-2162-48c7-ad81-a1b5bed8a7e5"
+type = "fix"
+description = "markdown: Fix \"list\" object has no attribute \"values\" in `MarkdownRenderer`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/149",
+]

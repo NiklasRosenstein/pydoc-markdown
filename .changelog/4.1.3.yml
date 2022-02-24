@@ -1,8 +1,0 @@
-release_date: '2021-07-24'
-changes:
-- type: fix
-  component: MarkdownRenderer
-  description: Remove zombie line that triggers error when using the Markdown renderer
-    directly
-  fixes:
-  - '#196'

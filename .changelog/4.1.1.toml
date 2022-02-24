@@ -1,0 +1,7 @@
+release-date = "2021-07-22"
+
+[[entries]]
+id = "1849f63e-e0d7-4588-a015-5cb4055ba8e6"
+type = "improvement"
+description = "Jinja2Renderer: added `format_function_signature` filter"
+author = "@NiklasRosenstein"

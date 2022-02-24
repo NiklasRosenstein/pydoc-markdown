@@ -1,0 +1,13 @@
+release-date = "2021-05-20"
+
+[[entries]]
+id = "6db4acf2-6c84-46b9-9a04-1ea95f063254"
+type = "feature"
+description = "Add support for getting configuration from pyproject.toml under the [tool.pydoc-markdown] table"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "ec6c7aa9-dd90-49e5-92cc-9e7d9ffbaa32"
+type = "fix"
+description = "fix docstring in PydocmdPreprocessor"
+author = "@NiklasRosenstein"

@@ -1,0 +1,7 @@
+release-date = "2021-09-04"
+
+[[entries]]
+id = "f4607952-2271-4db7-bbac-1ac796030e1d"
+type = "fix"
+description = "minimum `click` version is `7.1`, allow also `8.x`"
+author = "@NiklasRosenstein"

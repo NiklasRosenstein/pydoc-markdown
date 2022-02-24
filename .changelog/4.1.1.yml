@@ -1,6 +1,0 @@
-release_date: '2021-07-22'
-changes:
-- type: change
-  component: Jinja2Renderer
-  description: added `format_function_signature` filter
-  fixes: []

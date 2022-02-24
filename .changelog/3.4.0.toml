@@ -1,0 +1,10 @@
+release-date = "2020-08-31"
+
+[[entries]]
+id = "fcba1e3e-b1fd-4f8c-8dc1-8e2d2ff49d49"
+type = "feature"
+description = "mkdocs: add `server_port` option, treat `MKDOCS_PORT` environment variable if `server_port` option is not set"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/148",
+]

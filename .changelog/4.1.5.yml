@@ -1,6 +1,0 @@
-release_date: '2021-08-04'
-changes:
-- type: fix
-  component: general
-  description: fix import from `databind.core`
-  fixes: []

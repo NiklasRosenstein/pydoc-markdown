@@ -1,0 +1,7 @@
+release-date = "2021-07-22"
+
+[[entries]]
+id = "23760e0c-cdac-43e2-aa7d-bbeefe310714"
+type = "fix"
+description = "fix Python version classifiers"
+author = "@NiklasRosenstein"

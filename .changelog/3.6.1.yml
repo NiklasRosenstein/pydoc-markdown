@@ -1,8 +1,0 @@
-release_date: '2020-11-03'
-changes:
-- type: fix
-  component: general
-  description: Fix using `data_code_block` option in `MarkdownRenderer`, and add a
-    unit test for it
-  fixes:
-  - '160'

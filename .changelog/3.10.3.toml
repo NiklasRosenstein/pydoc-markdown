@@ -1,0 +1,19 @@
+release-date = "2021-05-09"
+
+[[entries]]
+id = "eeee53d5-8969-470b-9e75-9bc9b33632f3"
+type = "fix"
+description = "sort sidebar items in docusaurus"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/183",
+]
+
+[[entries]]
+id = "64c4e16c-e2d0-4443-9298-87625e9a0959"
+type = "fix"
+description = "replace backslashes with forward slashes in docusaurus sidebar (actually in 3.10.2)"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/129",
+]

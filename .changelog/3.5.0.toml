@@ -1,0 +1,35 @@
+release-date = "2020-09-04"
+
+[[entries]]
+id = "b1378f3b-8617-4c37-8d42-485f9920cc15"
+type = "feature"
+description = "docusaurus: Add new `docusaurus` Renderer (contributed to by @m-vdb)"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/151",
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/147",
+]
+
+[[entries]]
+id = "e3ccf20c-021c-428d-8b19-2a4f29670a12"
+type = "improvement"
+description = "markdown: Remove `MarkdownRenderer.fp` option, add `MarkdownRenderer.render_to_stream()`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "2d8ef2cc-fdd5-4244-a7e9-a7e6de54fe21"
+type = "feature"
+description = "filter: add `FilterProcessor.skip_empty_modules` option"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "da5cc1d1-fc37-450c-9f9b-74543f4f5982"
+type = "feature"
+description = "markdown: Add `MarkdownRenderer.render_module_header_template` and `.escape_html_in_docstring` options"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "de0385c5-0aac-4142-bfef-91ff0b6928ae"
+type = "feature"
+description = "cli: Add `--bootstrap docusaurus` option"
+author = "@NiklasRosenstein"

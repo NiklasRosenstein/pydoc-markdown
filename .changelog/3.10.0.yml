@@ -1,6 +1,0 @@
-release_date: '2021-02-20'
-changes:
-- type: feature
-  component: general
-  description: add `PythonLoader.encoding` option
-  fixes: []

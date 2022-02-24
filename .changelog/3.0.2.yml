@@ -1,6 +1,0 @@
-release_date: null
-changes:
-- type: fix
-  component: mkdocs
-  description: fix `NameError` in `MkdocsRenderer`
-  fixes: []

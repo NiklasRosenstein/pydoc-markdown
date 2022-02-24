@@ -1,0 +1,13 @@
+release-date = "2021-07-23"
+
+[[entries]]
+id = "389392c9-52f0-4837-b058-0ec822017c60"
+type = "fix"
+description = "fix `--render-toc` option"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "87a30a13-b9da-4cd5-b23e-14d8e3574d99"
+type = "feature"
+description = "Jinja2Renderer: add `blockquote` and `describe` built-in filters"
+author = "@NiklasRosenstein"

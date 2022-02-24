@@ -1,4 +1,19 @@
 [[entries]]
+id = "363e049b-c6b5-405a-b6f6-b1728fb99275"
+type = "fix"
+description = "hugo: Hugo now respects the baseUrl option @Heiss"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "57b68994-1c11-43da-991e-6531a2cc725f"
+type = "docs"
+description = "docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores."
+author = "@chrisstetter"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/189",
+]
+
+[[entries]]
 id = "072f60b0-1f4e-4075-a22a-242980b9f555"
 type = "hygiene"
 description = "remove `MarkdownRenderer.classdef_render_init_signature_if_needed` option because it never worked to begin with"

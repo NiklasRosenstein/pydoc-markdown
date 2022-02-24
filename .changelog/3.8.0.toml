@@ -1,0 +1,7 @@
+release-date = "2020-11-06"
+
+[[entries]]
+id = "17ef5aa4-e44a-41cb-b154-d4ee6aa8b5e3"
+type = "feature"
+description = "add new `bitbucket` source linker (@hkenny, #163)"
+author = "@NiklasRosenstein"

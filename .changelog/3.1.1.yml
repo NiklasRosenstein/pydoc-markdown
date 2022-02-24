@@ -1,8 +1,0 @@
-release_date: null
-changes:
-- type: improvement
-  component: dependencies
-  description: bump dependency on `nr.databind.core` to `~0.0.18` to avoid picking
-    up the bad `0.0.17` version
-  fixes:
-  - '126'

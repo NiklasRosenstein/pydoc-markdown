@@ -1,0 +1,10 @@
+release-date = "2021-05-21"
+
+[[entries]]
+id = "1e05ec39-a169-4e01-99a9-8c7059e96840"
+type = "feature"
+description = "SphinxProcessor: parse `type` and `rtype`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/157",
+]

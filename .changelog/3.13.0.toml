@@ -1,0 +1,7 @@
+release-date = "2021-05-29"
+
+[[entries]]
+id = "133eabd9-0af2-426d-8b71-aab963db0901"
+type = "improvement"
+description = "upgrade to `docspec-python~0.2.0`"
+author = "@NiklasRosenstein"

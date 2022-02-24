@@ -1,0 +1,13 @@
+release-date = "2021-05-21"
+
+[[entries]]
+id = "98dfb860-1be0-4594-9098-a0a8bb9c0529"
+type = "fix"
+description = "add missing `dataclasses` dependency for Python 3.6 compatibility"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "af994467-d624-4074-a960-75baf503e10f"
+type = "fix"
+description = "set minimum Python version in `package.yml` to `^3.6`"
+author = "@NiklasRosenstein"

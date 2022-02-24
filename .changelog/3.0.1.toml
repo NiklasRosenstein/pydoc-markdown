@@ -1,0 +1,49 @@
+release-date = "2020-05-16"
+
+[[entries]]
+id = "b58a872f-3020-4fa3-9779-7813fd287fcd"
+type = "feature"
+description = "cli: added `--version` option"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "f09ef20d-4bd1-4ee5-a59a-d3fb54b42225"
+type = "feature"
+description = "cli: added `-p,--package` option (which overrides `PythonLoader.packages`)"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "c67d5185-17b3-4fb2-9853-150f824380fd"
+type = "feature"
+description = "utils: added `pydoc_markdown.utils.page` module"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "f225eea2-6912-4ed3-8b46-0387cdb1e09e"
+type = "feature"
+description = "cli: added `RenderSession` class to `pydoc_markdown.main` module which makes the cli logic easier to maintain and re-use."
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "94539d09-f829-4759-b454-5d63c04f164d"
+type = "feature"
+description = "markdown: added hidden `MarkdownRenderer.fp` option"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "22cac368-b61e-4aa6-bfcb-b0aaa9eb6384"
+type = "feature"
+description = "python: added `PythonLoader.packages` option"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "48e5c895-51dc-430f-a482-405d5c637965"
+type = "improvement"
+description = "python: changed behavior of `PythonLoader.modules` option (it will not only load the module that was explicitly specified and exclude any sub-modules, if applicable)."
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "0917ae7d-9e5c-4c4f-bb4c-68c55c98d7b8"
+type = "improvement"
+description = "cli: dynamically lookup `MarkdownRenderer` configuration from the renderer to support renderers other than `MarkdownRenderer` and `MkdocsRenderer` that supply a `markdown` field that is an instance of `MarkdownRenderer` (so they can be used with `--render-toc` as well)."
+author = "@NiklasRosenstein"

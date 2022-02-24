@@ -1,6 +1,0 @@
-release_date: '2021-05-29'
-changes:
-- type: change
-  component: general
-  description: upgrade to `docspec-python~0.2.0`
-  fixes: []
