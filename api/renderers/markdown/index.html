@@ -566,9 +566,9 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">MarkdownRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">SinglePageRenderer</span><span class="p">)</span>
 </code></pre></div>
-<p>Produces Markdown files. This renderer is often used by other renderers, such as
-<code>MkdocsRenderer</code> and <code>HugoRenderer</code>. It provides a wide variety of options to customize
-the generated Markdown files.</p>
+<p>Produces Markdown files. This renderer is often used by other renderers, such as</p>
+<h1 id="mkdocsrenderer-and-hugorenderer-it-provides-a-wide-variety-of-options-to-customize">MkdocsRenderer and #HugoRenderer. It provides a wide variety of options to customize</h1>
+<p>the generated Markdown files.</p>
 <h3 id="options">Options</h3>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.filename"></a></p>
 <h4 id="filename">filename</h4>
@@ -589,7 +589,7 @@ by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers"></a></p>
 <h4 id="code_headers">code_headers</h4>
 <p>Render names in headers as code (using backticks or <code>&lt;code&gt;</code> tags,
-depending on <a href="#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.html_headers"><code>html_headers</code></a>). This is enabled by default.</p>
+depending on #html_headers). This is enabled by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.descriptive_class_title"></a></p>
 <h4 id="descriptive_class_title">descriptive_class_title</h4>
 <p>Generate descriptive class titles by adding the word "Objects" after
@@ -601,12 +601,12 @@ the module name. This is enabled by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_module_prefix"></a></p>
 <h4 id="add_module_prefix">add_module_prefix</h4>
 <p>Add the module name as a prefix to class &amp; method names. This module name is
-also rendered as code if <a href="#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers"><code>code_headers</code></a> is enabled. This is enabled
+also rendered as code if #code_headers is enabled. This is enabled
 by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_method_class_prefix"></a></p>
 <h4 id="add_method_class_prefix">add_method_class_prefix</h4>
 <p>Add the class name as a prefix to method names. This class name is
-also rendered as code if <a href="#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers"><code>code_headers</code></a> is enabled. This is enabled
+also rendered as code if #code_headers is enabled. This is enabled
 by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_member_class_prefix"></a></p>
 <h4 id="add_member_class_prefix">add_member_class_prefix</h4>
@@ -618,7 +618,7 @@ default.</p>
 This is disabled by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.sub_prefix"></a></p>
 <h4 id="sub_prefix">sub_prefix</h4>
-<p>If <a href="#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_full_prefix"><code>add_full_prefix</code></a> is enabled, this will result in the prefix to
+<p>If #add_full_prefix is enabled, this will result in the prefix to
 be wrapped in a <code>&lt;sub&gt;</code> tag.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.data_code_block"></a></p>
 <h4 id="data_code_block">data_code_block</h4>
@@ -694,19 +694,19 @@ enabled by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.use_fixed_header_levels"></a></p>
 <h4 id="use_fixed_header_levels">use_fixed_header_levels</h4>
 <p>Use a fixed header level for every kind of API object. The individual
-levels can be defined with <a href="#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.header_level_by_type"><code>header_level_by_type</code></a>.</p>
+levels can be defined with #header_level_by_type.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.header_level_by_type"></a></p>
 <h4 id="header_level_by_type">header_level_by_type</h4>
 <p>Fixed header levels by API object type.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_linker"></a></p>
 <h4 id="source_linker">source_linker</h4>
-<p>A plugin that implements the <code>SourceLinker</code> interface to provide links to the
+<p>A plugin that implements the #SourceLinker interface to provide links to the
 source code of API objects. If this field is specified, the renderer will
 place links to the source code in the generated Markdown files.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_format"></a></p>
 <h4 id="source_format">source_format</h4>
 <p>Allows you to override how the "view source" link is rendered into the Markdown
-file if a <a href="#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_linker"><code>source_linker</code></a> is configured. The default is <code>[[view_source]]({url})</code>.</p>
+file if a #source_linker is configured. The default is <code>[[view_source]]({url})</code>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.escape_html_in_docstring"></a></p>
 <h4 id="escape_html_in_docstring">escape_html_in_docstring</h4>
 <p>Escape html in docstring. Default to False.</p>
@@ -714,7 +714,7 @@ file if a <a href="#pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.s
 <h4 id="get_resolver">get_resolver</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_resolver</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Resolver</span><span class="p">]</span>
 </code></pre></div>
-<p>Returns a simple <code>Resolver</code> implementation. Finds cross-references in the same file.</p>
+<p>Returns a simple #Resolver implementation. Finds cross-references in the same file.</p>
 
               
             </article>

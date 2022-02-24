@@ -581,7 +581,7 @@ with the configuration class.</p>
 <h2 id="resolver-objects">Resolver Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Resolver</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
-<p>A resolver can be used by a <a href="#pydoc_markdown.interfaces.Processor"><code>Processor</code></a> to replace cross references with a hyperlink.</p>
+<p>A resolver can be used by a #Processor to replace cross references with a hyperlink.</p>
 <p><a id="pydoc_markdown.interfaces.Processor"></a></p>
 <h2 id="processor-objects">Processor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@A</span><span class="o">.</span><span class="n">unionclass</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
@@ -589,7 +589,7 @@ with the configuration class.</p>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">import_</span><span class="p">()),</span> <span class="n">style</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Style</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Processor</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p>A processor is an object that takes a list of <code>docspec.Modules</code> as an input and
+<p>A processor is an object that takes a list of #docspec.Module#s as an input and
 transforms it in an arbitrary way. This usually processes docstrings to convert from
 various documentation syntaxes to plain Markdown.</p>
 <p><a id="pydoc_markdown.interfaces.Renderer"></a></p>
@@ -599,12 +599,12 @@ various documentation syntaxes to plain Markdown.</p>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">import_</span><span class="p">()),</span> <span class="n">style</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Style</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Renderer</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p>A renderer is an object that takes a list of <code>docspec.Modules</code> as an input and produces
+<p>A renderer is an object that takes a list of #docspec.Module#s as an input and produces
 output files or writes to stdout. It may also expose additional command-line arguments.
 There can only be one renderer at the end of the processor chain.</p>
 <p>Note that sometimes a renderer may need to perform some processing before the render step.
 To keep the possibility open that a renderer may implement generic processing that could
-used without the actual renderering functionality, <a href="#pydoc_markdown.interfaces.Renderer"><code>Renderer</code></a> is a subclass of <a href="#pydoc_markdown.interfaces.Processor"><code>Processor</code></a>.</p>
+used without the actual renderering functionality, #Renderer is a subclass of #Processor.</p>
 <p><a id="pydoc_markdown.interfaces.SinglePageRenderer"></a></p>
 <h2 id="singlepagerenderer-objects">SinglePageRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">SinglePageRenderer</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
@@ -615,7 +615,7 @@ used without the actual renderering functionality, <a href="#pydoc_markdown.inte
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Server</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
 <p>This interface describes an object that can start a server process for
-live-viewing generated documentation in the browser. <a href="#pydoc_markdown.interfaces.Renderer"><code>Renderer</code></a>
+live-viewing generated documentation in the browser. #Renderer
 implementations may additionally implement this interface to advocate their
 compatibility with the <code>--server</code> and <code>--open</code> options of the pydoc-markdown
 CLI.</p>
@@ -625,13 +625,13 @@ CLI.</p>
 </code></pre></div>
 <p>Called when the files generated by pydoc-markdown have been updated.
 This gives the implementation a chance to reload the server process.
-The default implementation returns the <em>process</em> unchanged. Returning
-<code>None</code> will automatically call <code>start_server()</code> afterwards.</p>
+The default implementation returns the <em>process</em> unchanged. Returning</p>
+<h1 id="none-will-automatically-call-start_server-afterwards">None will automatically call #start_server() afterwards.</h1>
 <p><a id="pydoc_markdown.interfaces.Builder"></a></p>
 <h2 id="builder-objects">Builder Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Builder</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
-<p>This interface can be implemented additionally to the <a href="#pydoc_markdown.interfaces.Renderer"><code>Renderer</code></a> interface to
+<p>This interface can be implemented additionally to the #Renderer interface to
 indicate that the renderer supports building another produce after the markdown
 files have been rendered.</p>
 <p><a id="pydoc_markdown.interfaces.Builder.build"></a></p>

@@ -355,47 +355,6 @@
     PythonLoader Objects
   </a>
   
-    <nav class="md-nav" aria-label="PythonLoader Objects">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#packages" class="md-nav__link">
-    packages
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#search_path" class="md-nav__link">
-    search_path
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ignore_when_discovered" class="md-nav__link">
-    ignore_when_discovered
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parser" class="md-nav__link">
-    parser
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#encoding" class="md-nav__link">
-    encoding
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -623,47 +582,6 @@
     PythonLoader Objects
   </a>
   
-    <nav class="md-nav" aria-label="PythonLoader Objects">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#packages" class="md-nav__link">
-    packages
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#search_path" class="md-nav__link">
-    search_path
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ignore_when_discovered" class="md-nav__link">
-    ignore_when_discovered
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parser" class="md-nav__link">
-    parser
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#encoding" class="md-nav__link">
-    encoding
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -690,10 +608,10 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">PythonLoader</span><span class="p">(</span><span class="n">Loader</span><span class="p">)</span>
 </code></pre></div>
-<p>This implementation of the <code>Loader</code> interface parses Python modules and packages using
-<code>docspec_python</code>. See the options below to control which modules and packages are being
-loaded and how to configure the parser.</p>
-<p>With no <code>modules</code> or <a href="#pydoc_markdown.contrib.loaders.python.PythonLoader.packages"><code>packages</code></a> set, the <a href="#pydoc_markdown.contrib.loaders.python.PythonLoader"><code>PythonLoader</code></a> will discover available modules
+<p>This implementation of the #Loader interface parses Python modules and packages using</p>
+<h1 id="docspec_python-see-the-options-below-to-control-which-modules-and-packages-are-being">docspec_python. See the options below to control which modules and packages are being</h1>
+<p>loaded and how to configure the parser.</p>
+<p>With no #modules or #packages set, the #PythonLoader will discover available modules
 in the current and <code>src/</code> directory.</p>
 <p><strong>lib2to3 Quirks</strong></p>
 <p>Pydoc-Markdown doesn't execute your Python code but instead relies on the
@@ -709,12 +627,12 @@ in the current and <code>src/</code> directory.</p>
 including all sub-packages and modules.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.search_path"></a></p>
 <h4 id="search_path">search_path</h4>
-<p>The module search path. If not specified, the current <code>sys.path</code> is
+<p>The module search path. If not specified, the current #sys.path is
 used instead. If any of the elements contain a <code>*</code> (star) symbol, it
-will be expanded with <code>sys.path</code>.</p>
+will be expanded with #sys.path.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.ignore_when_discovered"></a></p>
 <h4 id="ignore_when_discovered">ignore_when_discovered</h4>
-<p>List of modules to ignore when using module discovery on the <a href="#pydoc_markdown.contrib.loaders.python.PythonLoader.search_path"><code>search_path</code></a>.</p>
+<p>List of modules to ignore when using module discovery on the #search_path.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.parser"></a></p>
 <h4 id="parser">parser</h4>
 <p>Options for the Python parser.</p>
