@@ -40,7 +40,7 @@ jobs:
       uses: actions/setup-python@v2
       with: { python-version: "3.10" }
     - name: Installing
-      run: pip install -r docs/requirements.txt
+      run: pip install -r docs/requirements.txt && pipx install .
     - name: Build documentation
       run: cd docs && novella
     - name: Publish docs
