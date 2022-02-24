@@ -1,2 +1,4 @@
+mkdocs
+mkdocs-material
 novella==0.1.4
 -r ../.github/slam-cli.txt
