@@ -50,3 +50,25 @@ id = "1dd5214f-680d-4f36-9c67-19035b0885a0"
 type = "feature"
 description = "`CrossRefProcessor` now accepts a `resolver_v2` argument to use instead of the `resolver` object passed through the `Processor` API"
 author = "@NiklasRosenstein"
+
+[[entries]]
+id = "49e011c3-a01e-4bf9-b821-106f5453299e"
+type = "fix"
+description = "hugo: Hugo now respects the baseUrl option @Heiss"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "b95f84ae-b3e2-421e-8fcc-b5a95601539a"
+type = "docs"
+description = "docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores."
+author = "@chrisstetter"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/189",
+]
+
+[[entries]]
+id = "4260b3b9-7545-4645-acfd-b0b3eb4fdbeb"
+type = "fix"
+description = "hugo: Adds Apple Silicon to Hugo' recognized architectures."
+author = "@MilesCranmer"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/238"
