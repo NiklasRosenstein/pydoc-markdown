@@ -579,7 +579,7 @@
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer"></a></p>
 <h2 id="markdownrenderer-objects">MarkdownRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">MarkdownRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">SinglePageRenderer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MarkdownRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">SinglePageRenderer</span><span class="p">,</span> <span class="n">SingleObjectRenderer</span><span class="p">)</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L41)</p>
 <p>Produces Markdown files. This renderer is often used by other renderers, such as</p>
@@ -767,7 +767,7 @@ file if a #source_linker is configured. The default is <code>[[view_source]]({ur
 <h4 id="get_resolver">get_resolver</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_resolver</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Resolver</span><span class="p">]</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L407)</p>
+<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L412)</p>
 <p>Returns a simple #Resolver implementation. Finds cross-references in the same file.</p>
 
               
