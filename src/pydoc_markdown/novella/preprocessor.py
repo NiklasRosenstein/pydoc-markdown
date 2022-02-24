@@ -16,7 +16,8 @@ from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.interfaces import Context, Loader, Processor, SingleObjectRenderer, SourceLinker
 from pydoc_markdown.contrib.loaders.python import PythonLoader
-from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer, MarkdownReferenceResolver
+from pydoc_markdown.util.docspec import ApiSuite
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +57,13 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
 
     source_linker = autodetect_source_linker()
     self._loader = PythonLoader(search_path=search_path)
-    self._processors = [FilterProcessor(), SmartProcessor(), CrossrefProcessor()]
-    self._renderer = MarkdownRenderer(source_linker=source_linker)
+    self._processors = [
+      FilterProcessor(),
+      SmartProcessor(),
+      # We return the entire link formatted as a Novella {@link} tag in #resolve_ref().
+      CrossrefProcessor(resolver_v2=MarkdownReferenceResolver(global_=True)),
+    ]
+    self._renderer = MarkdownRenderer(source_linker=source_linker, render_novella_anchors=True)
 
   @t.overload
   def loader(self) -> Loader: ...
@@ -95,6 +101,8 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     else:
       return self._renderer
 
+  # MarkdownPreprocessor
+
   def process_files(self, files: MarkdownFiles) -> None:
     context = Context(str(Path.cwd()))
     self._loader.init(context)
@@ -102,15 +110,16 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
 
     modules = list(self._loader.load())
     for processor in self._processors:
-      processor.process(modules, None)  # TODO: Add resolver here to render Novella {@link} tags?
+      processor.process(modules, self)
+    suite = ApiSuite(modules)
 
     for file in files:
       tags = [t for t in parse_block_tags(file.content) if t.name == 'pydoc']
-      file.content = replace_tags(file.content, tags, lambda t: self._replace_tag(modules, file, t))
+      file.content = replace_tags(file.content, tags, lambda t: self._replace_tag(suite, file, t))
 
-  def _replace_tag(self, modules: t.List[docspec.Module], file: MarkdownFile, tag: Tag) -> str | None:
+  def _replace_tag(self, suite: ApiSuite, file: MarkdownFile, tag: Tag) -> str | None:
     fqn = tag.args.strip()
-    objects = get_objects_by_fqn(modules, fqn)
+    objects = suite.resolve_fqn(fqn)
     if len(objects) > 1:
       logger.warning('  found multiple matches for Python FQN <fg=cyan>%s</fg>', fqn)
     elif not objects:
@@ -121,17 +130,3 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     fp = io.StringIO()
     self._renderer.render_object(fp, objects[0], tag.options)
     return fp.getvalue()
-
-
-def get_objects_by_fqn(modules: t.Sequence[docspec.Module], fqn: str) -> t.List[docspec.ApiObject]:
-
-  def _match(results: list[docspec.ApiObject]) -> t.Callable[[docspec.ApiObject], t.Any]:
-    def matcher(obj: docspec.ApiObject) -> None:
-      current_fqn = '.'.join(y.name for y in obj.path)
-      if current_fqn == fqn:
-        results.append(obj)
-    return matcher
-
-  results: list[docspec.ApiObject] = []
-  docspec.visit(modules, _match(results))
-  return results

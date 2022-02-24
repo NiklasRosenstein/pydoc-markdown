@@ -32,3 +32,21 @@ id = "56ad7f3e-b0f2-4a96-8066-64249bc18a47"
 type = "feature"
 description = "add `pydoc_markdown.interfaces.SingleObjectRenderer` and use it in Novella `@pydoc` tag processor"
 author = "@NiklasRosenstein"
+
+[[entries]]
+id = "ad6ce2db-2342-4baf-8a8d-6f3f858b1ac2"
+type = "feature"
+description = "add `ApiSuite` class and `ResolverV2` which is used by the new `@pydoc` tag preprocessor when using Novella"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "6bebcee4-6851-4ed6-8600-d0c2b997b97b"
+type = "feature"
+description = "`MarkdownReferenceResolver` now implements the new `ResolverV2` interface and can resolve references globally"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "1dd5214f-680d-4f36-9c67-19035b0885a0"
+type = "feature"
+description = "`CrossRefProcessor` now accepts a `resolver_v2` argument to use instead of the `resolver` object passed through the `Processor` API"
+author = "@NiklasRosenstein"

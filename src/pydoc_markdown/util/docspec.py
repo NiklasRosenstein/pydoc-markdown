@@ -81,3 +81,26 @@ def get_object_description(obj: docspec.ApiObject) -> str:
     return 'data'
   else:
     assert False, type(obj)
+
+
+class ApiSuite:
+  """ Container for all loaded API objects. """
+
+  def __init__(self, modules: t.List[docspec.Module]) -> None:
+    self._modules = modules
+
+  def resolve_fqn(self, fqn: str) -> t.List[docspec.ApiObject]:
+
+    def _match(results: list[docspec.ApiObject]) -> t.Callable[[docspec.ApiObject], t.Any]:
+      def matcher(obj: docspec.ApiObject) -> None:
+        current_fqn = '.'.join(y.name for y in obj.path)
+        if current_fqn == fqn:
+          results.append(obj)
+      return matcher
+
+    results: list[docspec.ApiObject] = []
+    docspec.visit(self._modules, _match(results))
+    return results
+
+  def __iter__(self) -> t.Iterator[docspec.Module]:
+    return iter(self._modules)

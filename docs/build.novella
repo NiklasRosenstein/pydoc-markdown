@@ -3,5 +3,5 @@ template "mkdocs" {
 }
 
 action "mkdocs-preprocess-markdown" {
-  use "pydoc"
+  use "pydoc" head: True
 }

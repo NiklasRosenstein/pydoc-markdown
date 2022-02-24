@@ -26,11 +26,10 @@ import sys
 import typing as t
 
 import docspec
-from deprecated import deprecated
 from docspec_python import format_arglist
 
-from pydoc_markdown.interfaces import Context, Renderer, Resolver, SingleObjectRenderer, SinglePageRenderer, SourceLinker
-from pydoc_markdown.util.docspec import format_function_signature, is_method
+from pydoc_markdown.interfaces import Context, Renderer, Resolver, ResolverV2, SingleObjectRenderer, SinglePageRenderer, SourceLinker
+from pydoc_markdown.util.docspec import format_function_signature, is_method, ApiSuite
 
 
 def dotted_name(obj: docspec.ApiObject) -> str:
@@ -198,6 +197,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
   #: Escape html in docstring. Default to False.
   escape_html_in_docstring: bool = False
 
+  #: Render Novella `@anchor` tags before headings.
+  render_novella_anchors: bool = False
+
   def __post_init__(self) -> None:
     self._resolver = MarkdownReferenceResolver()
 
@@ -252,6 +254,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
       header_template = '<h{0} id="{1}">{{title}}</h{0}>'.format(level, object_id)
     else:
       header_template = level * '#' + ' {title}'
+    if self.render_novella_anchors:
+      fp.write(f'@anchor pydoc:' + '.'.join(x.name for x in obj.path) + '\n')
     fp.write(header_template.format(title=self._get_title(obj)))
     fp.write('\n\n')
 
@@ -430,12 +434,16 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
       self.source_linker.init(context)
 
 
-class MarkdownReferenceResolver(Resolver):
+@dataclasses.dataclass
+class MarkdownReferenceResolver(Resolver, ResolverV2):
+
+  local: bool = True
+  global_: bool = False
 
   def generate_object_id(self, obj: docspec.ApiObject) -> str:
     return '.'.join(o.name for o in obj.path)
 
-  def _resolve_reference(self, obj: t.Optional[docspec.ApiObject], ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
+  def _resolve_reference_in_members(self, obj: t.Optional[docspec.ApiObject], ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
     if not obj:
       return None
     for part_name in ref:
@@ -444,16 +452,44 @@ class MarkdownReferenceResolver(Resolver):
         return None
     return obj
 
-  def _find_reference(self, obj: t.Optional[docspec.ApiObject], ref: t.List[str]) -> t.Optional[docspec.ApiObject]:
+  # Resolver
+
+  def resolve_ref(self, scope: docspec.ApiObject, ref: str) -> t.Optional[str]:
+    target = self.resolve_reference(scope, ref)
+    if target:
+      return '#' + self.generate_object_id(target)
+    return None
+
+  # ResolverV2
+
+  def resolve_reference(self, suite: ApiSuite, scope: docspec.ApiObject, ref: str) -> t.Optional[docspec.ApiObject]:
+    """ Resolves the reference by searching in the members of *scope* or any of its parents. """
+
+    # TODO (@NiklasRosenstein): Support resolving indirections
+
+    ref_split = ref.split('.')
+
+    obj = scope
     while obj:
-      resolved = self._resolve_reference(obj, ref)
+      resolved = self._resolve_reference_in_members(obj, ref_split)
       if resolved:
         return resolved
       obj = obj.parent
-    return None
 
-  def resolve_ref(self, obj: docspec.ApiObject, ref: str) -> t.Optional[str]:
-    target = self._find_reference(obj, ref.split('.'))
-    if target:
-      return '#' + self.generate_object_id(target)
+    if self.global_:
+      def _recurse(obj: docspec.ApiObject) -> t.Optional[docspec.ApiObject]:
+        resolved = self._resolve_reference_in_members(obj, ref_split)
+        if resolved:
+          return resolved
+        if isinstance(obj, docspec.HasMembers):
+          for member in obj.members:
+            resolved = _recurse(member)
+            if resolved:
+              return resolved
+
+      for module in suite:
+        resolved = _recurse(module)
+        if resolved:
+          return resolved
+
     return None

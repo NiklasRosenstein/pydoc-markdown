@@ -26,7 +26,8 @@ import typing as t
 
 import docspec
 
-from pydoc_markdown.interfaces import Processor, Resolver
+from pydoc_markdown.interfaces import Processor, Resolver, ResolverV2
+from pydoc_markdown.util.docspec import ApiSuite
 
 logger = logging.getLogger(__name__)
 
@@ -62,10 +63,13 @@ class CrossrefProcessor(Processor):
   ```
   """
 
+  #: If specified, it will be used instead of the resolver passed to #process() and the generated Markdown
+  #: code for the reference uses Novella `{@link}` syntax.
+  resolver_v2: t.Optional[ResolverV2] = None
+
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
     unresolved: t.Dict[str, t.List[str]] = {}
-    if resolver:
-      docspec.visit(modules, lambda x: self._preprocess_refs(x, t.cast(Resolver, resolver), unresolved))
+    docspec.visit(modules, lambda x: self._preprocess_refs(x, t.cast(Resolver, resolver), ApiSuite(modules), unresolved))
 
     if unresolved:
       summary = []
@@ -81,7 +85,8 @@ class CrossrefProcessor(Processor):
   def _preprocess_refs(
     self,
     node: docspec.ApiObject,
-    resolver: Resolver,
+    resolver: t.Optional[Resolver],
+    suite: ApiSuite,
     unresolved: t.Dict[str, t.List[str]],
   ) -> None:
     if not node.docstring:
@@ -100,16 +105,31 @@ class CrossrefProcessor(Processor):
       elif not parens and ref.endswith('.'):
         ref = ref[:-1]
         has_trailing_dot = True
-      href = resolver.resolve_ref(node, ref)
-      if href:
-        result = '[`{}`]({})'.format(ref + parens + trailing, href)
+
+      text = ref + parens + trailing
+      result: t.Optional[str] = None
+
+      if self.resolver_v2:
+        target = self.resolver_v2.resolve_reference(suite, node, ref)
+        if target:
+          import tomli_w
+          opt = tomli_w.dumps({"text": text})
+          result = f'{{@link pydoc:{".".join(x.name for x in target.path)} :with {opt}}}'
+
       else:
+        href = resolver.resolve_ref(node, ref)
+        if href:
+          result = '[`{}`]({})'.format(text, href)
+
+      if result is None:
         uid = '.'.join(x.name for x in node.path)
         unresolved.setdefault(uid, []).append(ref)
         result = '`{}`'.format(ref + parens + trailing)
+
       # Add back the dot.
       if has_trailing_dot:
         result += '.'
+
       return result
 
     node.docstring.content = re.sub(

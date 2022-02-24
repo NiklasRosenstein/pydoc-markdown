@@ -32,6 +32,9 @@ import typing as t
 import docspec
 from databind.core import annotations as A
 
+if t.TYPE_CHECKING:
+  from pydoc_markdown.util.docspec import ApiSuite
+
 
 class Context:
   """
@@ -72,6 +75,16 @@ class Resolver(abc.ABC):
 
   @abc.abstractmethod
   def resolve_ref(self, scope: docspec.ApiObject, ref: str) -> t.Optional[str]: ...
+
+
+class ResolverV2(abc.ABC):
+  """ New style interface for resolving based on a text ref from in the context of a #docspec.ApiObject
+  to find another. This is different from #Resolver because it returns the resolved object directly, instead
+  of some string representation of it.
+  """
+
+  @abc.abstractmethod
+  def resolve_reference(self, suite: 'ApiSuite', scope: docspec.ApiObject, ref: str) -> t.Optional[docspec.ApiObject]: ...
 
 
 @A.unionclass(A.unionclass.Subtypes.chain(
