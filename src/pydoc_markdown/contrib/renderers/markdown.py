@@ -110,10 +110,6 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
   #: keyword, the class name and its bases. This is enabled by default.
   classdef_code_block: bool = True
 
-  #: Render the constructor signature in the class definition code block
-  #: if its `__init__()` member is not visible.
-  classdef_render_init_signature_if_needed: bool = True
-
   #: Render decorators before class definitions.
   classdef_with_decorators: bool = True
 
@@ -290,15 +286,6 @@ class MarkdownRenderer(Renderer, SinglePageRenderer):
     code = 'class {}({})'.format(cls.name, bases)
     if self.signature_python_help_style:
       code = dotted_name(cls) + ' = ' + code
-    if self.classdef_render_init_signature_if_needed:
-      init_member = docspec.get_member(cls, '__init__')
-      if init_member and isinstance(init_member, docspec.Function):
-        code += ':\n '
-        if self.signature_with_vertical_bar:
-          code += "|  "
-        else:
-          code += "   "
-        code += self._format_function_signature(init_member, override_name=cls.name, add_method_bar=False)
 
     if cls.decorations and self.classdef_with_decorators:
       code = '\n'.join(self._format_decorations(cls.decorations)) + code

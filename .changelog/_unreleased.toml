@@ -1,0 +1,5 @@
+[[entries]]
+id = "072f60b0-1f4e-4075-a22a-242980b9f555"
+type = "hygiene"
+description = "remove `MarkdownRenderer.classdef_render_init_signature_if_needed` option because it never worked to begin with"
+author = "@NiklasRosenstein"
