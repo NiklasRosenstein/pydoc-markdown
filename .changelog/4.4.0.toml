@@ -48,3 +48,18 @@ id = "a783b7e4-efcf-487b-a069-5be522079e77"
 type = "feature"
 description = "add `GitlabSourceLinker` class (entrypoint name: `gitlab`). @Heiss"
 author = "@NiklasRosenstein"
+
+[[entries]]
+id = "3a84d8ee-f977-4385-8bd7-482e7ad8b5ff"
+type = "feature"
+description = "MarkdownRenderer: add `render_typehint_in_data_header` option to `MarkdownRenderer`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/229",
+]
+
+[[entries]]
+id = "590aa650-e39e-4791-bf7f-eacdf57da132"
+type = "fix"
+description = "MarkdownRenderer: no longer escape markdown in headers when `html_headers` is enabled (used to result in additional backslashes when interpreted by most Markdown to HTML renderers)"
+author = "@NiklasRosenstein"
