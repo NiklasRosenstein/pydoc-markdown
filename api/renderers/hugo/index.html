@@ -1,0 +1,778 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.1">
+    
+    
+      
+        <title>Docusaurus - Pydoc Markdown</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.e8d9bf0c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#docusaurus" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Pydoc Markdown" class="md-header__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pydoc Markdown
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docusaurus
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/NiklasRosenstein/pydoc-markdown/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Pydoc Markdown" class="md-nav__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pydoc Markdown
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/NiklasRosenstein/pydoc-markdown/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Welcome to the Pydoc Markdown documentation!
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Api
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Api" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Api
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/" class="md-nav__link">
+        Command-line interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/" class="md-nav__link">
+        Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../loaders/" class="md-nav__link">
+        Loaders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processors/" class="md-nav__link">
+        Processors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_5" type="checkbox" id="__nav_5_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_5">
+          Renderers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Renderers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_5">
+          <span class="md-nav__icon md-icon"></span>
+          Renderers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docusaurus/" class="md-nav__link">
+        Docusaurus
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Docusaurus
+      </a>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../jinja2/" class="md-nav__link">
+        Jinja2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../markdown/" class="md-nav__link">
+        Markdown
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mkdocs/" class="md-nav__link">
+        MkDocs
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/migrate-from-3x-to-4x/" class="md-nav__link">
+        Migrate from 3.x to 4.x
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/readthedocs/" class="md-nav__link">
+        Read the Docs
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD detached at pull/245/merge)/docs/content/api/renderers/hugo.md" title="Edit this page" class="md-content__button md-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+</a>
+
+
+
+<h1 id="docusaurus">Docusaurus</h1>
+<p><a id="pydoc_markdown.contrib.renderers.hugo"></a></p>
+<h1 id="pydoc_markdowncontribrenderershugo">pydoc_markdown.contrib.renderers.hugo</h1>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoPage"></a></p>
+<h2 id="hugopage-objects">HugoPage Objects</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">HugoPage</span><span class="p">(</span><span class="n">Page</span><span class="p">[</span><span class="s1">&#39;HugoPage&#39;</span><span class="p">])</span>
+</code></pre></div>
+<p>A subclass of <code>Page</code> which adds Hugo-specific overrides.</p>
+<h3 id="options">Options</h3>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoPage.preamble"></a></p>
+<h4 id="preamble">preamble</h4>
+<p>The Hugo preamble of the page. This is merged with the <a href="#pydoc_markdown.contrib.renderers.hugo.HugoRenderer.default_preamble"><code>HugoRenderer.default_preamble</code></a>.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoPage.directory"></a></p>
+<h4 id="directory">directory</h4>
+<p>Override the directory that this page is rendered into (relative to the
+content directory). Defaults to <code>null</code>.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig"></a></p>
+<h2 id="hugoconfig-objects">HugoConfig Objects</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">HugoConfig</span><span class="p">()</span>
+</code></pre></div>
+<p>Represents the Hugo configuration file that is rendered into the build directory.</p>
+<h3 id="options_1">Options</h3>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.title"></a></p>
+<h4 id="title">title</h4>
+<p>Title of the site. This is a mandatory field.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.theme"></a></p>
+<h4 id="theme">theme</h4>
+<p>The theme of the site. This is a mandatory field. It must be a string, a <code>HugoThemePath</code>
+or a <code>HugoThemeGitUrl</code> object. Examples:</p>
+<div class="highlight"><pre><span></span><code>theme: antarctica
+theme: {clone_url: &quot;https://github.com/alex-shpak/hugo-book.git&quot;}
+theme: docs/hugo-theme/
+</code></pre></div>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.baseURL"></a></p>
+<h4 id="baseurl">baseURL</h4>
+<p>Base URL.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.serverURL"></a></p>
+<h4 id="serverurl">serverURL</h4>
+<p>Server URL. Default: <code>127.0.0.1</code> aka <code>localhost</code></p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.serverPort"></a></p>
+<h4 id="serverport">serverPort</h4>
+<p>Server Port. Default: <code>1313</code></p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.languageCode"></a></p>
+<h4 id="languagecode">languageCode</h4>
+<p>Language code. Default: <code>en-us</code></p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.additional_options"></a></p>
+<h4 id="additional_options">additional_options</h4>
+<p>This field collects all remaining options that do not match any of the above
+and will be forwarded directly into the Hugo <code>config.yaml</code> when it is rendered
+into the build directory.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer"></a></p>
+<h2 id="hugorenderer-objects">HugoRenderer Objects</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">HugoRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">Builder</span><span class="p">)</span>
+</code></pre></div>
+<p>A renderer that produces Markdown files compatible with <a href="https://gohugo.io/">Hugo</a>. The <code>--bootstrap hugo</code>
+option can be used to create a Pydoc-Markdown configuration file with the Hugo template.</p>
+<ul>
+<li>Adds a YAML preamble to every generated Markdown file.</li>
+<li>Produces files in a layout suitable for Hugo (e.g. <code>_index.md</code> files).</li>
+<li>Produces a <code>config.yaml</code> if <a href="#pydoc_markdown.contrib.renderers.hugo.HugoRenderer.config"><code>config</code></a> is not set to <code>null</code>.</li>
+<li>Can be used with the Pydoc-Markdown <code>--server</code> option to live-preview the generated docs.</li>
+<li>Downloads a suitable Hugo binary from Github if Hugo is not already installed (see <a href="#pydoc_markdown.contrib.renderers.hugo.HugoRenderer.get_hugo"><code>get_hugo</code></a>).</li>
+</ul>
+<p>Example configuration:</p>
+<div class="highlight"><pre><span></span><code>renderer:
+  type: hugo
+  config:
+    title: My Project
+    theme: {clone_url: &quot;https://github.com/alex-shpak/hugo-book.git&quot;}
+  # The &quot;book&quot; theme only renders pages in &quot;content/docs&quot; into the nav.
+  content_directory: content/docs
+  default_preamble: {menu: main}
+  pages:
+    - title: Home
+      name: index
+      source: README.md
+    - title: API Documentation
+      contents:
+        - &#39;*&#39;
+</code></pre></div>
+<h3 id="options_2">Options</h3>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.build_directory"></a></p>
+<h4 id="build_directory">build_directory</h4>
+<p>The directory where all generated files are placed. Default: <code>build/docs</code></p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.content_directory"></a></p>
+<h4 id="content_directory">content_directory</h4>
+<p>The directory <em>inside</em> the build directory where the generated
+pages are written to. Default: <code>content</code></p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.clean_render"></a></p>
+<h4 id="clean_render">clean_render</h4>
+<p>Clean up files that were previously generated by the renderer before the next
+render pass. Defaults to <code>True</code>.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.pages"></a></p>
+<h4 id="pages">pages</h4>
+<p>The pages to render.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.default_preamble"></a></p>
+<h4 id="default_preamble">default_preamble</h4>
+<p>The default Hugo preamble that is applied to every page. Example:</p>
+<div class="highlight"><pre><span></span><code>default_preamble:
+menu: main
+</code></pre></div>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.markdown"></a></p>
+<h4 id="markdown">markdown</h4>
+<p>The <code>MarkdownRenderer</code> configuration.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.config"></a></p>
+<h4 id="config">config</h4>
+<p>The contents of the Hugo <code>config.toml</code> file as YAML. This can be set to <code>null</code> in
+order to not produce the <code>config.toml</code> file in the <a href="#pydoc_markdown.contrib.renderers.hugo.HugoRenderer.build_directory"><code>build_directory</code></a>. Must be deserializable
+into a <a href="#pydoc_markdown.contrib.renderers.hugo.HugoConfig"><code>HugoConfig</code></a>.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.get_hugo"></a></p>
+<h4 id="get_hugo">get_hugo</h4>
+<p>Options for when the Hugo binary is not present and should be downloaded
+automatically. Example:</p>
+<div class="highlight"><pre><span></span><code>get_hugo:
+enabled: true
+version: &#39;0.71&#39;
+extended: true
+</code></pre></div>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.install_hugo"></a></p>
+<h4 id="install_hugo">install_hugo</h4>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">install_hugo</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extended</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+<p>Downloads the latest release of <em>Hugo</em> from <a href="https://github.com/gohugoio/hugo/releases">Github</a></p>
+<p>and places it at the path specified by <em>to</em>. This will install the extended version if it is
+available and <em>extended</em> is set to <code>True</code>.</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>to</code>: The file to write the Hugo binary to.</li>
+<li><code>version</code>: The Hugo version to get. If not specified, the latest release will be used.</li>
+<li><code>extended</code>: Whether to download the "Hugo extended" version. Defaults to True.</li>
+</ul>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.get_github_releases"></a></p>
+<h4 id="get_github_releases">get_github_releases</h4>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_github_releases</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Generator</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</code></pre></div>
+<p>Returns an iterator for all releases of a Github repository.</p>
+<p><a id="pydoc_markdown.contrib.renderers.hugo.parse_links_header"></a></p>
+<h4 id="parse_links_header">parse_links_header</h4>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">parse_links_header</span><span class="p">(</span><span class="n">link_header</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</code></pre></div>
+<p>Parses the <code>Link</code> HTTP header and returns a map of the links. Logic from
+<a href="https://github.com/eclipse/egit-github/blob/master/org.eclipse.egit.github.core/src/org/eclipse/egit/github/core/client/PageLinks.java#L43-75">PageLinks.java</a>.</p>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../docusaurus/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Docusaurus" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Docusaurus
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../jinja2/" class="md-footer__link md-footer__link--next" aria-label="Next: Jinja2" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Jinja2
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8aa65030.min.js"></script>
+      
+    
+  </body>
+</html>

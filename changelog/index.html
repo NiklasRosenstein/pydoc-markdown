@@ -1,0 +1,1735 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.1">
+    
+    
+      
+        <title>Changelog - Pydoc Markdown</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.e8d9bf0c.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pydoc Markdown" class="md-header__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pydoc Markdown
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/NiklasRosenstein/pydoc-markdown/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pydoc Markdown" class="md-nav__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pydoc Markdown
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/NiklasRosenstein/pydoc-markdown/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Welcome to the Pydoc Markdown documentation!
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Changelog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Changelog
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unreleased" class="md-nav__link">
+    Unreleased
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#450-2021-12-12" class="md-nav__link">
+    4.5.0 (2021-12-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#440-2021-12-12" class="md-nav__link">
+    4.4.0 (2021-12-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#432-2021-09-04" class="md-nav__link">
+    4.3.2 (2021-09-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#431-2021-09-01" class="md-nav__link">
+    4.3.1 (2021-09-01)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#430-2021-08-28" class="md-nav__link">
+    4.3.0 (2021-08-28)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#420-2021-08-20" class="md-nav__link">
+    4.2.0 (2021-08-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#416-2021-08-09" class="md-nav__link">
+    4.1.6 (2021-08-09)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#415-2021-08-04" class="md-nav__link">
+    4.1.5 (2021-08-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#414-2021-08-04" class="md-nav__link">
+    4.1.4 (2021-08-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#413-2021-07-24" class="md-nav__link">
+    4.1.3 (2021-07-24)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#412-2021-07-23" class="md-nav__link">
+    4.1.2 (2021-07-23)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#411-2021-07-22" class="md-nav__link">
+    4.1.1 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-2021-07-22" class="md-nav__link">
+    4.1.0 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#401-2021-07-22" class="md-nav__link">
+    4.0.1 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-2021-07-22" class="md-nav__link">
+    4.0.0 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3140-2021-07-19" class="md-nav__link">
+    3.14.0 (2021-07-19)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3130-2021-05-29" class="md-nav__link">
+    3.13.0 (2021-05-29)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3121-2021-05-21" class="md-nav__link">
+    3.12.1 (2021-05-21)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3120-2021-05-21" class="md-nav__link">
+    3.12.0 (2021-05-21)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3110-2021-05-20" class="md-nav__link">
+    3.11.0 (2021-05-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3103-2021-05-09" class="md-nav__link">
+    3.10.3 (2021-05-09)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3101-2021-04-02" class="md-nav__link">
+    3.10.1 (2021-04-02)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3100-2021-02-20" class="md-nav__link">
+    3.10.0 (2021-02-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#390-2020-12-15" class="md-nav__link">
+    3.9.0 (2020-12-15)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#380-2020-11-06" class="md-nav__link">
+    3.8.0 (2020-11-06)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#370-2020-11-05" class="md-nav__link">
+    3.7.0 (2020-11-05)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#361-2020-11-03" class="md-nav__link">
+    3.6.1 (2020-11-03)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#360-2020-10-28" class="md-nav__link">
+    3.6.0 (2020-10-28)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#350-2020-09-04" class="md-nav__link">
+    3.5.0 (2020-09-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#340-2020-08-31" class="md-nav__link">
+    3.4.0 (2020-08-31)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#331-2020-08-29" class="md-nav__link">
+    3.3.1 (2020-08-29)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#330-2020-07-17" class="md-nav__link">
+    3.3.0 (2020-07-17)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#320post1-2020-07-15" class="md-nav__link">
+    3.2.0.post1 (2020-07-15)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#320-2020-07-13" class="md-nav__link">
+    3.2.0 (2020-07-13)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#311-2020-06-26" class="md-nav__link">
+    3.1.1 (2020-06-26)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#310-2020-06-04" class="md-nav__link">
+    3.1.0 (2020-06-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#302-2020-05-16" class="md-nav__link">
+    3.0.2 (2020-05-16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#301-2020-05-16" class="md-nav__link">
+    3.0.1 (2020-05-16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#300-2020-05-12" class="md-nav__link">
+    3.0.0 (2020-05-12)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        Getting started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Api
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Api" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Api
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/cli/" class="md-nav__link">
+        Command-line interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/interfaces/" class="md-nav__link">
+        Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/loaders/" class="md-nav__link">
+        Loaders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/processors/" class="md-nav__link">
+        Processors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_5" type="checkbox" id="__nav_5_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_5">
+          Renderers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Renderers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_5">
+          <span class="md-nav__icon md-icon"></span>
+          Renderers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/renderers/docusaurus/" class="md-nav__link">
+        Docusaurus
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/renderers/hugo/" class="md-nav__link">
+        Docusaurus
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/renderers/jinja2/" class="md-nav__link">
+        Jinja2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/renderers/markdown/" class="md-nav__link">
+        Markdown
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/renderers/mkdocs/" class="md-nav__link">
+        MkDocs
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Guides
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Guides" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Guides
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/migrate-from-3x-to-4x/" class="md-nav__link">
+        Migrate from 3.x to 4.x
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/readthedocs/" class="md-nav__link">
+        Read the Docs
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unreleased" class="md-nav__link">
+    Unreleased
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#450-2021-12-12" class="md-nav__link">
+    4.5.0 (2021-12-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#440-2021-12-12" class="md-nav__link">
+    4.4.0 (2021-12-12)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#432-2021-09-04" class="md-nav__link">
+    4.3.2 (2021-09-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#431-2021-09-01" class="md-nav__link">
+    4.3.1 (2021-09-01)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#430-2021-08-28" class="md-nav__link">
+    4.3.0 (2021-08-28)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#420-2021-08-20" class="md-nav__link">
+    4.2.0 (2021-08-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#416-2021-08-09" class="md-nav__link">
+    4.1.6 (2021-08-09)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#415-2021-08-04" class="md-nav__link">
+    4.1.5 (2021-08-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#414-2021-08-04" class="md-nav__link">
+    4.1.4 (2021-08-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#413-2021-07-24" class="md-nav__link">
+    4.1.3 (2021-07-24)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#412-2021-07-23" class="md-nav__link">
+    4.1.2 (2021-07-23)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#411-2021-07-22" class="md-nav__link">
+    4.1.1 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#410-2021-07-22" class="md-nav__link">
+    4.1.0 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#401-2021-07-22" class="md-nav__link">
+    4.0.1 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-2021-07-22" class="md-nav__link">
+    4.0.0 (2021-07-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3140-2021-07-19" class="md-nav__link">
+    3.14.0 (2021-07-19)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3130-2021-05-29" class="md-nav__link">
+    3.13.0 (2021-05-29)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3121-2021-05-21" class="md-nav__link">
+    3.12.1 (2021-05-21)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3120-2021-05-21" class="md-nav__link">
+    3.12.0 (2021-05-21)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3110-2021-05-20" class="md-nav__link">
+    3.11.0 (2021-05-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3103-2021-05-09" class="md-nav__link">
+    3.10.3 (2021-05-09)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3101-2021-04-02" class="md-nav__link">
+    3.10.1 (2021-04-02)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3100-2021-02-20" class="md-nav__link">
+    3.10.0 (2021-02-20)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#390-2020-12-15" class="md-nav__link">
+    3.9.0 (2020-12-15)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#380-2020-11-06" class="md-nav__link">
+    3.8.0 (2020-11-06)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#370-2020-11-05" class="md-nav__link">
+    3.7.0 (2020-11-05)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#361-2020-11-03" class="md-nav__link">
+    3.6.1 (2020-11-03)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#360-2020-10-28" class="md-nav__link">
+    3.6.0 (2020-10-28)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#350-2020-09-04" class="md-nav__link">
+    3.5.0 (2020-09-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#340-2020-08-31" class="md-nav__link">
+    3.4.0 (2020-08-31)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#331-2020-08-29" class="md-nav__link">
+    3.3.1 (2020-08-29)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#330-2020-07-17" class="md-nav__link">
+    3.3.0 (2020-07-17)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#320post1-2020-07-15" class="md-nav__link">
+    3.2.0.post1 (2020-07-15)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#320-2020-07-13" class="md-nav__link">
+    3.2.0 (2020-07-13)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#311-2020-06-26" class="md-nav__link">
+    3.1.1 (2020-06-26)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#310-2020-06-04" class="md-nav__link">
+    3.1.0 (2020-06-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#302-2020-05-16" class="md-nav__link">
+    3.0.2 (2020-05-16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#301-2020-05-16" class="md-nav__link">
+    3.0.1 (2020-05-16)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#300-2020-05-12" class="md-nav__link">
+    3.0.0 (2020-05-12)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD detached at pull/245/merge)/docs/content/changelog.md" title="Edit this page" class="md-content__button md-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+</a>
+
+
+
+<h1 id="changelog">Changelog</h1>
+<h2 id="unreleased">Unreleased</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+hugo: Hugo now respects the baseUrl option @Heiss</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/233">233</a></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Docs</td><td>
+
+docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores.</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/235">235</a></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/189">189</a></td><td>@chrisstetter</td></tr>
+  <tr><td>Hygiene</td><td>
+
+remove `MarkdownRenderer.classdef_render_init_signature_if_needed` option because it never worked to begin with</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Breaking change</td><td>
+
+remove `MarkdownRenderer.render_to_stream()` from public api</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="450-2021-12-12">4.5.0 (2021-12-12)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+MarkdownRenderer: Add `render_page_title` option.</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/214">214</a>, <a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/216">216</a></td><td>@t6847kimo</td></tr>
+  <tr><td>Feature</td><td>
+
+git: Git source linkers now have a `use_branch` option to use the current branch name instead of the current commit SHA when generating links to the source code</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/218">218</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="440-2021-12-12">4.4.0 (2021-12-12)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+Sphinx processor now triggers when `:arg` or other Sphinx keywords are encountered in a docstring</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/221">221</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Tests</td><td>
+
+Refactor sphinx processor tests and add new test for param keyword only. Fixes minor issue with argument only docstring. @gmarks2149</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+sphinx_processor: Fix multi-line parameter sphinx docstring rendering issue by switching to docstring-parser to parse the docstrings. @gmarks2149</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/195">195</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+Fix configuration generated with `--bootstrap mkdocs`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/230">230</a></td><td>@gethvi</td></tr>
+  <tr><td>Feature</td><td>
+
+HugoRenderer: add `serverURL` and `serverPort` options to `$.renderer.config` block to allow overwriting the URL where the local Hugo server serves from</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/202">202</a>, <a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/231">231</a></td><td>@melMass</td></tr>
+  <tr><td>Feature</td><td>
+
+add `GitlabSourceLinker` class (entrypoint name: `gitlab`). @Heiss</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="432-2021-09-04">4.3.2 (2021-09-04)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+minimum `click` version is `7.1`, allow also `8.x`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="431-2021-09-01">4.3.1 (2021-09-01)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+Calling pydoc-markdown with `--render-toc` option causes an exception</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/213">213</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="430-2021-08-28">4.3.0 (2021-08-28)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+fix use of `docspec.ApiObject.path` after we migrated away from using deprecated `docspec.ReverseMap`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+change default configuration of `MarkdownRenderer` (`signature_with_vertical_bar = False` (many people seemed to dislike that) and `signature_with_def = True` (for consistency with the included `class` keyword for classes))</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="420-2021-08-20">4.2.0 (2021-08-20)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+HugoRenderer: Enable Hugo `markup.goldmark.renderer.unsafe` option by default</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/198">198</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+MarkdownRenderer: Markdown renderer produces header anchors with `name` attribute instead of `id`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/200">200</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+MarkdownRenderer: @melMass added the `MarkdownRenderer.add_module_prefix` option</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/199">199</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Docs</td><td>
+
+switch Pydoc-Markdown to generated its docs with MkDocs</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Docs</td><td>
+
+add Jinja2 renderer documentation in generated docs</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+update template for `--bootstrap readthedocs` and related documentation</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+fix `mkdocs` bootstrap configuration, update mkdocs and hugo bootstrap config to include example on how to select parts of the API docs</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="416-2021-08-09">4.1.6 (2021-08-09)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+HugoRenderer: Restore old behaviour for `HugoConfig.additional_options`, which should be deserialized flat (i.e. it takes on any additional options in the same object that can not be mapped to any other fields of the config object)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="415-2021-08-04">4.1.5 (2021-08-04)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+fix import from `databind.core`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="414-2021-08-04">4.1.4 (2021-08-04)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+remove unused dependency on `nr.collections`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+Use `tempfile` instead of `nr.fs`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="413-2021-07-24">4.1.3 (2021-07-24)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+MarkdownRenderer: Remove zombie line that triggers error when using the Markdown renderer directly</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/196">196</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="412-2021-07-23">4.1.2 (2021-07-23)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+fix `--render-toc` option</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+Jinja2Renderer: add `blockquote` and `describe` built-in filters</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="411-2021-07-22">4.1.1 (2021-07-22)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Improvement</td><td>
+
+Jinja2Renderer: added `format_function_signature` filter</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="410-2021-07-22">4.1.0 (2021-07-22)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+CrossrefProcessor: missing trailing characters for unresolved crossref</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+MarkdownRenderer: add MarkdownReferenceResolver helper class</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+Add `jinja2` renderer</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="401-2021-07-22">4.0.1 (2021-07-22)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+fix Python version classifiers</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="400-2021-07-22">4.0.0 (2021-07-22)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Breaking change</td><td>
+
+Migrate to `databind.core 1.x` and `databind.json 1.x` from `nr.databind.core` and `nr.databin.json` and
+uses of `nr.interface` are replaced with ABCs. If you developed plugins for Pydoc-Markdown, please follow
+the guide at https://pydoc-markdown.readthedocs.io/en/latest/docs/migrate-from-3x-to-4x/.
+</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+docusaurus: Insert an additional newline after header anchors (`<a id=".."></a>`) when `MarkdownRenderer.insert_header_anchors`
+is enabled to fix Docusaurus header rendering.
+</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+unset `__PYENV_LAUNCHER__` environment variable for commands invoked via `$.hooks.pre-render` and `$.hooks.post-render` to avoid issues when the hook invokes a script installed into a different Python virtualenv than the virtualenv that is currently active in the terminal</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+Pydoc-Markdown now requires Python 3.7 or newer (before it was 3.6 or newer). This is due to `databind.core` having that minimum version requirement</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3140-2021-07-19">3.14.0 (2021-07-19)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+add `MarkdownRenderer.signature_with_vertical_bar` option (contributed by @t6847kimo)</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/192">192</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3130-2021-05-29">3.13.0 (2021-05-29)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Improvement</td><td>
+
+upgrade to `docspec-python~0.2.0`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3121-2021-05-21">3.12.1 (2021-05-21)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+add missing `dataclasses` dependency for Python 3.6 compatibility</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+set minimum Python version in `package.yml` to `^3.6`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3120-2021-05-21">3.12.0 (2021-05-21)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+SphinxProcessor: parse `type` and `rtype`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/157">157</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3110-2021-05-20">3.11.0 (2021-05-20)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+Add support for getting configuration from pyproject.toml under the [tool.pydoc-markdown] table</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+fix docstring in PydocmdPreprocessor</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3103-2021-05-09">3.10.3 (2021-05-09)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+sort sidebar items in docusaurus</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/183">183</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+replace backslashes with forward slashes in docusaurus sidebar (actually in 3.10.2)</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/129">129</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3101-2021-04-02">3.10.1 (2021-04-02)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+fix code blocks indentation in `SphinxProcessor`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/179">179</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="3100-2021-02-20">3.10.0 (2021-02-20)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+add `PythonLoader.encoding` option</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="390-2020-12-15">3.9.0 (2020-12-15)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+Fix `IndexError` while processing short module path (by @g6123)</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/167">167</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+bump `watchdog` dependency to `^1.0.0`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="380-2020-11-06">3.8.0 (2020-11-06)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+add new `bitbucket` source linker (@hkenny, #163)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="370-2020-11-05">3.7.0 (2020-11-05)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Improvement</td><td>
+
+FilterProcessor: Fix `NameError: name _check is not defined`, slightly alter behaviour of `FilterProcessor.expression` field`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/161">161</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="361-2020-11-03">3.6.1 (2020-11-03)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+Fix using `data_code_block` option in `MarkdownRenderer`, and add a unit test for it</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/160">160</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="360-2020-10-28">3.6.0 (2020-10-28)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+Add `git` and `gitea` source linker (@tboulogne, #158)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+Update Docusaurus sidebar generation (@m-vdb, #156)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="350-2020-09-04">3.5.0 (2020-09-04)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+docusaurus: Add new `docusaurus` Renderer (contributed to by @m-vdb)</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/151">151</a>, <a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/147">147</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+markdown: Remove `MarkdownRenderer.fp` option, add `MarkdownRenderer.render_to_stream()`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+filter: add `FilterProcessor.skip_empty_modules` option</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+markdown: Add `MarkdownRenderer.render_module_header_template` and `.escape_html_in_docstring` options</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+cli: Add `--bootstrap docusaurus` option</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="340-2020-08-31">3.4.0 (2020-08-31)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+mkdocs: add `server_port` option, treat `MKDOCS_PORT` environment variable if `server_port` option is not set</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/148">148</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="331-2020-08-29">3.3.1 (2020-08-29)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+markdown: Fix "list" object has no attribute "values" in `MarkdownRenderer`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/149">149</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="330-2020-07-17">3.3.0 (2020-07-17)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+plugin types can now be resolved by their FQN (i.e. the absolute import name, such as `pydoc_markdown.contrib.loaders.python.PythonLoader`) in addition to their registered entrypoint name.</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/131">131</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+add new `SourceLinker` interface</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+add `GitHubSourceLinker` class (entrypoint name: `github`)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+markdown: add `MarkdownRenderer.source_linker`, `.source_position` and `.source_format` options</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/122">122</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+cli: `-v,--verbose` and `-q,--quiet` flags are now countable (e.g. `-vv` will raise the logging verbosity to `DEBUG`)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+internal: Ensure consistency independent of the CWD from which Pydoc-Markdown is invoked as long as the same configuration file is used by introduce the `Context` object and the `init()` method for plugins. The `Context.directory` is set to the parent directory of the `pydoc-markdown.yml` configuration file. Plugins use that directory to interpret relative paths instead of the current working directory. </td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+implement YTT-like YAML preprocessing when the Pydoc-Markdown configuration is loaded</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="320post1-2020-07-15">3.2.0.post1 (2020-07-15)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+packaging: add `$.readme` to `pydoc-markdown/package.yaml`, fixing the generated `setup.py` to include the `README.md` from the parent folder.</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/130">130</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="320-2020-07-13">3.2.0 (2020-07-13)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+cli: add `--dump` and `--with-processors/--without-processors` options</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Docs</td><td>
+
+add docstrings to classes defined in `pydoc_markdown.contrib.processors`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+use `docspec` module instead of `pydoc_markdown.reflection` to represent API objects</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+python: use `docspec-python` to load Python API objects</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+crossref: warnings produced about references that cannot be resolved are now summarized in a single log-line</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+With the removal of `pydoc_markdown.reflection`, the `ModuleGraph` class has also been removed and replaced by List[docspec.Module]`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+filter: Rename FilterProcessor.include_root_objects to .do_not_filter_modules</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+change type signatures and some method names of interfaces in `pydoc_markdown.interfaces`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+utils: The `Page.filtered_modules()` method now warns if an element in `Page.contents` did not match an API object</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+markdown: the Markdown header level for methods is now correctly read from the "Method" key in `MarkdownRenderer.header_level_by_type`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/121">121</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+cli: remove `--bootstrap-mkdocs` in favor of `--bootstrap` option which now accepts an argument</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+cli: the `--bootstrap` option now requires an argument, which must be either "base", "mkdocs" or "hugo" (new)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+mkdocs: The `MkdocsRenderer.clean_render` option is enabled again by default, but instead of removing the whole `content_directory`, it will instead only remove files that it has previously generated (it will place a `.generated-files.txt` file in the `output_directory` for that).</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+cli: add `MarkdownRenderer.classdef_with_decorators` and `MarkdownRenderer.signature_with_decorators` options</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+Add new `HugoRenderer` (YAML type name `hugo`).</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/106">106</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+smart-processor: now looks for a `@doc:fmt:<formatter_name>` string in the docstring, which can be used to override the style that is used in case the automatically detected style is incorrect</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Docs</td><td>
+
+The Pydoc-Markdown documentation is now available on Read the Docs (https://pydoc-markdown.readthedocs.io/en/latest/)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+api: Add new `Builder` interface that is used with the new `--build` and `--site-dir` options</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+mkdocs: Implement `Builder` interface for `MkDocsRenderer`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+hugo: Implement `Builder` interface for `HugoRenderer`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+cli: Add new `--build` and `--site-dir` options as well as `--bootstrap readthedocs`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+mkdocs: Fix error in MkDocs navigation generation if a page has no `source` and no `contents`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+mkdocs: generated `mkdocs.yml` now uses forward slashes for filenames on Windows system to increase portability</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/129">129</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+add new `$.hooks.pre-render` and `$.hooks.post-render` options</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/112">112</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="311-2020-06-26">3.1.1 (2020-06-26)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Improvement</td><td>
+
+dependencies: bump dependency on `nr.databind.core` to `~0.0.18` to avoid picking up the bad `0.0.17` version</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/126">126</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="310-2020-06-04">3.1.0 (2020-06-04)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Improvement</td><td>
+
+cli: rename `--watch-and-serve` option to `--server`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+cli: watch and serve mainloop now reloads the config file and does not open the browser another time if it was already opened once.</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+cli: fix `pydoc-markdown.yml` generated with `--bootstrap`</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/118">118</a></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+markdown: * change default for `header_level_by_type` (`2` to `1` for modules, `3` to `2` for classes).
+* change default for `descriptive_class_title` (`false` to `true`)
+</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+markdown: added `content_directory` option (replaces hardcoded default `docs` value, defaults to `content` now)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+markdown: renamed `clean_docs_directory_on_render` to `clean_render` and change the default from `true` to `false`.</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+mkdocs: `mkdocs_config` option can now be set to `null` (the renderer will the refrain
+from writing a `mkdocs.yml` file into the output directory).
+</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Fix</td><td>
+
+python: fix assignments with annotations being ignored by the parser</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/115">115</a></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="302-2020-05-16">3.0.2 (2020-05-16)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Fix</td><td>
+
+mkdocs: fix `NameError` in `MkdocsRenderer`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="301-2020-05-16">3.0.1 (2020-05-16)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+cli: added `--version` option</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+cli: added `-p,--package` option (which overrides `PythonLoader.packages`)</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+utils: added `pydoc_markdown.utils.page` module</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+cli: added `RenderSession` class to `pydoc_markdown.main` module which makes the cli logic easier to maintain and re-use.</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+markdown: added hidden `MarkdownRenderer.fp` option</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Feature</td><td>
+
+python: added `PythonLoader.packages` option</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+python: changed behavior of `PythonLoader.modules` option (it will not only load the module that was explicitly specified and exclude any sub-modules, if applicable).</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+  <tr><td>Improvement</td><td>
+
+cli: dynamically lookup `MarkdownRenderer` configuration from the renderer to support renderers other than `MarkdownRenderer` and `MkdocsRenderer` that supply a `markdown` field that is an instance of `MarkdownRenderer` (so they can be used with `--render-toc` as well).</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+<h2 id="300-2020-05-12">3.0.0 (2020-05-12)</h2>
+<table><tr><th>Type</th><th>Description</th><th>PR</th><th>Issues</th><th>Author</th></tr>
+  <tr><td>Feature</td><td>
+
+Initial release of Pydoc-Markdown v3.</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+</table>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Welcome to the Pydoc Markdown documentation!" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Welcome to the Pydoc Markdown documentation!
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Configuration
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.8aa65030.min.js"></script>
+      
+    
+  </body>
+</html>
