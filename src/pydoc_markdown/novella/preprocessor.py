@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class PydocTagPreprocessor(MarkdownPreprocessor):
   """ Implements the `@pydoc` tag for Novella preprocesing. """
 
-  _loader: Loader = None
+  _loader: Loader
   _processors: t.List[Processor]
   _renderer: SinglePageRenderer
 
@@ -76,9 +76,8 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     self._loader.init(context)
 
     modules = list(self._loader.load())
-    resolver = self._renderer.get_resolver(modules)
     for processor in self._processors:
-      processor.process(modules, resolver)
+      processor.process(modules, None)  # TODO: Add resolver here to render Novella {@link} tags?
 
     for file in files:
       tags = [t for t in parse_block_tags(file.content) if t.name == 'pydoc']
@@ -95,7 +94,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
 
     import io
     fp = io.StringIO()
-    self._renderer.render_single_page(fp, [objects[0]])
+    self._renderer.render_single_page(fp, [objects[0]])  # type: ignore  # TODO (@NiklasRosenstein): New interface to render single API objects?
     return fp.getvalue()
 
 
