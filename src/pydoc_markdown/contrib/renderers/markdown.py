@@ -295,7 +295,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     parts.append((override_name or func.name))
     parts.append(format_function_signature(func, self._is_method(func)))
     result = ''.join(parts)
-    result = self._yapf_code(result + ': pass').rpartition(':')[0].strip() + ':'
+    result = self._yapf_code(result + ': pass').rpartition(':')[0].strip()
 
     if add_method_bar and self._is_method(func):
       result = '\n'.join(' | ' + l for l in result.split('\n'))
@@ -308,7 +308,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     code = 'class {}({})'.format(cls.name, bases)
     if self.signature_python_help_style:
       code = dotted_name(cls) + ' = ' + code
-    code = self._yapf_code(code + ': pass').rpartition(':')[0].strip() + ':'
+    code = self._yapf_code(code + ': pass').rpartition(':')[0].strip()
 
     if cls.decorations and self.classdef_with_decorators:
       code = '\n'.join(self._format_decorations(cls.decorations)) + code
