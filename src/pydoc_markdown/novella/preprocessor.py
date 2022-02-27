@@ -64,7 +64,11 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
       # We return the entire link formatted as a Novella {@link} tag in #resolve_ref().
       CrossrefProcessor(resolver_v2=MarkdownReferenceResolver(global_=True)),
     ]
-    self._renderer = MarkdownRenderer(source_linker=source_linker, render_novella_anchors=True)
+    self._renderer = MarkdownRenderer(
+      source_linker=source_linker,
+      render_novella_anchors=True,
+      render_module_header=False,
+    )
 
   @t.overload
   def loader(self) -> Loader: ...
