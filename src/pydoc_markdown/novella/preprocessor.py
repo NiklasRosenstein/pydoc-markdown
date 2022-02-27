@@ -8,7 +8,7 @@ import docspec
 from nr.util.functional import assure
 from nr.util.plugins import load_entrypoint
 from novella.markdown.preprocessor import MarkdownFile, MarkdownFiles, MarkdownPreprocessor
-from novella.markdown.tagparser import parse_block_tags, replace_tags, Tag
+from novella.markdown.tagparser import parse_block_tags, parse_inline_tags, replace_tags, Tag
 from novella.repository import RepositoryType, detect_repository
 from pydoc_markdown.contrib.source_linkers import git as git_source_linkers
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
@@ -42,7 +42,8 @@ def autodetect_source_linker() -> t.Optional[SourceLinker]:
 
 
 class PydocTagPreprocessor(MarkdownPreprocessor):
-  """ Implements the `@pydoc` tag for Novella preprocesing. """
+  """ Implements the `@pydoc` and `@pylink` tag for Novella preprocesing. Must be run before the `@anchor` and
+  `{@link}` builtin preprocessors. """
 
   _loader: Loader
   _processors: t.List[Processor]
@@ -115,9 +116,11 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
 
     for file in files:
       tags = [t for t in parse_block_tags(file.content) if t.name == 'pydoc']
-      file.content = replace_tags(file.content, tags, lambda t: self._replace_tag(suite, file, t))
+      file.content = replace_tags(file.content, tags, lambda t: self._replace_pydoc_tag(suite, file, t))
+      tags = [t for t in parse_inline_tags(file.content) if t.name == 'pylink']
+      file.content = replace_tags(file.content, tags, lambda t: self._replace_pylink_tag(t))
 
-  def _replace_tag(self, suite: ApiSuite, file: MarkdownFile, tag: Tag) -> str | None:
+  def _replace_pydoc_tag(self, suite: ApiSuite, file: MarkdownFile, tag: Tag) -> str | None:
     fqn = tag.args.strip()
     objects = suite.resolve_fqn(fqn)
     if len(objects) > 1:
@@ -130,3 +133,6 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     fp = io.StringIO()
     self._renderer.render_object(fp, objects[0], tag.options)
     return fp.getvalue()
+
+  def _replace_pylink_tag(self, tag: Tag) -> str | None:
+    return f'{{@link pydoc:{tag.args.strip()}}}'
