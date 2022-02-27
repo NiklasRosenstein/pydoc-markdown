@@ -69,7 +69,7 @@ id = "b95f84ae-b3e2-421e-8fcc-b5a95601539a"
 type = "docs"
 description = "docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores."
 author = "@chrisstetter"
-pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/235"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/189",
 ]
