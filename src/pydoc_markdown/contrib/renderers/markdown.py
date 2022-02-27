@@ -24,9 +24,11 @@ import html
 import io
 import sys
 import typing as t
+from pathlib import Path
 
 import docspec
 from docspec_python import format_arglist
+from yapf.yapflib.yapf_api import FormatCode
 
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, ResolverV2, SingleObjectRenderer, SinglePageRenderer, SourceLinker
 from pydoc_markdown.util.docspec import format_function_signature, is_method, ApiSuite
@@ -200,6 +202,13 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
   #: Render Novella `@anchor` tags before headings.
   render_novella_anchors: bool = False
 
+  #: Format code rendered into Markdown code blocks with YAPF.
+  format_code: bool = True
+
+  #: The style to format code as. This can be a YAPF builtin style name or point to
+  #: a file relative to the context directory (usually the working directory).
+  format_code_style: str = 'pep8'
+
   def __post_init__(self) -> None:
     self._resolver = MarkdownReferenceResolver()
 
@@ -263,6 +272,13 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     for dec in decorations:
       yield '@{}{}\n'.format(dec.name, dec.args or '')
 
+  def _yapf_code(self, code: str) -> str:
+    if not self.format_code:
+      return code
+    style_file = Path(self._context.directory) / self.format_code_style
+    style = str(style_file) if style_file.is_file() else self.format_code_style
+    return FormatCode(code, style_config=style)[0]
+
   def _format_function_signature(self, func: docspec.Function, override_name: str = None, add_method_bar: bool = True) -> str:
     parts: t.List[str] = []
     if self.signature_with_decorators:
@@ -279,6 +295,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     parts.append((override_name or func.name))
     parts.append(format_function_signature(func, self._is_method(func)))
     result = ''.join(parts)
+    result = self._yapf_code(result + ': pass').rpartition(':')[0].strip() + ':'
+
     if add_method_bar and self._is_method(func):
       result = '\n'.join(' | ' + l for l in result.split('\n'))
     return result
@@ -290,6 +308,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     code = 'class {}({})'.format(cls.name, bases)
     if self.signature_python_help_style:
       code = dotted_name(cls) + ' = ' + code
+    code = self._yapf_code(code + ': pass').rpartition(':')[0].strip() + ':'
 
     if cls.decorations and self.classdef_with_decorators:
       code = '\n'.join(self._format_decorations(cls.decorations)) + code
@@ -297,9 +316,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
 
   def _format_data_signature(self, data: docspec.Variable) -> str:
     expr = str(data.value)
-    if len(expr) > self.data_expression_maxlength:
-      expr = expr[:self.data_expression_maxlength] + ' ...'
-    return data.name + ' = ' + expr
+    code = self._yapf_code(data.name + ' = ' + expr).strip()
+    if len(code) > self.data_expression_maxlength:
+      code = code[:self.data_expression_maxlength] + ' ...'
+    return code
 
   def _render_signature_block(self, fp: t.TextIO, obj: docspec.ApiObject):
     if self.classdef_code_block and isinstance(obj, docspec.Class):
@@ -432,6 +452,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
   def init(self, context: Context) -> None:
     if self.source_linker:
       self.source_linker.init(context)
+    self._context = context
 
 
 @dataclasses.dataclass

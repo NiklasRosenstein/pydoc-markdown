@@ -72,3 +72,12 @@ type = "fix"
 description = "hugo: Adds Apple Silicon to Hugo' recognized architectures."
 author = "@MilesCranmer"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/238"
+
+[[entries]]
+id = "a20167d1-cb1c-4331-8be9-43b115f0292a"
+type = "feature"
+description = "bring back formatting function, class and variable signatures with YAPF. (Tagging @lgeiger as the author because he was the original author of the feature in a previous version of Pydoc-Markdown, see https://github.com/NiklasRosenstein/pydoc-markdown/pull/78)"
+author = "@lgeiger"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/244",
+]
