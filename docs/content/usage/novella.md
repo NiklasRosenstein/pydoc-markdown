@@ -1,18 +1,26 @@
-# Using Novella
+---
+title: Novella
+---
 
-[Novella] is the new backend for Pydoc-Markdown and most development will be focused on improving the integration. The
-Pydoc-Markdown CLI and YAML-style configuration that has been available for a while will stay for a while (written
-on Feb 24, 2022).
+# Using the new Novella build backend
 
   [Novella]: https://niklasrosenstein.github.io/novella/
 
-Documentation builds with Novella are slightly different from Pydoc-Markdown. In essence, it is an agnostic linear
-build system that operates in a separate build directory. Builtin tools allow you to copy files into the build
-directory from your project root and then process these files, allowing for the Novella Markdown preprocessor and
-its plugins to take effect.
+Starting with Pydoc-Markdown v4.6.0, [Novella] is the new backend for Pydoc-Markdown and future development will be
+focused on improving the integration and to improve Novella itself. The [old-style Pydoc-Markdown configuration](./old-style.md)
+will not see any feature development, but stay around for until at least the next major release.
 
-Novella also comes with some builtin support for invoking static site generators. At the time of writing (Feb 24, 2022)
-it provides a template for [MkDocs][], but other generators might be added soon.
+!!! note
+
+    __For previous users of Pydoc-Markdown__
+
+    Documentation builds with Novella are slightly different from Pydoc-Markdown's original build process. In essence,
+    it is an agnostic build system that operates in a separate build directory. Builtin tools allow you to copy files
+    into the build directory from your project root and then process these files, allowing for the Novella Markdown
+    preprocessor and its plugins to take effect.
+
+    Pydoc-Markdown plugs into the preprocessing and replaces `@pydoc` and `@pylink` tags in the Markdown files with
+    generate API documentation in Markdown format.
 
   [MkDocs]: https://www.mkdocs.org/
 
@@ -25,7 +33,7 @@ shortcomings of the template's configurability.
 __Example__
 
 ```py
-template "novella" {
+template "mkdocs" {
   content_directory = "content/"
 }
 

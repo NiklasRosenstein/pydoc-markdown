@@ -1,6 +1,7 @@
-# Welcome to the Pydoc Markdown documentation!
+---
+title: Home
+---
 
-@cat ../../readme.md :with slice_lines = "0:2"
-![](https://img.shields.io/badge/Version-{@shell git describe --tag | sed -e "s/-/--/g" }%20%28{@shell git branch | grep \\* | cut -d ' ' -f2 | sed -e "s/-/--/g"}%29-blue?style=for-the-badge)
+# Welcome to the Pydoc Markdown documentation! <sup style="font-size: 10px">{@shell git describe --tag ${GITHUB_HEAD_REF:-HEAD\}} ({@shell git branch | grep \\* | cut -d ' ' -f2})</sup>
 
-@cat ../../readme.md :with slice_lines = "6:"
+@cat ../../readme.md :with slice_lines = "2:"

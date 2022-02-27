@@ -1,69 +1,53 @@
+# Pydoc-Markdown
+
 ![Python versions](https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge)
 [![Pypi version](https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge)](https://pypi.org/project/pydoc-markdown/)
 [![Build status](https://img.shields.io/github/workflow/status/NiklasRosenstein/pydoc-markdown/Python%20package?style=for-the-badge)](https://github.com/NiklasRosenstein/pydoc-markdown/actions)
-[![Docs status](https://img.shields.io/readthedocs/pydoc-markdown?style=for-the-badge)](https://pydoc-markdown.readthedocs.io/en/latest/)
 
-# Pydoc-Markdown
+Pydoc-Markdown is a tool to create Python API documentation in Markdown format. Instead of executing your Python
+code like so many other documentation tools, it parses it using [docspec][] instead. To run Pydoc-Markdown, you
+need to use at least Python 3.7.
 
-Pydoc-Markdown is a tool and library to create Python API documentation in
-Markdown format based on `lib2to3`, allowing it to parse your Python code
-without executing it.
+[>> Go to the Documentation][Documentation]
 
-Pydoc-Markdown requires Python 3.7 or newer, however the code that you want to
-generate API documentation for can be for any Python version.
+  [contrib]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md
+  [docspec]: https://niklasrosenstein.github.io/docspec/
+  [Documentation]: https://niklasrosenstein.github.io/pydoc-markdown/
+  [MkDocs]: https://www.mkdocs.org/
+  [Novella]: https://niklasrosenstein.github.io/novella/
+  [Novella build backend]: https://niklasrosenstein.github.io/pydoc-markdown/
 
-[>> Go to the Documentation](https://pydoc-markdown.readthedocs.io/en/latest/)
+### Installation
 
-## Features
+I recommend to install Pydoc-Markdown using Pipx.
 
-* Understands multiple doc styles (Sphinx, Google, Pydoc-Markdown)
-* Supports assignment docstrings (`#:` block before or string literal after the statement)
-* Links references to other documented API objects [WIP]
-* [MkDocs][], [Hugo](https://gohugo.io/) and [Docusaurus](https://v2.docusaurus.io/) integration
+    $ pipx install pydoc-markdown[novella]
 
-[MkDocs]: https://www.mkdocs.org/
+### Features
 
-## Installation
+* Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly
+  formatted Markdown
+* Can parse docstrings for variables thanks to [docspec][] (`#:` block before or string literal after the statement)
+* Generates links to other API objects per the documentation syntax (e.g. `#OtherClass` for the Pydoc-Markdown style)
 
-Install Pydoc-Markdown from PyPI:
+### News
 
-    $ pipx install 'pydoc-markdown>=4.0.0,<5.0.0'
+Starting with __4.6.0__, development focuses on integrating with [Novella][] and use it as a replacement for
+tool-specific renderers thus far provided directly by Pydoc-Markdown (i.e. integrations with MkDocs, Hugo and
+Docusuraus). Such integrations are/will be provided by Novella instead.
 
-## Quickstart (MkDocs)
+With the Novella integration, you can now place generated API content in Markdown format inline with your
+existing Markdown documentation source files using `@pydoc` tags. Check out the [Documentation][] for more
+information on how to use Pydoc-Markdown with Novella.
 
-    $ pipx install mkdocs
-    $ pydoc-markdown --bootstrap mkdocs
-    $ pydoc-markdown --bootstrap readthedocs
-    $ pydoc-markdown --server --open
+The old style of using Pydoc-Markdown with a YAML or PyProject configuration to generate files and kick off the
+build is now deprecated but will be maintained for the foreseeable future (at least until the next major version
+bump). It is strongly recommended to migrate your existing projects to using the [Novella build backend][].
 
-What this does:
+### Contributing to Pydoc-Markdown
 
-1. Install [MkDocs][]
-2. Create a `pydoc-markdown.yml` file in the current directory
-3. Create files to render your documentation on [readthedocs.org](https://readthedocs.org/)
-4. Render Markdown files from the Python modules/packages in your current
-   working directory and run MkDocs to open a live-preview of the page.
+All contributions are welcome! Check out the [Contribution Guidelines][contrib].
 
-## Quickstart (Hugo)
-
-    $ pydoc-markdown --bootstrap hugo
-    $ pydoc-markdown --server --open
-  
-What this does:
-
-1. Create a `pydoc-markdown.yml` file in the current directory
-2. Render Markdown files from the Python modules/packages in your current working directory
-   and run Hugo to open a live-preview of the page. If Hugo is not available on your system,
-   it will be downloaded automatically.
-
-## Contributing to Pydoc-Markdown
-
-All contributions are welcome! Check out the [Contributing](.github/CONTRIBUTING.md) guidelines.
-
-## Questions / Need help?
+### Questions / Need help?
 
 Feel free to open a topic on [GitHub Discussions](https://github.com/NiklasRosenstein/pydoc-markdown/discussions)!
-
----
-
-<p align="center">Copyright &copy; 2021 Niklas Rosenstein</p>
