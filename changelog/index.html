@@ -1216,37 +1216,37 @@ hugo: Hugo now respects the baseUrl option @Heiss</td><td><a href="https://githu
 docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores.</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/235">235</a></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/189">189</a></td><td>@chrisstetter</td></tr>
   <tr><td>Hygiene</td><td>
 
-remove `MarkdownRenderer.classdef_render_init_signature_if_needed` option because it never worked to begin with</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+remove `MarkdownRenderer.classdef_render_init_signature_if_needed` option because it never worked to begin with</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
   <tr><td>Breaking change</td><td>
 
-remove `MarkdownRenderer.render_to_stream()` from public api</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+remove `MarkdownRenderer.render_to_stream()` from public api</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
   <tr><td>Feature</td><td>
 
-add `pydoc_markdown.interfaces.SingleObjectRenderer` and use it in Novella `@pydoc` tag processor</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+add `pydoc_markdown.interfaces.SingleObjectRenderer` and use it in Novella `@pydoc` tag processor</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
   <tr><td>Feature</td><td>
 
-add `ApiSuite` class and `ResolverV2` which is used by the new `@pydoc` tag preprocessor when using Novella</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+add `ApiSuite` class and `ResolverV2` which is used by the new `@pydoc` tag preprocessor when using Novella</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
   <tr><td>Feature</td><td>
 
-`MarkdownReferenceResolver` now implements the new `ResolverV2` interface and can resolve references globally</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+`MarkdownReferenceResolver` now implements the new `ResolverV2` interface and can resolve references globally</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
   <tr><td>Feature</td><td>
 
-`CrossRefProcessor` now accepts a `resolver_v2` argument to use instead of the `resolver` object passed through the `Processor` API</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+`CrossRefProcessor` now accepts a `resolver_v2` argument to use instead of the `resolver` object passed through the `Processor` API</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
   <tr><td>Fix</td><td>
 
-hugo: Hugo now respects the baseUrl option @Heiss</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+hugo: Hugo now respects the baseUrl option @Heiss</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
   <tr><td>Docs</td><td>
 
-docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores.</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/189">189</a></td><td>@chrisstetter</td></tr>
+docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores.</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/235">235</a></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/189">189</a></td><td>@chrisstetter</td></tr>
   <tr><td>Fix</td><td>
 
 hugo: Adds Apple Silicon to Hugo' recognized architectures.</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/238">238</a></td><td></td><td>@MilesCranmer</td></tr>
   <tr><td>Feature</td><td>
 
-bring back formatting function, class and variable signatures with YAPF. (Tagging @lgeiger as the author because he was the original author of the feature in a previous version of Pydoc-Markdown, see https://github.com/NiklasRosenstein/pydoc-markdown/pull/78)</td><td></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/244">244</a></td><td>@lgeiger</td></tr>
+bring back formatting function, class and variable signatures with YAPF. (Tagging @lgeiger as the author because he was the original author of the feature in a previous version of Pydoc-Markdown, see https://github.com/NiklasRosenstein/pydoc-markdown/pull/78)</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/244">244</a></td><td>@lgeiger</td></tr>
   <tr><td>Fix</td><td>
 
-fix forwarding of `PluginBase.init()` calls to sub-plugins in unittests and `DocusaurusRenderer`</td><td></td><td></td><td>@NiklasRosenstein</td></tr>
+fix forwarding of `PluginBase.init()` calls to sub-plugins in unittests and `DocusaurusRenderer`</td><td><a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/245">245</a></td><td></td><td>@NiklasRosenstein</td></tr>
 </table>
 
 <h2 id="450-2021-12-12">4.5.0 (2021-12-12)</h2>
