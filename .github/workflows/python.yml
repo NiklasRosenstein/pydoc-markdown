@@ -23,7 +23,7 @@ jobs:
       uses: actions/setup-python@v2
       with: { python-version: "3.10" }
     - name: Installing tooling
-      run: pip install pipx -q && pipx install $(cat .github/slam-cli.txt)
+      run: pip install pipx -q && pipx install $(cat .github/files/slam-cli.txt)
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with: { python-version: "${{ matrix.python-version }}" }
@@ -40,11 +40,11 @@ jobs:
       uses: actions/setup-python@v2
       with: { python-version: "3.10" }
     - name: Installing tooling
-      run: pip install pipx -q && pipx install $(cat .github/slam-cli.txt)
+      run: pip install pipx -q && pipx install $(cat .github/files/slam-cli.txt)
     - name: Install
       run: slam install --extras docs --no-venv-check
     - name: Build documentation
-      run: cd docs && novella
+      run: git fetch && cd docs && novella
     - name: Publish docs
       uses: JamesIves/github-pages-deploy-action@4.1.4
       #if: github.ref == 'refs/heads/develop'
