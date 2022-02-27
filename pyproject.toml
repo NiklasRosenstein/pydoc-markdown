@@ -34,6 +34,7 @@ requests = "^2.23.0"
 PyYAML = "^5.3"
 tomli = "^2.0.0"
 tomli_w = "^1.0.0"
+yapf = ">=0.30.0"
 watchdog = "*"
 
 [tool.poetry.urls]
