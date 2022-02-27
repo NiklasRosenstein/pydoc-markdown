@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.2">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.3">
     
     
       
@@ -611,7 +611,7 @@
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer"></a></p>
 <h2 id="markdownrenderer-objects">MarkdownRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">MarkdownRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">SinglePageRenderer</span><span class="p">,</span> <span class="n">SingleObjectRenderer</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">MarkdownRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">SinglePageRenderer</span><span class="p">,</span> <span class="n">SingleObjectRenderer</span><span class="p">)</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L42)</p>
 <p>Produces Markdown files. This renderer is often used by other renderers, such as
@@ -810,20 +810,20 @@ file if a <a href="#source_linker">source_linker</a> is configured. The default 
 a file relative to the context directory (usually the working directory).</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.get_resolver"></a></p>
 <h4 id="get_resolver">get_resolver</h4>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_resolver</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Resolver</span><span class="p">]:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_resolver</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Resolver</span><span class="p">]</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L436)</p>
 <p>Returns a simple <a href="/api/interfaces#resolver-objects">Resolver</a> implementation. Finds cross-references in the same file.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver"></a></p>
 <h2 id="markdownreferenceresolver-objects">MarkdownReferenceResolver Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">MarkdownReferenceResolver</span><span class="p">(</span><span class="n">Resolver</span><span class="p">,</span> <span class="n">ResolverV2</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">MarkdownReferenceResolver</span><span class="p">(</span><span class="n">Resolver</span><span class="p">,</span> <span class="n">ResolverV2</span><span class="p">)</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L459)</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver.resolve_reference"></a></p>
 <h4 id="resolve_reference">resolve_reference</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">resolve_reference</span><span class="p">(</span><span class="n">suite</span><span class="p">:</span> <span class="n">ApiSuite</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">docspec</span><span class="o">.</span><span class="n">ApiObject</span><span class="p">,</span>
-                      <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">ApiObject</span><span class="p">]:</span>
+                      <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">ApiObject</span><span class="p">]</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L495)</p>
 <p>Resolves the reference by searching in the members of <em>scope</em> or any of its parents.</p>
@@ -900,7 +900,7 @@ a file relative to the context directory (usually the working directory).</p>
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.9f3ca3d1.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.b88e97c5.min.js"></script>
       
     
   </body>

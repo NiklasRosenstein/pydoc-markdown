@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.2">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.3">
     
     
       
@@ -611,7 +611,7 @@
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoPage"></a></p>
 <h2 id="hugopage-objects">HugoPage Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">HugoPage</span><span class="p">(</span><span class="n">Page</span><span class="p">[</span><span class="s1">&#39;HugoPage&#39;</span><span class="p">]):</span>
+<span class="k">class</span> <span class="nc">HugoPage</span><span class="p">(</span><span class="n">Page</span><span class="p">[</span><span class="s1">&#39;HugoPage&#39;</span><span class="p">])</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L60)</p>
 <p>A subclass of {@link pydoc:pydoc_markdown.util.pages.Page} which adds Hugo-specific overrides.</p>
@@ -628,7 +628,7 @@ content directory). Defaults to <code>null</code>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig"></a></p>
 <h2 id="hugoconfig-objects">HugoConfig Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">HugoConfig</span><span class="p">():</span>
+<span class="k">class</span> <span class="nc">HugoConfig</span><span class="p">()</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L121)</p>
 <p>Represents the Hugo configuration file that is rendered into the build directory.</p>
@@ -671,7 +671,7 @@ into the build directory.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer"></a></p>
 <h2 id="hugorenderer-objects">HugoRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">HugoRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">Builder</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">HugoRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">Builder</span><span class="p">)</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L181)</p>
 <p>A renderer that produces Markdown files compatible with <a href="https://gohugo.io/">Hugo</a>. The <code>--bootstrap hugo</code>
@@ -748,7 +748,7 @@ extended: true
 </code></pre></div>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.install_hugo"></a></p>
 <h4 id="install_hugo">install_hugo</h4>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">install_hugo</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extended</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">install_hugo</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extended</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L355)</p>
 <p>Downloads the latest release of <em>Hugo</em> from <a href="https://github.com/gohugoio/hugo/releases">Github</a></p>
@@ -762,13 +762,13 @@ available and <em>extended</em> is set to <code>True</code>.</p>
 </ul>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.get_github_releases"></a></p>
 <h4 id="get_github_releases">get_github_releases</h4>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_github_releases</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Generator</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_github_releases</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Generator</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L422)</p>
 <p>Returns an iterator for all releases of a Github repository.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.parse_links_header"></a></p>
 <h4 id="parse_links_header">parse_links_header</h4>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">parse_links_header</span><span class="p">(</span><span class="n">link_header</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">parse_links_header</span><span class="p">(</span><span class="n">link_header</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L437)</p>
 <p>Parses the <code>Link</code> HTTP header and returns a map of the links. Logic from
@@ -846,7 +846,7 @@ available and <em>extended</em> is set to <code>True</code>.</p>
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.9f3ca3d1.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.b88e97c5.min.js"></script>
       
     
   </body>
