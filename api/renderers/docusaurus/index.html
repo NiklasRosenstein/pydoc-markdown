@@ -270,6 +270,18 @@
       
       
       
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
       
         <label class="md-nav__link" for="__nav_5">
           Api
@@ -353,6 +365,18 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_5" type="checkbox" id="__nav_5_5" checked>
       
       
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_5">
@@ -475,6 +499,14 @@
       
       
       
+        
+          
+        
+          
+        
+          
+        
+      
       
         <label class="md-nav__link" for="__nav_6">
           Guides
@@ -579,7 +611,7 @@
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.CustomizedMarkdownRenderer"></a></p>
 <h2 id="customizedmarkdownrenderer-objects">CustomizedMarkdownRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">CustomizedMarkdownRenderer</span><span class="p">(</span><span class="n">MarkdownRenderer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CustomizedMarkdownRenderer</span><span class="p">(</span><span class="n">MarkdownRenderer</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L21)</p>
 <p>We override some defaults in this subclass.</p>
@@ -598,18 +630,18 @@
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer"></a></p>
 <h2 id="docusaurusrenderer-objects">DocusaurusRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">DocusaurusRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DocusaurusRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L40)</p>
 <p>Produces Markdown files and a <code>sidebar.json</code> file for use in a <a href="https://v2.docusaurus.io/">Docusaurus v2</a> websites.
 It creates files in a fixed layout that reflects the structure of the documented packages.
-The files will be rendered into the directory specified with the <a href="#docs\_base\_path">docs_base_path</a> option.</p>
+The files will be rendered into the directory specified with the <a href="#docs_base_path">docs_base_path</a> option.</p>
 <p>Check out the complete <a href="https://github.com/NiklasRosenstein/pydoc-markdown/tree/develop/examples/docusaurus">Docusaurus example on GitHub</a>.</p>
 <h3 id="options">Options</h3>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.markdown"></a></p>
 <h4 id="markdown">markdown</h4>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L55)</p>
-<p>The <a href="/api/renderers/markdown#markdownrenderer objects">MarkdownRenderer</a> configuration.</p>
+<p>The <a href="/api/renderers/markdown#markdownrenderer-objects">MarkdownRenderer</a> configuration.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.docs_base_path"></a></p>
 <h4 id="docs_base_path">docs_base_path</h4>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L59)</p>
@@ -639,6 +671,11 @@ module name will be used. This option assumes that there is only one top-level m
             </article>
           </div>
         </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"/></svg>
+            Back to top
+          </a>
         
       </main>
       
@@ -699,7 +736,7 @@ module name will be used. This option assumes that there is only one top-level m
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
     
     
       <script src="../../../assets/javascripts/bundle.9f3ca3d1.min.js"></script>

@@ -270,6 +270,18 @@
       
       
       
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
       
         <label class="md-nav__link" for="__nav_5">
           Api
@@ -502,6 +514,18 @@
       
       
       
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
       
         <label class="md-nav__link" for="__nav_5_5">
           Renderers
@@ -612,6 +636,14 @@
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
       
       
+      
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_6">
@@ -838,25 +870,25 @@
 <p><a id="pydoc_markdown.contrib.processors.crossref.CrossrefProcessor"></a></p>
 <h2 id="crossrefprocessor-objects">CrossrefProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">CrossrefProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CrossrefProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L36)</p>
 <p>Finds references to other objects in Markdown docstrings and produces links to other
-pages. The links are provided by the current <a href="/api/interfaces#renderer objects">Renderer</a> via the <a href="/api/interfaces#resolver objects">Resolver</a> interface.</p>
+pages. The links are provided by the current <a href="/api/interfaces#renderer-objects">Renderer</a> via the <a href="/api/interfaces#resolver-objects">Resolver</a> interface.</p>
 <blockquote>
 <p><strong>Note</strong>: This processor is a work in progress, and most of the time it just converts
 references into inline-code.</p>
 </blockquote>
 <p>The syntax for cross references is as follows:</p>
-<div class="highlight"><pre><span></span><code>This is a ref to another class: &lt;a href=&quot;#pydocmdprocessor objects&quot;&gt;PydocmdProcessor&lt;/a&gt;
+<div class="highlight"><pre><span></span><code>This is a ref to another class: &lt;a href=&quot;#pydocmdprocessor-objects&quot;&gt;PydocmdProcessor&lt;/a&gt;
 You can rename a ref like `this`~PydocmdProcessor
-And you can append to the ref name like this: &lt;a href=&quot;#pydocmdprocessor objects&quot;&gt;PydocmdProcessors&lt;/a&gt;
+And you can append to the ref name like this: &lt;a href=&quot;#pydocmdprocessor-objects&quot;&gt;PydocmdProcessors&lt;/a&gt;
 </code></pre></div>
 <p>Renders as</p>
 <blockquote>
-<p>This is a ref to another class: <a href="#pydocmdprocessor objects">PydocmdProcessor</a>
+<p>This is a ref to another class: <a href="#pydocmdprocessor-objects">PydocmdProcessor</a>
 You can rename a ref like <code>this</code>~PydocmdProcessor
-And you can append to the ref name like this: <a href="#pydocmdprocessor objects">PydocmdProcessors</a></p>
+And you can append to the ref name like this: <a href="#pydocmdprocessor-objects">PydocmdProcessors</a></p>
 </blockquote>
 <p>Example configuration:</p>
 <div class="highlight"><pre><span></span><code>processors:
@@ -870,7 +902,7 @@ code for the reference uses Novella <code>{@link }</code> syntax.</p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor"></a></p>
 <h2 id="filterprocessor-objects">FilterProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">FilterProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FilterProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L31)</p>
 <p>The <code>filter</code> processor removes module and class members based on certain criteria.</p>
@@ -913,7 +945,7 @@ Default: <code>true</code></p>
 <p><a id="pydoc_markdown.contrib.processors.google.GoogleProcessor"></a></p>
 <h2 id="googleprocessor-objects">GoogleProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">GoogleProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GoogleProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/google.py#L33)</p>
 <p>This class implements the preprocessor for Google and PEP 257 docstrings. It converts
@@ -955,7 +987,7 @@ Todo:
 <p><a id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor"></a></p>
 <h2 id="pydocmdprocessor-objects">PydocmdProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">PydocmdProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PydocmdProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/pydocmd.py#L35)</p>
 <p>The Pydoc-Markdown processor for Markdown docstrings. This processor parses docstrings
@@ -989,15 +1021,15 @@ A value.
 <p><a id="pydoc_markdown.contrib.processors.smart.SmartProcessor"></a></p>
 <h2 id="smartprocessor-objects">SmartProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">SmartProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SmartProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/smart.py#L34)</p>
-<p>This processor picks the <a href="#googleprocessor objects">GoogleProcessor</a>, <a href="#sphinxprocessor objects">SphinxProcessor</a> or <a href="#pydocmdprocessor objects">PydocmdProcessor</a> after
+<p>This processor picks the <a href="#googleprocessor-objects">GoogleProcessor</a>, <a href="#sphinxprocessor-objects">SphinxProcessor</a> or <a href="#pydocmdprocessor-objects">PydocmdProcessor</a> after
 guessing which is appropriate from the syntax it finds in the docstring.</p>
 <p><a id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor"></a></p>
 <h2 id="sphinxprocessor-objects">SphinxProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span> <span class="nc">SphinxProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SphinxProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
 </code></pre></div>
 <p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/sphinx.py#L56)</p>
 <p>This processor parses ReST/Sphinx-style function documentation and converts it into</p>
@@ -1023,6 +1055,11 @@ An `int` that represents an interesting value.
             </article>
           </div>
         </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"/></svg>
+            Back to top
+          </a>
         
       </main>
       
@@ -1083,7 +1120,7 @@ An `int` that represents an interesting value.
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
     
     
       <script src="../../assets/javascripts/bundle.9f3ca3d1.min.js"></script>
