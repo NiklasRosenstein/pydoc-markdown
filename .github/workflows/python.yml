@@ -32,6 +32,21 @@ jobs:
     - name: Test
       run: slam test
 
+  update-pr-numbers:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with: { python-version: "3.10" }
+    - name: Install Slam
+      run: pip install -r slam-cli==
+    - name: Update PR references in changelogs
+      run: slam -vv changelog update-pr --use github-actions
+
   documentation:
     runs-on: ubuntu-latest
     steps:
