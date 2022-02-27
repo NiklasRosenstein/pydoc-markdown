@@ -12,6 +12,7 @@ from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
+from pydoc_markdown.interfaces import Context
 from ..utils import Case, assert_text_equals, load_testcase, get_testcases_for
 
 
@@ -20,6 +21,10 @@ class MarkdownTestConfig:
   renderer: MarkdownRenderer = dataclasses.field(default_factory=MarkdownRenderer)
   filter: FilterProcessor = dataclasses.field(default_factory=FilterProcessor)
   parser: ParserOptions = dataclasses.field(default_factory=ParserOptions)
+
+  def init(self, context: Context) -> None:
+    self.renderer.init(context)
+    self.filter.init(context)
 
 
 def load_string_as_module(
@@ -36,6 +41,7 @@ def assert_code_as_markdown(source_code, markdown, full=False, parser_options=No
 
   # Init the settings in which we want to run the tests.
   assert isinstance(config.render, MarkdownRenderer)
+  config.init(Context('.'))
   config.renderer.insert_header_anchors = False
   config.renderer.add_member_class_prefix = False
   config.renderer.render_toc = False
@@ -63,6 +69,7 @@ def assert_code_as_markdown(source_code, markdown, full=False, parser_options=No
 def test_markdown_renderer(filename: str) -> None:
   case = load_testcase('renderers/markdown', filename)
   config = databind.json.load(case.config, MarkdownTestConfig)
+  config.init(Context('.'))
   modules = [load_string_as_module(case.filename, case.code, options=config.parser)]
   config.filter.process(modules, None)
   SmartProcessor().process(modules, None)

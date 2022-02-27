@@ -7,6 +7,7 @@ from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.docusaurus import DocusaurusRenderer
+from pydoc_markdown.interfaces import Context
 from ..utils import assert_text_equals
 
 DOCUSAURUS_TESTCASES_DIR = Path(__file__).parent.parent / 'testcases' / 'renderers' / 'docusaurus'

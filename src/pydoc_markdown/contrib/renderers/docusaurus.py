@@ -11,7 +11,7 @@ import databind.core.annotations as A
 import docspec
 import typing_extensions as te
 
-from pydoc_markdown.interfaces import Renderer
+from pydoc_markdown.interfaces import Context, Renderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 
 logger = logging.getLogger(__name__)
@@ -73,6 +73,9 @@ class DocusaurusRenderer(Renderer):
   #: The top-level module label in the sidebar. Default to null, meaning that the actual
   #: module name will be used. This option assumes that there is only one top-level module.
   sidebar_top_level_module_label: t.Optional[str] = None
+
+  def init(self, context: Context) -> None:
+    self.markdown.init(context)
 
   def render(self, modules: t.List[docspec.Module]) -> None:
     module_tree: t.Dict[str, t.Any] = {"children": {}, "edges": []}

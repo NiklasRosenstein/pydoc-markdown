@@ -81,3 +81,9 @@ author = "@lgeiger"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/244",
 ]
+
+[[entries]]
+id = "d9e1123d-97bf-4ab3-9c1f-82eef6b8200b"
+type = "fix"
+description = "fix forwarding of `PluginBase.init()` calls to sub-plugins in unittests and `DocusaurusRenderer`"
+author = "@NiklasRosenstein"
