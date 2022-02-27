@@ -28,7 +28,7 @@ from pathlib import Path
 
 import docspec
 from docspec_python import format_arglist
-from yapf.yapflib.yapf_api import FormatCode
+from yapf.yapflib.yapf_api import FormatCode  # type: ignore[import]
 
 from pydoc_markdown.interfaces import Context, Renderer, Resolver, ResolverV2, SingleObjectRenderer, SinglePageRenderer, SourceLinker
 from pydoc_markdown.util.docspec import format_function_signature, is_method, ApiSuite
