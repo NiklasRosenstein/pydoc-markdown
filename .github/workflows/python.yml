@@ -61,7 +61,7 @@ jobs:
     - name: Install
       run: slam install --extras docs --no-venv-check
     - name: Build documentation
-      run: cd docs && novella
+      run: git co -b $GITHUB_HEAD_REF && cd docs && novella
     - name: Publish docs
       uses: JamesIves/github-pages-deploy-action@4.1.4
       #if: github.ref == 'refs/heads/develop'
