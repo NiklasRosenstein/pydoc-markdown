@@ -71,7 +71,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
   #: Generate descriptive class titles by adding the word "Objects" if set to `True`. Otherwise,
   #: it can be a string that is appended or prepended (appended if the string begins with `$`).
   #: the class name. This is enabled by default.
-  descriptive_class_title: bool | str = True
+  descriptive_class_title: t.Union[bool, str] = True
 
   #: Generate descriptivie module titles by adding the word "Module" before
   #: the module name. This is enabled by default.
