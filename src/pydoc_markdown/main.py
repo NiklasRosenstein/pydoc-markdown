@@ -125,7 +125,7 @@ class RenderSession:
       config.init(Context(directory=os.path.dirname(os.path.abspath(self.config))))
 
     if config.unknown_fields:
-      logger.warning('Unknown configuration options: %s', ', '.join(config.unknown_fields))
+      logger.warning('Unknown configuration options:\n%s\n', '\n------\n'.join(config.unknown_fields))
 
     return config
 

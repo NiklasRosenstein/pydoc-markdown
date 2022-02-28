@@ -116,10 +116,7 @@ class PydocMarkdown:
 
     for loc, keys in unknown_keys:
       for key in keys:
-        self.unknown_fields.append(str(loc.push_unknown(key).format(loc.Format.PLAIN)))
-
-    #self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
-    #  for n in collector.nodes))
+        self.unknown_fields.append(str(loc.push_unknown(key).format()))
 
   def init(self, context: Context) -> None:
     """
