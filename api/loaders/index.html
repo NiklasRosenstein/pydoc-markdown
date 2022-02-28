@@ -348,11 +348,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pythonloader-objects" class="md-nav__link">
-    PythonLoader Objects
+  <a href="#class-pythonloader" class="md-nav__link">
+    Class PythonLoader
   </a>
   
-    <nav class="md-nav" aria-label="PythonLoader Objects">
+    <nav class="md-nav" aria-label="Class PythonLoader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -666,11 +666,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pythonloader-objects" class="md-nav__link">
-    PythonLoader Objects
+  <a href="#class-pythonloader" class="md-nav__link">
+    Class PythonLoader
   </a>
   
-    <nav class="md-nav" aria-label="PythonLoader Objects">
+    <nav class="md-nav" aria-label="Class PythonLoader">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -733,15 +733,15 @@
 
 <h1 id="loaders">Loaders</h1>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader"></a></p>
-<h2 id="pythonloader-objects">PythonLoader Objects</h2>
+<h2 id="class-pythonloader">Class PythonLoader</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">PythonLoader</span><span class="p">(</span><span class="n">Loader</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/loaders/python.py#L41">[view_source]</a></p>
-<p>This implementation of the <a href="/api/interfaces#loader-objects">Loader</a> interface parses Python modules and packages using
+<p>This implementation of the <a href="/api/interfaces#class-loader">Loader</a> interface parses Python modules and packages using
 <code>docspec_python</code>. See the options below to control which modules and packages are being
 loaded and how to configure the parser.</p>
-<p>With no <code>modules</code> or <a href="#packages">packages</a> set, the <a href="#pythonloader-objects">PythonLoader</a> will discover available modules
+<p>With no <code>modules</code> or <a href="#packages">packages</a> set, the <a href="#class-pythonloader">PythonLoader</a> will discover available modules
 in the current and <code>src/</code> directory.</p>
 <p><strong>lib2to3 Quirks</strong></p>
 <p>Pydoc-Markdown doesn't execute your Python code but instead relies on the

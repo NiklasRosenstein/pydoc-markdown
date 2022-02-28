@@ -430,11 +430,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hugopage-objects" class="md-nav__link">
-    HugoPage Objects
+  <a href="#class-hugopage" class="md-nav__link">
+    Class HugoPage
   </a>
   
-    <nav class="md-nav" aria-label="HugoPage Objects">
+    <nav class="md-nav" aria-label="Class HugoPage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -470,11 +470,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hugoconfig-objects" class="md-nav__link">
-    HugoConfig Objects
+  <a href="#class-hugoconfig" class="md-nav__link">
+    Class HugoConfig
   </a>
   
-    <nav class="md-nav" aria-label="HugoConfig Objects">
+    <nav class="md-nav" aria-label="Class HugoConfig">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -545,11 +545,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hugorenderer-objects" class="md-nav__link">
-    HugoRenderer Objects
+  <a href="#class-hugorenderer" class="md-nav__link">
+    Class HugoRenderer
   </a>
   
-    <nav class="md-nav" aria-label="HugoRenderer Objects">
+    <nav class="md-nav" aria-label="Class HugoRenderer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -838,11 +838,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hugopage-objects" class="md-nav__link">
-    HugoPage Objects
+  <a href="#class-hugopage" class="md-nav__link">
+    Class HugoPage
   </a>
   
-    <nav class="md-nav" aria-label="HugoPage Objects">
+    <nav class="md-nav" aria-label="Class HugoPage">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -878,11 +878,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hugoconfig-objects" class="md-nav__link">
-    HugoConfig Objects
+  <a href="#class-hugoconfig" class="md-nav__link">
+    Class HugoConfig
   </a>
   
-    <nav class="md-nav" aria-label="HugoConfig Objects">
+    <nav class="md-nav" aria-label="Class HugoConfig">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -953,11 +953,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hugorenderer-objects" class="md-nav__link">
-    HugoRenderer Objects
+  <a href="#class-hugorenderer" class="md-nav__link">
+    Class HugoRenderer
   </a>
   
-    <nav class="md-nav" aria-label="HugoRenderer Objects">
+    <nav class="md-nav" aria-label="Class HugoRenderer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1074,9 +1074,8 @@
 
 
 <h1 id="docusaurus">Docusaurus</h1>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L22">[view_source]</a></p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoPage"></a></p>
-<h2 id="hugopage-objects">HugoPage Objects</h2>
+<h2 id="class-hugopage">Class HugoPage</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">HugoPage</span><span class="p">(</span><span class="n">Page</span><span class="p">[</span><span class="s1">&#39;HugoPage&#39;</span><span class="p">])</span>
 </code></pre></div>
@@ -1093,7 +1092,7 @@
 <p>Override the directory that this page is rendered into (relative to the
 content directory). Defaults to <code>null</code>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig"></a></p>
-<h2 id="hugoconfig-objects">HugoConfig Objects</h2>
+<h2 id="class-hugoconfig">Class HugoConfig</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">HugoConfig</span><span class="p">()</span>
 </code></pre></div>
@@ -1136,7 +1135,7 @@ theme: docs/hugo-theme/
 and will be forwarded directly into the Hugo <code>config.yaml</code> when it is rendered
 into the build directory.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer"></a></p>
-<h2 id="hugorenderer-objects">HugoRenderer Objects</h2>
+<h2 id="class-hugorenderer">Class HugoRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">HugoRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">Builder</span><span class="p">)</span>
 </code></pre></div>
@@ -1196,13 +1195,13 @@ menu: main
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.markdown"></a></p>
 <h4 id="markdown">markdown</h4>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L240">[view_source]</a></p>
-<p>The <a href="/api/renderers/markdown#markdownrenderer-objects">MarkdownRenderer</a> configuration.</p>
+<p>The <a href="/api/renderers/markdown#class-markdownrenderer">MarkdownRenderer</a> configuration.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.config"></a></p>
 <h4 id="config">config</h4>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L245">[view_source]</a></p>
 <p>The contents of the Hugo <code>config.toml</code> file as YAML. This can be set to <code>null</code> in
 order to not produce the <code>config.toml</code> file in the <a href="#build_directory">build_directory</a>. Must be deserializable
-into a <a href="#hugoconfig-objects">HugoConfig</a>.</p>
+into a <a href="#class-hugoconfig">HugoConfig</a>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.get_hugo"></a></p>
 <h4 id="get_hugo">get_hugo</h4>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L256">[view_source]</a></p>

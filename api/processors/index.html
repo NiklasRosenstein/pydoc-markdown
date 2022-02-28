@@ -362,11 +362,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#crossrefprocessor-objects" class="md-nav__link">
-    CrossrefProcessor Objects
+  <a href="#class-crossrefprocessor" class="md-nav__link">
+    Class CrossrefProcessor
   </a>
   
-    <nav class="md-nav" aria-label="CrossrefProcessor Objects">
+    <nav class="md-nav" aria-label="Class CrossrefProcessor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -382,11 +382,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#filterprocessor-objects" class="md-nav__link">
-    FilterProcessor Objects
+  <a href="#class-filterprocessor" class="md-nav__link">
+    Class FilterProcessor
   </a>
   
-    <nav class="md-nav" aria-label="FilterProcessor Objects">
+    <nav class="md-nav" aria-label="Class FilterProcessor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -450,29 +450,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#googleprocessor-objects" class="md-nav__link">
-    GoogleProcessor Objects
+  <a href="#class-googleprocessor" class="md-nav__link">
+    Class GoogleProcessor
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pydocmdprocessor-objects" class="md-nav__link">
-    PydocmdProcessor Objects
+  <a href="#class-pydocmdprocessor" class="md-nav__link">
+    Class PydocmdProcessor
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#smartprocessor-objects" class="md-nav__link">
-    SmartProcessor Objects
+  <a href="#class-smartprocessor" class="md-nav__link">
+    Class SmartProcessor
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#sphinxprocessor-objects" class="md-nav__link">
-    SphinxProcessor Objects
+  <a href="#class-sphinxprocessor" class="md-nav__link">
+    Class SphinxProcessor
   </a>
   
 </li>
@@ -734,11 +734,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#crossrefprocessor-objects" class="md-nav__link">
-    CrossrefProcessor Objects
+  <a href="#class-crossrefprocessor" class="md-nav__link">
+    Class CrossrefProcessor
   </a>
   
-    <nav class="md-nav" aria-label="CrossrefProcessor Objects">
+    <nav class="md-nav" aria-label="Class CrossrefProcessor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -754,11 +754,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#filterprocessor-objects" class="md-nav__link">
-    FilterProcessor Objects
+  <a href="#class-filterprocessor" class="md-nav__link">
+    Class FilterProcessor
   </a>
   
-    <nav class="md-nav" aria-label="FilterProcessor Objects">
+    <nav class="md-nav" aria-label="Class FilterProcessor">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -822,29 +822,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#googleprocessor-objects" class="md-nav__link">
-    GoogleProcessor Objects
+  <a href="#class-googleprocessor" class="md-nav__link">
+    Class GoogleProcessor
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pydocmdprocessor-objects" class="md-nav__link">
-    PydocmdProcessor Objects
+  <a href="#class-pydocmdprocessor" class="md-nav__link">
+    Class PydocmdProcessor
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#smartprocessor-objects" class="md-nav__link">
-    SmartProcessor Objects
+  <a href="#class-smartprocessor" class="md-nav__link">
+    Class SmartProcessor
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#sphinxprocessor-objects" class="md-nav__link">
-    SphinxProcessor Objects
+  <a href="#class-sphinxprocessor" class="md-nav__link">
+    Class SphinxProcessor
   </a>
   
 </li>
@@ -869,27 +869,27 @@
 
 <h1 id="processors">Processors</h1>
 <p><a id="pydoc_markdown.contrib.processors.crossref.CrossrefProcessor"></a></p>
-<h2 id="crossrefprocessor-objects">CrossrefProcessor Objects</h2>
+<h2 id="class-crossrefprocessor">Class CrossrefProcessor</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">CrossrefProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L36">[view_source]</a></p>
 <p>Finds references to other objects in Markdown docstrings and produces links to other
-pages. The links are provided by the current <a href="/api/interfaces#renderer-objects">Renderer</a> via the <a href="/api/interfaces#resolver-objects">Resolver</a> interface.</p>
+pages. The links are provided by the current <a href="/api/interfaces#class-renderer">Renderer</a> via the <a href="/api/interfaces#class-resolver">Resolver</a> interface.</p>
 <blockquote>
 <p><strong>Note</strong>: This processor is a work in progress, and most of the time it just converts
 references into inline-code.</p>
 </blockquote>
 <p>The syntax for cross references is as follows:</p>
-<div class="highlight"><pre><span></span><code>This is a ref to another class: &lt;a href=&quot;#pydocmdprocessor-objects&quot;&gt;PydocmdProcessor&lt;/a&gt;
+<div class="highlight"><pre><span></span><code>This is a ref to another class: &lt;a href=&quot;#class-pydocmdprocessor&quot;&gt;PydocmdProcessor&lt;/a&gt;
 You can rename a ref like `this`~PydocmdProcessor
-And you can append to the ref name like this: &lt;a href=&quot;#pydocmdprocessor-objects&quot;&gt;PydocmdProcessors&lt;/a&gt;
+And you can append to the ref name like this: &lt;a href=&quot;#class-pydocmdprocessor&quot;&gt;PydocmdProcessors&lt;/a&gt;
 </code></pre></div>
 <p>Renders as</p>
 <blockquote>
-<p>This is a ref to another class: <a href="#pydocmdprocessor-objects">PydocmdProcessor</a>
+<p>This is a ref to another class: <a href="#class-pydocmdprocessor">PydocmdProcessor</a>
 You can rename a ref like <code>this</code>~PydocmdProcessor
-And you can append to the ref name like this: <a href="#pydocmdprocessor-objects">PydocmdProcessors</a></p>
+And you can append to the ref name like this: <a href="#class-pydocmdprocessor">PydocmdProcessors</a></p>
 </blockquote>
 <p>Example configuration:</p>
 <div class="highlight"><pre><span></span><code>processors:
@@ -901,7 +901,7 @@ And you can append to the ref name like this: <a href="#pydocmdprocessor-objects
 <p>If specified, it will be used instead of the resolver passed to {@link pydoc:pydoc_markdown.PydocMarkdown.process} and the generated Markdown
 code for the reference uses Novella <code>{@link }</code> syntax.</p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor"></a></p>
-<h2 id="filterprocessor-objects">FilterProcessor Objects</h2>
+<h2 id="class-filterprocessor">Class FilterProcessor</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">FilterProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
@@ -944,7 +944,7 @@ Default: <code>true</code></p>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L68">[view_source]</a></p>
 <p>Skip modules with no content. Default: <code>false</code>.</p>
 <p><a id="pydoc_markdown.contrib.processors.google.GoogleProcessor"></a></p>
-<h2 id="googleprocessor-objects">GoogleProcessor Objects</h2>
+<h2 id="class-googleprocessor">Class GoogleProcessor</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">GoogleProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
@@ -986,7 +986,7 @@ Todo:
 <li>You have to also use <code>sphinx.ext.todo</code> extension</li>
 </ul>
 <p><a id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor"></a></p>
-<h2 id="pydocmdprocessor-objects">PydocmdProcessor Objects</h2>
+<h2 id="class-pydocmdprocessor">Class PydocmdProcessor</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">PydocmdProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
@@ -1020,15 +1020,15 @@ A value.
 <p><strong>Returns</strong></p>
 <p>A value.</p>
 <p><a id="pydoc_markdown.contrib.processors.smart.SmartProcessor"></a></p>
-<h2 id="smartprocessor-objects">SmartProcessor Objects</h2>
+<h2 id="class-smartprocessor">Class SmartProcessor</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">SmartProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/smart.py#L34">[view_source]</a></p>
-<p>This processor picks the <a href="#googleprocessor-objects">GoogleProcessor</a>, <a href="#sphinxprocessor-objects">SphinxProcessor</a> or <a href="#pydocmdprocessor-objects">PydocmdProcessor</a> after
+<p>This processor picks the <a href="#class-googleprocessor">GoogleProcessor</a>, <a href="#class-sphinxprocessor">SphinxProcessor</a> or <a href="#class-pydocmdprocessor">PydocmdProcessor</a> after
 guessing which is appropriate from the syntax it finds in the docstring.</p>
 <p><a id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor"></a></p>
-<h2 id="sphinxprocessor-objects">SphinxProcessor Objects</h2>
+<h2 id="class-sphinxprocessor">Class SphinxProcessor</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">SphinxProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
