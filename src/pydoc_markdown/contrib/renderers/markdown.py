@@ -68,9 +68,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
   #: depending on #html_headers). This is enabled by default.
   code_headers: bool = False
 
-  #: Generate descriptive class titles by adding the word "Objects" after
+  #: Generate descriptive class titles by adding the word "Objects" if set to `True`. Otherwise,
+  #: it can be a string that is appended or prepended (appended if the string begins with `$`).
   #: the class name. This is enabled by default.
-  descriptive_class_title: bool = True
+  descriptive_class_title: bool | str = True
 
   #: Generate descriptivie module titles by adding the word "Module" before
   #: the module name. This is enabled by default.
@@ -337,13 +338,19 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
   def _render_object(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
     if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
-    url = self.source_linker.get_source_url(obj) if self.source_linker else None
-    source_string = self.source_format.replace('{url}', str(url)) if url else None
-    if source_string and self.source_position == 'before signature':
-      fp.write(source_string + '\n\n')
+
+    if not isinstance(obj, docspec.Module):
+      url = self.source_linker.get_source_url(obj) if self.source_linker else None
+      source_string = self.source_format.replace('{url}', str(url)) if url else None
+      if source_string and self.source_position == 'before signature':
+        fp.write(source_string + '\n\n')
+
     self._render_signature_block(fp, obj)
-    if source_string and self.source_position == 'after signature':
-      fp.write(source_string + '\n\n')
+
+    if not isinstance(obj, docspec.Module):
+      if source_string and self.source_position == 'after signature':
+        fp.write(source_string + '\n\n')
+
     if obj.docstring:
       docstring = html.escape(obj.docstring.content) if self.escape_html_in_docstring else obj.docstring.content
       lines = docstring.split('\n')
@@ -392,7 +399,14 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     if isinstance(obj, docspec.Module) and self.descriptive_module_title:
       title = 'Module ' + title
     if isinstance(obj, docspec.Class) and self.descriptive_class_title:
-      title += ' Objects'
+      if self.descriptive_class_title is True:
+        title += ' Objects'
+      elif self.descriptive_class_title is False:
+        pass
+      elif self.descriptive_class_title.startswith('$'):
+        title += self.descriptive_class_title[1:]
+      else:
+        title = self.descriptive_class_title + title
     return title
 
   def _escape(self, s):

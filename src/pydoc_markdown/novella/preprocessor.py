@@ -68,6 +68,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
       source_linker=source_linker,
       render_novella_anchors=True,
       render_module_header=False,
+      descriptive_class_title='Class ',
     )
 
   @t.overload

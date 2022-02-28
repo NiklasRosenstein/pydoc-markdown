@@ -97,3 +97,9 @@ type = "fix"
 description = "fix forwarding of `PluginBase.init()` calls to sub-plugins in unittests and `DocusaurusRenderer`"
 author = "@NiklasRosenstein"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "f6874d1a-63e0-4504-8d90-fc3d0f4d7db0"
+type = "improvement"
+description = "do not render link to source for modules in `MarkdownRenderer`"
+author = "@NiklasRosenstein"
