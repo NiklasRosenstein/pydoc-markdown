@@ -835,39 +835,39 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD detached at pull/245/merge)/docs/content/api/renderers/docusaurus.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/content/api/renderers/docusaurus.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
 
 <h1 id="docusaurus">Docusaurus</h1>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L3)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L3">[view_source]</a></p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.CustomizedMarkdownRenderer"></a></p>
 <h2 id="customizedmarkdownrenderer-objects">CustomizedMarkdownRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">CustomizedMarkdownRenderer</span><span class="p">(</span><span class="n">MarkdownRenderer</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L21)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L21">[view_source]</a></p>
 <p>We override some defaults in this subclass.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.CustomizedMarkdownRenderer.insert_header_anchors"></a></p>
 <h4 id="insert_header_anchors">insert_header_anchors</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L25)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L25">[view_source]</a></p>
 <p>Disabled because Docusaurus supports this automatically.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.CustomizedMarkdownRenderer.escape_html_in_docstring"></a></p>
 <h4 id="escape_html_in_docstring">escape_html_in_docstring</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L28)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L28">[view_source]</a></p>
 <p>Escape html in docstring, otherwise it could lead to invalid html.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.CustomizedMarkdownRenderer.render_module_header_template"></a></p>
 <h4 id="render_module_header_template">render_module_header_template</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L31)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L31">[view_source]</a></p>
 <p>Conforms to Docusaurus header format.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer"></a></p>
 <h2 id="docusaurusrenderer-objects">DocusaurusRenderer Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">DocusaurusRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L40)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L40">[view_source]</a></p>
 <p>Produces Markdown files and a <code>sidebar.json</code> file for use in a <a href="https://v2.docusaurus.io/">Docusaurus v2</a> websites.
 It creates files in a fixed layout that reflects the structure of the documented packages.
 The files will be rendered into the directory specified with the <a href="#docs_base_path">docs_base_path</a> option.</p>
@@ -875,30 +875,30 @@ The files will be rendered into the directory specified with the <a href="#docs_
 <h3 id="options">Options</h3>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.markdown"></a></p>
 <h4 id="markdown">markdown</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L55)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L55">[view_source]</a></p>
 <p>The <a href="/api/renderers/markdown#markdownrenderer-objects">MarkdownRenderer</a> configuration.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.docs_base_path"></a></p>
 <h4 id="docs_base_path">docs_base_path</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L59)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L59">[view_source]</a></p>
 <p>The path where the docusaurus docs content is. Defaults "docs" folder.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.relative_output_path"></a></p>
 <h4 id="relative_output_path">relative_output_path</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L63)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L63">[view_source]</a></p>
 <p>The output path inside the docs_base_path folder, used to ouput the
 module reference.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.relative_sidebar_path"></a></p>
 <h4 id="relative_sidebar_path">relative_sidebar_path</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L67)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L67">[view_source]</a></p>
 <p>The sidebar path inside the docs_base_path folder, used to ouput the
 sidebar for the module reference.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.sidebar_top_level_label"></a></p>
 <h4 id="sidebar_top_level_label">sidebar_top_level_label</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L71)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L71">[view_source]</a></p>
 <p>The top-level label in the sidebar. Default to 'Reference'. Can be set to null to
 remove the sidebar top-level all together. This option assumes that there is only one top-level module.</p>
 <p><a id="pydoc_markdown.contrib.renderers.docusaurus.DocusaurusRenderer.sidebar_top_level_module_label"></a></p>
 <h4 id="sidebar_top_level_module_label">sidebar_top_level_module_label</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L75)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/docusaurus.py#L75">[view_source]</a></p>
 <p>The top-level module label in the sidebar. Default to null, meaning that the actual
 module name will be used. This option assumes that there is only one top-level module.</p>
 

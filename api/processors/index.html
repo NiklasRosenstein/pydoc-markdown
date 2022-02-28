@@ -861,7 +861,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD detached at pull/245/merge)/docs/content/api/processors.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/content/api/processors.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
@@ -873,7 +873,7 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">CrossrefProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L36)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L36">[view_source]</a></p>
 <p>Finds references to other objects in Markdown docstrings and produces links to other
 pages. The links are provided by the current <a href="/api/interfaces#renderer-objects">Renderer</a> via the <a href="/api/interfaces#resolver-objects">Resolver</a> interface.</p>
 <blockquote>
@@ -897,7 +897,7 @@ And you can append to the ref name like this: <a href="#pydocmdprocessor-objects
 </code></pre></div>
 <p><a id="pydoc_markdown.contrib.processors.crossref.CrossrefProcessor.resolver_v2"></a></p>
 <h4 id="resolver_v2">resolver_v2</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L68)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L68">[view_source]</a></p>
 <p>If specified, it will be used instead of the resolver passed to {@link pydoc:pydoc_markdown.PydocMarkdown.process} and the generated Markdown
 code for the reference uses Novella <code>{@link }</code> syntax.</p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor"></a></p>
@@ -905,7 +905,7 @@ code for the reference uses Novella <code>{@link }</code> syntax.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">FilterProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L31)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L31">[view_source]</a></p>
 <p>The <code>filter</code> processor removes module and class members based on certain criteria.</p>
 <p>Example configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="nb">filter</span>
@@ -915,7 +915,7 @@ code for the reference uses Novella <code>{@link }</code> syntax.</p>
 <h3 id="options">Options</h3>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.expression"></a></p>
 <h4 id="expression">expression</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L51)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L51">[view_source]</a></p>
 <p>A Python expression that is evaluated given the variables <code>name</code>, <code>obj</code> and <code>default</code>
 and is expected to return a boolean to indicate whether the <code>docspec.ApiObject</code> should
 be kept or removed. If specified, the expression is the ultimate truth for determining
@@ -923,32 +923,32 @@ the keep-or-remove state of a node. Using <code>'default()'</code> as the expres
 semantic as not specifying this field. Default: <code>null</code></p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.documented_only"></a></p>
 <h4 id="documented_only">documented_only</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L54)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L54">[view_source]</a></p>
 <p>Keep only API objects that have docstrings. Default: <code>true</code></p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.exclude_private"></a></p>
 <h4 id="exclude_private">exclude_private</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L58)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L58">[view_source]</a></p>
 <p>Exclude API objects that appear to be private members (i.e. their name begins with
 and underscore but does not end with one). Default: <code>true</code></p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.exclude_special"></a></p>
 <h4 id="exclude_special">exclude_special</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L62)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L62">[view_source]</a></p>
 <p>Exclude special members (e.g.<code>__path__</code>, <code>__annotations__</code>, <code>__name__</code> and <code>__all__</code>).
 Default: <code>true</code></p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.do_not_filter_modules"></a></p>
 <h4 id="do_not_filter_modules">do_not_filter_modules</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L65)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L65">[view_source]</a></p>
 <p>Do not filter <code>docspec.Module</code> objects. Default: <code>true</code></p>
 <p><a id="pydoc_markdown.contrib.processors.filter.FilterProcessor.skip_empty_modules"></a></p>
 <h4 id="skip_empty_modules">skip_empty_modules</h4>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/filter.py#L68)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/filter.py#L68">[view_source]</a></p>
 <p>Skip modules with no content. Default: <code>false</code>.</p>
 <p><a id="pydoc_markdown.contrib.processors.google.GoogleProcessor"></a></p>
 <h2 id="googleprocessor-objects">GoogleProcessor Objects</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">GoogleProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/google.py#L33)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/google.py#L33">[view_source]</a></p>
 <p>This class implements the preprocessor for Google and PEP 257 docstrings. It converts
 docstrings formatted in the Google docstyle to Markdown syntax.</p>
 <p><strong>References</strong>:</p>
@@ -990,7 +990,7 @@ Todo:
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">PydocmdProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/pydocmd.py#L35)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/pydocmd.py#L35">[view_source]</a></p>
 <p>The Pydoc-Markdown processor for Markdown docstrings. This processor parses docstrings
 formatted like the examples below and turns them into proper Markdown markup.</p>
 <p>Examples:</p>
@@ -1024,7 +1024,7 @@ A value.
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">SmartProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/smart.py#L34)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/smart.py#L34">[view_source]</a></p>
 <p>This processor picks the <a href="#googleprocessor-objects">GoogleProcessor</a>, <a href="#sphinxprocessor-objects">SphinxProcessor</a> or <a href="#pydocmdprocessor-objects">PydocmdProcessor</a> after
 guessing which is appropriate from the syntax it finds in the docstring.</p>
 <p><a id="pydoc_markdown.contrib.processors.sphinx.SphinxProcessor"></a></p>
@@ -1032,7 +1032,7 @@ guessing which is appropriate from the syntax it finds in the docstring.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">SphinxProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p>[[view_source]](https://github.com/NiklasRosenstein/pydoc-markdown/blob/(HEAD/docs/../src/pydoc_markdown/contrib/processors/sphinx.py#L56)</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/processors/sphinx.py#L56">[view_source]</a></p>
 <p>This processor parses ReST/Sphinx-style function documentation and converts it into</p>
 <p>Markdown syntax.</p>
 <p>Example:</p>
