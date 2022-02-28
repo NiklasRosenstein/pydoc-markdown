@@ -10,7 +10,7 @@ changes:
   - '#189'
 - type: fix
   component: hugo
-  description: 'Adds Apple Silicon to Hugo's recognized architectures. (@MilesCranmer)'
+  description: 'Adds Apple Silicon to Hugo''s recognized architectures. (@MilesCranmer)'
 - type: fix
   component: general
   description: databind >1.4.0 changed Location.format()
