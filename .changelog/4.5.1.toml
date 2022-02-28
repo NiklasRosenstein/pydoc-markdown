@@ -1,0 +1,31 @@
+release-date = "2022-02-28"
+
+[[entries]]
+id = "1c73ed54-6904-4815-b481-e0cc8a098e89"
+type = "fix"
+description = "hugo: Hugo now respects the baseUrl option @Heiss"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "1fabc056-6f2f-43b5-9da0-da912fc1d89c"
+type = "docs"
+description = "docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores."
+author = "@chrisstetter"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/189",
+]
+
+[[entries]]
+id = "d9c97be1-b95f-4168-ada0-363520717086"
+type = "fix"
+description = "hugo: Adds Apple Silicon to Hugo's recognized architectures."
+author = "@MilesCranmer"
+
+[[entries]]
+id = "214552f5-b934-462c-9cfb-c47f20d41617"
+type = "fix"
+description = "databind >1.4.0 changed Location.format()"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/246",
+]

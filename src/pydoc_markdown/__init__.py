@@ -46,7 +46,7 @@ from pydoc_markdown.util import ytemplate
 
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
-__version__ = '4.5.0'
+__version__ = '4.5.1'
 
 logger = logging.getLogger(__name__)
 
@@ -120,9 +120,6 @@ class PydocMarkdown:
     for loc, keys in unknown_keys:
       for key in keys:
         self.unknown_fields.append(str(loc.push_unknown(key).format()))
-
-    #self.unknown_fields = list(concat((str(n.locator.append(u)) for u in n.unknowns)
-    #  for n in collector.nodes))
 
   def init(self, context: Context) -> None:
     """
