@@ -339,7 +339,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     if not isinstance(obj, docspec.Module) or self.render_module_header:
       self._render_header(fp, level, obj)
 
-    if not isinstance(obj, docspec.Module):
+    render_view_source = not isinstance(obj, (docspec.Module, docspec.Variable))
+
+    if render_view_source:
       url = self.source_linker.get_source_url(obj) if self.source_linker else None
       source_string = self.source_format.replace('{url}', str(url)) if url else None
       if source_string and self.source_position == 'before signature':
@@ -347,7 +349,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
 
     self._render_signature_block(fp, obj)
 
-    if not isinstance(obj, docspec.Module):
+    if render_view_source:
       if source_string and self.source_position == 'after signature':
         fp.write(source_string + '\n\n')
 

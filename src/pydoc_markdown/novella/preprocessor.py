@@ -42,14 +42,17 @@ def autodetect_source_linker() -> t.Optional[SourceLinker]:
 
 
 class PydocTagPreprocessor(MarkdownPreprocessor):
-  """ Implements the `@pydoc` and `@pylink` tag for Novella preprocesing. Must be run before the `@anchor` and
-  `{@link}` builtin preprocessors. """
+  """ Implements the `@pydoc` and `@pylink` tag when using Novella for Markdown preprocessing
+
+  This preprocessor precedes the Novella built-in "anchor" preprocessor as it generates `@anchor` and `{@link}` tags.
+  """
 
   _loader: Loader
   _processors: t.List[Processor]
   _renderer: SingleObjectRenderer
+  _suite: ApiSuite | None = None
 
-  def __init__(self) -> None:
+  def __post_init__(self) -> None:
     # Heuristic to provide a sensible default configuration of the plugin.
     if Path.cwd().name.lower() in ('docs', 'documentation'):
       search_path = ['../src', '..']
@@ -109,19 +112,24 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
 
   # MarkdownPreprocessor
 
+  def setup(self) -> None:
+    if self.dependencies is None and self.predecessors is None:
+      self.precedes('anchor')
+
   def process_files(self, files: MarkdownFiles) -> None:
     context = Context(str(Path.cwd()))
     self._loader.init(context)
     self._renderer.init(context)
 
-    modules = list(self._loader.load())
-    for processor in self._processors:
-      processor.process(modules, self)
-    suite = ApiSuite(modules)
+    if self._suite is None:
+      modules = list(self._loader.load())
+      for processor in self._processors:
+        processor.process(modules, self)
+      self._suite = ApiSuite(modules)
 
     for file in files:
       tags = [t for t in parse_block_tags(file.content) if t.name == 'pydoc']
-      file.content = replace_tags(file.content, tags, lambda t: self._replace_pydoc_tag(suite, file, t))
+      file.content = replace_tags(file.content, tags, lambda t: self._replace_pydoc_tag(self._suite, file, t))
       tags = [t for t in parse_inline_tags(file.content) if t.name == 'pylink']
       file.content = replace_tags(file.content, tags, lambda t: self._replace_pylink_tag(t))
 
@@ -137,7 +145,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     import io
     fp = io.StringIO()
     self._renderer.render_object(fp, objects[0], tag.options)
-    return fp.getvalue()
+    return self.action.repeat(file.path, file.output_path, fp.getvalue())
 
   def _replace_pylink_tag(self, tag: Tag) -> str | None:
     return f'{{@link pydoc:{tag.args.strip()}}}'

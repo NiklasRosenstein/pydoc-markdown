@@ -1,7 +1,8 @@
 template "mkdocs" {
-  site_name = "Pydoc Markdown"
-}
-
-action "mkdocs-preprocess-markdown" {
-  use "pydoc" head: True
+  configure update_config {
+    site_name = "Pydoc Markdown"
+  }
+  configure preprocessor {
+    use "pydoc"
+  }
 }
