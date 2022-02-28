@@ -29,7 +29,7 @@ renderer:
   pages:
   - title: Home
     name: index
-    source: README.md
+    source: readme.md
   - title: Changelog
     name: changelog
     source: CHANGELOG.md
