@@ -733,15 +733,16 @@
 
 <h1 id="loaders">Loaders</h1>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader"></a></p>
 <h2 id="class-pythonloader">Class PythonLoader</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">PythonLoader</span><span class="p">(</span><span class="n">Loader</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/loaders/python.py#L41">[view_source]</a></p>
-<p>This implementation of the <a href="/api/interfaces#class-loader">Loader</a> interface parses Python modules and packages using
+<p>This implementation of the <a href="/api/interfaces#pydoc:pydoc_markdown.interfaces.Loader">Loader</a> interface parses Python modules and packages using
 <code>docspec_python</code>. See the options below to control which modules and packages are being
 loaded and how to configure the parser.</p>
-<p>With no <code>modules</code> or <a href="#packages">packages</a> set, the <a href="#class-pythonloader">PythonLoader</a> will discover available modules
+<p>With no <code>modules</code> or <a href="/api/loaders#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.packages">packages</a> set, the <a href="/api/loaders#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader">PythonLoader</a> will discover available modules
 in the current and <code>src/</code> directory.</p>
 <p><strong>lib2to3 Quirks</strong></p>
 <p>Pydoc-Markdown doesn't execute your Python code but instead relies on the
@@ -752,27 +753,27 @@ in the current and <code>src/</code> directory.</p>
   it is legal syntax</li>
 </ul>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.packages"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.packages"></a></p>
 <h4 id="packages">packages</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/loaders/python.py#L68">[view_source]</a></p>
 <p>A list of package names that this loader will search for and then parse,
 including all sub-packages and modules.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.search_path"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.search_path"></a></p>
 <h4 id="search_path">search_path</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/loaders/python.py#L73">[view_source]</a></p>
 <p>The module search path. If not specified, the current <code>sys.path</code> is
 used instead. If any of the elements contain a <code>*</code> (star) symbol, it
 will be expanded with <code>sys.path</code>.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.ignore_when_discovered"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.ignore_when_discovered"></a></p>
 <h4 id="ignore_when_discovered">ignore_when_discovered</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/loaders/python.py#L76">[view_source]</a></p>
-<p>List of modules to ignore when using module discovery on the <a href="#search_path">search_path</a>.</p>
+<p>List of modules to ignore when using module discovery on the <a href="/api/loaders#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.search_path">search_path</a>.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.parser"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.parser"></a></p>
 <h4 id="parser">parser</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/loaders/python.py#L79">[view_source]</a></p>
 <p>Options for the Python parser.</p>
 <p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.encoding"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.encoding"></a></p>
 <h4 id="encoding">encoding</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/loaders/python.py#L82">[view_source]</a></p>
 <p>The encoding to use when reading the Python source files.</p>
 
               

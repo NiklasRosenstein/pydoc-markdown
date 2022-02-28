@@ -846,12 +846,14 @@
 Pydoc-Markdown to implement custom loaders for documentation data,
 processors or renderers.</p>
 <p><a id="pydoc_markdown.interfaces.Context"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Context"></a></p>
 <h2 id="class-context">Class Context</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Context</span><span class="p">()</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/interfaces.py#L39">[view_source]</a></p>
 <p>Context data that is passed to plugins when they are loaded.</p>
 <p><a id="pydoc_markdown.interfaces.Loader"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Loader"></a></p>
 <h2 id="class-loader">Class Loader</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@A</span><span class="o">.</span><span class="n">unionclass</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">entrypoint</span><span class="p">(</span><span class="s1">&#39;pydoc_markdown.interfaces.Loader&#39;</span><span class="p">),</span>
@@ -863,20 +865,23 @@ processors or renderers.</p>
 data. The location from which the documentation is loaded must be defined
 with the configuration class.</p>
 <p><a id="pydoc_markdown.interfaces.Resolver"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Resolver"></a></p>
 <h2 id="class-resolver">Class Resolver</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Resolver</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/interfaces.py#L71">[view_source]</a></p>
-<p>A resolver can be used by a <a href="#class-processor">Processor</a> to replace cross references with a hyperlink.</p>
+<p>A resolver can be used by a <a href="/api/interfaces#pydoc:pydoc_markdown.interfaces.Processor">Processor</a> to replace cross references with a hyperlink.</p>
 <p><a id="pydoc_markdown.interfaces.ResolverV2"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.ResolverV2"></a></p>
 <h2 id="class-resolverv2">Class ResolverV2</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">ResolverV2</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/interfaces.py#L80">[view_source]</a></p>
 <p>New style interface for resolving based on a text ref from in the context of a <code>docspec.ApiObject</code>
-to find another. This is different from <a href="#class-resolver">Resolver</a> because it returns the resolved object directly, instead
+to find another. This is different from <a href="/api/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> because it returns the resolved object directly, instead
 of some string representation of it.</p>
 <p><a id="pydoc_markdown.interfaces.Processor"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Processor"></a></p>
 <h2 id="class-processor">Class Processor</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@A</span><span class="o">.</span><span class="n">unionclass</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">entrypoint</span><span class="p">(</span><span class="s1">&#39;pydoc_markdown.interfaces.Processor&#39;</span><span class="p">),</span>
@@ -888,6 +893,7 @@ of some string representation of it.</p>
 transforms it in an arbitrary way. This usually processes docstrings to convert from
 various documentation syntaxes to plain Markdown.</p>
 <p><a id="pydoc_markdown.interfaces.Renderer"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Renderer"></a></p>
 <h2 id="class-renderer">Class Renderer</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@A</span><span class="o">.</span><span class="n">unionclass</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">entrypoint</span><span class="p">(</span><span class="s1">&#39;pydoc_markdown.interfaces.Renderer&#39;</span><span class="p">),</span>
@@ -900,30 +906,34 @@ output files or writes to stdout. It may also expose additional command-line arg
 There can only be one renderer at the end of the processor chain.</p>
 <p>Note that sometimes a renderer may need to perform some processing before the render step.
 To keep the possibility open that a renderer may implement generic processing that could
-used without the actual renderering functionality, <a href="#class-renderer">Renderer</a> is a subclass of <a href="#class-processor">Processor</a>.</p>
+used without the actual renderering functionality, <a href="/api/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> is a subclass of <a href="/api/interfaces#pydoc:pydoc_markdown.interfaces.Processor">Processor</a>.</p>
 <p><a id="pydoc_markdown.interfaces.SinglePageRenderer"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.SinglePageRenderer"></a></p>
 <h2 id="class-singlepagerenderer">Class SinglePageRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">SinglePageRenderer</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/interfaces.py#L126">[view_source]</a></p>
 <p>Interface for rendering a single page.</p>
 <p><a id="pydoc_markdown.interfaces.SingleObjectRenderer"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.SingleObjectRenderer"></a></p>
 <h2 id="class-singleobjectrenderer">Class SingleObjectRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">SingleObjectRenderer</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/interfaces.py#L136">[view_source]</a></p>
 <p>Interface for rendering a single <code>docspec.ApiObject</code>.</p>
 <p><a id="pydoc_markdown.interfaces.Server"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Server"></a></p>
 <h2 id="class-server">Class Server</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Server</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/interfaces.py#L145">[view_source]</a></p>
 <p>This interface describes an object that can start a server process for
-live-viewing generated documentation in the browser. <a href="#class-renderer">Renderer</a>
+live-viewing generated documentation in the browser. <a href="/api/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a>
 implementations may additionally implement this interface to advocate their
 compatibility with the <code>--server</code> and <code>--open</code> options of the pydoc-markdown
 CLI.</p>
 <p><a id="pydoc_markdown.interfaces.Server.reload_server"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Server.reload_server"></a></p>
 <h4 id="reload_server">reload_server</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">reload_server</span><span class="p">(</span><span class="n">process</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span>
 </code></pre></div>
@@ -933,14 +943,16 @@ This gives the implementation a chance to reload the server process.
 The default implementation returns the <em>process</em> unchanged. Returning
 <code>None</code> will automatically call <code>start_server()</code> afterwards.</p>
 <p><a id="pydoc_markdown.interfaces.Builder"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Builder"></a></p>
 <h2 id="class-builder">Class Builder</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Builder</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/interfaces.py#L171">[view_source]</a></p>
-<p>This interface can be implemented additionally to the <a href="#class-renderer">Renderer</a> interface to
+<p>This interface can be implemented additionally to the <a href="/api/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> interface to
 indicate that the renderer supports building another produce after the markdown
 files have been rendered.</p>
 <p><a id="pydoc_markdown.interfaces.Builder.build"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.Builder.build"></a></p>
 <h4 id="build">build</h4>
 <div class="highlight"><pre><span></span><code><span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
 <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">site_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
@@ -949,6 +961,7 @@ files have been rendered.</p>
 <p>Invoke the build. The <em>site_dir</em> is the directory in which the output files should be
 placed. Otherwise, the directory may be determined by the builder.</p>
 <p><a id="pydoc_markdown.interfaces.SourceLinker"></a></p>
+<p><a id="pydoc:pydoc_markdown.interfaces.SourceLinker"></a></p>
 <h2 id="class-sourcelinker">Class SourceLinker</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@A</span><span class="o">.</span><span class="n">unionclass</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">entrypoint</span><span class="p">(</span><span class="s1">&#39;pydoc_markdown.interfaces.SourceLinker&#39;</span><span class="p">),</span>

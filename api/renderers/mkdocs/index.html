@@ -789,6 +789,7 @@
 
 <h1 id="mkdocs">MkDocs</h1>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.CustomizedMarkdownRenderer"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.CustomizedMarkdownRenderer"></a></p>
 <h2 id="class-customizedmarkdownrenderer">Class CustomizedMarkdownRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">CustomizedMarkdownRenderer</span><span class="p">(</span><span class="n">MarkdownRenderer</span><span class="p">)</span>
@@ -796,6 +797,7 @@
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/mkdocs.py#L44">[view_source]</a></p>
 <p>We override some defaults in this subclass.</p>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer"></a></p>
 <h2 id="class-mkdocsrenderer">Class MkdocsRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">MkdocsRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">Builder</span><span class="p">)</span>
@@ -820,32 +822,32 @@ be used to create a Pydoc-Markdown configuration file with the MkDocs template.<
 </code></pre></div>
 <h3 id="options">Options</h3>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.output_directory"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.output_directory"></a></p>
 <h4 id="output_directory">output_directory</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/mkdocs.py#L79">[view_source]</a></p>
 <p>The output directory for the generated Markdown files. Defaults to
 <code>build/docs</code>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.content_directory_name"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.content_directory_name"></a></p>
 <h4 id="content_directory_name">content_directory_name</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/mkdocs.py#L82">[view_source]</a></p>
-<p>Name of the content directory (inside the <a href="#output_directory">output_directory</a>). Defaults to "content".</p>
+<p>Name of the content directory (inside the <a href="/api/renderers/mkdocs#pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.output_directory">output_directory</a>). Defaults to "content".</p>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.clean_render"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.clean_render"></a></p>
 <h4 id="clean_render">clean_render</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/mkdocs.py#L86">[view_source]</a></p>
 <p>Remove files generated in a previous pass by the Mkdocs renderer before rendering
 again. Defaults to <code>True</code>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.site_name"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.site_name"></a></p>
 <h4 id="site_name">site_name</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/mkdocs.py#L99">[view_source]</a></p>
 <p>The name of the site. This will be carried into the <code>site_name</code> key
-of the <a href="#mkdocs_config">mkdocs_config</a>.</p>
+of the <a href="/api/renderers/mkdocs#pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.mkdocs_config">mkdocs_config</a>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.mkdocs_config"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.mkdocs_config"></a></p>
 <h4 id="mkdocs_config">mkdocs_config</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/mkdocs.py#L103">[view_source]</a></p>
 <p>Arbitrary configuration values that will be rendered to an
 <code>mkdocs.yml</code> file.</p>
 <p><a id="pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.server_port"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer.server_port"></a></p>
 <h4 id="server_port">server_port</h4>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/../src/pydoc_markdown/contrib/renderers/mkdocs.py#L111">[view_source]</a></p>
 <p>Port for the Mkdocs server when using the <code>pydoc-markdown --server</code> option.
 Defaults to <code>8000</code>. Can be set with the <code>MKDOCS_PORT</code> environment variable:</p>
 <div class="highlight"><pre><span></span><code>$ MKDOCS_PORT=8383 pydoc-markdown -so
