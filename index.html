@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-the-pydoc-markdown-documentation-v450-72-gdf4f5a2-adopt-new-docspec" class="md-skip">
+        <a href="#welcome-to-the-pydoc-markdown-documentation-451-68-gd1050e1-adopt-new-docspec" class="md-skip">
           Skip to content
         </a>
       
@@ -210,68 +210,9 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Home
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="." class="md-nav__link md-nav__link--active">
         Home
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    Installation
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    Features
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#news" class="md-nav__link">
-    News
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#contributing-to-pydoc-markdown" class="md-nav__link">
-    Contributing to Pydoc-Markdown
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#questions-need-help" class="md-nav__link">
-    Questions / Need help?
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -644,49 +585,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    Installation
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    Features
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#news" class="md-nav__link">
-    News
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#contributing-to-pydoc-markdown" class="md-nav__link">
-    Contributing to Pydoc-Markdown
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#questions-need-help" class="md-nav__link">
-    Questions / Need help?
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -703,39 +601,60 @@
 
 
 
-<h1 id="welcome-to-the-pydoc-markdown-documentation-v450-72-gdf4f5a2-adopt-new-docspec">Welcome to the Pydoc Markdown documentation! <sup style="font-size: 10px"><code>v4.5.0-72-gdf4f5a2 (adopt-new-docspec)</code></sup></h1>
+<h1 id="welcome-to-the-pydoc-markdown-documentation-451-68-gd1050e1-adopt-new-docspec">Welcome to the Pydoc Markdown documentation! <sup style="font-size: 10px"><code>4.5.1-68-gd1050e1 (adopt-new-docspec)</code></sup></h1>
 <p><img alt="Python versions" src="https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge" />
 <a href="https://pypi.org/project/pydoc-markdown/"><img alt="Pypi version" src="https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge" /></a>
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/actions"><img alt="Build status" src="https://img.shields.io/github/workflow/status/NiklasRosenstein/pydoc-markdown/Python%20package?style=for-the-badge" /></a></p>
-<p>Pydoc-Markdown is a tool to create Python API documentation in Markdown format. Instead of executing your Python
-code like so many other documentation tools, it parses it using <a href="https://niklasrosenstein.github.io/docspec/">docspec</a> instead. To run Pydoc-Markdown, you
-need to use at least Python 3.7.</p>
-<p><a href="https://niklasrosenstein.github.io/pydoc-markdown/">&gt;&gt; Go to the Documentation</a></p>
-<h3 id="installation">Installation</h3>
-<p>I recommend to install Pydoc-Markdown using Pipx.</p>
-<div class="highlight"><pre><span></span><code>$ pipx install pydoc-markdown[novella]
-</code></pre></div>
-<h3 id="features">Features</h3>
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/actions"><img alt="Build status" src="https://img.shields.io/github/workflow/status/NiklasRosenstein/pydoc-markdown/Python%20package?style=for-the-badge" /></a>
+<a href="https://pydoc-markdown.readthedocs.io/en/latest/"><img alt="Docs status" src="https://img.shields.io/readthedocs/pydoc-markdown?style=for-the-badge" /></a></p>
+<h1 id="pydoc-markdown">Pydoc-Markdown</h1>
+<p>Pydoc-Markdown is a tool and library to create Python API documentation in
+Markdown format based on <code>lib2to3</code>, allowing it to parse your Python code
+without executing it.</p>
+<p>Pydoc-Markdown requires Python 3.7 or newer, however the code that you want to
+generate API documentation for can be for any Python version.</p>
+<p><a href="https://pydoc-markdown.readthedocs.io/en/latest/">&gt;&gt; Go to the Documentation</a></p>
+<h2 id="features">Features</h2>
 <ul>
-<li>Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly
-  formatted Markdown</li>
-<li>Can parse docstrings for variables thanks to <a href="https://niklasrosenstein.github.io/docspec/">docspec</a> (<code>#:</code> block before or string literal after the statement)</li>
-<li>Generates links to other API objects per the documentation syntax (e.g. <code>#OtherClass</code> for the Pydoc-Markdown style)</li>
+<li>Understands multiple doc styles (Sphinx, Google, Pydoc-Markdown)</li>
+<li>Supports assignment docstrings (<code>#:</code> block before or string literal after the statement)</li>
+<li>Links references to other documented API objects [WIP]</li>
+<li>[MkDocs][], <a href="https://gohugo.io/">Hugo</a> and <a href="https://v2.docusaurus.io/">Docusaurus</a> integration</li>
 </ul>
-<h3 id="news">News</h3>
-<p>Starting with <strong>4.6.0</strong>, development focuses on integrating with <a href="https://niklasrosenstein.github.io/novella/">Novella</a> and use it as a replacement for
-tool-specific renderers thus far provided directly by Pydoc-Markdown (i.e. integrations with MkDocs, Hugo and
-Docusuraus). Such integrations are/will be provided by Novella instead.</p>
-<p>With the Novella integration, you can now place generated API content in Markdown format inline with your
-existing Markdown documentation source files using <code>@pydoc</code> tags. Check out the <a href="https://niklasrosenstein.github.io/pydoc-markdown/">Documentation</a> for more
-information on how to use Pydoc-Markdown with Novella.</p>
-<p>The old style of using Pydoc-Markdown with a YAML or PyProject configuration to generate files and kick off the
-build is now deprecated but will be maintained for the foreseeable future (at least until the next major version
-bump). It is strongly recommended to migrate your existing projects to using the <a href="https://niklasrosenstein.github.io/pydoc-markdown/">Novella build backend</a>.</p>
-<h3 id="contributing-to-pydoc-markdown">Contributing to Pydoc-Markdown</h3>
-<p>All contributions are welcome! Check out the <a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md">Contribution Guidelines</a>.</p>
-<h3 id="questions-need-help">Questions / Need help?</h3>
+<h2 id="installation">Installation</h2>
+<p>Install Pydoc-Markdown from PyPI:</p>
+<div class="highlight"><pre><span></span><code>$ pipx install &#39;pydoc-markdown&gt;=4.0.0,&lt;5.0.0&#39;
+</code></pre></div>
+<h2 id="quickstart-mkdocs">Quickstart (MkDocs)</h2>
+<div class="highlight"><pre><span></span><code>$ pipx install mkdocs
+$ pydoc-markdown --bootstrap mkdocs
+$ pydoc-markdown --bootstrap readthedocs
+$ pydoc-markdown --server --open
+</code></pre></div>
+<p>What this does:</p>
+<ol>
+<li>Install [MkDocs][]</li>
+<li>Create a <code>pydoc-markdown.yml</code> file in the current directory</li>
+<li>Create files to render your documentation on <a href="https://readthedocs.org/">readthedocs.org</a></li>
+<li>Render Markdown files from the Python modules/packages in your current
+   working directory and run MkDocs to open a live-preview of the page.</li>
+</ol>
+<h2 id="quickstart-hugo">Quickstart (Hugo)</h2>
+<div class="highlight"><pre><span></span><code>$ pydoc-markdown --bootstrap hugo
+$ pydoc-markdown --server --open
+</code></pre></div>
+<p>What this does:</p>
+<ol>
+<li>Create a <code>pydoc-markdown.yml</code> file in the current directory</li>
+<li>Render Markdown files from the Python modules/packages in your current working directory
+   and run Hugo to open a live-preview of the page. If Hugo is not available on your system,
+   it will be downloaded automatically.</li>
+</ol>
+<h2 id="contributing-to-pydoc-markdown">Contributing to Pydoc-Markdown</h2>
+<p>All contributions are welcome! Check out the <a href=".github/CONTRIBUTING.md">Contributing</a> guidelines.</p>
+<h2 id="questions-need-help">Questions / Need help?</h2>
 <p>Feel free to open a topic on <a href="https://github.com/NiklasRosenstein/pydoc-markdown/discussions">GitHub Discussions</a>!</p>
+<hr />
+<p align="center">Copyright &copy; 2021 Niklas Rosenstein</p>
 
               
             </article>
