@@ -27,7 +27,6 @@ With no arguments it will load the default configuration file. If the
 or a YAML formatted object for the configuration.
 """
 
-import dataclasses
 import logging
 import os
 import sys
