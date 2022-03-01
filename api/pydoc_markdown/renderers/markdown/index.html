@@ -1349,7 +1349,7 @@
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L42">[view_source]</a></p>
 <p>Produces Markdown files. This renderer is often used by other renderers, such as
-<a href="/api/pydoc_markdown/renderers/mkdocs#pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer">MkdocsRenderer</a> and <a href="/api/pydoc_markdown/renderers/hugo#pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer">HugoRenderer</a>. It provides a wide variety of options to customize
+<a href="/pydoc-markdown/api/pydoc_markdown/renderers/mkdocs#pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer">MkdocsRenderer</a> and <a href="/pydoc-markdown/api/pydoc_markdown/renderers/hugo#pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer">HugoRenderer</a>. It provides a wide variety of options to customize
 the generated Markdown files.</p>
 <h3 id="options">Options</h3>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.filename"></a></p>
@@ -1376,7 +1376,7 @@ by default.</p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers"></a></p>
 <h4 id="code_headers">code_headers</h4>
 <p>Render names in headers as code (using backticks or <code>&lt;code&gt;</code> tags,
-depending on <a href="/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.html_headers">html_headers</a>). This is enabled by default.</p>
+depending on <a href="/pydoc-markdown/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.html_headers">html_headers</a>). This is enabled by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.descriptive_class_title"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.descriptive_class_title"></a></p>
 <h4 id="descriptive_class_title">descriptive_class_title</h4>
@@ -1392,13 +1392,13 @@ the module name. This is enabled by default.</p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_module_prefix"></a></p>
 <h4 id="add_module_prefix">add_module_prefix</h4>
 <p>Add the module name as a prefix to class &amp; method names. This module name is
-also rendered as code if <a href="/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers">code_headers</a> is enabled. This is enabled
+also rendered as code if <a href="/pydoc-markdown/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers">code_headers</a> is enabled. This is enabled
 by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_method_class_prefix"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_method_class_prefix"></a></p>
 <h4 id="add_method_class_prefix">add_method_class_prefix</h4>
 <p>Add the class name as a prefix to method names. This class name is
-also rendered as code if <a href="/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers">code_headers</a> is enabled. This is enabled
+also rendered as code if <a href="/pydoc-markdown/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.code_headers">code_headers</a> is enabled. This is enabled
 by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_member_class_prefix"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_member_class_prefix"></a></p>
@@ -1413,7 +1413,7 @@ This is disabled by default.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.sub_prefix"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.sub_prefix"></a></p>
 <h4 id="sub_prefix">sub_prefix</h4>
-<p>If <a href="/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_full_prefix">add_full_prefix</a> is enabled, this will result in the prefix to
+<p>If <a href="/pydoc-markdown/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.add_full_prefix">add_full_prefix</a> is enabled, this will result in the prefix to
 be wrapped in a <code>&lt;sub&gt;</code> tag.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.data_code_block"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.data_code_block"></a></p>
@@ -1510,7 +1510,7 @@ enabled by default.</p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.use_fixed_header_levels"></a></p>
 <h4 id="use_fixed_header_levels">use_fixed_header_levels</h4>
 <p>Use a fixed header level for every kind of API object. The individual
-levels can be defined with <a href="/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.header_level_by_type">header_level_by_type</a>.</p>
+levels can be defined with <a href="/pydoc-markdown/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.header_level_by_type">header_level_by_type</a>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.header_level_by_type"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.header_level_by_type"></a></p>
 <h4 id="header_level_by_type">header_level_by_type</h4>
@@ -1518,14 +1518,14 @@ levels can be defined with <a href="/api/pydoc_markdown/renderers/markdown#pydoc
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_linker"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_linker"></a></p>
 <h4 id="source_linker">source_linker</h4>
-<p>A plugin that implements the <a href="/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.SourceLinker">SourceLinker</a> interface to provide links to the
+<p>A plugin that implements the <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.SourceLinker">SourceLinker</a> interface to provide links to the
 source code of API objects. If this field is specified, the renderer will
 place links to the source code in the generated Markdown files.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_format"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_format"></a></p>
 <h4 id="source_format">source_format</h4>
 <p>Allows you to override how the "view source" link is rendered into the Markdown
-file if a <a href="/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_linker">source_linker</a> is configured. The default is <code>[[view_source]]({url})</code>.</p>
+file if a <a href="/pydoc-markdown/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.source_linker">source_linker</a> is configured. The default is <code>[[view_source]]({url})</code>.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.escape_html_in_docstring"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.escape_html_in_docstring"></a></p>
 <h4 id="escape_html_in_docstring">escape_html_in_docstring</h4>
@@ -1549,7 +1549,7 @@ a file relative to the context directory (usually the working directory).</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_resolver</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Resolver</span><span class="p">]</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L452">[view_source]</a></p>
-<p>Returns a simple <a href="/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> implementation. Finds cross-references in the same file.</p>
+<p>Returns a simple <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> implementation. Finds cross-references in the same file.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver"></a></p>
 <h2 id="class-markdownreferenceresolver">Class MarkdownReferenceResolver</h2>

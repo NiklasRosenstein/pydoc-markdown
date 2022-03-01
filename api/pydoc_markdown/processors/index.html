@@ -919,21 +919,21 @@
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/processors/crossref.py#L36">[view_source]</a></p>
 <p>Finds references to other objects in Markdown docstrings and produces links to other
-pages. The links are provided by the current <a href="/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> via the <a href="/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> interface.</p>
+pages. The links are provided by the current <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> via the <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> interface.</p>
 <blockquote>
 <p><strong>Note</strong>: This processor is a work in progress, and most of the time it just converts
 references into inline-code.</p>
 </blockquote>
 <p>The syntax for cross references is as follows:</p>
-<div class="highlight"><pre><span></span><code>This is a ref to another class: [PydocmdProcessor](/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor)
+<div class="highlight"><pre><span></span><code>This is a ref to another class: [PydocmdProcessor](/pydoc-markdown/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor)
 You can rename a ref like `this`~PydocmdProcessor
-And you can append to the ref name like this: [PydocmdProcessors](/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor)
+And you can append to the ref name like this: [PydocmdProcessors](/pydoc-markdown/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor)
 </code></pre></div>
 <p>Renders as</p>
 <blockquote>
-<p>This is a ref to another class: <a href="/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor">PydocmdProcessor</a>
+<p>This is a ref to another class: <a href="/pydoc-markdown/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor">PydocmdProcessor</a>
 You can rename a ref like <code>this</code>~PydocmdProcessor
-And you can append to the ref name like this: <a href="/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor">PydocmdProcessors</a></p>
+And you can append to the ref name like this: <a href="/pydoc-markdown/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor">PydocmdProcessors</a></p>
 </blockquote>
 <p>Example configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">processors</span><span class="p">:</span><span class="w"></span>
@@ -942,7 +942,7 @@ And you can append to the ref name like this: <a href="/api/pydoc_markdown/proce
 <p><a id="pydoc_markdown.contrib.processors.crossref.CrossrefProcessor.resolver_v2"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.processors.crossref.CrossrefProcessor.resolver_v2"></a></p>
 <h4 id="resolver_v2">resolver_v2</h4>
-<p>If specified, it will be used instead of the resolver passed to <a href="/api/pydoc_markdown#pydoc:pydoc_markdown.PydocMarkdown.process">process()</a> and the generated Markdown
+<p>If specified, it will be used instead of the resolver passed to <a href="/pydoc-markdown/api/pydoc_markdown#pydoc:pydoc_markdown.PydocMarkdown.process">process()</a> and the generated Markdown
 code for the reference uses Novella <code>{@link }</code> syntax.</p>
 <hr />
 <p>Module: <code>pydoc_markdown.contrib.processors.filter</code></p>
@@ -1081,7 +1081,7 @@ A value.
 <span class="k">class</span> <span class="nc">SmartProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/processors/smart.py#L34">[view_source]</a></p>
-<p>This processor picks the <a href="/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.google.GoogleProcessor">GoogleProcessor</a>, <a href="/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.sphinx.SphinxProcessor">SphinxProcessor</a> or <a href="/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor">PydocmdProcessor</a> after
+<p>This processor picks the <a href="/pydoc-markdown/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.google.GoogleProcessor">GoogleProcessor</a>, <a href="/pydoc-markdown/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.sphinx.SphinxProcessor">SphinxProcessor</a> or <a href="/pydoc-markdown/api/pydoc_markdown/processors#pydoc:pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor">PydocmdProcessor</a> after
 guessing which is appropriate from the syntax it finds in the docstring.</p>
 <hr />
 <p>Module: <code>pydoc_markdown.contrib.processors.sphinx</code></p>
