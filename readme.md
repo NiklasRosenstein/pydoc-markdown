@@ -42,7 +42,7 @@ information on how to use Pydoc-Markdown with Novella.
 
 The old style of using Pydoc-Markdown with a YAML or PyProject configuration to generate files and kick off the
 build is now deprecated but will be maintained for the foreseeable future (at least until the next major version
-bump). It is strongly recommended to migrate your existing projects to using the [Novella build backend][].
+bump). It is strongly recommended to migrate your existing projects to using the Novella build backend.
 
 ### Contributing to Pydoc-Markdown
 
