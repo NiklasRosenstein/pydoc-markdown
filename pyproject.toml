@@ -48,8 +48,8 @@ types-requests = "*"
 types-PyYAML = "*"
 
 [tool.poetry.extras]
-novella = ["novella ^0.1.9"]
-docs = ["novella ^0.1.9", "mkdocs", "mkdocs-material"]
+novella = ["novella ^0.1.10"]
+docs = ["novella ^0.1.10", "mkdocs", "mkdocs-material"]
 
 [tool.poetry.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"
