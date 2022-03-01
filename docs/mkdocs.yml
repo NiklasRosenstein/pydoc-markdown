@@ -18,4 +18,5 @@ nav:
         - mkdocs: api/pydoc_markdown/renderers/mkdocs.md
   - Other:
     - changelog.md
+    - contributing.md
     - deprecated-configuration.md
