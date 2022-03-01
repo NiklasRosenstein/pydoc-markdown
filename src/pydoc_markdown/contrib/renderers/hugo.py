@@ -191,7 +191,7 @@ class HugoRenderer(Renderer, Server, Builder):
 
   Example configuration:
 
-  ```yml
+  ```yaml
   renderer:
     type: hugo
     config:

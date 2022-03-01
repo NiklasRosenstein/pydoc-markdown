@@ -15,7 +15,7 @@ need to use at least Python 3.7.
   [Documentation]: https://niklasrosenstein.github.io/pydoc-markdown/
   [MkDocs]: https://www.mkdocs.org/
   [Novella]: https://niklasrosenstein.github.io/novella/
-  [Novella build backend]: https://niklasrosenstein.github.io/pydoc-markdown/
+  [Novella build backend]: https://niklasrosenstein.github.io/pydoc-markdown/usage/novella/
 
 ### Installation
 

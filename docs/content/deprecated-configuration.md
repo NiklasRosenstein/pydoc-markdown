@@ -1,9 +1,20 @@
-# Configuration
+# Deprecated Configuration
 
-Pydoc-Markdown will read the configuration from a file called `pydoc-markdown.yml` (or `.yaml`)
-or from the `pyproject.toml` file under the `[tool.pydoc-markdown]` table. If you use the YAML
-configuration, the configuration file is pre-processed with a [YTT][]-like templating language
-(see [YAML Preprocessing](#yaml-preprocessing)).
+!!! attention
+
+    Using Pydoc-Markdown this way is deprecated since v4.6.0. It is strongly recommended that you
+    use the [Novella build backend](./novella.md) instead. This way of using Pydoc-Markdown will
+    likely be removed with the next major version release (5.x).
+
+Pydoc-Markdown can be configured with using via a YAML file. By default, the CLI will look for a file
+called `pydoc-markdown.yaml` (or `.yml`) in the current working directory. (Note that the configuration
+is not read from file when using the `-m,--module`, `-p,--package` and other options that are intended
+for invoking Pydoc-Markdown without a configuration file).
+
+> __Tip__: The `--bootstrap` and `--bootstrap-mkdocs` options can be used to write a template configuration file.
+
+If you use the YAML configuration, the configuration file is pre-processed with a [YTT][]-like templating
+language (see [YAML Preprocessing](#yaml-preprocessing)).
 
 The configuration contains of four main sections:
 
@@ -159,4 +170,28 @@ module school._person
 module school._pupil
 | class Pupil
 [ ... ]
+```
+
+## Hugo baseURL
+
+When using Hugo, usually you want to set the `baseURL` configuration so that it can generated
+permalinks properly. If you are building on Read the Docs, chances are that you will have
+multiple versions of the documentation, which all require a different `baseURL`.
+
+Pydoc-Markdown configuration files are pre-processed with a [YTT][]-like templating language.
+
+  [YTT]: https://get-ytt.io/
+
+```yml
+#@ def base_url():
+#@    if env.READTHEDOCS:
+#@      return "https://pydoc-markdown.readthedocs.io/en/" + env.READTHEDOCS_VERSION + "/"
+#@    else:
+#@      return None
+#@ end
+
+renderer:
+  type: hugo
+  config:
+    baseURL: #@ base_url()
 ```

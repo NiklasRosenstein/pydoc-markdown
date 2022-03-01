@@ -57,7 +57,7 @@ class CrossrefProcessor(Processor):
 
   Example configuration:
 
-  ```yml
+  ```yaml
   processors:
     - type: crossref
   ```

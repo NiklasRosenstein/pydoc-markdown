@@ -1,8 +1,10 @@
-template "mkdocs" {
-  configure update_config {
-    site_name = "Pydoc Markdown"
-  }
-  configure preprocessor {
-    use "pydoc"
-  }
+template "mkdocs"
+
+action "mkdocs-update-config" {
+  site_name = "Pydoc Markdown"
+  update '$.theme.features' add: ['navigation.sections']
+}
+
+action "preprocess-markdown" {
+  use "pydoc"
 }

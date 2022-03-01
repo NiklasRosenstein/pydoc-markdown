@@ -56,7 +56,7 @@ class MkdocsRenderer(Renderer, Server, Builder):
 
   Example configuration:
 
-  ```yml
+  ```yaml
   renderer:
     type: mkdocs
     pages:

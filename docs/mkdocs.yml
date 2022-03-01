@@ -1,0 +1,21 @@
+nav:
+  - index.md
+  - getting-started.md
+  - just-generate-me-some-markdown.md
+  - readthedocs.md
+  - API Documentation:
+    - api/cli.md
+    - pydoc_markdown:
+      - api/pydoc_markdown/index.md
+      - interfaces: api/pydoc_markdown/interfaces.md
+      - contrib.loaders: api/pydoc_markdown/loaders.md
+      - contrib.processors: api/pydoc_markdown/processors.md
+      - contrib.renderers:
+        - docusaurus: api/pydoc_markdown/renderers/docusaurus.md
+        - hugo: api/pydoc_markdown/renderers/hugo.md
+        - jinja2: api/pydoc_markdown/renderers/jinja2.md
+        - markdown: api/pydoc_markdown/renderers/markdown.md
+        - mkdocs: api/pydoc_markdown/renderers/mkdocs.md
+  - Other:
+    - changelog.md
+    - deprecated-configuration.md
