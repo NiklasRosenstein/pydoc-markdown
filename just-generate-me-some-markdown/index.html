@@ -13,7 +13,7 @@
     
     
       
-        <title>Configuration - Pydoc Markdown</title>
+        <title>Just generate me some Markdown! - Pydoc Markdown</title>
       
     
     
@@ -21,6 +21,10 @@
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.e6a45f82.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ffc105">
         
       
     
@@ -48,7 +52,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="deep-orange">
   
     
     
@@ -58,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuration" class="md-skip">
+        <a href="#just-generate-me-some-markdown" class="md-skip">
           Skip to content
         </a>
       
@@ -91,7 +95,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configuration
+              Just generate me some Markdown!
             
           </span>
         </div>
@@ -216,8 +220,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
-        Changelog
+      <a href="../getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -241,12 +245,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Configuration
+          Just generate me some Markdown!
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Configuration
+        Just generate me some Markdown!
       </a>
       
         
@@ -265,57 +269,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#yaml-example" class="md-nav__link">
-    YAML Example
+  <a href="#cli-example" class="md-nav__link">
+    CLI Example
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pyproject-example" class="md-nav__link">
-    PyProject Example
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#yaml-preprocessing" class="md-nav__link">
-    YAML Preprocessing
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#loaders" class="md-nav__link">
-    Loaders
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#processors" class="md-nav__link">
-    Processors
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#renderer" class="md-nav__link">
-    Renderer
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hooks" class="md-nav__link">
-    Hooks
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-your-configuration" class="md-nav__link">
-    Testing your Configuration
+  <a href="#api-example" class="md-nav__link">
+    API Example
   </a>
   
 </li>
@@ -335,11 +297,28 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../readthedocs/" class="md-nav__link">
+        Read the Docs
+      </a>
+    </li>
+  
+
     
-    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
       
       
       
@@ -348,23 +327,17 @@
         
           
         
-          
-        
-          
-        
-          
-        
       
       
-        <label class="md-nav__link" for="__nav_4">
-          Api
+        <label class="md-nav__link" for="__nav_5">
+          API Documentation
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Api" data-md-level="1">
-        <label class="md-nav__title" for="__nav_4">
+      <nav class="md-nav" aria-label="API Documentation" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
-          Api
+          API Documentation
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -387,9 +360,57 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2" type="checkbox" id="__nav_5_2" >
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../api/pydoc_markdown/">pydoc_markdown</a>
+          
+            <label for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="pydoc_markdown" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          pydoc_markdown
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../api/interfaces/" class="md-nav__link">
-        Interfaces
+      <a href="../api/pydoc_markdown/interfaces/" class="md-nav__link">
+        interfaces
       </a>
     </li>
   
@@ -402,8 +423,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/loaders/" class="md-nav__link">
-        Loaders
+      <a href="../api/pydoc_markdown/loaders/" class="md-nav__link">
+        contrib.loaders
       </a>
     </li>
   
@@ -416,8 +437,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/processors/" class="md-nav__link">
-        Processors
+      <a href="../api/pydoc_markdown/processors/" class="md-nav__link">
+        contrib.processors
       </a>
     </li>
   
@@ -433,7 +454,7 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2_5" type="checkbox" id="__nav_5_2_5" >
       
       
       
@@ -450,15 +471,15 @@
         
       
       
-        <label class="md-nav__link" for="__nav_4_5">
-          Renderers
+        <label class="md-nav__link" for="__nav_5_2_5">
+          contrib.renderers
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Renderers" data-md-level="2">
-        <label class="md-nav__title" for="__nav_4_5">
+      <nav class="md-nav" aria-label="contrib.renderers" data-md-level="3">
+        <label class="md-nav__title" for="__nav_5_2_5">
           <span class="md-nav__icon md-icon"></span>
-          Renderers
+          contrib.renderers
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -468,8 +489,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/renderers/docusaurus/" class="md-nav__link">
-        Docusaurus
+      <a href="../api/pydoc_markdown/renderers/docusaurus/" class="md-nav__link">
+        docusaurus
       </a>
     </li>
   
@@ -482,8 +503,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/renderers/hugo/" class="md-nav__link">
-        Docusaurus
+      <a href="../api/pydoc_markdown/renderers/hugo/" class="md-nav__link">
+        hugo
       </a>
     </li>
   
@@ -496,8 +517,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/renderers/jinja2/" class="md-nav__link">
-        Jinja2
+      <a href="../api/pydoc_markdown/renderers/jinja2/" class="md-nav__link">
+        jinja2
       </a>
     </li>
   
@@ -510,8 +531,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/renderers/markdown/" class="md-nav__link">
-        Markdown
+      <a href="../api/pydoc_markdown/renderers/markdown/" class="md-nav__link">
+        markdown
       </a>
     </li>
   
@@ -524,8 +545,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/renderers/mkdocs/" class="md-nav__link">
-        MkDocs
+      <a href="../api/pydoc_markdown/renderers/mkdocs/" class="md-nav__link">
+        mkdocs
       </a>
     </li>
   
@@ -544,6 +565,13 @@
     </li>
   
 
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
     
       
       
@@ -553,10 +581,12 @@
   
   
     
-    <li class="md-nav__item md-nav__item--nested">
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
       
       
       
@@ -565,21 +595,17 @@
         
           
         
-          
-        
-          
-        
       
       
-        <label class="md-nav__link" for="__nav_5">
-          Usage
+        <label class="md-nav__link" for="__nav_6">
+          Other
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Usage" data-md-level="1">
-        <label class="md-nav__title" for="__nav_5">
+      <nav class="md-nav" aria-label="Other" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Usage
+          Other
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -589,8 +615,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/novella/" class="md-nav__link">
-        Novella
+      <a href="../changelog/" class="md-nav__link">
+        Changelog
       </a>
     </li>
   
@@ -603,36 +629,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/old-style/" class="md-nav__link">
-        Old-style YAML or PyProject <sup>(deprecated)</sup>
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../usage/plain/" class="md-nav__link">
-        Plain
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../usage/readthedocs/" class="md-nav__link">
-        Read the Docs
+      <a href="../deprecated-configuration/" class="md-nav__link">
+        Deprecated Configuration
       </a>
     </li>
   
@@ -672,57 +670,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#yaml-example" class="md-nav__link">
-    YAML Example
+  <a href="#cli-example" class="md-nav__link">
+    CLI Example
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pyproject-example" class="md-nav__link">
-    PyProject Example
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#yaml-preprocessing" class="md-nav__link">
-    YAML Preprocessing
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#loaders" class="md-nav__link">
-    Loaders
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#processors" class="md-nav__link">
-    Processors
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#renderer" class="md-nav__link">
-    Renderer
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hooks" class="md-nav__link">
-    Hooks
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-your-configuration" class="md-nav__link">
-    Testing your Configuration
+  <a href="#api-example" class="md-nav__link">
+    API Example
   </a>
   
 </li>
@@ -739,137 +695,70 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/content/configuration.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/content/just-generate-me-some-markdown.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
 
-<h1 id="configuration">Configuration</h1>
-<p>Pydoc-Markdown will read the configuration from a file called <code>pydoc-markdown.yml</code> (or <code>.yaml</code>)
-or from the <code>pyproject.toml</code> file under the <code>[tool.pydoc-markdown]</code> table. If you use the YAML
-configuration, the configuration file is pre-processed with a <a href="https://get-ytt.io/">YTT</a>-like templating language
-(see <a href="#yaml-preprocessing">YAML Preprocessing</a>).</p>
-<p>The configuration contains of four main sections:</p>
-<ul>
-<li><code>loaders</code>: A list of plugins that load API objects, for example from Python source files. The
-  default configuration defines just a <code>python</code> loader.</li>
-<li><code>processors</code>: A list of plugins that process API objects to modify their docstrings (e.g. to
-  adapt them from a documentation format to Markdown or to remove items that should not be
-  rendered into the documentation). The default configuration defines the <code>filter</code>, <code>smart</code> and
-  <code>crossref</code> processors in that order.</li>
-<li><code>renderer</code>: A plugin that produces the output files. The default configuration defines the
-  <code>markdown</code> renderer (which by default will render a single file to stdout).</li>
-<li><code>hooks</code>: Configuration for commands that will be executed before and after rendering.</li>
-</ul>
-<h3 id="yaml-example">YAML Example</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">loaders</span><span class="p">:</span><span class="w"></span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span><span class="w"></span>
-<span class="w">  </span><span class="nt">search_path</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">../src</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="nt">renderer</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mkdocs</span><span class="w"></span>
-<span class="w">  </span><span class="nt">pages</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API Documentation</span><span class="w"></span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index</span><span class="w"></span>
-<span class="w">    </span><span class="nt">contents</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">school.*</span><span class="w"></span>
+<h1 id="just-generate-me-some-markdown">Just generate me some Markdown!</h1>
+<p>If you only want to use Pydoc-Markdown to generate Markdown from Python code, but not use it for anything else
+(such as interfacing with a static site generator), you can of course do that. You can make use of the <a href="/api/pydoc_markdown/loaders#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader">Class PythonLoader</a> and <a href="/api/pydoc_markdown/renderers/markdown#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer">Class MarkdownRenderer</a>,
+or more conveniently the <a href="/api/pydoc_markdown#pydoc:pydoc_markdown.PydocMarkdown">Class PydocMarkdown</a> APIs, or use the CLI.</p>
+<h2 id="cli-example">CLI Example</h2>
+<p>The Pydoc-Markdown CLI accepts some options that can modify the default configuration (i.e. the Python loader and
+Markdown renderer) and write the generated Markdown to stdout.</p>
+<div class="highlight"><pre><span></span><code>pydoc-markdown -I src -m package_name.module_name --render-toc &gt; module_name.md
 </code></pre></div>
-<h3 id="pyproject-example">PyProject Example</h3>
-<div class="highlight"><pre><span></span><code><span class="k">[[tool.pydoc-markdown.loaders]]</span><span class="w"></span>
-<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;python&quot;</span><span class="w"></span>
-<span class="n">search_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s">&quot;../src&quot;</span><span class="w"> </span><span class="p">]</span><span class="w"></span>
+<p>You can also supply a YAML configuration as a positional argument that will be treated the same way as if it
+was loaded from a <code>pydoc-markdown.yml</code> file.</p>
+<div class="highlight"><pre><span></span><code>pydoc-markdown -m my_module <span class="s1">&#39;{</span>
+<span class="s1">    renderer: {</span>
+<span class="s1">      type: markdown,</span>
+<span class="s1">      descriptive_class_title: false,</span>
+<span class="s1">      render_toc: true</span>
+<span class="s1">    }</span>
+<span class="s1">  }&#39;</span> &gt; my_module.md
+</code></pre></div>
+<h2 id="api-example">API Example</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example 1</label><label for="__tabbed_1_2">Example 2</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pydoc_markdown.interfaces</span> <span class="kn">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">pydoc_markdown.contrib.loaders.python</span> <span class="kn">import</span> <span class="n">PythonLoader</span>
+<span class="kn">from</span> <span class="nn">pydoc_markdown.contrib.renderers.markdown</span> <span class="kn">import</span> <span class="n">MarkdownRenderer</span>
 
-<span class="k">[tool.pydoc-markdown.renderer]</span><span class="w"></span>
-<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mkdocs&quot;</span><span class="w"></span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">loader</span> <span class="o">=</span> <span class="n">PythonLoader</span><span class="p">(</span><span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">])</span>
+<span class="n">renderer</span> <span class="o">=</span> <span class="n">MarkdownRenderer</span><span class="p">(</span><span class="n">render_module_header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="k">[[tool.pydoc-markdown.renderer.pages]]</span><span class="w"></span>
-<span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;API Documentation&quot;</span><span class="w"></span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;index&quot;</span><span class="w"></span>
-<span class="n">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s">&quot;school.*&quot;</span><span class="w"> </span><span class="p">]</span><span class="w"></span>
+<span class="n">loader</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+<span class="n">renderer</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+<span class="n">modules</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_to_string</span><span class="p">(</span><span class="n">modules</span><span class="p">))</span>
 </code></pre></div>
-<h2 id="yaml-preprocessing">YAML Preprocessing</h2>
-<blockquote>
-<p><em>New in Pydoc-Markdown 3.3.0. See also <code>pydoc_markdown.util.ytemplate</code></em></p>
-</blockquote>
-<p>Pydoc-Markdown performs very basic pre-processing on the YAML configuration before it is
-deserialized. The format is similar to that of <a href="https://get-ytt.io/">YTT</a>, but supports only a subset of the
-features and logic is interpreted as actual Python code.</p>
-<p>Supports preprocessing features:</p>
-<ul>
-<li><code>def</code> blocks to define a Python function (requires an <code>end</code> keyword, encapsulating YAML
-  code into the function definition is not supported)</li>
-<li>Value substitution</li>
-</ul>
-<p>Check out the <a href="readthedocs#hugo-baseurl">Read the Docs/Hugo baseURL</a> documentation for an
-example.</p>
-<h2 id="loaders">Loaders</h2>
-<p>Loaders are configured in the <code>$.loaders</code> section of the Pydoc-Markdown configuration file.
-The key must be a list of loader definitions. Currently there is only the
-<a href="../api-documentation/loaders#pydoc_markdown.contrib.loaders.python.PythonLoader">Python Loader</a>.</p>
-<p>Example:</p>
-<div class="highlight"><pre><span></span><code>loaders:
-- type: loadertype1
-  key: value
-- type: loadertype2
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This does not include any filtering logic and will just render every member in your Python code.</p>
+</div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pydoc_markdown</span> <span class="kn">import</span> <span class="n">PydocMarkdown</span>
+<span class="kn">from</span> <span class="nn">pydoc_markdown.contrib.loaders.python</span> <span class="kn">import</span> <span class="n">PythonLoader</span>
+<span class="kn">from</span> <span class="nn">pydoc_markdown.contrib.renderers.markdown</span> <span class="kn">import</span> <span class="n">MarkdownRenderer</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">PydocMarkdown</span><span class="p">()</span>  <span class="c1"># Preconfigured with a PythonLoader, FilterProcessor, CrossRefProcess, SmartProcessor and MarkdownRenderer</span>
+
+<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">loaders</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">PythonLoader</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">loaders</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">search_path</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+
+<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span> <span class="n">MarkdownRenderer</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_to_string</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">load_modules</span><span class="p">()))</span>
 </code></pre></div>
-<p>If no loaders are specified, the Python loader is used by default.</p>
-<h2 id="processors">Processors</h2>
-<p>Similar to the Loaders, the <code>$.processors</code> section expects a list of processor definitions.
-If no processors are defined, the <code>filter</code>, <code>smart</code> and <code>crossref</code> processors are used (in
-that order). Many processors do not have any additional options.</p>
-<p>Example:</p>
-<div class="highlight"><pre><span></span><code>processors:
-- type: filter
-  documented_only: false
-- type: smart
-- type: crossref
-</code></pre></div>
-<h2 id="renderer">Renderer</h2>
-<p>The <code>$.renderer</code> defines the renderer to use when running <code>pydoc-markdown</code> without arguments.
-Some renderers support the <code>--server</code> option, which allows a live-preview of the documentation.
-The default renderer is the <a href="../api-documentation/renderers/markdown">Markdown renderer</a> which
-will print the result to the terminal.</p>
-<p>Other renderers may produce files on disk in a layout that conforms with the static site generator
-that they aim to support.</p>
-<p>Example:</p>
-<div class="highlight"><pre><span></span><code>renderer:
-  type: mkdocs
-  pages:
-  - title: API Documentation
-    name: index
-    contents:
-    - school.*
-</code></pre></div>
-<h2 id="hooks">Hooks</h2>
-<p>Example:</p>
-<div class="highlight"><pre><span></span><code>hooks:
-  pre-render:
-  - generate-changelog &gt;docs/CHANGELOG.md
-</code></pre></div>
-<p>Allows you to specify shell commands that will be execute before or after the render step.</p>
-<p><strong>Available keys</strong></p>
-<ul>
-<li><code>$.hooks.pre-render</code></li>
-<li><code>$.hooks.post-render</code></li>
-</ul>
-<h2 id="testing-your-configuration">Testing your Configuration</h2>
-<p>You can test the configuration of your loaders using the <code>pydoc-markdown --dump</code> option. Combine
-this with <code>docpspec -m --dump-tree</code> to get a full formatted list tree of all API objects that
-Pydoc-Markdown has discovered, after applying all processors. You can disable processors by
-adding the <code>--without-processors</code> function.</p>
-<div class="highlight"><pre><span></span><code>$ pydoc-markdown --dump | docspec -m --dump-tree
-module school._class
-| class Class
-| | data topic
-| | data teacher
-module school._person
-| class Person
-| | data name
-| | data age
-module school._pupil
-| class Pupil
-[ ... ]
-</code></pre></div>
+</div>
+</div>
+</div>
 
               
             </article>
@@ -888,7 +777,7 @@ module school._pupil
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../changelog/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Changelog" rel="prev">
+        <a href="../getting-started/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Getting started" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -897,20 +786,20 @@ module school._pupil
               <span class="md-footer__direction">
                 Previous
               </span>
-              Changelog
+              Getting started
             </div>
           </div>
         </a>
       
       
         
-        <a href="../api/cli/" class="md-footer__link md-footer__link--next" aria-label="Next: Command-line interface" rel="next">
+        <a href="../readthedocs/" class="md-footer__link md-footer__link--next" aria-label="Next: Read the Docs" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Command-line interface
+              Read the Docs
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -940,7 +829,7 @@ module school._pupil
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow", "navigation.sections"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
     
     
       <script src="../assets/javascripts/bundle.b88e97c5.min.js"></script>

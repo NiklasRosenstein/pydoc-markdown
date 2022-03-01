@@ -8,19 +8,23 @@
       
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.3">
     
     
       
-        <title>Read the Docs - Pydoc Markdown</title>
+        <title>contrib.loaders - Pydoc Markdown</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.e8d9bf0c.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.e8d9bf0c.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ffc105">
         
       
     
@@ -34,7 +38,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -48,7 +52,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="deep-orange">
   
     
     
@@ -58,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#read-the-docs" class="md-skip">
+        <a href="#pydoc_markdowncontribloaderspython" class="md-skip">
           Skip to content
         </a>
       
@@ -72,7 +76,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Pydoc Markdown" class="md-header__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+    <a href="../../.." title="Pydoc Markdown" class="md-header__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -91,7 +95,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Read the Docs
+              contrib.loaders
             
           </span>
         </div>
@@ -170,7 +174,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Pydoc Markdown" class="md-nav__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+    <a href="../../.." title="Pydoc Markdown" class="md-nav__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -201,7 +205,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         Home
       </a>
     </li>
@@ -216,8 +220,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
-        Changelog
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -231,8 +235,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
-        Configuration
+      <a href="../../../just-generate-me-some-markdown/" class="md-nav__link">
+        Just generate me some Markdown!
       </a>
     </li>
   
@@ -245,212 +249,10 @@
   
   
   
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
-      
-      
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-      
-        <label class="md-nav__link" for="__nav_4">
-          Api
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Api" data-md-level="1">
-        <label class="md-nav__title" for="__nav_4">
-          <span class="md-nav__icon md-icon"></span>
-          Api
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../../api/cli/" class="md-nav__link">
-        Command-line interface
+      <a href="../../../readthedocs/" class="md-nav__link">
+        Read the Docs
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/interfaces/" class="md-nav__link">
-        Interfaces
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/loaders/" class="md-nav__link">
-        Loaders
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/processors/" class="md-nav__link">
-        Processors
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
-      
-      
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-      
-        <label class="md-nav__link" for="__nav_4_5">
-          Renderers
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Renderers" data-md-level="2">
-        <label class="md-nav__title" for="__nav_4_5">
-          <span class="md-nav__icon md-icon"></span>
-          Renderers
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/docusaurus/" class="md-nav__link">
-        Docusaurus
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/hugo/" class="md-nav__link">
-        Docusaurus
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/jinja2/" class="md-nav__link">
-        Jinja2
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/markdown/" class="md-nav__link">
-        Markdown
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/mkdocs/" class="md-nav__link">
-        MkDocs
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -465,7 +267,9 @@
   
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
       
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
@@ -477,21 +281,17 @@
         
           
         
-          
-        
-          
-        
       
       
         <label class="md-nav__link" for="__nav_5">
-          Usage
+          API Documentation
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Usage" data-md-level="1">
+      <nav class="md-nav" aria-label="API Documentation" data-md-level="1">
         <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
-          Usage
+          API Documentation
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -501,8 +301,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../novella/" class="md-nav__link">
-        Novella
+      <a href="../../cli/" class="md-nav__link">
+        Command-line interface
       </a>
     </li>
   
@@ -513,14 +313,50 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../old-style/" class="md-nav__link">
-        Old-style YAML or PyProject <sup>(deprecated)</sup>
-      </a>
-    </li>
   
-
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2" type="checkbox" id="__nav_5_2" checked>
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">pydoc_markdown</a>
+          
+            <label for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="pydoc_markdown" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          pydoc_markdown
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
             
           
             
@@ -529,8 +365,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../plain/" class="md-nav__link">
-        Plain
+      <a href="../interfaces/" class="md-nav__link">
+        interfaces
       </a>
     </li>
   
@@ -552,10 +388,288 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          contrib.loaders
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
-        Read the Docs
+        contrib.loaders
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#class-pythonloader" class="md-nav__link">
+    Class PythonLoader
+  </a>
+  
+    <nav class="md-nav" aria-label="Class PythonLoader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#packages" class="md-nav__link">
+    packages
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search_path" class="md-nav__link">
+    search_path
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore_when_discovered" class="md-nav__link">
+    ignore_when_discovered
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parser" class="md-nav__link">
+    parser
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding" class="md-nav__link">
+    encoding
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../processors/" class="md-nav__link">
+        contrib.processors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2_5" type="checkbox" id="__nav_5_2_5" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_5_2_5">
+          contrib.renderers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="contrib.renderers" data-md-level="3">
+        <label class="md-nav__title" for="__nav_5_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          contrib.renderers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../renderers/docusaurus/" class="md-nav__link">
+        docusaurus
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../renderers/hugo/" class="md-nav__link">
+        hugo
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../renderers/jinja2/" class="md-nav__link">
+        jinja2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../renderers/markdown/" class="md-nav__link">
+        markdown
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../renderers/mkdocs/" class="md-nav__link">
+        mkdocs
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Other
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Other" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Other
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../deprecated-configuration/" class="md-nav__link">
+        Deprecated Configuration
+      </a>
     </li>
   
 
@@ -587,6 +701,62 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#class-pythonloader" class="md-nav__link">
+    Class PythonLoader
+  </a>
+  
+    <nav class="md-nav" aria-label="Class PythonLoader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#packages" class="md-nav__link">
+    packages
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search_path" class="md-nav__link">
+    search_path
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore_when_discovered" class="md-nav__link">
+    ignore_when_discovered
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parser" class="md-nav__link">
+    parser
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding" class="md-nav__link">
+    encoding
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -597,46 +767,56 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/content/usage/readthedocs.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/content/api/pydoc_markdown/loaders.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
 
-<h1 id="read-the-docs">Read the Docs</h1>
-<p>Using Pydoc-Markdown on <a href="https://readthedocs.org/">readthedocs.org</a> requires some "hacking" because natively it
-does not allow you to run any custom commands. Using <a href="https://pypi.org/project/readthedocs-custom-steps/">readthedocs-custom-steps</a>, you can hook into the call
-that RTD expects to generate the documentation using Sphinx/MkDocs and run your own commands instead.</p>
-<p><strong>Example</strong></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">.readthedocs.yml</label><label for="__tabbed_1_2">setup.cfg</label><label for="__tabbed_1_3">pyproject.toml</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="nt">mkdocs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span><span class="w">  </span><span class="c1"># tell readthedocs to use mkdocs</span><span class="w"></span>
-<span class="nt">python</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.7</span><span class="w"></span>
-<span class="w">  </span><span class="nt">install</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip</span><span class="w"></span>
-<span class="w">    </span><span class="nt">extra_requirements</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rtd</span><span class="w"></span>
+<h1 id="pydoc_markdowncontribloaderspython">pydoc_markdown.contrib.loaders.python</h1>
+<p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader"></a></p>
+<h2 id="class-pythonloader">Class PythonLoader</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">PythonLoader</span><span class="p">(</span><span class="n">Loader</span><span class="p">)</span>
 </code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="k">[options.extras_require]</span><span class="w"></span>
-<span class="na">rtd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">readthedocs-custom-steps==0.6.2</span><span class="w"></span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="c1"># ...</span><span class="w"></span>
-
-<span class="k">[tool.readthedocs-custom-steps]</span><span class="w"></span>
-<span class="n">script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">novella --site-dir _site/html</span>
-<span class="s">&quot;&quot;&quot;</span><span class="w"></span>
-</code></pre></div>
-</div>
-</div>
-</div>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/loaders/python.py#L41">[view_source]</a></p>
+<p>This implementation of the <a href="/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Loader">Loader</a> interface parses Python modules and packages using
+<code>docspec_python</code>. See the options below to control which modules and packages are being
+loaded and how to configure the parser.</p>
+<p>With no <code>modules</code> or <a href="/api/pydoc_markdown/loaders#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.packages">packages</a> set, the <a href="/api/pydoc_markdown/loaders#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader">PythonLoader</a> will discover available modules
+in the current and <code>src/</code> directory.</p>
+<p><strong>lib2to3 Quirks</strong></p>
+<p>Pydoc-Markdown doesn't execute your Python code but instead relies on the
+<code>lib2to3</code> parser. This means it also inherits any quirks of <code>lib2to3</code>.</p>
+<p><em>List of known quirks</em></p>
+<ul>
+<li>A function argument in Python 3 cannot be called <code>print</code> even though
+  it is legal syntax</li>
+</ul>
+<p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.packages"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.packages"></a></p>
+<h4 id="packages">packages</h4>
+<p>A list of package names that this loader will search for and then parse,
+including all sub-packages and modules.</p>
+<p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.search_path"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.search_path"></a></p>
+<h4 id="search_path">search_path</h4>
+<p>The module search path. If not specified, the current <code>sys.path</code> is
+used instead. If any of the elements contain a <code>*</code> (star) symbol, it
+will be expanded with <code>sys.path</code>.</p>
+<p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.ignore_when_discovered"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.ignore_when_discovered"></a></p>
+<h4 id="ignore_when_discovered">ignore_when_discovered</h4>
+<p>List of modules to ignore when using module discovery on the <a href="/api/pydoc_markdown/loaders#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.search_path">search_path</a>.</p>
+<p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.parser"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.parser"></a></p>
+<h4 id="parser">parser</h4>
+<p>Options for the Python parser.</p>
+<p><a id="pydoc_markdown.contrib.loaders.python.PythonLoader.encoding"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.encoding"></a></p>
+<h4 id="encoding">encoding</h4>
+<p>The encoding to use when reading the Python source files.</p>
 
               
             </article>
@@ -655,7 +835,7 @@ that RTD expects to generate the documentation using Sphinx/MkDocs and run your 
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../plain/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Plain" rel="prev">
+        <a href="../interfaces/" class="md-footer__link md-footer__link--prev" aria-label="Previous: interfaces" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -664,11 +844,26 @@ that RTD expects to generate the documentation using Sphinx/MkDocs and run your 
               <span class="md-footer__direction">
                 Previous
               </span>
-              Plain
+              interfaces
             </div>
           </div>
         </a>
       
+      
+        
+        <a href="../processors/" class="md-footer__link md-footer__link--next" aria-label="Next: contrib.processors" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              contrib.processors
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
       
     </nav>
   
@@ -692,10 +887,10 @@ that RTD expects to generate the documentation using Sphinx/MkDocs and run your 
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow", "navigation.sections"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
     
     
-      <script src="../../assets/javascripts/bundle.b88e97c5.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.b88e97c5.min.js"></script>
       
     
   </body>

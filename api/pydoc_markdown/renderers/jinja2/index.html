@@ -8,19 +8,23 @@
       
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.3">
     
     
       
-        <title>Plain - Pydoc Markdown</title>
+        <title>jinja2 - Pydoc Markdown</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.e8d9bf0c.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.e8d9bf0c.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ffc105">
         
       
     
@@ -34,7 +38,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -48,7 +52,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="deep-orange">
   
     
     
@@ -58,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#plain" class="md-skip">
+        <a href="#class-renderblock" class="md-skip">
           Skip to content
         </a>
       
@@ -72,7 +76,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Pydoc Markdown" class="md-header__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+    <a href="../../../.." title="Pydoc Markdown" class="md-header__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -91,7 +95,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Plain
+              jinja2
             
           </span>
         </div>
@@ -170,7 +174,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Pydoc Markdown" class="md-nav__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
+    <a href="../../../.." title="Pydoc Markdown" class="md-nav__button md-logo" aria-label="Pydoc Markdown" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -201,7 +205,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../../.." class="md-nav__link">
         Home
       </a>
     </li>
@@ -216,8 +220,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
-        Changelog
+      <a href="../../../../getting-started/" class="md-nav__link">
+        Getting started
       </a>
     </li>
   
@@ -231,8 +235,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
-        Configuration
+      <a href="../../../../just-generate-me-some-markdown/" class="md-nav__link">
+        Just generate me some Markdown!
       </a>
     </li>
   
@@ -245,212 +249,10 @@
   
   
   
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
-      
-      
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-      
-        <label class="md-nav__link" for="__nav_4">
-          Api
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Api" data-md-level="1">
-        <label class="md-nav__title" for="__nav_4">
-          <span class="md-nav__icon md-icon"></span>
-          Api
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../../api/cli/" class="md-nav__link">
-        Command-line interface
+      <a href="../../../../readthedocs/" class="md-nav__link">
+        Read the Docs
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/interfaces/" class="md-nav__link">
-        Interfaces
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/loaders/" class="md-nav__link">
-        Loaders
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/processors/" class="md-nav__link">
-        Processors
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
-      
-      
-      
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-      
-        <label class="md-nav__link" for="__nav_4_5">
-          Renderers
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Renderers" data-md-level="2">
-        <label class="md-nav__title" for="__nav_4_5">
-          <span class="md-nav__icon md-icon"></span>
-          Renderers
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/docusaurus/" class="md-nav__link">
-        Docusaurus
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/hugo/" class="md-nav__link">
-        Docusaurus
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/jinja2/" class="md-nav__link">
-        Jinja2
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/markdown/" class="md-nav__link">
-        Markdown
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/renderers/mkdocs/" class="md-nav__link">
-        MkDocs
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -465,7 +267,9 @@
   
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
       
         <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
@@ -477,21 +281,17 @@
         
           
         
-          
-        
-          
-        
       
       
         <label class="md-nav__link" for="__nav_5">
-          Usage
+          API Documentation
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Usage" data-md-level="1">
+      <nav class="md-nav" aria-label="API Documentation" data-md-level="1">
         <label class="md-nav__title" for="__nav_5">
           <span class="md-nav__icon md-icon"></span>
-          Usage
+          API Documentation
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -501,8 +301,72 @@
   
   
     <li class="md-nav__item">
-      <a href="../novella/" class="md-nav__link">
-        Novella
+      <a href="../../../cli/" class="md-nav__link">
+        Command-line interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2" type="checkbox" id="__nav_5_2" checked>
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../">pydoc_markdown</a>
+          
+            <label for="__nav_5_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="pydoc_markdown" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          pydoc_markdown
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/" class="md-nav__link">
+        interfaces
       </a>
     </li>
   
@@ -515,8 +379,90 @@
   
   
     <li class="md-nav__item">
-      <a href="../old-style/" class="md-nav__link">
-        Old-style YAML or PyProject <sup>(deprecated)</sup>
+      <a href="../../loaders/" class="md-nav__link">
+        contrib.loaders
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processors/" class="md-nav__link">
+        contrib.processors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2_5" type="checkbox" id="__nav_5_2_5" checked>
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_5_2_5">
+          contrib.renderers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="contrib.renderers" data-md-level="3">
+        <label class="md-nav__title" for="__nav_5_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          contrib.renderers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docusaurus/" class="md-nav__link">
+        docusaurus
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hugo/" class="md-nav__link">
+        hugo
       </a>
     </li>
   
@@ -535,12 +481,93 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          jinja2
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Plain
+        jinja2
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#class-renderblock" class="md-nav__link">
+    Class RenderBlock
+  </a>
+  
+    <nav class="md-nav" aria-label="Class RenderBlock">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#produces" class="md-nav__link">
+    produces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jinja2_environment_settings" class="md-nav__link">
+    jinja2_environment_settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-jinja2renderer" class="md-nav__link">
+    Class Jinja2Renderer
+  </a>
+  
+    <nav class="md-nav" aria-label="Class Jinja2Renderer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#renders" class="md-nav__link">
+    renders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_directory" class="md-nav__link">
+    build_directory
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -553,8 +580,106 @@
   
   
     <li class="md-nav__item">
-      <a href="../readthedocs/" class="md-nav__link">
-        Read the Docs
+      <a href="../markdown/" class="md-nav__link">
+        markdown
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mkdocs/" class="md-nav__link">
+        mkdocs
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Other
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Other" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Other
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../deprecated-configuration/" class="md-nav__link">
+        Deprecated Configuration
       </a>
     </li>
   
@@ -584,8 +709,75 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#class-renderblock" class="md-nav__link">
+    Class RenderBlock
+  </a>
+  
+    <nav class="md-nav" aria-label="Class RenderBlock">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#template" class="md-nav__link">
+    template
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#produces" class="md-nav__link">
+    produces
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jinja2_environment_settings" class="md-nav__link">
+    jinja2_environment_settings
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-jinja2renderer" class="md-nav__link">
+    Class Jinja2Renderer
+  </a>
+  
+    <nav class="md-nav" aria-label="Class Jinja2Renderer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#renders" class="md-nav__link">
+    renders
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build_directory" class="md-nav__link">
+    build_directory
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -597,31 +789,49 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/adopt-new-docspec/docs/content/usage/plain.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/content/api/pydoc_markdown/renderers/jinja2.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
 
-<h1 id="plain">Plain</h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This section is severly lacking details. Sorry!</p>
-</div>
-<p>You can use the Pydoc-Markdown CLI to generate some plain Markdown content for your Python project.</p>
-<div class="highlight"><pre><span></span><code>$ pydoc-markdown -I src -m package_name.module_name --render-toc &gt; module_name.md
+  <h1>jinja2</h1>
+
+<p>at any point on future Pydoc-Markdown versions.</p>
+<p><a id="pydoc_markdown.contrib.renderers.jinja2.RenderBlock"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.jinja2.RenderBlock"></a></p>
+<h2 id="class-renderblock">Class RenderBlock</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@D</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">RenderBlock</span><span class="p">()</span>
 </code></pre></div>
-<p>This uses the default configuration which consists of a <code>python</code> loader, the <code>filter</code>, <code>smart</code> and <code>crossref</code>
-processors and the <code>markdown</code> renderer. A YAML payload can be passed to the CLI that will be applied on top
-of the default configuration, allowing you to make small adjustments that are not exposed via CLI options.</p>
-<div class="highlight"><pre><span></span><code>$ pydoc-markdown -m my_module &#39;{
-    renderer: {
-      type: markdown,
-      descriptive_class_title: false,
-      render_toc: true
-    }
-  }&#39; &gt; my_module.md
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/jinja2.py#L40">[view_source]</a></p>
+<p><a id="pydoc_markdown.contrib.renderers.jinja2.RenderBlock.template"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.jinja2.RenderBlock.template"></a></p>
+<h4 id="template">template</h4>
+<p>The path to the Jinja2 template that is used to render the output files.</p>
+<p><a id="pydoc_markdown.contrib.renderers.jinja2.RenderBlock.produces"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.jinja2.RenderBlock.produces"></a></p>
+<h4 id="produces">produces</h4>
+<p>A mapping for filename (without suffix) to a list of Module selectors.</p>
+<p><a id="pydoc_markdown.contrib.renderers.jinja2.RenderBlock.jinja2_environment_settings"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.jinja2.RenderBlock.jinja2_environment_settings"></a></p>
+<h4 id="jinja2_environment_settings">jinja2_environment_settings</h4>
+<p>Settings for the Jinja2 Environment.</p>
+<p><a id="pydoc_markdown.contrib.renderers.jinja2.Jinja2Renderer"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.jinja2.Jinja2Renderer"></a></p>
+<h2 id="class-jinja2renderer">Class Jinja2Renderer</h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@D</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Jinja2Renderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">)</span>
 </code></pre></div>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/jinja2.py#L53">[view_source]</a></p>
+<p><a id="pydoc_markdown.contrib.renderers.jinja2.Jinja2Renderer.renders"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.jinja2.Jinja2Renderer.renders"></a></p>
+<h4 id="renders">renders</h4>
+<p>Render instructions.</p>
+<p><a id="pydoc_markdown.contrib.renderers.jinja2.Jinja2Renderer.build_directory"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.jinja2.Jinja2Renderer.build_directory"></a></p>
+<h4 id="build_directory">build_directory</h4>
+<p>Build directory where all the files are produced.</p>
 
               
             </article>
@@ -640,7 +850,7 @@ of the default configuration, allowing you to make small adjustments that are no
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../old-style/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Old-style YAML or PyProject &lt;sup&gt;(deprecated)&lt;/sup&gt;" rel="prev">
+        <a href="../hugo/" class="md-footer__link md-footer__link--prev" aria-label="Previous: hugo" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -649,20 +859,20 @@ of the default configuration, allowing you to make small adjustments that are no
               <span class="md-footer__direction">
                 Previous
               </span>
-              Old-style YAML or PyProject <sup>(deprecated)</sup>
+              hugo
             </div>
           </div>
         </a>
       
       
         
-        <a href="../readthedocs/" class="md-footer__link md-footer__link--next" aria-label="Next: Read the Docs" rel="next">
+        <a href="../markdown/" class="md-footer__link md-footer__link--next" aria-label="Next: markdown" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Read the Docs
+              markdown
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -692,10 +902,10 @@ of the default configuration, allowing you to make small adjustments that are no
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.top", "toc.follow", "navigation.sections"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.bd0b6b67.min.js"}</script>
     
     
-      <script src="../../assets/javascripts/bundle.b88e97c5.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.b88e97c5.min.js"></script>
       
     
   </body>
