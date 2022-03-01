@@ -60,11 +60,14 @@ jobs:
       run: pip install pipx -q && pipx install $(cat .github/files/slam-cli.txt)
     - name: Install
       run: slam install --extras docs --no-venv-check
+    - name: Checkout branch if PR
+      if: github.event_name == 'pull_request'
+      run: git checkout -b $GITHUB_HEAD_REF
     - name: Build documentation
-      run: git branch && git status && git checkout -b $GITHUB_HEAD_REF && cd docs && novella
+      run: cd docs && novella
     - name: Publish docs
       uses: JamesIves/github-pages-deploy-action@4.1.4
-      #if: github.ref == 'refs/heads/develop'
+      if: github.ref == 'refs/heads/develop'
       with:
         branch: gh-pages
         folder: docs/_site
