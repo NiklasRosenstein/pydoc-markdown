@@ -1,10 +1,11 @@
 
+from __future__ import annotations
+
 import logging
 import re
 import typing as t
 from pathlib import Path
 
-import docspec
 from nr.util.functional import assure
 from nr.util.plugins import load_entrypoint
 from novella.markdown.preprocessor import MarkdownFile, MarkdownFiles, MarkdownPreprocessor
