@@ -118,6 +118,9 @@ class BaseGitSourceLinker(SourceLinker):
       self._project_root = git_get_toplevel(context.directory)
     self._sha = git_get_current_commit_sha(self._project_root)
     self._branch = git_get_current_branch(self._project_root)
+    if self.use_branch and '(' in self._branch:
+      logger.warning('Cannot use invalid branch name "%s" for source linker, falling back to SHA', self._branch)
+      self.use_branch = False
     logger.debug('project_root = %r', self._project_root)
     logger.debug('sha = %r', self._sha)
     logger.debug('branch = %r', self._branch)

@@ -1,4 +1,3 @@
-
 [[entries]]
 id = "57b68994-1c11-43da-991e-6531a2cc725f"
 type = "docs"
@@ -74,3 +73,9 @@ type = "improvement"
 description = "do not render link to source for modules in `MarkdownRenderer`"
 author = "@NiklasRosenstein"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "29f32901-5f34-4b19-b86a-ead2830114dd"
+type = "improvement"
+description = "Git source linkers now fall back to the SHA if the current branch is invalid (e.g. in a detached HEAD state) and logs a warning"
+author = "@NiklasRosenstein"
