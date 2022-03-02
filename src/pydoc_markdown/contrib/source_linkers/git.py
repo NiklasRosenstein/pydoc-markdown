@@ -97,7 +97,7 @@ class BaseGitSourceLinker(SourceLinker):
 
     context_vars = self.get_context_vars()
     context_vars['path'] = str(rel_path)
-    context_vars['sha'] = self._branch if self.use_branch else self._sha
+    context_vars['sha'] = (self._branch if self.use_branch else self._sha) or '?'
     context_vars['lineno'] = str(obj.location.lineno)
 
     url = self.get_url_template().format(**context_vars)
@@ -118,15 +118,16 @@ class BaseGitSourceLinker(SourceLinker):
     if self.root:
       self._project_root = os.path.join(context.directory, self.root)
     else:
-      self._project_root = git.get_toplevel()
-      if not self._project_root:
+      project_root = git.get_toplevel()
+      if not project_root:
         raise RuntimeError(f'Path "%s" is not in a Git repository', context.directory)
+      self._project_root = project_root
 
     self._sha = git.rev_parse('HEAD')
 
     if self.use_branch:
       try:
-        self._branch = git.get_current_branch_name()
+        self._branch: str | None = git.get_current_branch_name()
         if '(' in self._branch:
           raise NoCurrentBranchError  # For older versions of nr.util which returned the detached HEAD branch
       except NoCurrentBranchError:
