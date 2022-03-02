@@ -1,3 +1,4 @@
+@anchor getting-started
 # Getting started
 
   [Novella]: https://niklasrosenstein.github.io/novella/

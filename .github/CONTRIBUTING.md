@@ -1,14 +1,23 @@
 # Contributing to Pydoc-Markdown
 
-  [unreleased]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.changelog/_unreleased.toml
-  [Discussions]: https://github.com/NiklasRosenstein/pydoc-markdown/discussions
+  [0]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.changelog/_unreleased.toml
+  [1]: https://github.com/NiklasRosenstein/pydoc-markdown/discussions
   [Slam]: https://niklasrosenstein.github.io/slam/
 
-You are welcome to contribute Pydoc-Markdown. Feel free to use [Discussions][] if you have any questions before
-creating a Pull Request.
+Contributions to Pydoc-Markdown are very welcome!
 
-When you create a Pull Request, please make sure that you add an entry for the
-[`.changelog/_unreleased.toml`][unreleased] file. Please use [Slam][] to create the changelog entry.
+If you want to talk about a potential contribution before investing any time, please do create a new topic on
+[GitHub Discussions][0].
+
+## Pull request requirements
+
+* Please look to adhere to the existing code style (2-space indendation, 120 character line length limit)
+* Pull requests should contain at least one new changelog entry unless the change is trivial (see below for details)
+
+## Changelog entries
+
+Pydoc-Markdown uses [Slam][] to manage changelogs. You should use the Slam CLI to add a new changelog entry, otherwise
+you need to manually generate a UUID-4.
 
     $ slam changelog add -t <type> -d <changelog message> [--issue <issue_url>]
 

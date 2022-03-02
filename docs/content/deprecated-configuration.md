@@ -3,7 +3,7 @@
 !!! attention
 
     Using Pydoc-Markdown this way is deprecated since v4.6.0. It is strongly recommended that you
-    use the [Novella build backend](./novella.md) instead. This way of using Pydoc-Markdown will
+    use the Novella build backend instead (see {@link getting-started}). This way of using Pydoc-Markdown will
     likely be removed with the next major version release (5.x).
 
 Pydoc-Markdown can be configured with using via a YAML file. By default, the CLI will look for a file
