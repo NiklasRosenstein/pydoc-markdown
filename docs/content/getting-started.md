@@ -5,7 +5,7 @@
 
 Starting with Pydoc-Markdown v4.6.0, you should configure your build using [Novella]. Note however, that Novella
 is not installed directly with Pydoc-Markdown because it requires Python 3.8+ and for backwards compatibility with
-the old build style prior to v4.7.0, Pydoc-Markdown remains 3.7 compatible.
+the old build style prior to v4.6.0, Pydoc-Markdown remains 3.7 compatible.
 
 You need to install Novella separetely or use the Pydoc-Markdown extra.
 
