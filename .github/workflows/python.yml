@@ -64,7 +64,7 @@ jobs:
       if: github.event_name == 'pull_request'
       run: git checkout -b $GITHUB_HEAD_REF
     - name: Build documentation
-      run: cd docs && novella
+      run: cd docs && novella --base-url pydoc-markdown/
     - name: Publish docs
       uses: JamesIves/github-pages-deploy-action@4.1.4
       if: github.ref == 'refs/heads/develop'
