@@ -923,7 +923,7 @@ with the configuration class.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Resolver</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L71">[view_source]</a></p>
-<p>A resolver can be used by a <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Processor">Processor</a> to replace cross references with a hyperlink.</p>
+<p>A resolver can be used by a <a href="#pydoc:pydoc_markdown.interfaces.Processor">Processor</a> to replace cross references with a hyperlink.</p>
 <p><a id="pydoc_markdown.interfaces.ResolverV2"></a></p>
 <p><a id="pydoc:pydoc_markdown.interfaces.ResolverV2"></a></p>
 <h2 id="class-resolverv2">Class ResolverV2</h2>
@@ -931,7 +931,7 @@ with the configuration class.</p>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L80">[view_source]</a></p>
 <p>New style interface for resolving based on a text ref from in the context of a <code>docspec.ApiObject</code>
-to find another. This is different from <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> because it returns the resolved object directly, instead
+to find another. This is different from <a href="#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> because it returns the resolved object directly, instead
 of some string representation of it.</p>
 <p><a id="pydoc_markdown.interfaces.Processor"></a></p>
 <p><a id="pydoc:pydoc_markdown.interfaces.Processor"></a></p>
@@ -959,7 +959,7 @@ output files or writes to stdout. It may also expose additional command-line arg
 There can only be one renderer at the end of the processor chain.</p>
 <p>Note that sometimes a renderer may need to perform some processing before the render step.
 To keep the possibility open that a renderer may implement generic processing that could
-used without the actual renderering functionality, <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> is a subclass of <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Processor">Processor</a>.</p>
+used without the actual renderering functionality, <a href="#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> is a subclass of <a href="#pydoc:pydoc_markdown.interfaces.Processor">Processor</a>.</p>
 <p><a id="pydoc_markdown.interfaces.SinglePageRenderer"></a></p>
 <p><a id="pydoc:pydoc_markdown.interfaces.SinglePageRenderer"></a></p>
 <h2 id="class-singlepagerenderer">Class SinglePageRenderer</h2>
@@ -981,7 +981,7 @@ used without the actual renderering functionality, <a href="/pydoc-markdown/api/
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L145">[view_source]</a></p>
 <p>This interface describes an object that can start a server process for
-live-viewing generated documentation in the browser. <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a>
+live-viewing generated documentation in the browser. <a href="#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a>
 implementations may additionally implement this interface to advocate their
 compatibility with the <code>--server</code> and <code>--open</code> options of the pydoc-markdown
 CLI.</p>
@@ -1001,7 +1001,7 @@ The default implementation returns the <em>process</em> unchanged. Returning
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Builder</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L171">[view_source]</a></p>
-<p>This interface can be implemented additionally to the <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> interface to
+<p>This interface can be implemented additionally to the <a href="#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> interface to
 indicate that the renderer supports building another produce after the markdown
 files have been rendered.</p>
 <p><a id="pydoc_markdown.interfaces.Builder.build"></a></p>
