@@ -594,9 +594,47 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Contributing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Contributing
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pull-request-requirements" class="md-nav__link">
+    Pull request requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog-entries" class="md-nav__link">
+    Changelog entries
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -643,6 +681,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pull-request-requirements" class="md-nav__link">
+    Pull request requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog-entries" class="md-nav__link">
+    Changelog entries
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -660,10 +720,17 @@
 
 
 <h1 id="contributing-to-pydoc-markdown">Contributing to Pydoc-Markdown</h1>
-<p>You are welcome to contribute Pydoc-Markdown. Feel free to use <a href="https://github.com/NiklasRosenstein/pydoc-markdown/discussions">Discussions</a> if you have any questions before
-creating a Pull Request.</p>
-<p>When you create a Pull Request, please make sure that you add an entry for the
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.changelog/_unreleased.toml"><code>.changelog/_unreleased.toml</code></a> file. Please use <a href="https://niklasrosenstein.github.io/slam/">Slam</a> to create the changelog entry.</p>
+<p>Contributions to Pydoc-Markdown are very welcome!</p>
+<p>If you want to talk about a potential contribution before investing any time, please do create a new topic on
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.changelog/_unreleased.toml">GitHub Discussions</a>.</p>
+<h2 id="pull-request-requirements">Pull request requirements</h2>
+<ul>
+<li>Please look to adhere to the existing code style (2-space indendation, 120 character line length limit)</li>
+<li>Pull requests should contain at least one new changelog entry unless the change is trivial (see below for details)</li>
+</ul>
+<h2 id="changelog-entries">Changelog entries</h2>
+<p>Pydoc-Markdown uses <a href="https://niklasrosenstein.github.io/slam/">Slam</a> to manage changelogs. You should use the Slam CLI to add a new changelog entry, otherwise
+you need to manually generate a UUID-4.</p>
 <div class="highlight"><pre><span></span><code>$ slam changelog add -t &lt;type&gt; -d &lt;changelog message&gt; [--issue &lt;issue_url&gt;]
 </code></pre></div>
 <p>After you create the pull request, GitHub Actions will take care of injecting the PR URL into the changelog entry.</p>
