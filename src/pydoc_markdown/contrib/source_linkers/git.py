@@ -27,6 +27,7 @@ from pathlib import Path
 
 import databind.core.dataclasses as dataclasses
 import docspec
+from nr.util.git import Git, NoCurrentBranchError
 
 from pydoc_markdown.interfaces import Context, SourceLinker
 
@@ -112,15 +113,27 @@ class BaseGitSourceLinker(SourceLinker):
     root and Git SHA at this stage before #get_source_url() is called.
     """
 
+    git = Git(context.directory)
+
     if self.root:
       self._project_root = os.path.join(context.directory, self.root)
     else:
-      self._project_root = git_get_toplevel(context.directory)
-    self._sha = git_get_current_commit_sha(self._project_root)
-    self._branch = git_get_current_branch(self._project_root)
-    if self.use_branch and '(' in self._branch:
-      logger.warning('Cannot use invalid branch name "%s" for source linker, falling back to SHA', self._branch)
-      self.use_branch = False
+      self._project_root = git.get_toplevel()
+      if not self._project_root:
+        raise RuntimeError(f'Path "%s" is not in a Git repository', context.directory)
+
+    self._sha = git.rev_parse('HEAD')
+
+    if self.use_branch:
+      try:
+        self._branch = git.get_current_branch_name()
+        if '(' in self._branch:
+          raise NoCurrentBranchError  # For older versions of nr.util which returned the detached HEAD branch
+      except NoCurrentBranchError:
+        logger.warning('Repository is not currently on a branch, falling back to SHA')
+        self.use_branch = False
+        self._branch = None
+
     logger.debug('project_root = %r', self._project_root)
     logger.debug('sha = %r', self._sha)
     logger.debug('branch = %r', self._branch)
