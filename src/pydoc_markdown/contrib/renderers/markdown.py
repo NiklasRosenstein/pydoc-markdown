@@ -250,8 +250,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
       # in the field will act as a first fallback, the level of the object inside it's
       # hierarchy is the final fallback.
       header_levels = {
-        **self.header_level_by_type,
         **type(self).__dataclass_fields__['header_level_by_type'].default_factory(),
+        **self.header_level_by_type,
       }
       # Backwards compat for whe we used "Data" instead of "Variable" which mirrors the docspec API
       header_levels['Data'] = header_levels.get('Variable', level)
