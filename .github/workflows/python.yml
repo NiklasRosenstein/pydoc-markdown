@@ -19,11 +19,7 @@ jobs:
         python-version: [ "3.7", "3.8", "3.9", "3.10", "3.x" ]
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with: { python-version: "3.10" }
-    - name: Installing tooling
-      run: pip install pipx -q && pipx install $(cat .github/files/slam-cli.txt)
+    - uses: NiklasRosenstein/slam@github-action/install/v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with: { python-version: "${{ matrix.python-version }}" }
@@ -32,20 +28,12 @@ jobs:
     - name: Test
       run: slam test
 
-  update-pr-numbers:
-    if: github.event_name == 'pull_request'
-    permissions:
-      contents: write
+  changelog-update:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with: { python-version: "3.10" }
-    - name: Install Slam
-      run: pip install -r .github/files/slam-cli.txt
-    - name: Update PR references in changelogs
-      run: slam -vv changelog update-pr --use github-actions
+      - uses: actions/checkout@v2
+      - uses: NiklasRosenstein/slam@github-action/changelog-update/v1
 
   documentation:
     runs-on: ubuntu-latest
@@ -56,11 +44,7 @@ jobs:
     - name: Checkout branch if PR
       if: github.event_name == 'pull_request'
       run: git checkout -b $GITHUB_HEAD_REF
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with: { python-version: "3.10" }
-    - name: Installing tooling
-      run: pip install pipx -q && pipx install $(cat .github/files/slam-cli.txt)
+    - uses: NiklasRosenstein/slam@github-action/install/v1
     - name: Install
       run: slam install --extras docs --no-venv-check
     - name: Build documentation
