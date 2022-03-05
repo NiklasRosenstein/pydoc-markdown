@@ -7,3 +7,9 @@ pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/249"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/248",
 ]
+
+[[entries]]
+id = "0129cf1b-9df5-43b2-9915-a904cf5ef3a0"
+type = "fix"
+description = "fix backwards compat of handling `\"Data\"` key in `MarkdownRenderer.header_level_by_type` when now it should be `\"Variable\"`"
+author = "@NiklasRosenstein"
