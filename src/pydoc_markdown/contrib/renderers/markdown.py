@@ -254,7 +254,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         **self.header_level_by_type,
       }
       # Backwards compat for when we used "Data" instead of "Variable" which mirrors the docspec API
-      header_levels['Variable'] = header_levels.get('Data', level)
+      header_levels['Variable'] = header_levels.get('Data', header_levels['Variable'])
 
       type_name = 'Method' if self._is_method(obj) else type(obj).__name__
       level = header_levels.get(type_name, level)
