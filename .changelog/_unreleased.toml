@@ -3,6 +3,7 @@ id = "69632097-79eb-4381-89c9-5ba4bd2f926f"
 type = "fix"
 description = "fix recognition of overwritten values in `MarkdownRenderer.header_level_by_type`"
 author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/249"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/248",
 ]
