@@ -888,7 +888,7 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/content/api/pydoc_markdown/interfaces.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/None/docs/content/api/pydoc_markdown/interfaces.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
@@ -904,7 +904,7 @@ processors or renderers.</p>
 <h2 id="class-context">Class Context</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Context</span><span class="p">()</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L39">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L39">[view_source]</a></p>
 <p>Context data that is passed to plugins when they are loaded.</p>
 <p><a id="pydoc_markdown.interfaces.Loader"></a></p>
 <p><a id="pydoc:pydoc_markdown.interfaces.Loader"></a></p>
@@ -914,7 +914,7 @@ processors or renderers.</p>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">import_</span><span class="p">()),</span> <span class="n">style</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Style</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Loader</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L56">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L56">[view_source]</a></p>
 <p>This interface describes an object that is capable of loading documentation
 data. The location from which the documentation is loaded must be defined
 with the configuration class.</p>
@@ -923,14 +923,14 @@ with the configuration class.</p>
 <h2 id="class-resolver">Class Resolver</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Resolver</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L71">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L71">[view_source]</a></p>
 <p>A resolver can be used by a <a href="#pydoc:pydoc_markdown.interfaces.Processor">Processor</a> to replace cross references with a hyperlink.</p>
 <p><a id="pydoc_markdown.interfaces.ResolverV2"></a></p>
 <p><a id="pydoc:pydoc_markdown.interfaces.ResolverV2"></a></p>
 <h2 id="class-resolverv2">Class ResolverV2</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">ResolverV2</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L80">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L80">[view_source]</a></p>
 <p>New style interface for resolving based on a text ref from in the context of a <code>docspec.ApiObject</code>
 to find another. This is different from <a href="#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> because it returns the resolved object directly, instead
 of some string representation of it.</p>
@@ -942,7 +942,7 @@ of some string representation of it.</p>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">import_</span><span class="p">()),</span> <span class="n">style</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Style</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Processor</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L93">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L93">[view_source]</a></p>
 <p>A processor is an object that takes a list of <code>docspec.Modules</code> as an input and
 transforms it in an arbitrary way. This usually processes docstrings to convert from
 various documentation syntaxes to plain Markdown.</p>
@@ -954,7 +954,7 @@ various documentation syntaxes to plain Markdown.</p>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">import_</span><span class="p">()),</span> <span class="n">style</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Style</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Renderer</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L107">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L107">[view_source]</a></p>
 <p>A renderer is an object that takes a list of <code>docspec.Modules</code> as an input and produces
 output files or writes to stdout. It may also expose additional command-line arguments.
 There can only be one renderer at the end of the processor chain.</p>
@@ -966,21 +966,21 @@ used without the actual renderering functionality, <a href="#pydoc:pydoc_markdow
 <h2 id="class-singlepagerenderer">Class SinglePageRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">SinglePageRenderer</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L126">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L126">[view_source]</a></p>
 <p>Interface for rendering a single page.</p>
 <p><a id="pydoc_markdown.interfaces.SingleObjectRenderer"></a></p>
 <p><a id="pydoc:pydoc_markdown.interfaces.SingleObjectRenderer"></a></p>
 <h2 id="class-singleobjectrenderer">Class SingleObjectRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">SingleObjectRenderer</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L136">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L136">[view_source]</a></p>
 <p>Interface for rendering a single <code>docspec.ApiObject</code>.</p>
 <p><a id="pydoc_markdown.interfaces.Server"></a></p>
 <p><a id="pydoc:pydoc_markdown.interfaces.Server"></a></p>
 <h2 id="class-server">Class Server</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Server</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L145">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L145">[view_source]</a></p>
 <p>This interface describes an object that can start a server process for
 live-viewing generated documentation in the browser. <a href="#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a>
 implementations may additionally implement this interface to advocate their
@@ -991,7 +991,7 @@ CLI.</p>
 <h4 id="reload_server">reload_server</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">reload_server</span><span class="p">(</span><span class="n">process</span><span class="p">:</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L160">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L160">[view_source]</a></p>
 <p>Called when the files generated by pydoc-markdown have been updated.
 This gives the implementation a chance to reload the server process.
 The default implementation returns the <em>process</em> unchanged. Returning
@@ -1001,7 +1001,7 @@ The default implementation returns the <em>process</em> unchanged. Returning
 <h2 id="class-builder">Class Builder</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Builder</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L171">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L171">[view_source]</a></p>
 <p>This interface can be implemented additionally to the <a href="#pydoc:pydoc_markdown.interfaces.Renderer">Renderer</a> interface to
 indicate that the renderer supports building another produce after the markdown
 files have been rendered.</p>
@@ -1011,7 +1011,7 @@ files have been rendered.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
 <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">site_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L179">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L179">[view_source]</a></p>
 <p>Invoke the build. The <em>site_dir</em> is the directory in which the output files should be
 placed. Otherwise, the directory may be determined by the builder.</p>
 <p><a id="pydoc_markdown.interfaces.SourceLinker"></a></p>
@@ -1022,7 +1022,7 @@ placed. Otherwise, the directory may be determined by the builder.</p>
   <span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Subtypes</span><span class="o">.</span><span class="n">import_</span><span class="p">()),</span> <span class="n">style</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">unionclass</span><span class="o">.</span><span class="n">Style</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">SourceLinker</span><span class="p">(</span><span class="n">PluginBase</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/interfaces.py#L189">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/94903759bcaf42a88e6ec83e261fcb6d56400082/docs/../src/pydoc_markdown/interfaces.py#L189">[view_source]</a></p>
 <p>This interface is used to determine the URL to the source of an API object. Renderers
 can use it to place a link to the source in the generated documentation.</p>
 
