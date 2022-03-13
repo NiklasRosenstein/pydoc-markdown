@@ -46,7 +46,7 @@ from pydoc_markdown.util import ytemplate
 
 
 __author__ = 'Niklas Rosenstein <rosensteinniklas@gmail.com>'
-__version__ = '4.6.2'
+__version__ = '4.6.3'
 
 logger = logging.getLogger(__name__)
 
