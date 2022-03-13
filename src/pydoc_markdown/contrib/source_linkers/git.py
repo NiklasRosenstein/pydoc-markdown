@@ -72,6 +72,11 @@ class BaseGitSourceLinker(SourceLinker):
   #: Use the branch name instead of the current SHA to generate URLs.
   use_branch: bool = False
 
+  def __post_init__(self) -> None:
+    self._project_root: t.Optional[str] = None
+    self._branch: t.Optional[str] = None
+    self._sha: t.Optional[str] = None
+
   def get_context_vars(self) -> t.Dict[str, str]:
     return {}
 
@@ -84,6 +89,8 @@ class BaseGitSourceLinker(SourceLinker):
     """
     Compute the URL in the GitHub/Gitea #repo for the API object *obj*.
     """
+
+    assert self._project_root is not None
 
     if not obj.location or not obj.location.filename:
       return None
@@ -124,16 +131,16 @@ class BaseGitSourceLinker(SourceLinker):
       self._project_root = project_root
 
     self._sha = git.rev_parse('HEAD')
+    self._branch = None
 
     if self.use_branch:
       try:
-        self._branch: str | None = git.get_current_branch_name()
+        self._branch = git.get_current_branch_name()
         if '(' in self._branch:
           raise NoCurrentBranchError  # For older versions of nr.util which returned the detached HEAD branch
       except NoCurrentBranchError:
         logger.warning('Repository is not currently on a branch, falling back to SHA')
         self.use_branch = False
-        self._branch = None
 
     logger.debug('project_root = %r', self._project_root)
     logger.debug('sha = %r', self._sha)
