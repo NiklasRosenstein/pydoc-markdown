@@ -1,0 +1,5 @@
+[[entries]]
+id = "1dab5782-9dc8-4b38-9907-98f64a74c32f"
+type = "fix"
+description = "fix subscript error for type annotation in Python <=3.8"
+author = "@NiklasRosenstein"

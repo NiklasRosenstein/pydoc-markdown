@@ -149,7 +149,7 @@ class PydocMarkdown:
 
     logger.info('Loading modules.')
     self.ensure_initialized()
-    modules: list[docspec.Module] = []
+    modules: t.List[docspec.Module] = []
     for loader in self.loaders:
       modules.extend(loader.load())
     return modules
