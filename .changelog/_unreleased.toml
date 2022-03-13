@@ -3,6 +3,7 @@ id = "f2e4f7fa-d53e-4481-85b8-57749532c73e"
 type = "fix"
 description = "fix AttributeError when using a Git source linker with `use_branch` disabled"
 author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/issues/252"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/250",
 ]
