@@ -21,7 +21,6 @@
 
 import logging
 import os
-import subprocess
 import typing as t
 from pathlib import Path
 
@@ -32,29 +31,6 @@ from nr.util.git import Git, NoCurrentBranchError
 from pydoc_markdown.interfaces import Context, SourceLinker
 
 logger = logging.getLogger(__name__)
-
-
-def _getoutput(cmd: t.List[str], cwd: str = None) -> str:
-  logger.debug('running command %r (cwd: %r)', cmd, cwd)
-  process = subprocess.Popen(cmd, cwd=cwd, stdout=subprocess.PIPE)
-  stdout = process.communicate()[0].decode()
-  if process.returncode != 0:
-    raise RuntimeError('process {} exited with non-zero exit code {}'
-                       .format(cmd[0], process.returncode))
-  return stdout
-
-
-def git_get_toplevel(cwd: str) -> str:
-  return _getoutput(['git', 'rev-parse', '--show-toplevel'], cwd=cwd).strip()
-
-
-def git_get_current_commit_sha(cwd: str) -> str:
-  return _getoutput(['git', 'rev-parse', 'HEAD'], cwd=cwd).strip()
-
-
-def git_get_current_branch(cwd: str) -> str:
-  branches = _getoutput(['git', 'branch'], cwd=cwd).strip().splitlines()
-  return next(b for b in branches if b.startswith('*')).split()[1]
 
 
 @dataclasses.dataclass

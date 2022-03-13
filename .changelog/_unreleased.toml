@@ -7,3 +7,9 @@ pr = "https://github.com/NiklasRosenstein/pydoc-markdown/issues/252"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/250",
 ]
+
+[[entries]]
+id = "b3776b2e-53bd-46a9-9970-e8d53a61f04f"
+type = "hygiene"
+description = "remove unused functions that interact with Git since the same functionality from the `nr.utils.git` module is used instead now"
+author = "@NiklasRosenstein"
