@@ -111,6 +111,17 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     else:
       return self._renderer
 
+  def _load_api_suite(self) -> ApiSuite:
+    if self._suite is None:
+      modules = list(self._loader.load())
+      for processor in self._processors:
+        processor.process(modules, self)
+      self._suite = ApiSuite(modules)
+    return self._suite
+
+  def _replace_pylink_tag(self, tag: Tag) -> str | None:
+    return f'{{@link pydoc:{tag.args.strip()}}}'
+
   # MarkdownPreprocessor
 
   def setup(self) -> None:
@@ -121,22 +132,18 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     context = Context(str(Path.cwd()))
     self._loader.init(context)
     self._renderer.init(context)
-
-    if self._suite is None:
-      modules = list(self._loader.load())
-      for processor in self._processors:
-        processor.process(modules, self)
-      self._suite = ApiSuite(modules)
+    suite = self._load_api_suite()
 
     for file in files:
       tags = [t for t in parse_block_tags(file.content) if t.name == 'pydoc']
-      file.content = replace_tags(file.content, tags, lambda t: self._replace_pydoc_tag(self._suite, file, t))
+      file.content = replace_tags(file.content, tags, lambda t: self._replace_pydoc_tag(file, t))
       tags = [t for t in parse_inline_tags(file.content) if t.name == 'pylink']
       file.content = replace_tags(file.content, tags, lambda t: self._replace_pylink_tag(t))
 
-  def _replace_pydoc_tag(self, suite: ApiSuite, file: MarkdownFile, tag: Tag) -> str | None:
+  def _replace_pydoc_tag(self, file: MarkdownFile, tag: Tag) -> str | None:
+    assert self._suite is not None
     fqn = tag.args.strip()
-    objects = suite.resolve_fqn(fqn)
+    objects = self._suite.resolve_fqn(fqn)
     if len(objects) > 1:
       logger.warning('  found multiple matches for Python FQN <fg=cyan>%s</fg>', fqn)
     elif not objects:
@@ -147,6 +154,3 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     fp = io.StringIO()
     self._renderer.render_object(fp, objects[0], tag.options)
     return self.action.repeat(file.path, file.output_path, fp.getvalue())
-
-  def _replace_pylink_tag(self, tag: Tag) -> str | None:
-    return f'{{@link pydoc:{tag.args.strip()}}}'
