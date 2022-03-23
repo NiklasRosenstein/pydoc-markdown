@@ -19,21 +19,21 @@ jobs:
         python-version: [ "3.7", "3.8", "3.9", "3.10", "3.x" ]
     steps:
     - uses: actions/checkout@v2
-    - uses: NiklasRosenstein/slam@github-action/install/v1
+    - uses: NiklasRosenstein/slap@gha/install/v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with: { python-version: "${{ matrix.python-version }}" }
     - name: Install
-      run: slam install --no-venv-check
+      run: slap install --no-venv-check
     - name: Test
-      run: slam test
+      run: slap test
 
   changelog-update:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v2
-      - uses: NiklasRosenstein/slam@github-action/changelog-update/v1
+      - uses: NiklasRosenstein/slap@gha/changelog/update/v1
 
   documentation:
     runs-on: ubuntu-latest
@@ -44,9 +44,9 @@ jobs:
     - name: Checkout branch if PR
       if: github.event_name == 'pull_request'
       run: git checkout -b $GITHUB_HEAD_REF
-    - uses: NiklasRosenstein/slam@github-action/install/v1
+    - uses: NiklasRosenstein/slap@gha/install/v1
     - name: Install
-      run: slam install --extras docs --no-venv-check
+      run: slap install --extras docs --no-venv-check
     - name: Build documentation
       run: cd docs && novella --base-url pydoc-markdown/
     - name: Publish docs

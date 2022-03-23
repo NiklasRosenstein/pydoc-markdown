@@ -2,7 +2,7 @@
 
   [0]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.changelog/_unreleased.toml
   [1]: https://github.com/NiklasRosenstein/pydoc-markdown/discussions
-  [Slam]: https://niklasrosenstein.github.io/slam/
+  [Slam]: https://niklasrosenstein.github.io/slap/
 
 Contributions to Pydoc-Markdown are very welcome!
 
@@ -19,6 +19,6 @@ If you want to talk about a potential contribution before investing any time, pl
 Pydoc-Markdown uses [Slam][] to manage changelogs. You should use the Slam CLI to add a new changelog entry, otherwise
 you need to manually generate a UUID-4.
 
-    $ slam changelog add -t <type> -d <changelog message> [--issue <issue_url>]
+    $ slap changelog add -t <type> -d <changelog message> [--issue <issue_url>]
 
 After you create the pull request, GitHub Actions will take care of injecting the PR URL into the changelog entry.

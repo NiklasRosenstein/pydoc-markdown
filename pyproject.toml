@@ -86,12 +86,12 @@ pydoc = "pydoc_markdown.novella.preprocessor:PydocTagPreprocessor"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.slam]
+[tool.slap]
 typed = true
 
-[tool.slam.release]
+[tool.slap.release]
 tag-format = "v{version}"
 
-[tool.slam.test]
+[tool.slap.test]
 pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov"
 mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_markdown/novella"
