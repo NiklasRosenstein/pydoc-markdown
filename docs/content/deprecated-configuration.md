@@ -1,3 +1,4 @@
+@anchor old-style-config
 # Deprecated Configuration
 
 !!! attention

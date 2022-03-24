@@ -95,3 +95,7 @@ tag-format = "v{version}"
 [tool.slap.test]
 pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov"
 mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_markdown/novella"
+
+[tool.slap.run]
+"docs:build" = "cd docs && novella --base-url pydoc-markdown/"
+"docs:dev" = "cd docs && novella --serve"
