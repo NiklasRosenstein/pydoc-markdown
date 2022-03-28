@@ -3,3 +3,12 @@ id = "61d34362-5fc1-474f-9c19-bead33b9ddc7"
 type = "improvement"
 description = "add explicit compatibility with Novella 0.2.x (`>=0.1.10,<0.3.0`)"
 author = "@NiklasRosenstein"
+
+[[entries]]
+id = "e1e8f57c-4f39-4f89-9cb3-18dbc29dedf4"
+type = "docs"
+description = "Fix installation instructions using Pipx (#256)"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/256",
+]
