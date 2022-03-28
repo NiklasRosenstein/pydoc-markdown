@@ -25,7 +25,7 @@ I recommend to install Pydoc-Markdown using Pipx.
     $ pipx install novella
     $ pipx inject novella pydoc-markdown[novella]
 
-If you need access to the Pydoc-Markdown CLI instead, because you rely on the "old-style" pre-4.5.0
+If you need access to the Pydoc-Markdown CLI instead, because you rely on the "old-style" pre-4.6.0
 YAML configuration, you should install the package directly through Pipx.
 
     $ pipx install pydoc-markdown
