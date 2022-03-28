@@ -1,0 +1,5 @@
+[[entries]]
+id = "61d34362-5fc1-474f-9c19-bead33b9ddc7"
+type = "improvement"
+description = "add explicit compatibility with Novella 0.2.x (`>=0.1.10,<0.3.0`)"
+author = "@NiklasRosenstein"
