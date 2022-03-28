@@ -93,7 +93,7 @@ typed = true
 tag-format = "v{version}"
 
 [tool.slap.install]
-dev_extras = []
+dev-extras = []
 
 [tool.slap.test]
 pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov"
