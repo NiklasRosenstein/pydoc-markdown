@@ -63,7 +63,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-the-pydoc-markdown-documentation-v463-5-g20152c2-develop" class="md-skip">
+        <a href="#welcome-to-the-pydoc-markdown-documentation-v463-7-gd71bebc-develop" class="md-skip">
           Skip to content
         </a>
       
@@ -760,7 +760,7 @@
 
 
 
-<h1 id="welcome-to-the-pydoc-markdown-documentation-v463-5-g20152c2-develop">Welcome to the Pydoc Markdown documentation! <sup style="font-size: 10px"><code>v4.6.3-5-g20152c2 (develop)</code></sup></h1>
+<h1 id="welcome-to-the-pydoc-markdown-documentation-v463-7-gd71bebc-develop">Welcome to the Pydoc Markdown documentation! <sup style="font-size: 10px"><code>v4.6.3-7-gd71bebc (develop)</code></sup></h1>
 <p><img alt="Python versions" src="https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge" />
 <a href="https://pypi.org/project/pydoc-markdown/"><img alt="Pypi version" src="https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge" /></a>
 <a href="https://github.com/NiklasRosenstein/pydoc-markdown/actions"><img alt="Build status" src="https://img.shields.io/github/workflow/status/NiklasRosenstein/pydoc-markdown/Python%20package?style=for-the-badge" /></a>
@@ -771,8 +771,17 @@ need to use at least Python 3.7.</p>
 <p><a href="https://niklasrosenstein.github.io/pydoc-markdown/">&gt;&gt; Go to the Documentation</a></p>
 <h3 id="installation">Installation</h3>
 <p>I recommend to install Pydoc-Markdown using Pipx.</p>
-<div class="highlight"><pre><span></span><code>$ pipx install pydoc-markdown[novella]
+<div class="highlight"><pre><span></span><code>$ pipx install novella
+$ pipx inject novella pydoc-markdown[novella]
 </code></pre></div>
+<p>If you need access to the Pydoc-Markdown CLI instead, because you rely on the "old-style" pre-4.5.0
+YAML configuration, you should install the package directly through Pipx.</p>
+<div class="highlight"><pre><span></span><code>$ pipx install pydoc-markdown
+</code></pre></div>
+<blockquote>
+<p>Note: You can also use <code>pipx install pydoc-markdown[novella] --include-deps</code>, but be aware that this
+also adds other programs in Pydoc-Markdown's dependency tree to your PATH.</p>
+</blockquote>
 <h3 id="features">Features</h3>
 <ul>
 <li>Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly

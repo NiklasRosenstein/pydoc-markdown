@@ -820,9 +820,9 @@ the API object you specify.</p>
 <p>Change into the <code>docs/</code> directory where your <code>build.novella</code> script resides and invoke the Novella CLI. The MkDocs
 template exposes some command-line arguments that you can pass through the CLI, one of which is the <code>--serve</code> option
 that runs MkDocs in the server mode instead of building the documentation and writing it to disk.</p>
-<div class="highlight"><span class="filename">$ novella --help</span><pre><span></span><code>usage: novella [--version] [-h] [-i TEMPLATE] [-c PATH] [-b PATH] [-r] [--dot]
-               [--intercept ACTION] [--serve] [--site-dir PATH]
-               [--base-url URL]
+<div class="highlight"><span class="filename">$ novella --help</span><pre><span></span><code>usage: novella [--version] [-h] [-i TEMPLATE] [-c PATH] [-d DIRECTORY]
+               [-b PATH] [-r] [--dot] [--intercept ACTION] [--serve]
+               [--site-dir PATH] [--base-url URL]
 
 options:
   --version             show program&#39;s version number and exit
@@ -831,8 +831,12 @@ options:
                         Create a `build.novella` file initialized from a
                         template. Available templates are: &quot;mkdocs&quot;, &quot;hugo&quot;
   -c PATH, --config-file PATH
-                        The configuration file to load. (default:
-                        build.novella)
+                        The configuration file to load. Can be a
+                        pyproject.toml in which case the code is looked up
+                        under the tool.novella.script key. (default: None)
+  -d DIRECTORY, --directory DIRECTORY
+                        Switch to the specified directory before executing the
+                        configuration file.
   -b PATH, --build-directory PATH
                         The build directory. If not specified, a temporary
                         directory will be created.
