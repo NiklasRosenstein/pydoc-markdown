@@ -112,7 +112,7 @@ class Renderer(PluginBase):
 
   Note that sometimes a renderer may need to perform some processing before the render step.
   To keep the possibility open that a renderer may implement generic processing that could
-  used without the actual renderering functionality, #Renderer is a subclass of #Processor.
+  used without the actual rendering functionality, #Renderer is a subclass of #Processor.
   """
 
   def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None: pass
