@@ -33,34 +33,30 @@ logger = logging.getLogger(__name__)
 
 
 class _CallbackEventHandler(FileSystemEventHandler):
+    def __init__(self, callback, filter_paths=None):
+        self._callback = callback
+        self._filter_paths = filter_paths
 
-  def __init__(self, callback, filter_paths=None):
-    self._callback = callback
-    self._filter_paths = filter_paths
-
-  def on_any_event(self, event):
-    if self._filter_paths and event.src_path not in self._filter_paths:
-      return
-    self._callback(event)
+    def on_any_event(self, event):
+        if self._filter_paths and event.src_path not in self._filter_paths:
+            return
+        self._callback(event)
 
 
-def watch_paths(
-  paths: List[str],
-  recursive: bool = False
-) -> Tuple[Observer, threading.Event]:
-  """ Creates an observer for the specified *paths* and returns it together
-  with a #threading.Event object. The event will be set when event occurred.
-  """
+def watch_paths(paths: List[str], recursive: bool = False) -> Tuple[Observer, threading.Event]:
+    """Creates an observer for the specified *paths* and returns it together
+    with a #threading.Event object. The event will be set when event occurred.
+    """
 
-  paths = [os.path.abspath(os.path.normpath(x)) for x in paths]
-  directories = set(os.path.dirname(x) for x in paths)
+    paths = [os.path.abspath(os.path.normpath(x)) for x in paths]
+    directories = set(os.path.dirname(x) for x in paths)
 
-  event = threading.Event()
-  event_handler = _CallbackEventHandler(lambda _: event.set(), paths)
-  observer = Observer()
+    event = threading.Event()
+    event_handler = _CallbackEventHandler(lambda _: event.set(), paths)
+    observer = Observer()
 
-  for directory in directories:
-    observer.schedule(event_handler, directory, recursive)
-  observer.start()
+    for directory in directories:
+        observer.schedule(event_handler, directory, recursive)
+    observer.start()
 
-  return observer, event
+    return observer, event

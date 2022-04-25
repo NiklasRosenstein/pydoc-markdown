@@ -33,82 +33,84 @@ from pydoc_markdown.interfaces import Processor, Resolver
 
 @dataclasses.dataclass
 class PydocmdProcessor(Processor):
-  """
-  The Pydoc-Markdown processor for Markdown docstrings. This processor parses docstrings
-  formatted like the examples below and turns them into proper Markdown markup.
+    """
+    The Pydoc-Markdown processor for Markdown docstrings. This processor parses docstrings
+    formatted like the examples below and turns them into proper Markdown markup.
 
-  Examples:
+    Examples:
 
-  ```
-  # Arguments
+    ```
+    # Arguments
 
-  arg1 (int): The first argument.
-  kwargs (dict): Keyword arguments.
+    arg1 (int): The first argument.
+    kwargs (dict): Keyword arguments.
 
-  # Raises
-  RuntimeError: If something bad happens.
-  ValueError: If an invalid argument is specified.
+    # Raises
+    RuntimeError: If something bad happens.
+    ValueError: If an invalid argument is specified.
 
-  # Returns
-  A value.
-  ```
+    # Returns
+    A value.
+    ```
 
-  Renders as:
+    Renders as:
 
-  # Arguments
+    # Arguments
 
-  arg1 (int): The first argument.
-  kwargs (dict): Keyword arguments.
+    arg1 (int): The first argument.
+    kwargs (dict): Keyword arguments.
 
-  # Raises
-  RuntimeError: If something bad happens.
-  ValueError: If an invalid argument is specified.
+    # Raises
+    RuntimeError: If something bad happens.
+    ValueError: If an invalid argument is specified.
 
-  # Returns
-  A value.
+    # Returns
+    A value.
 
-  @doc:fmt:pydocmd
-  """
+    @doc:fmt:pydocmd
+    """
 
-  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
-    docspec.visit(modules, self._process)
+    def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
+        docspec.visit(modules, self._process)
 
-  def _process(self, node: docspec.ApiObject):
-    if not node.docstring:
-      return
-    lines = []
-    codeblock_opened = False
-    current_section = None
-    for line in node.docstring.content.split('\n'):
-      if line.startswith("```"):
-        codeblock_opened = (not codeblock_opened)
-      if not codeblock_opened:
-        line, current_section = self._preprocess_line(line, current_section)
-      lines.append(line)
-    node.docstring.content = '\n'.join(lines)
+    def _process(self, node: docspec.ApiObject):
+        if not node.docstring:
+            return
+        lines = []
+        codeblock_opened = False
+        current_section = None
+        for line in node.docstring.content.split("\n"):
+            if line.startswith("```"):
+                codeblock_opened = not codeblock_opened
+            if not codeblock_opened:
+                line, current_section = self._preprocess_line(line, current_section)
+            lines.append(line)
+        node.docstring.content = "\n".join(lines)
 
-  def _preprocess_line(self, line, current_section):
-    match = re.match(r'# (.*)$', line)
-    if match:
-      current_section = match.group(1).strip().lower()
-      line = re.sub(r'# (.*)$', r'__\1__\n', line)
+    def _preprocess_line(self, line, current_section):
+        match = re.match(r"# (.*)$", line)
+        if match:
+            current_section = match.group(1).strip().lower()
+            line = re.sub(r"# (.*)$", r"__\1__\n", line)
 
-    if current_section in ('arguments', 'parameters'):
-      style: t.Optional[str] = r'- __\1__:\3'
-    elif current_section in ('attributes', 'members', 'raises'):
-      style = r'- `\1`:\3'
-    elif current_section in ('returns',):
-      style = r'`\1`:\3'
-    else:
-      style = None
-    if style:
-      #                  | ident  | types     | doc
-      line = re.sub(r'\s*([^\\:]+)(\s*\(.+\))?:(.*)$', style, line)
+        if current_section in ("arguments", "parameters"):
+            style: t.Optional[str] = r"- __\1__:\3"
+        elif current_section in ("attributes", "members", "raises"):
+            style = r"- `\1`:\3"
+        elif current_section in ("returns",):
+            style = r"`\1`:\3"
+        else:
+            style = None
+        if style:
+            #                  | ident  | types     | doc
+            line = re.sub(r"\s*([^\\:]+)(\s*\(.+\))?:(.*)$", style, line)
 
-    # Rewrite the argument type in the parentheses.
-    if current_section in ('arguments', 'parameters'):
-      def sub(m):
-        return '__{}__ (`{}`):'.format(m.group(1), m.group(2))
-      line = re.sub(r'__(\w+)\s*\((.*?)\)__:', sub, line)
+        # Rewrite the argument type in the parentheses.
+        if current_section in ("arguments", "parameters"):
 
-    return line, current_section
+            def sub(m):
+                return "__{}__ (`{}`):".format(m.group(1), m.group(2))
+
+            line = re.sub(r"__(\w+)\s*\((.*?)\)__:", sub, line)
+
+        return line, current_section

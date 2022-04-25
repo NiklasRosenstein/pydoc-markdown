@@ -24,38 +24,38 @@ import typing as t
 
 import docspec
 
-from pydoc_markdown.interfaces import Processor, Resolver
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
 from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
+from pydoc_markdown.interfaces import Processor, Resolver
 
 
 @dataclasses.dataclass
 class SmartProcessor(Processor):
-  """
-  This processor picks the #GoogleProcessor, #SphinxProcessor or #PydocmdProcessor after
-  guessing which is appropriate from the syntax it finds in the docstring.
-  """
+    """
+    This processor picks the #GoogleProcessor, #SphinxProcessor or #PydocmdProcessor after
+    guessing which is appropriate from the syntax it finds in the docstring.
+    """
 
-  google: GoogleProcessor = dataclasses.field(default_factory=GoogleProcessor)
-  pydocmd: PydocmdProcessor = dataclasses.field(default_factory=PydocmdProcessor)
-  sphinx: SphinxProcessor = dataclasses.field(default_factory=SphinxProcessor)
+    google: GoogleProcessor = dataclasses.field(default_factory=GoogleProcessor)
+    pydocmd: PydocmdProcessor = dataclasses.field(default_factory=PydocmdProcessor)
+    sphinx: SphinxProcessor = dataclasses.field(default_factory=SphinxProcessor)
 
-  def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
-    docspec.visit(modules, self._process)
+    def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
+        docspec.visit(modules, self._process)
 
-  def _process(self, obj: docspec.ApiObject):
-    if not obj.docstring:
-      return None
+    def _process(self, obj: docspec.ApiObject):
+        if not obj.docstring:
+            return None
 
-    for name in ('google', 'pydocmd', 'sphinx'):
-      indicator = '@doc:fmt:' + name
-      if indicator in obj.docstring.content:
-        obj.docstring.content = obj.docstring.content.replace(indicator, '')
-        return getattr(self, name)._process(obj)
+        for name in ("google", "pydocmd", "sphinx"):
+            indicator = "@doc:fmt:" + name
+            if indicator in obj.docstring.content:
+                obj.docstring.content = obj.docstring.content.replace(indicator, "")
+                return getattr(self, name)._process(obj)
 
-    if self.sphinx.check_docstring_format(obj.docstring.content):
-      return self.sphinx._process(obj)
-    if self.google.check_docstring_format(obj.docstring.content):
-      return self.google._process(obj)
-    return self.pydocmd._process(obj)
+        if self.sphinx.check_docstring_format(obj.docstring.content):
+            return self.sphinx._process(obj)
+        if self.google.check_docstring_format(obj.docstring.content):
+            return self.google._process(obj)
+        return self.pydocmd._process(obj)

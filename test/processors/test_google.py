@@ -1,18 +1,19 @@
+from pydoc_markdown.contrib.processors.google import GoogleProcessor
 
 from . import assert_processor_result
-from pydoc_markdown.contrib.processors.google import GoogleProcessor
 
 
 def test_google_processor(processor=None):
-  assert_processor_result(processor or GoogleProcessor(),
-  '''
+    assert_processor_result(
+        processor or GoogleProcessor(),
+        """
   Args:
     s (str): A string.
     b (int): An int.
   Returns:
     any: Something funny.
-  ''',
-  '''
+  """,
+        """
   **Arguments**:
 
   - `s` _str_ - A string.
@@ -21,10 +22,12 @@ def test_google_processor(processor=None):
   **Returns**:
 
   - `any` - Something funny.
-  ''')
+  """,
+    )
 
-  assert_processor_result(processor or GoogleProcessor(),
-  '''
+    assert_processor_result(
+        processor or GoogleProcessor(),
+        """
   Args:
     s (str): A string.
               And the description
@@ -33,8 +36,8 @@ def test_google_processor(processor=None):
     b (int): An int.
   Returns:
     any: Something funny.
-  ''',
-  '''
+  """,
+        """
   **Arguments**:
 
   - `s` _str_ - A string.
@@ -46,10 +49,12 @@ def test_google_processor(processor=None):
   **Returns**:
 
   - `any` - Something funny.
-  ''')
+  """,
+    )
 
-  assert_processor_result(processor or GoogleProcessor(),
-  '''
+    assert_processor_result(
+        processor or GoogleProcessor(),
+        """
   Example:
 
   ```py
@@ -58,8 +63,8 @@ def test_google_processor(processor=None):
     if some_condition(value):
       value = scanner.advance()
   ```
-  ''',
-  '''
+  """,
+        """
   **Example**:
 
 
@@ -69,4 +74,5 @@ def test_google_processor(processor=None):
     if some_condition(value):
       value = scanner.advance()
   ```
-  ''')
+  """,
+    )

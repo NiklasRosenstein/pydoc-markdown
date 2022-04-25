@@ -102,3 +102,12 @@ mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_
 [tool.slap.run]
 "docs:build" = "cd docs && novella --base-url pydoc-markdown/"
 "docs:dev" = "cd docs && novella --serve"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+combine_as_imports = true
+indent = "    "
