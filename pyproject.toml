@@ -46,6 +46,8 @@ mypy = "*"
 types-deprecated = "*"
 types-requests = "*"
 types-PyYAML = "*"
+isort = "^5.10.1"
+black = "^22.3.0"
 
 [tool.poetry.extras]
 novella = ["novella >=0.1.10,<0.3.0"]
@@ -98,7 +100,19 @@ dev-extras = []
 [tool.slap.test]
 pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov"
 mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_markdown/novella"
+isort = "isort src test --check-only"
+black = "black src test --check"
 
 [tool.slap.run]
 "docs:build" = "cd docs && novella --base-url pydoc-markdown/"
 "docs:dev" = "cd docs && novella --serve"
+"fmt" = "isort src test && black src test"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+combine_as_imports = true
+indent = "    "

@@ -21,7 +21,7 @@
 
 
 #: The default configuration that is rendered when using --bootstrap base.
-DEFAULT_CONFIG = '''
+DEFAULT_CONFIG = """
 loaders:
   - type: python
 processors:
@@ -30,11 +30,11 @@ processors:
   - type: crossref
 renderer:
   type: markdown
-'''.lstrip()
+""".lstrip()
 
 
 #: The default configuration that is rendered when uing --bootstrap mkdocs.
-DEFAULT_MKDOCS_CONFIG = '''
+DEFAULT_MKDOCS_CONFIG = """
 loaders:
   - type: python
 processors:
@@ -55,11 +55,11 @@ renderer:
     site_name: My Project
     theme: readthedocs
     repo_url: https://github.com/Me/my-project
-'''.lstrip()
+""".lstrip()
 
 
 #: The default configuration that is rendered when using --bootstrap hugo.
-DEFAULT_HUGO_CONFIG = '''
+DEFAULT_HUGO_CONFIG = """
 loaders:
   - type: python
 processors:
@@ -82,9 +82,9 @@ renderer:
       children:
         - title: my_project
           contents: [ my_project, my_project.* ]
-'''.lstrip()
+""".lstrip()
 
-DEFAULT_DOCUSAURUS_CONFIG = '''
+DEFAULT_DOCUSAURUS_CONFIG = """
 loaders:
   - type: python
 processors:
@@ -98,12 +98,12 @@ renderer:
   relative_output_path: reference
   relative_sidebar_path: sidebar.json
   sidebar_top_level_label: 'Reference'
-'''.lstrip()
+""".lstrip()
 
 
 #: Default configuration for Read the Docs to use Pydoc-Markdown.
 READTHEDOCS_FILES = {
-  '.readthedocs.yml': '''
+    ".readthedocs.yml": """
 version: 2
 mkdocs: {}  # tell readthedocs to use mkdocs
 python:
@@ -112,15 +112,13 @@ python:
   - method: pip
     path: .
   - requirements: docs/requirements.txt
-'''.lstrip(),
-
-  'docs/.readthedocs-custom-steps.yml': '''
+""".lstrip(),
+    "docs/.readthedocs-custom-steps.yml": """
 steps:
 - |
   pydoc-markdown --build --site-dir "$PWD/_build/html"
-'''.lstrip(),
-
-  'docs/requirements.txt': '''
+""".lstrip(),
+    "docs/requirements.txt": """
 readthedocs-custom-steps==0.5.1
-'''.lstrip(),
+""".lstrip(),
 }
