@@ -18,7 +18,7 @@ classifiers = [
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
 ]
-keywords = [ 'documentation', 'docs', 'generator', 'markdown', 'pydoc' ]
+keywords = [ "documentation", "docs", "generator", "markdown", "pydoc" ]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -115,4 +115,3 @@ line-length = 120
 profile = "black"
 line_length = 120
 combine_as_imports = true
-indent = "    "
