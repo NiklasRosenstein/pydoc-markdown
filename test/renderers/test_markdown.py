@@ -13,9 +13,9 @@ from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Context
+from pydoc_markdown.interfaces import Context, Processor
 
-from ..utils import Case, assert_text_equals, get_testcases_for, load_testcase
+from ..utils import assert_text_equals, get_testcases_for, load_testcase
 
 
 @dataclasses.dataclass
@@ -23,10 +23,12 @@ class MarkdownTestConfig:
     renderer: MarkdownRenderer = dataclasses.field(default_factory=MarkdownRenderer)
     filter: FilterProcessor = dataclasses.field(default_factory=FilterProcessor)
     parser: ParserOptions = dataclasses.field(default_factory=ParserOptions)
+    processor: Processor = dataclasses.field(default_factory=SmartProcessor)
 
     def init(self, context: Context) -> None:
         self.renderer.init(context)
         self.filter.init(context)
+        self.processor.init(context)
 
 
 def load_string_as_module(
@@ -73,6 +75,6 @@ def test_markdown_renderer(filename: str) -> None:
     config.init(Context("."))
     modules = [load_string_as_module(case.filename, case.code, options=config.parser)]
     config.filter.process(modules, None)
-    SmartProcessor().process(modules, None)
+    config.processor.process(modules, None)
     result = config.renderer.render_to_string(modules)
     assert_text_equals(result, case.output)

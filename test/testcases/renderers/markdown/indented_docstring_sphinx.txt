@@ -1,0 +1,54 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+processor:
+  type: sphinx
+----
+def a(v: int) -> None:
+    """ This is a docstring.
+
+    :param v: The value.
+    :return: None
+
+    Example:
+
+        >>> import os
+        >>> os.getenv('PYTHON')
+        'python'
+
+    Or check out this code:
+
+    ```py
+    def foo():
+      print("Hello, World!")
+    ```
+    """
+----
+#### a
+
+```python
+def a(v: int) -> None
+```
+
+This is a docstring.
+
+**Arguments**:
+
+- `v`: The value.
+
+**Returns**:
+
+None
+Example:
+
+    >>> import os
+    >>> os.getenv('PYTHON')
+    'python'
+
+Or check out this code:
+
+```py
+def foo():
+  print("Hello, World!")
+```
