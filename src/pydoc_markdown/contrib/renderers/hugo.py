@@ -383,7 +383,7 @@ def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
     elif machine in ("i386",):
         arch = "32bit"
     else:
-        raise EnvironmentError("unsure whether to intepret {!r} as 32- or 64-bit.".format(machine))
+        raise EnvironmentError("unsure whether to interpret {!r} as 32- or 64-bit.".format(machine))
 
     releases = get_github_releases("gohugoio/hugo")
     if version:

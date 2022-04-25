@@ -56,11 +56,11 @@ class DocusaurusRenderer(Renderer):
     #: The path where the docusaurus docs content is. Defaults "docs" folder.
     docs_base_path: str = "docs"
 
-    #: The output path inside the docs_base_path folder, used to ouput the
+    #: The output path inside the docs_base_path folder, used to output the
     #: module reference.
     relative_output_path: str = "reference"
 
-    #: The sidebar path inside the docs_base_path folder, used to ouput the
+    #: The sidebar path inside the docs_base_path folder, used to output the
     #: sidebar for the module reference.
     relative_sidebar_path: str = "sidebar.json"
 
