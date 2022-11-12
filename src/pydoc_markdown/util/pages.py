@@ -25,6 +25,8 @@ output files and allow the user to define the pages with the API objects
 to document.
 """
 
+from __future__ import annotations
+
 import copy
 import dataclasses
 import fnmatch
@@ -110,7 +112,7 @@ class Page(t.Generic[T_Page]):
     def has_content(self) -> bool:
         return bool(self.source or self.contents)
 
-    def iter_hierarchy(self, parent_chain: t.List["Page"] = None) -> t.Iterable[IterHierarchyItem]:
+    def iter_hierarchy(self, parent_chain: t.List[Page] | None = None) -> t.Iterable[IterHierarchyItem]:
         if parent_chain is None:
             parent_chain = []
         yield IterHierarchyItem(self, parent_chain)

@@ -25,6 +25,8 @@ Template language for YAML files similar to [YTT][].
   [YTT]: https://get-ytt.io/
 """
 
+from __future__ import annotations
+
 import json
 import textwrap
 from typing import Any, Dict, Mapping, TextIO, Type, Union
@@ -35,7 +37,7 @@ import yaml
 def load(
     file_: Union[str, TextIO],
     context: Dict[str, Any],
-    Loader: Type[yaml.Loader] = None,  # TODO(@NiklasRosenstein): Correct type annotation
+    Loader: Type[yaml.Loader] | None = None,  # TODO(@NiklasRosenstein): Correct type annotation
 ) -> Any:
     """
     Loads a YAML template into a Python object.

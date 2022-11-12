@@ -27,6 +27,8 @@ With no arguments it will load the default configuration file. If the
 or a YAML formatted object for the configuration.
 """
 
+from __future__ import annotations
+
 import logging
 import os
 import sys
@@ -59,11 +61,11 @@ class RenderSession:
     def __init__(
         self,
         config: t.Union[None, dict, str],  #: Configuration object or file
-        render_toc: bool = None,  #: Override the "render_toc" option in the MarkdownRenderer
-        search_path: t.List[str] = None,  #: Override the search path in the Python loader
-        modules: t.List[str] = None,  #: Override the modules in the Python loader
-        packages: t.List[str] = None,  #: Override the packages in the Python loader
-        py2: bool = None,  #: Override Python2 compatibility in the Python loader
+        render_toc: bool | None = None,  #: Override the "render_toc" option in the MarkdownRenderer
+        search_path: t.List[str] | None = None,  #: Override the search path in the Python loader
+        modules: t.List[str] | None = None,  #: Override the modules in the Python loader
+        packages: t.List[str] | None = None,  #: Override the packages in the Python loader
+        py2: bool | None = None,  #: Override Python2 compatibility in the Python loader
     ) -> None:
         self.config = config
         self.render_toc = render_toc

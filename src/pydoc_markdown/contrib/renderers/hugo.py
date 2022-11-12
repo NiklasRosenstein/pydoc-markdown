@@ -19,6 +19,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+from __future__ import annotations
+
 import abc
 import dataclasses
 import logging
@@ -355,7 +357,7 @@ class HugoRenderer(Renderer, Server, Builder):
         self.markdown.init(context)
 
 
-def install_hugo(to: str, version: str = None, extended: bool = True) -> None:
+def install_hugo(to: str, version: str | None = None, extended: bool = True) -> None:
     """
     Downloads the latest release of *Hugo* from [Github](https://github.com/gohugoio/hugo/releases)
     and places it at the path specified by *to*. This will install the extended version if it is

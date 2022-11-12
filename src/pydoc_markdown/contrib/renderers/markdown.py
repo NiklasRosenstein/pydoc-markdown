@@ -19,6 +19,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+from __future__ import annotations
+
 import dataclasses
 import html
 import io
@@ -259,7 +261,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             # in the field will act as a first fallback, the level of the object inside it's
             # hierarchy is the final fallback.
             header_levels = {
-                **type(self).__dataclass_fields__["header_level_by_type"].default_factory(),
+                **type(self).__dataclass_fields__["header_level_by_type"].default_factory(),  # type: ignore
                 **self.header_level_by_type,
             }
             # Backwards compat for when we used "Data" instead of "Variable" which mirrors the docspec API
@@ -290,7 +292,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         return FormatCode(code, style_config=style)[0]
 
     def _format_function_signature(
-        self, func: docspec.Function, override_name: str = None, add_method_bar: bool = True
+        self, func: docspec.Function, override_name: str | None = None, add_method_bar: bool = True
     ) -> str:
         parts: t.List[str] = []
         if self.signature_with_decorators:
