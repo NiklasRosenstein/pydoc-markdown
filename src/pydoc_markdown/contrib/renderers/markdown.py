@@ -318,7 +318,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     def _format_classdef_signature(self, cls: docspec.Class) -> str:
         bases = ", ".join(map(str, cls.bases or []))
         if cls.metaclass:
-            bases += ", metaclass=" + str(cls.metaclass)
+            if cls.bases:
+                bases += ", "
+            bases += "metaclass=" + str(cls.metaclass)
         code = "class {}({})".format(cls.name, bases)
         if self.signature_python_help_style:
             code = dotted_name(cls) + " = " + code

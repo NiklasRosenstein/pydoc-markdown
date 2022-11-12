@@ -21,3 +21,12 @@ author = "@NiklasRosenstein"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/274",
 ]
+
+[[entries]]
+id = "f2ec6f82-8b97-4b9e-9b13-dbc315814a40"
+type = "fix"
+description = "fix generated code for class signature with not base class and a metaclass parameter"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/272",
+]

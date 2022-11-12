@@ -1,0 +1,26 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+  data_code_block: true
+filter:
+  documented_only: false
+----
+class MyClass(metaclass=MyMetaclass):
+    pass
+
+class AnotherClass(object, metaclass=AnotherMetaclass):
+    pass
+----
+
+## MyClass Objects
+
+```python
+class MyClass(metaclass=MyMetaclass)
+```
+
+## AnotherClass Objects
+
+```python
+class AnotherClass(object, metaclass=AnotherMetaclass)
+```
