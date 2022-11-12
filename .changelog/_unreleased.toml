@@ -12,3 +12,12 @@ author = "@NiklasRosenstein"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/256",
 ]
+
+[[entries]]
+id = "4ffc08fa-99d0-41b5-bd71-b56ff99639d7"
+type = "fix"
+description = "fix interpreting Markdown in-document anchor links as cross references"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/274",
+]

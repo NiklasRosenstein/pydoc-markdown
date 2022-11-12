@@ -136,5 +136,13 @@ class CrossrefProcessor(Processor):
             return result
 
         node.docstring.content = re.sub(
-            r"\B#(?P<ref>[\w\d\._]+)(?P<parens>\(\))?(?P<trailing>#[\w\d\._]+)?", handler, node.docstring.content
+            r"""
+            (?<!\]\()                       # Avoid parsing Markdown formatted local anchor links (e.g. `[a](#b)`).
+            \B\#(?P<ref>[\w\d\._]+)         # Begin with a hash tag followed by member name(s)
+            (?P<parens>\(\))?               # Optionally followed by parentheses.
+            (?P<trailing>\#[\w\d\._]+)?     # Another hash tag which supplies the text to render for the reference.
+            """,
+            handler,
+            node.docstring.content,
+            flags=re.VERBOSE,
         )
