@@ -1355,7 +1355,7 @@
                 
                   
 
-  <a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/content/api/pydoc_markdown/renderers/markdown.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/None/docs/content/api/pydoc_markdown/renderers/markdown.md" title="Edit this page" class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
@@ -1369,7 +1369,7 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">MarkdownRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">SinglePageRenderer</span><span class="p">,</span> <span class="n">SingleObjectRenderer</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L52">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/3aa2fa94f514ee827992e4145a23e1260b5a4efd/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L52">[view_source]</a></p>
 <p>Produces Markdown files. This renderer is often used by other renderers, such as
 <a href="/pydoc-markdown/api/pydoc_markdown/renderers/mkdocs#pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer">MkdocsRenderer</a> and <a href="/pydoc-markdown/api/pydoc_markdown/renderers/hugo#pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer">HugoRenderer</a>. It provides a wide variety of options to customize
 the generated Markdown files.</p>
@@ -1570,7 +1570,7 @@ a file relative to the context directory (usually the working directory).</p>
 <h4 id="get_resolver">get_resolver</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_resolver</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Resolver</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L470">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/3aa2fa94f514ee827992e4145a23e1260b5a4efd/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L470">[view_source]</a></p>
 <p>Returns a simple <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> implementation. Finds cross-references in the same file.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver"></a></p>
@@ -1578,14 +1578,14 @@ a file relative to the context directory (usually the working directory).</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">MarkdownReferenceResolver</span><span class="p">(</span><span class="n">Resolver</span><span class="p">,</span> <span class="n">ResolverV2</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L493">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/3aa2fa94f514ee827992e4145a23e1260b5a4efd/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L493">[view_source]</a></p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver.resolve_reference"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver.resolve_reference"></a></p>
 <h4 id="resolve_reference">resolve_reference</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">resolve_reference</span><span class="p">(</span><span class="n">suite</span><span class="p">:</span> <span class="n">ApiSuite</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">docspec</span><span class="o">.</span><span class="n">ApiObject</span><span class="p">,</span>
                       <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">ApiObject</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L533">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/3aa2fa94f514ee827992e4145a23e1260b5a4efd/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L533">[view_source]</a></p>
 <p>Resolves the reference by searching in the members of <em>scope</em> or any of its parents.</p>
 
 
