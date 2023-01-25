@@ -1,0 +1,8 @@
+[[entries]]
+id = "5be79248-7b86-465d-953c-d0c69ab64e8a"
+type = "improvement"
+description = "Implement support for NumPy-style docstrings"
+author = "celsiusnarhwal"
+issues = [
+    "https://github.com/celsiusnarhwal/pydoc-markdown/issues/251",
+]

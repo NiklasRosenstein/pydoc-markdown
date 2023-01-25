@@ -35,6 +35,7 @@ tomli = "^2.0.0"
 tomli_w = "^1.0.0"
 yapf = ">=0.30.0"
 watchdog = "*"
+numpydoc = "^1.5.0"
 
 [tool.poetry.urls]
 Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"

@@ -25,6 +25,7 @@ import typing as t
 import docspec
 
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
+from pydoc_markdown.contrib.processors.numpy import NumpyProcessor
 from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
 from pydoc_markdown.interfaces import Processor, Resolver
@@ -33,13 +34,14 @@ from pydoc_markdown.interfaces import Processor, Resolver
 @dataclasses.dataclass
 class SmartProcessor(Processor):
     """
-    This processor picks the #GoogleProcessor, #SphinxProcessor or #PydocmdProcessor after
+    This processor picks the #GoogleProcessor, #SphinxProcessor, #PydocmdProcessor, or #NumpyProcessor after
     guessing which is appropriate from the syntax it finds in the docstring.
     """
 
     google: GoogleProcessor = dataclasses.field(default_factory=GoogleProcessor)
     pydocmd: PydocmdProcessor = dataclasses.field(default_factory=PydocmdProcessor)
     sphinx: SphinxProcessor = dataclasses.field(default_factory=SphinxProcessor)
+    numpy: NumpyProcessor = dataclasses.field(default_factory=NumpyProcessor)
 
     def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
         docspec.visit(modules, self._process)
@@ -48,7 +50,7 @@ class SmartProcessor(Processor):
         if not obj.docstring:
             return None
 
-        for name in ("google", "pydocmd", "sphinx"):
+        for name in ("google", "pydocmd", "sphinx", "numpy"):
             indicator = "@doc:fmt:" + name
             if indicator in obj.docstring.content:
                 obj.docstring.content = obj.docstring.content.replace(indicator, "")
@@ -58,4 +60,6 @@ class SmartProcessor(Processor):
             return self.sphinx._process(obj)
         if self.google.check_docstring_format(obj.docstring.content):
             return self.google._process(obj)
+        if self.numpy.check_docstring_format(obj.docstring.content):
+            return self.numpy._process(obj)
         return self.pydocmd._process(obj)
