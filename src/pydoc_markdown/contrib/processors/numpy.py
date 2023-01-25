@@ -125,7 +125,9 @@ class NumpyProcessor(Processor):
             except Warning:
                 return False
 
-    def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
+    def process(
+        self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]
+    ) -> None:
         docspec.visit(modules, self._process)
 
     def _process(self, node: docspec.ApiObject):
@@ -136,7 +138,11 @@ class NumpyProcessor(Processor):
         lines = []
 
         # Filter self._SECTION_MAP to only include sections used in the docstring
-        active_sections = {k: v for k, v in self._SECTION_MAP.items() if any(docstring.get(sec) for sec in v)}
+        active_sections = {
+            k: v
+            for k, v in self._SECTION_MAP.items()
+            if any(docstring.get(sec) for sec in v)
+        }
 
         # numpydoc is opinionated when it comes to section order so we have to preserve the order of the original
         # docstring ourselves
@@ -144,29 +150,42 @@ class NumpyProcessor(Processor):
         # First, we create a regex pattern to match all section headings in the docstring
         keyword_regex = re.compile(
             "|".join(
-                [rf"{keyword}(?:\r?\n)-{{{len(keyword)}}}" for keyword in itertools.chain(*active_sections.values())]
+                [
+                    rf"{keyword}(?:\r?\n)-{{{len(keyword)}}}"
+                    for keyword in itertools.chain(*active_sections.values())
+                ]
             )
         )
 
         # Second, we strip each patten match of hyphens and whitespace
-        keyword_matches = [match.replace("-", "").strip() for match in keyword_regex.findall(node.docstring.content)]
+        keyword_matches = [
+            match.replace("-", "").strip()
+            for match in keyword_regex.findall(node.docstring.content)
+        ]
 
         # Third, we determine the section order in the eventual output based on the order of the headings in the
         # original docstring (but always starting with the summary)
         section_order = [
             "Summary",
-            *[next(key for key, value in active_sections.items() if keyword in value) for keyword in keyword_matches],
+            *[
+                next(key for key, value in active_sections.items() if keyword in value)
+                for keyword in keyword_matches
+            ],
         ]
 
         # Finally, we sort active_sections according to the section order we just determined
-        sorted_sections = sorted(active_sections.items(), key=lambda x: section_order.index(x[0]))
+        active_sections = sorted(
+            active_sections.items(), key=lambda x: section_order.index(x[0])
+        )
 
-        for section, keywords in sorted_sections:
+        for section, keywords in active_sections:
             lines.extend(self._get_section_contents(docstring, section, keywords))
 
         node.docstring.content = "\n".join(lines)
 
-    def _get_section_contents(self, docstring: NumpyDocString, section: str, keywords: list) -> list[str]:
+    def _get_section_contents(
+        self, docstring: NumpyDocString, section: str, keywords: list
+    ) -> list[str]:
         contents = list(itertools.chain([docstring.get(sec) for sec in keywords]))
 
         if section == "Summary":
@@ -224,7 +243,9 @@ class NumpyProcessor(Processor):
 
         for match in citations.finditer(contents):
             ref_id = match.group("ref_id")
-            contents = contents.replace(match.group(0), replacements[section].format(ref_id=ref_id))
+            contents = contents.replace(
+                match.group(0), replacements[section].format(ref_id=ref_id)
+            )
 
         return [f"\n**{section}**\n", *contents.splitlines()]
 
@@ -232,7 +253,10 @@ class NumpyProcessor(Processor):
     def _parse_examples(contents: list[str]) -> list[str]:
         # Wraps doctests in Python codeblocks and leaves all other content as is
         doctests = re.compile(r"(>>>(?:.+(?:\r?\n|$))+)", flags=re.MULTILINE)
-        return ["\n**Examples**\n", *doctests.sub("```python\n\g<0>\n```", "\n".join(contents)).splitlines()]
+        return [
+            "\n**Examples**\n",
+            *doctests.sub("```python\n\g<0>\n```", "\n".join(contents)).splitlines(),
+        ]
 
     @staticmethod
     def _parse_see_also(contents: list[tuple]) -> list[str]:
@@ -242,10 +266,16 @@ class NumpyProcessor(Processor):
             sublines = []
             objs, desc = group
 
-            sublines.append("* " + ", ".join([f":{obj[1]}:`{obj[0]}`" if obj[1] else f"{obj[0]}" for obj in objs]))
+            sublines.append(
+                "* "
+                + ", ".join(
+                    [f":{obj[1]}:`{obj[0]}`" if obj[1] else f"{obj[0]}" for obj in objs]
+                )
+            )
 
             if desc:
                 sublines[-1] += ": " + "\n".join(desc)
+
             lines.extend(sublines)
 
         return [f"\n**See Also**\n", *lines]
