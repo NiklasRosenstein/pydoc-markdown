@@ -21,7 +21,7 @@ classifiers = [
 keywords = [ "documentation", "docs", "generator", "markdown", "pydoc" ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 click = ">=7.1,<9.0"
 "databind" = "^1.5.0"
 docspec = "^2.0.0a1"
@@ -35,6 +35,9 @@ tomli = "^2.0.0"
 tomli_w = "^1.0.0"
 yapf = ">=0.30.0"
 watchdog = "*"
+mkdocs = { version = "^1.4.2", optional = true }
+mkdocs-material = { version = "^9.0.8", optional = true }
+novella = { version = ">=0.1.10,<0.3.0", optional = true }
 
 [tool.poetry.urls]
 Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
@@ -50,8 +53,8 @@ isort = "^5.10.1"
 black = "^22.3.0"
 
 [tool.poetry.extras]
-novella = ["novella >=0.1.10,<0.3.0"]
-docs = ["novella >=0.1.10,<0.3.0", "mkdocs", "mkdocs-material"]
+novella = ["novella"]
+docs = ["novella", "mkdocs", "mkdocs-material"]
 
 [tool.poetry.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"
