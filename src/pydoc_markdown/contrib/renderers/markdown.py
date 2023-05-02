@@ -26,6 +26,7 @@ import html
 import io
 import sys
 import typing as t
+import re
 from pathlib import Path
 
 import docspec
