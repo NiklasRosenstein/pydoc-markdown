@@ -102,7 +102,7 @@ class DocusaurusRenderer(Renderer):
             filepath.mkdir(parents=True, exist_ok=True)
             filepath = filepath / f"{module_parts[-1]}.md"
 
-            with filepath.open("w") as fp:
+            with filepath.open("w", "utf8") as fp:
                 logger.info("Render file %s", filepath)
                 self.markdown.render_single_page(fp, [module])
 
