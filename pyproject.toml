@@ -46,12 +46,12 @@ mypy = "*"
 types-deprecated = "*"
 types-requests = "*"
 types-PyYAML = "*"
-isort = "5.10.1"
+isort = "^5.10.1"
 black = "^22.3.0"
 
-#[tool.poetry.extras]
-#novella = ["novella >=0.1.10,<0.3.0"]
-#docs = ["novella >=0.1.10,<0.3.0", "mkdocs", "mkdocs-material"]
+[tool.poetry.extras]
+novella = ["novella >=0.1.10,<0.3.0"]
+docs = ["novella >=0.1.10,<0.3.0", "mkdocs", "mkdocs-material"]
 
 [tool.poetry.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"

@@ -22,11 +22,11 @@
 from __future__ import annotations
 
 import dataclasses
-import html
+
 import io
 import sys
 import typing as t
-import re
+
 from pathlib import Path
 
 import docspec
@@ -43,6 +43,8 @@ from pydoc_markdown.interfaces import (
     SourceLinker,
 )
 from pydoc_markdown.util.docspec import ApiSuite, format_function_signature, is_method
+
+from src.pydoc_markdown.util.misc import escape_except_blockquotes
 
 
 def dotted_name(obj: docspec.ApiObject) -> str:
@@ -370,27 +372,6 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 fp.write(source_string + "\n\n")
 
         if obj.docstring:
-            def escape_except_blockquotes(string: str) -> str:
-                # Define regex patterns to match blockquotes
-                single_quote_pattern = r"`[^`]*`"
-                triple_quote_pattern = r"```[\s\S]*?```"
-
-                # Find all blockquotes in the string
-                blockquote_matches = re.findall(f"({triple_quote_pattern}|{single_quote_pattern})", string)
-
-                # Replace all blockquotes with placeholder tokens to preserve their contents
-                for i, match in enumerate(blockquote_matches):
-                    string = string.replace(match, f"BLOCKQUOTE_TOKEN_{i}")
-
-                # Escape the remaining string
-                escaped_string = html.escape(string)
-
-                # Replace the placeholder tokens with their original contents
-                for i, match in enumerate(blockquote_matches):
-                    escaped_string = escaped_string.replace(f"BLOCKQUOTE_TOKEN_{i}", match)
-
-                return escaped_string
-
             docstring = escape_except_blockquotes(obj.docstring.content) if self.escape_html_in_docstring else obj.docstring.content
             lines = docstring.split("\n")
             if self.docstrings_as_blockquote:
