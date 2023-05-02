@@ -1,0 +1,13 @@
+release-date = "2021-08-04"
+
+[[entries]]
+id = "93d37f88-fd89-4030-830d-b6efa389dc1a"
+type = "fix"
+description = "remove unused dependency on `nr.collections`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "8bff76af-04a4-4bcc-b4ee-11dcd65e0250"
+type = "improvement"
+description = "Use `tempfile` instead of `nr.fs`"
+author = "@NiklasRosenstein"

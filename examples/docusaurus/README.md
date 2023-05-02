@@ -7,7 +7,7 @@ Steps that were done for this example:
 1. Bootstrap a Docusaurus project:
 
 ```
-$ npx @docusaurus/init@next init docusaurus-example classic
+$ npx create-docusaurus@latest docusaurus-example classic
 ```
 
 2. Bootstrap a Pydoc-Markdown configuration file for use with Docusaurus:
@@ -27,20 +27,33 @@ $ pydoc-markdown --bootstrap docusaurus
 ```js
 module.exports = {
   someSidebar: {
-    "API Documentation": require("./docs/reference/sidebar.json"),
+    "API Documentation": [
+      require("./docs/reference/sidebar.json")
+    ],
     Docusaurus: ['doc1', 'doc2', 'doc3'],
     Features: ['mdx'],
   },
 };
 ```
 
-5. Run Pydoc-Markdown to generate the Markdown files and `docs/reference/sidebar.json`.
+5. Update the [plugin-content-docs](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#exclude) config in `docusaurus-example/docusaurus.config.js` to not exclude files and folders prefixed with an underscore (_) as those are [ignored by default](https://docusaurus.io/docs/create-doc):
+
+```js
+exclude: [
+  // '**/_*.{js,jsx,ts,tsx,md,mdx}',
+  // '**/_*/**',
+  '**/*.test.{js,jsx,ts,tsx}',
+  '**/__tests__/**',
+],
+```
+
+6. Run Pydoc-Markdown to generate the Markdown files and `docs/reference/sidebar.json`.
 
 ```
 $ pydoc-markdown
 ```
 
-6. Run Docusaurus to preview the documentation:
+7. Run Docusaurus to preview the documentation:
 
 ```
 $ cd docusaurus-example

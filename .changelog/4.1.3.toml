@@ -1,0 +1,10 @@
+release-date = "2021-07-24"
+
+[[entries]]
+id = "a1b2354f-8454-4d4c-8050-e54b4d466d0b"
+type = "fix"
+description = "MarkdownRenderer: Remove zombie line that triggers error when using the Markdown renderer directly"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/196",
+]

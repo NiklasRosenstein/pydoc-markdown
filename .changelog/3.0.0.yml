@@ -1,6 +1,0 @@
-release_date: null
-changes:
-- type: feature
-  component: general
-  description: Initial release of Pydoc-Markdown v3.
-  fixes: []

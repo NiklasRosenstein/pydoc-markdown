@@ -1,0 +1,20 @@
+release-date = "2021-12-12"
+
+[[entries]]
+id = "b118ed66-58be-4505-80d1-7d21a0ea7c7c"
+type = "feature"
+description = "MarkdownRenderer: Add `render_page_title` option."
+author = "@t6847kimo"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/214",
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/216",
+]
+
+[[entries]]
+id = "7161c39d-9595-4eba-bb17-997b341a08ef"
+type = "feature"
+description = "git: Git source linkers now have a `use_branch` option to use the current branch name instead of the current commit SHA when generating links to the source code"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/218",
+]

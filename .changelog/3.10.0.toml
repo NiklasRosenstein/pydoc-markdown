@@ -1,0 +1,7 @@
+release-date = "2021-02-20"
+
+[[entries]]
+id = "f6351a2b-09b6-483e-9272-783816239f97"
+type = "feature"
+description = "add `PythonLoader.encoding` option"
+author = "@NiklasRosenstein"

@@ -1,0 +1,10 @@
+release-date = "2020-11-03"
+
+[[entries]]
+id = "ae09a523-74ce-4298-b475-3e47391e55c6"
+type = "fix"
+description = "Fix using `data_code_block` option in `MarkdownRenderer`, and add a unit test for it"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/160",
+]

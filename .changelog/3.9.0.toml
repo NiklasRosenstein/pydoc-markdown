@@ -1,0 +1,16 @@
+release-date = "2020-12-15"
+
+[[entries]]
+id = "7a20ee2a-4d23-4b35-8cc2-2f86318fbc25"
+type = "fix"
+description = "Fix `IndexError` while processing short module path (by @g6123)"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/167",
+]
+
+[[entries]]
+id = "98d668c3-2441-4daa-b24b-89cd43374542"
+type = "improvement"
+description = "bump `watchdog` dependency to `^1.0.0`"
+author = "@NiklasRosenstein"

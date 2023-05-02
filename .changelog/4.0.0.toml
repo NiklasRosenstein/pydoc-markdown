@@ -1,0 +1,25 @@
+release-date = "2021-07-22"
+
+[[entries]]
+id = "e2ffa993-e42a-4da6-9d2d-33a86bb19761"
+type = "breaking change"
+description = "Migrate to `databind.core 1.x` and `databind.json 1.x` from `nr.databind.core` and `nr.databin.json` and\nuses of `nr.interface` are replaced with ABCs. If you developed plugins for Pydoc-Markdown, please follow\nthe guide at https://pydoc-markdown.readthedocs.io/en/latest/docs/migrate-from-3x-to-4x/.\n"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "ab0e4473-87bb-41ab-b3ee-8736d33a85dc"
+type = "fix"
+description = "docusaurus: Insert an additional newline after header anchors (`<a id=\"..\"></a>`) when `MarkdownRenderer.insert_header_anchors`\nis enabled to fix Docusaurus header rendering.\n"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "7c621815-7b87-463b-9997-72177fffcfff"
+type = "fix"
+description = "unset `__PYENV_LAUNCHER__` environment variable for commands invoked via `$.hooks.pre-render` and `$.hooks.post-render` to avoid issues when the hook invokes a script installed into a different Python virtualenv than the virtualenv that is currently active in the terminal"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "847077bb-baaa-45c2-a670-d070c5d7edb9"
+type = "improvement"
+description = "Pydoc-Markdown now requires Python 3.7 or newer (before it was 3.6 or newer). This is due to `databind.core` having that minimum version requirement"
+author = "@NiklasRosenstein"

@@ -1,0 +1,55 @@
+release-date = "2020-06-04"
+
+[[entries]]
+id = "18f18e63-e1c2-4da6-813e-b77983ba3a30"
+type = "improvement"
+description = "cli: rename `--watch-and-serve` option to `--server`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "4035ad6e-f9c9-4436-93c7-9836160ca5a0"
+type = "improvement"
+description = "cli: watch and serve mainloop now reloads the config file and does not open the browser another time if it was already opened once."
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "4f7d791d-33a4-481a-8481-4f9ee8a29763"
+type = "fix"
+description = "cli: fix `pydoc-markdown.yml` generated with `--bootstrap`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/118",
+]
+
+[[entries]]
+id = "c2e12520-2262-4ebc-8c2f-c3931dd3fb44"
+type = "improvement"
+description = "markdown: * change default for `header_level_by_type` (`2` to `1` for modules, `3` to `2` for classes).\n* change default for `descriptive_class_title` (`false` to `true`)\n"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "d15033e5-d2c5-4632-9fda-cbc1288a5b18"
+type = "feature"
+description = "markdown: added `content_directory` option (replaces hardcoded default `docs` value, defaults to `content` now)"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "b222638d-ea90-489d-911e-3192454ac900"
+type = "improvement"
+description = "markdown: renamed `clean_docs_directory_on_render` to `clean_render` and change the default from `true` to `false`."
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "a0286043-a024-40c6-8e31-f20c5de4d243"
+type = "improvement"
+description = "mkdocs: `mkdocs_config` option can now be set to `null` (the renderer will the refrain\nfrom writing a `mkdocs.yml` file into the output directory).\n"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "10d731a8-3f0a-416d-a679-6b7f82b2e0b9"
+type = "fix"
+description = "python: fix assignments with annotations being ignored by the parser"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/115",
+]

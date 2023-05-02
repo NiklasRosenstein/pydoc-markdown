@@ -1,0 +1,37 @@
+----
+# This unittest replicates https://github.com/NiklasRosenstein/pydoc-markdown/issues/259
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+  data_code_block: true
+filter:
+  documented_only: false
+----
+
+def func() -> None:
+    """
+    Example:
+
+        >>> url = URL('https://foo.bar')
+        >>> print(url)
+        https://foo.bar
+
+    :param url: Link to a remote file.
+    """
+----
+
+#### func
+
+```python
+def func() -> None
+```
+
+Example:
+
+>>> url = URL('https://foo.bar')
+    >>> print(url)
+    https://foo.bar
+
+**Arguments**:
+
+- `url`: Link to a remote file.

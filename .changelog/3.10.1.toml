@@ -1,0 +1,10 @@
+release-date = "2021-04-02"
+
+[[entries]]
+id = "c18ca885-4bd4-47b6-99df-e020841dd693"
+type = "fix"
+description = "fix code blocks indentation in `SphinxProcessor`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/179",
+]

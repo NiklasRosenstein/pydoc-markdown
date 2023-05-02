@@ -1,0 +1,42 @@
+----
+----
+def a(*args, **kwargs):
+  """Docstring goes here."""
+def b(abc, *,):
+  """Docstring goes here."""
+def c(abc, *, defg):
+  """Docstring goes here."""
+----
+<a id="func_02_starred_args"></a>
+
+# func\_02\_starred\_args
+
+<a id="func_02_starred_args.a"></a>
+
+#### a
+
+```python
+def a(*args, **kwargs)
+```
+
+Docstring goes here.
+
+<a id="func_02_starred_args.b"></a>
+
+#### b
+
+```python
+def b(abc)
+```
+
+Docstring goes here.
+
+<a id="func_02_starred_args.c"></a>
+
+#### c
+
+```python
+def c(abc, *, defg)
+```
+
+Docstring goes here.

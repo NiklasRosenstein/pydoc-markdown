@@ -1,0 +1,19 @@
+release-date = "2021-07-22"
+
+[[entries]]
+id = "b0c727bb-e05e-447e-82c1-682527695eca"
+type = "fix"
+description = "CrossrefProcessor: missing trailing characters for unresolved crossref"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "6a34e546-a605-4c00-a5ad-880bbdd9e462"
+type = "improvement"
+description = "MarkdownRenderer: add MarkdownReferenceResolver helper class"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "ac28b78e-842d-40a0-8821-93df008b29e6"
+type = "feature"
+description = "Add `jinja2` renderer"
+author = "@NiklasRosenstein"

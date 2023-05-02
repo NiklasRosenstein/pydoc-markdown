@@ -1,0 +1,7 @@
+release-date = "2020-05-12"
+
+[[entries]]
+id = "e16ef453-65f1-4a46-8d00-540040a64726"
+type = "feature"
+description = "Initial release of Pydoc-Markdown v3."
+author = "@NiklasRosenstein"

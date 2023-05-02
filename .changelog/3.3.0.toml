@@ -1,0 +1,49 @@
+release-date = "2020-07-17"
+
+[[entries]]
+id = "efc00ce7-b4f3-4725-8ce6-687e7eadb01c"
+type = "feature"
+description = "plugin types can now be resolved by their FQN (i.e. the absolute import name, such as `pydoc_markdown.contrib.loaders.python.PythonLoader`) in addition to their registered entrypoint name."
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/131",
+]
+
+[[entries]]
+id = "5df62efe-8aeb-47bd-b8f5-a14bd20d857f"
+type = "feature"
+description = "add new `SourceLinker` interface"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "9addcd3a-e881-429a-a7ad-1617ae3e9953"
+type = "feature"
+description = "add `GitHubSourceLinker` class (entrypoint name: `github`)"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "5e4ce0b6-cf8f-4f5e-aca3-188808e6476b"
+type = "feature"
+description = "markdown: add `MarkdownRenderer.source_linker`, `.source_position` and `.source_format` options"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/122",
+]
+
+[[entries]]
+id = "8b51fe41-5b77-4469-94b1-033948f9c12d"
+type = "improvement"
+description = "cli: `-v,--verbose` and `-q,--quiet` flags are now countable (e.g. `-vv` will raise the logging verbosity to `DEBUG`)"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "1d48d893-ae96-466d-b7fa-a25d7057fd7a"
+type = "improvement"
+description = "internal: Ensure consistency independent of the CWD from which Pydoc-Markdown is invoked as long as the same configuration file is used by introduce the `Context` object and the `init()` method for plugins. The `Context.directory` is set to the parent directory of the `pydoc-markdown.yml` configuration file. Plugins use that directory to interpret relative paths instead of the current working directory. "
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "9d990abe-9882-4a15-a7b8-b2d617239615"
+type = "feature"
+description = "implement YTT-like YAML preprocessing when the Pydoc-Markdown configuration is loaded"
+author = "@NiklasRosenstein"

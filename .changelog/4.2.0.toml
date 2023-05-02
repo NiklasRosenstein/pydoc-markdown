@@ -1,0 +1,52 @@
+release-date = "2021-08-20"
+
+[[entries]]
+id = "f8dbebc9-8dc1-432d-9ed3-f339b3137959"
+type = "fix"
+description = "HugoRenderer: Enable Hugo `markup.goldmark.renderer.unsafe` option by default"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/198",
+]
+
+[[entries]]
+id = "d17cfb44-5366-454e-bc6f-475e145bb985"
+type = "fix"
+description = "MarkdownRenderer: Markdown renderer produces header anchors with `name` attribute instead of `id`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/200",
+]
+
+[[entries]]
+id = "1f1256e9-2ec7-493e-9ab5-6810e5819b2e"
+type = "feature"
+description = "MarkdownRenderer: @melMass added the `MarkdownRenderer.add_module_prefix` option"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/199",
+]
+
+[[entries]]
+id = "4c230b35-151b-4cf7-9a6b-f850ee59cf5b"
+type = "docs"
+description = "switch Pydoc-Markdown to generated its docs with MkDocs"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "4b2908e7-0cce-4a9f-9147-033443d5090e"
+type = "docs"
+description = "add Jinja2 renderer documentation in generated docs"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "6ab678d8-2da9-4461-baed-51dcdb1e779f"
+type = "improvement"
+description = "update template for `--bootstrap readthedocs` and related documentation"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "4d0f7188-5783-4712-af8a-1a761ae534e0"
+type = "fix"
+description = "fix `mkdocs` bootstrap configuration, update mkdocs and hugo bootstrap config to include example on how to select parts of the API docs"
+author = "@NiklasRosenstein"

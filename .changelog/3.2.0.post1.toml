@@ -1,0 +1,10 @@
+release-date = "2020-07-15"
+
+[[entries]]
+id = "d5ada3cc-f30a-40b0-8e57-a1fdbcf4bbc2"
+type = "fix"
+description = "packaging: add `$.readme` to `pydoc-markdown/package.yaml`, fixing the generated `setup.py` to include the `README.md` from the parent folder."
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/130",
+]

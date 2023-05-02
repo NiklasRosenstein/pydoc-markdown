@@ -1,0 +1,157 @@
+release-date = "2020-07-13"
+
+[[entries]]
+id = "1a61b55d-c3eb-49dc-b3ad-7fd3b5a831e3"
+type = "feature"
+description = "cli: add `--dump` and `--with-processors/--without-processors` options"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "1efecdbd-ca6f-417f-bb6f-892b34818393"
+type = "docs"
+description = "add docstrings to classes defined in `pydoc_markdown.contrib.processors`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "4d3d3b3d-c4c7-4f35-a3f1-9bbe05a55b8e"
+type = "improvement"
+description = "use `docspec` module instead of `pydoc_markdown.reflection` to represent API objects"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "f2860459-91da-4311-a4bd-23c5fe8ba347"
+type = "improvement"
+description = "python: use `docspec-python` to load Python API objects"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "cf85bccf-0cbb-462e-a1ff-d6c715b74947"
+type = "improvement"
+description = "crossref: warnings produced about references that cannot be resolved are now summarized in a single log-line"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "bee177d4-499d-46e9-bb8c-798a8322fe44"
+type = "improvement"
+description = "With the removal of `pydoc_markdown.reflection`, the `ModuleGraph` class has also been removed and replaced by List[docspec.Module]`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "c18b456f-efc5-4d75-90cf-ad678fe1530e"
+type = "improvement"
+description = "filter: Rename FilterProcessor.include_root_objects to .do_not_filter_modules"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "fae4b70b-b1d4-4081-8d19-9aa6037a5e5a"
+type = "improvement"
+description = "change type signatures and some method names of interfaces in `pydoc_markdown.interfaces`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "c9ade480-3a29-4113-b79b-229e6d76f7e2"
+type = "improvement"
+description = "utils: The `Page.filtered_modules()` method now warns if an element in `Page.contents` did not match an API object"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "e532687a-a44b-4fcb-98e9-b3192843683c"
+type = "fix"
+description = "markdown: the Markdown header level for methods is now correctly read from the \"Method\" key in `MarkdownRenderer.header_level_by_type`"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/121",
+]
+
+[[entries]]
+id = "1820df67-6404-4f20-9be3-832fb7702540"
+type = "improvement"
+description = "cli: remove `--bootstrap-mkdocs` in favor of `--bootstrap` option which now accepts an argument"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "def15354-92c4-48a8-af77-e1319e2623e5"
+type = "improvement"
+description = "cli: the `--bootstrap` option now requires an argument, which must be either \"base\", \"mkdocs\" or \"hugo\" (new)"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "4e8e348b-46ec-4716-9a89-72f54c173af6"
+type = "feature"
+description = "mkdocs: The `MkdocsRenderer.clean_render` option is enabled again by default, but instead of removing the whole `content_directory`, it will instead only remove files that it has previously generated (it will place a `.generated-files.txt` file in the `output_directory` for that)."
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "2a07cb88-15a4-4a18-833b-6df93a23bfde"
+type = "feature"
+description = "cli: add `MarkdownRenderer.classdef_with_decorators` and `MarkdownRenderer.signature_with_decorators` options"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "3609fd42-ce59-4506-9293-1baf569794a9"
+type = "feature"
+description = "Add new `HugoRenderer` (YAML type name `hugo`)."
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/106",
+]
+
+[[entries]]
+id = "4379d7cc-dfe1-4ca1-a867-09f43f505758"
+type = "feature"
+description = "smart-processor: now looks for a `@doc:fmt:<formatter_name>` string in the docstring, which can be used to override the style that is used in case the automatically detected style is incorrect"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "b7e00b8d-c8c4-4295-be6f-7f5710ecf7b5"
+type = "docs"
+description = "The Pydoc-Markdown documentation is now available on Read the Docs (https://pydoc-markdown.readthedocs.io/en/latest/)"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "9c47b59e-69ea-4f29-9535-5a56ed6dfedf"
+type = "feature"
+description = "api: Add new `Builder` interface that is used with the new `--build` and `--site-dir` options"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "dd0eaa97-8d65-47f1-9b92-ae9201dd8a96"
+type = "feature"
+description = "mkdocs: Implement `Builder` interface for `MkDocsRenderer`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "f79aaa65-56e4-4424-b107-e5a858d94c38"
+type = "feature"
+description = "hugo: Implement `Builder` interface for `HugoRenderer`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "93e0a669-e1a8-463a-835f-1a0b0eeac744"
+type = "feature"
+description = "cli: Add new `--build` and `--site-dir` options as well as `--bootstrap readthedocs`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "09917c66-1a6b-4242-a820-de7341ce3820"
+type = "fix"
+description = "mkdocs: Fix error in MkDocs navigation generation if a page has no `source` and no `contents`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "eb74f88c-dd51-4943-a318-b6ec6ff829ed"
+type = "improvement"
+description = "mkdocs: generated `mkdocs.yml` now uses forward slashes for filenames on Windows system to increase portability"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/129",
+]
+
+[[entries]]
+id = "1c322f20-d6be-4824-adef-31f27e342bfe"
+type = "feature"
+description = "add new `$.hooks.pre-render` and `$.hooks.post-render` options"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/112",
+]

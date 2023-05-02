@@ -1,0 +1,83 @@
+release-date = "2022-03-02"
+
+[[entries]]
+id = "57b68994-1c11-43da-991e-6531a2cc725f"
+type = "docs"
+description = "docusaurus: Update `plugin-content-docs` config for docusarus@beta to not exclude files and folders with underscores."
+author = "@chrisstetter"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/235"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/189",
+]
+
+[[entries]]
+id = "072f60b0-1f4e-4075-a22a-242980b9f555"
+type = "hygiene"
+description = "remove `MarkdownRenderer.classdef_render_init_signature_if_needed` option because it never worked to begin with"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "f0c733c1-d6db-45ed-a471-3ddd1dc688bb"
+type = "breaking change"
+description = "remove `MarkdownRenderer.render_to_stream()` from public api"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "56ad7f3e-b0f2-4a96-8066-64249bc18a47"
+type = "feature"
+description = "add `pydoc_markdown.interfaces.SingleObjectRenderer` and use it in Novella `@pydoc` tag processor"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "ad6ce2db-2342-4baf-8a8d-6f3f858b1ac2"
+type = "feature"
+description = "add `ApiSuite` class and `ResolverV2` which is used by the new `@pydoc` tag preprocessor when using Novella"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "6bebcee4-6851-4ed6-8600-d0c2b997b97b"
+type = "feature"
+description = "`MarkdownReferenceResolver` now implements the new `ResolverV2` interface and can resolve references globally"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "1dd5214f-680d-4f36-9c67-19035b0885a0"
+type = "feature"
+description = "`CrossRefProcessor` now accepts a `resolver_v2` argument to use instead of the `resolver` object passed through the `Processor` API"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "a20167d1-cb1c-4331-8be9-43b115f0292a"
+type = "feature"
+description = "bring back formatting function, class and variable signatures with YAPF. (Tagging @lgeiger as the author because he was the original author of the feature in a previous version of Pydoc-Markdown, see https://github.com/NiklasRosenstein/pydoc-markdown/pull/78)"
+author = "@lgeiger"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/244",
+]
+
+[[entries]]
+id = "d9e1123d-97bf-4ab3-9c1f-82eef6b8200b"
+type = "fix"
+description = "fix forwarding of `PluginBase.init()` calls to sub-plugins in unittests and `DocusaurusRenderer`"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "f6874d1a-63e0-4504-8d90-fc3d0f4d7db0"
+type = "improvement"
+description = "do not render link to source for modules in `MarkdownRenderer`"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/245"
+
+[[entries]]
+id = "29f32901-5f34-4b19-b86a-ead2830114dd"
+type = "improvement"
+description = "Git source linkers now fall back to the SHA if the current branch is invalid (e.g. in a detached HEAD state) and logs a warning"
+author = "@NiklasRosenstein"

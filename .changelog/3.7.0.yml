@@ -1,8 +1,0 @@
-release_date: '2020-11-05'
-changes:
-- type: change
-  component: FilterProcessor
-  description: 'Fix `NameError: name _check is not defined`, slightly alter behaviour
-    of `FilterProcessor.expression` field`'
-  fixes:
-  - '#161'

@@ -1,0 +1,80 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+filter:
+  documented_only: false
+----
+class Foo:
+  # This is not a member docstring.
+  member = None
+
+  #: This is a member docstring.
+  another: t.List[str]
+
+class Bar:
+  # This is not a class docstring.
+  # We don't treat those as docstrings.
+  pass
+
+class Spam:
+  """ This is a docstring! """
+
+class Egg:
+  """
+  The class documentation!
+  """
+
+  def __init__(self, param):
+    """
+    The constructor.
+
+    :param param: A parameter.
+    """
+    self.param = param
+----
+## Foo Objects
+
+```python
+class Foo()
+```
+
+#### member
+
+#### another
+
+This is a member docstring.
+
+## Bar Objects
+
+```python
+class Bar()
+```
+
+## Spam Objects
+
+```python
+class Spam()
+```
+
+This is a docstring!
+
+## Egg Objects
+
+```python
+class Egg()
+```
+
+The class documentation!
+
+#### \_\_init\_\_
+
+```python
+def __init__(param)
+```
+
+The constructor.
+
+**Arguments**:
+
+- `param`: A parameter.

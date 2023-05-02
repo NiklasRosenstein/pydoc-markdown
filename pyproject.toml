@@ -1,0 +1,117 @@
+[tool.poetry]
+name = "pydoc-markdown"
+version = "4.6.4"
+description = "Create Python API documentation in Markdown format."
+authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
+license = "MIT"
+readme = "readme.md"
+packages = [{include = "pydoc_markdown", from = "src"}]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: End Users/Desktop",
+  "Topic :: Software Development :: Code Generators",
+  "Topic :: Utilities",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+]
+keywords = [ "documentation", "docs", "generator", "markdown", "pydoc" ]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = ">=7.1,<9.0"
+"databind" = "^1.5.0"
+docspec = "^2.0.0a1"
+docspec-python = "^2.0.0a1"
+docstring-parser = "^0.11"
+"nr.util" = ">=0.7.5,<1.0.0"
+jinja2 = "^3.0.0"
+requests = "^2.23.0"
+PyYAML = "^5.3"
+tomli = "^2.0.0"
+tomli_w = "^1.0.0"
+yapf = ">=0.30.0"
+watchdog = "*"
+
+[tool.poetry.urls]
+Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+pytest-coverage = "*"
+mypy = "*"
+types-deprecated = "*"
+types-requests = "*"
+types-PyYAML = "*"
+isort = "^5.10.1"
+black = "^22.3.0"
+
+[tool.poetry.extras]
+novella = ["novella >=0.1.10,<0.3.0"]
+docs = ["novella >=0.1.10,<0.3.0", "mkdocs", "mkdocs-material"]
+
+[tool.poetry.scripts]
+pydoc-markdown = "pydoc_markdown.main:cli"
+
+[tool.poetry.plugins."pydoc_markdown.interfaces.Loader"]
+python = "pydoc_markdown.contrib.loaders.python:PythonLoader"
+
+[tool.poetry.plugins."pydoc_markdown.interfaces.Processor"]
+crossref = "pydoc_markdown.contrib.processors.crossref:CrossrefProcessor"
+filter = "pydoc_markdown.contrib.processors.filter:FilterProcessor"
+google = "pydoc_markdown.contrib.processors.google:GoogleProcessor"
+pydocmd = "pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor"
+smart = "pydoc_markdown.contrib.processors.smart:SmartProcessor"
+sphinx = "pydoc_markdown.contrib.processors.sphinx:SphinxProcessor"
+
+[tool.poetry.plugins."pydoc_markdown.interfaces.Renderer"]
+hugo = "pydoc_markdown.contrib.renderers.hugo:HugoRenderer"
+markdown = "pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer"
+mkdocs = "pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer"
+docusaurus = "pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer"
+jinja2 = "pydoc_markdown.contrib.renderers.jinja2:Jinja2Renderer"
+
+[tool.poetry.plugins."pydoc_markdown.interfaces.SourceLinker"]
+git = "pydoc_markdown.contrib.source_linkers.git:GitSourceLinker"
+github = "pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker"
+gitlab = "pydoc_markdown.contrib.source_linkers.git:GitlabSourceLinker"
+gitea = "pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker"
+bitbucket = "pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker"
+
+[tool.poetry.plugins."novella.markdown.preprocessors"]
+pydoc = "pydoc_markdown.novella.preprocessor:PydocTagPreprocessor"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.slap]
+typed = true
+
+[tool.slap.release]
+tag-format = "v{version}"
+
+[tool.slap.install]
+dev-extras = []
+
+[tool.slap.test]
+pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov -vv"
+mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_markdown/novella"
+isort = "isort src test --check-only"
+black = "black src test --check"
+
+[tool.slap.run]
+"docs:build" = "cd docs && novella --base-url pydoc-markdown/"
+"docs:dev" = "cd docs && novella --serve"
+"fmt" = "isort src test && black src test"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+combine_as_imports = true

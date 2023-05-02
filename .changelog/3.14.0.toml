@@ -1,0 +1,10 @@
+release-date = "2021-07-19"
+
+[[entries]]
+id = "6bafff44-b805-47b9-96b0-1596021afaa9"
+type = "feature"
+description = "add `MarkdownRenderer.signature_with_vertical_bar` option (contributed by @t6847kimo)"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/192",
+]

@@ -1,0 +1,44 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+processor:
+  type: pydocmd
+----
+def a():
+    """ This is a docstring.
+
+    Example:
+
+        >>> import os
+        >>> os.getenv('PYTHON')
+        'python'
+
+    Or check out this code:
+
+    ```py
+    def foo():
+      print("Hello, World!")
+    ```
+    """
+----
+#### a
+
+```python
+def a()
+```
+
+This is a docstring.
+
+Example:
+
+    >>> import os
+    >>> os.getenv('PYTHON')
+    'python'
+
+Or check out this code:
+
+```py
+def foo():
+  print("Hello, World!")
+```

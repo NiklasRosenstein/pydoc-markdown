@@ -1,8 +1,0 @@
-release_date: '2020-08-31'
-changes:
-- type: feature
-  component: mkdocs
-  description: add `server_port` option, treat `MKDOCS_PORT` environment variable
-    if `server_port` option is not set
-  fixes:
-  - '#148'

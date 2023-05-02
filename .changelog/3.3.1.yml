@@ -1,7 +1,0 @@
-release_date: 2020-08-29
-changes:
-- type: fix
-  component: markdown
-  description: Fix "list" object has no attribute "values" in `MarkdownRenderer`
-  fixes:
-  - '#149'

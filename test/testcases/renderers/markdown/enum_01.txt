@@ -1,0 +1,26 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+filter:
+  documented_only: false
+----
+class PetType(enum.Enum):
+  """ Enumeration to identify possible pet types. """
+  DOG = 0
+  CAT = 1
+  MOUSE = 2  #: Mice are rare.
+----
+## PetType Objects
+
+```python
+class PetType(enum.Enum)
+```
+
+Enumeration to identify possible pet types.
+
+#### DOG
+
+#### CAT
+
+#### MOUSE

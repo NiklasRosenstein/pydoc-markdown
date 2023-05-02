@@ -1,7 +1,0 @@
-release_date: null
-changes:
-- type: fix
-  component: general
-  description: Fix `IndexError` while processing short module path (by @g6123)
-  fixes:
-  - '#167'

@@ -1,0 +1,46 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+----
+class Foo:
+  #: This is a member docstring.
+  member = None
+
+  #: This is a member with a type hint.
+  int_member: int = 32
+
+  #: A member with type hint but no value.
+  float_member: float
+
+class Bar:
+  member = None
+  """ This is a member docstring. """
+----
+## Foo Objects
+
+```python
+class Foo()
+```
+
+#### member
+
+This is a member docstring.
+
+#### int\_member
+
+This is a member with a type hint.
+
+#### float\_member
+
+A member with type hint but no value.
+
+## Bar Objects
+
+```python
+class Bar()
+```
+
+#### member
+
+This is a member docstring.

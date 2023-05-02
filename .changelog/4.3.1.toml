@@ -1,0 +1,10 @@
+release-date = "2021-09-01"
+
+[[entries]]
+id = "63245de7-afba-41c8-957b-8a6dec8dde98"
+type = "fix"
+description = "Calling pydoc-markdown with `--render-toc` option causes an exception"
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/213",
+]
