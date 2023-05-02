@@ -24,6 +24,9 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
     #: Disabled because Docusaurus supports this automatically.
     insert_header_anchors: bool = False
 
+    #: Escape html in docstring, otherwise it could lead to invalid html.
+    escape_html_in_docstring: bool = True
+
     #: Conforms to Docusaurus header format.
     render_module_header_template: str = (
         "---\n" "sidebar_label: {relative_module_name}\n" "title: {module_name}\n" "---\n\n"
