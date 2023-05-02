@@ -389,7 +389,6 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 for i, match in enumerate(blockquote_matches):
                     escaped_string = escaped_string.replace(f"BLOCKQUOTE_TOKEN_{i}", match)
 
-                print("///", string, "\n|||", escaped_string)
                 return escaped_string
 
             docstring = escape_except_blockquotes(obj.docstring.content) if self.escape_html_in_docstring else obj.docstring.content
