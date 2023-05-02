@@ -130,7 +130,7 @@ class PydocMarkdown:
         logger.debug("Initializing plugins with context %r", context)
         for loader in self.loaders:
             loader.init(context)
-            loader.encoding = "utf8"
+            loader.encoding = "utf-8"
         for processor in self.processors:
             processor.init(context)
         self.renderer.init(context)
