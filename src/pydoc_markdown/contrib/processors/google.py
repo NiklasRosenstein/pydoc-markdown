@@ -135,9 +135,9 @@ class GoogleProcessor(Processor):
             current_lines.clear()
 
         for line in node.docstring.content.split("\n"):
-            if line.strip().startswith("```"):
+            if line.lstrip().startswith("```"):
                 in_codeblock = not in_codeblock
-                current_lines.append(line.strip())
+                current_lines.append(line)
                 continue
 
             if in_codeblock:
