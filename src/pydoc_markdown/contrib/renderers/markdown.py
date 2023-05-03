@@ -44,7 +44,7 @@ from pydoc_markdown.interfaces import (
 )
 from pydoc_markdown.util.docspec import ApiSuite, format_function_signature, is_method
 
-from src.pydoc_markdown.util.misc import escape_except_blockquotes
+from pydoc_markdown.util.misc import escape_except_blockquotes
 
 
 def dotted_name(obj: docspec.ApiObject) -> str:
