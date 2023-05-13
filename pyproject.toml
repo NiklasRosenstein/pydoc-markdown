@@ -36,8 +36,19 @@ tomli_w = "^1.0.0"
 yapf = ">=0.30.0"
 watchdog = "*"
 
-novella = { version = " >=0.1.10,<0.3.0", optional = true }
+[tool.poetry.group.novella]
+optional = true
 
+[tool.poetry.group.novella.dependencies]
+novella = { version = " >=0.1.10,<0.3.0" }
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+novella = { version = " >=0.1.10,<0.3.0" }
+mkdocs = "*"
+mkdocs-material = "*"
 
 [tool.poetry.urls]
 Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
@@ -51,10 +62,6 @@ types-requests = "*"
 types-PyYAML = "*"
 isort = "^5.10.1"
 black = "^22.3.0"
-
-[tool.poetry.extras]
-novella = ["novella"]
-#docs = ["novella", "mkdocs", "mkdocs-material"]
 
 [tool.poetry.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"
