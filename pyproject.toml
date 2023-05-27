@@ -63,6 +63,20 @@ types-PyYAML = "*"
 isort = "^5.10.1"
 black = "^22.3.0"
 
+[tool.poetry.group.novella]
+optional = true
+
+[tool.poetry.group.novella.dependencies]
+novella = { version = " >=0.1.10,<0.3.0" }
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+novella = { version = " >=0.1.10,<0.3.0" }
+mkdocs = "*"
+mkdocs-material = "*"
+
 [tool.poetry.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"
 
