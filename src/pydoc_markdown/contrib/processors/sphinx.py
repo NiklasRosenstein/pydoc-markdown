@@ -148,7 +148,7 @@ class SphinxProcessor(Processor):
         lines = []
         components: t.Dict[str, t.List[str]] = {}
 
-        parsed_docstring = docstring_parser.parse(node.docstring.content, docstring_parser.DocstringStyle.REST)
+        parsed_docstring = docstring_parser.parse(node.docstring.content, docstring_parser.DocstringStyle.AUTO)
         components["Arguments"] = self._convert_params(parsed_docstring.params)
         components["Raises"] = self._convert_raises(parsed_docstring.raises)
         return_doc = self._convert_returns(parsed_docstring.returns)

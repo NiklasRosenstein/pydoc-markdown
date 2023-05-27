@@ -79,7 +79,9 @@ class PythonLoader(Loader):
     parser: docspec_python.ParserOptions = dataclasses.field(default_factory=docspec_python.ParserOptions)
 
     #: The encoding to use when reading the Python source files.
-    encoding: t.Optional[str] = None
+    #:
+    #: Changed in 4.7.0: Default changed from `None` (system default encoding) to `"utf-8"`.
+    encoding: str = "utf-8"
 
     def __post_init__(self) -> None:
         self._context: t.Optional[Context] = None
