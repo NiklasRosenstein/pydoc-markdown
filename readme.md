@@ -9,10 +9,7 @@ Pydoc-Markdown is a tool to create Python API documentation in Markdown format. 
 code like so many other documentation tools, it parses it using [docspec][] instead. To run Pydoc-Markdown, you
 need to use at least Python 3.7.
 
-<p align="center">
-
 [→ Go to the Documentation 📘][Documentation]
-</p>
 
   [contrib]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md
   [docspec]: https://niklasrosenstein.github.io/docspec/
