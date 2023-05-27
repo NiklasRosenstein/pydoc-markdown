@@ -1,0 +1,11 @@
+[[entries]]
+id = "4409675c-ea67-4c56-be5a-a7310f779c15"
+type = "improvement"
+description = "Change `PythonLoader.encoding` default value from `None` (system default) to `utf-8`"
+author = "@NiklasRosenstein"
+
+[[entries]]
+id = "01003f02-89ec-46d5-9809-4cacf51547fa"
+type = "improvement"
+description = "Support parsing all types of docstring formats that are supported by the `docstring_parser` module in `SphinxProcessor`, not just ReST"
+author = "@hippalectryon-0"
