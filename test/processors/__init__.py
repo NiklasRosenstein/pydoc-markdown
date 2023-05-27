@@ -11,4 +11,5 @@ def assert_processor_result(processor, docstring, expected_output):
     )
     processor.process([module], None)
     assert module.docstring
+    print(module.docstring.content)
     assert_text_equals(module.docstring.content, textwrap.dedent(expected_output))
