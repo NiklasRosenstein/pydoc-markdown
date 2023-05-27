@@ -22,7 +22,8 @@ def test_google_processor(processor=None):
   **Returns**:
 
   - `any` - Something funny.
-  """)
+  """,
+    )
 
     assert_processor_result(
         processor or GoogleProcessor(),
@@ -48,7 +49,8 @@ def test_google_processor(processor=None):
   **Returns**:
 
   - `any` - Something funny.
-  """)
+  """,
+    )
 
     assert_processor_result(
         processor or GoogleProcessor(),
@@ -72,11 +74,12 @@ def test_google_processor(processor=None):
     if some_condition(value):
       value = scanner.advance()
   ```
-  """)
+  """,
+    )
 
     assert_processor_result(
         processor or GoogleProcessor(),
-        '''
+        """
   Args:
     s (str): A string.
     b (int): An int.
@@ -86,8 +89,8 @@ def test_google_processor(processor=None):
     ```
   Returns:
     any: Something funny.
-  ''',
-  '''
+  """,
+        """
   **Arguments**:
 
   - `s` _str_ - A string.
@@ -102,4 +105,5 @@ def test_google_processor(processor=None):
   **Returns**:
 
   - `any` - Something funny.
-  ''')
+  """,
+    )
