@@ -175,7 +175,7 @@ class Page(t.Generic[T_Page]):
                 src_path = os.path.join(context_directory, self.source)
                 logger.info('Writing "%s" (source: "%s")', filename, src_path)
                 with open(src_path, "rb") as src:
-                    shutil.copyfileobj(src, fp.buffer)
+                    shutil.copyfileobj(src, fp.buffer)  # type: ignore[misc]  # See https://github.com/python/mypy/issues/15031  # noqa: E501
             else:
                 logger.info('Rendering "%s"', filename)
                 renderer.render_single_page(fp, self.filtered_modules(modules), self.title)

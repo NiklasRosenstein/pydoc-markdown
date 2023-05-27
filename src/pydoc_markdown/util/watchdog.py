@@ -27,7 +27,7 @@ import threading
 from typing import List, Tuple
 
 from watchdog.events import FileSystemEventHandler  # type: ignore
-from watchdog.observers import Observer  # type: ignore
+from watchdog.observers import BaseObserver, Observer  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ class _CallbackEventHandler(FileSystemEventHandler):
         self._callback(event)
 
 
-def watch_paths(paths: List[str], recursive: bool = False) -> Tuple[Observer, threading.Event]:
+def watch_paths(paths: List[str], recursive: bool = False) -> Tuple[BaseObserver, threading.Event]:
     """Creates an observer for the specified *paths* and returns it together
     with a #threading.Event object. The event will be set when event occurred.
     """

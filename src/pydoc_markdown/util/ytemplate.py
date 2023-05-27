@@ -78,7 +78,7 @@ def load(
 
         yaml_code.append(line)
 
-    return yaml.load("".join(yaml_code), Loader)
+    return yaml.load("".join(yaml_code), Loader or yaml.Loader)
 
 
 class Attributor:
