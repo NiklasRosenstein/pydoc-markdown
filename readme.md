@@ -42,12 +42,12 @@ If you plan on using the [Novella][] integration, you may want to install it as:
 
 ### News 📢
 
-#### 4.7.0
+#### 4.7.0 (Undeprecating YAML configuration)
 
 Many users prefer the YAML configuration over the using [Novella][], which is why starting with __4.7.0__, the YAML
 style configuration is officially un-deprecated and will continue to be supported.
 
-#### 4.6.0
+#### 4.6.0 (Novella integration)
 
 Starting with __4.6.0__, development focuses on integrating with [Novella][] and use it as a replacement for
 tool-specific renderers thus far provided directly by Pydoc-Markdown (i.e. integrations with MkDocs, Hugo and

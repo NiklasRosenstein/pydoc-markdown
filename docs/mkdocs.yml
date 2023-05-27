@@ -1,8 +1,12 @@
 nav:
   - index.md
-  - getting-started.md
-  - just-generate-me-some-markdown.md
-  - readthedocs.md
+  - Usage:
+    - usage/cli-and-api.md
+    - YAML Configuration: usage/yaml.md
+    - usage/novella.md
+  - Examples:
+    - examples/hugo.md
+    - examples/readthedocs.md
   - API Documentation:
     - api/cli.md
     - pydoc_markdown:
@@ -19,4 +23,3 @@ nav:
   - Other:
     - changelog.md
     - contributing.md
-    - deprecated-configuration.md

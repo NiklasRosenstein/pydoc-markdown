@@ -27,7 +27,8 @@ import threading
 from typing import List, Tuple
 
 from watchdog.events import FileSystemEventHandler  # type: ignore
-from watchdog.observers import BaseObserver, Observer  # type: ignore
+from watchdog.observers import Observer  # type: ignore
+from watchdog.observers.api import BaseObserver  # type: ignore
 
 logger = logging.getLogger(__name__)
 
