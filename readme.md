@@ -1,4 +1,4 @@
-# Pydoc-Markdown
+# Pydoc-Markdown 📃
 
 ![Python versions](https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge)
 [![Pypi version](https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge)](https://pypi.org/project/pydoc-markdown/)
@@ -9,7 +9,7 @@ Pydoc-Markdown is a tool to create Python API documentation in Markdown format. 
 code like so many other documentation tools, it parses it using [docspec][] instead. To run Pydoc-Markdown, you
 need to use at least Python 3.7.
 
-[>> Go to the Documentation][Documentation]
+[→ Go to the Documentation 📘][Documentation]
 
   [contrib]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md
   [docspec]: https://niklasrosenstein.github.io/docspec/
@@ -18,29 +18,36 @@ need to use at least Python 3.7.
   [Novella]: https://niklasrosenstein.github.io/novella/
   [Novella build backend]: https://niklasrosenstein.github.io/pydoc-markdown/usage/novella/
 
-### Installation
+### Installation 📦
 
-I recommend to install Pydoc-Markdown using Pipx.
+You can install Pydoc-Markdown using Pipx:
+
+    $ pipx install pydoc-markdown
+
+If you plan on using the [Novella][] integration, you may want to install it as:
 
     $ pipx install novella
     $ pipx inject novella pydoc-markdown[novella]
 
-If you need access to the Pydoc-Markdown CLI instead, because you rely on the "old-style" pre-4.6.0
-YAML configuration, you should install the package directly through Pipx.
-
-    $ pipx install pydoc-markdown
-
-> Note: You can also use `pipx install pydoc-markdown[novella] --include-deps`, but be aware that this
-> also adds other programs in Pydoc-Markdown's dependency tree to your PATH.
-
-### Features
+### Features 🌟
 
 * Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly
   formatted Markdown
 * Can parse docstrings for variables thanks to [docspec][] (`#:` block before or string literal after the statement)
 * Generates links to other API objects per the documentation syntax (e.g. `#OtherClass` for the Pydoc-Markdown style)
+* Configure the output using a YAML file or `pyProject.toml`, then you're only one command away to generate the
+  documentation in Markdown format
+* Or use [Novella][] to tightly integrate with static site generators like MkDocs and Hugo with with additional
+  features such as Markdown pre-processing
 
-### News
+### News 📢
+
+#### 4.7.0
+
+Many users prefer the YAML configuration over the using [Novella][], which is why starting with __4.7.0__, the YAML
+style configuration is officially un-deprecated and will continue to be supported.
+
+#### 4.6.0
 
 Starting with __4.6.0__, development focuses on integrating with [Novella][] and use it as a replacement for
 tool-specific renderers thus far provided directly by Pydoc-Markdown (i.e. integrations with MkDocs, Hugo and
