@@ -1,0 +1,8 @@
+[[entries]]
+id = "b3fe8391-64a2-46fb-a7f2-2b0e2202fa13"
+type = "fix"
+description = "Fix codeblocks rendering to maintain indentation as per the original docstring."
+author = "@hippalectryon-0"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/169",
+]
