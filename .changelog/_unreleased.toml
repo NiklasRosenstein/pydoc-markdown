@@ -1,4 +1,14 @@
 [[entries]]
+id = "5be79248-7b86-465d-953c-d0c69ab64e8a"
+type = "improvement"
+description = "Implement support for NumPy-style docstrings"
+author = "celsiusnarhwal"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/279"
+issues = [
+    "https://github.com/celsiusnarhwal/pydoc-markdown/issues/251",
+]
+
+[[entries]]
 id = "4409675c-ea67-4c56-be5a-a7310f779c15"
 type = "improvement"
 description = "Change `PythonLoader.encoding` default value from `None` (system default) to `utf-8`"

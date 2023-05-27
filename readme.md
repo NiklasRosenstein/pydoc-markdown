@@ -31,8 +31,8 @@ If you plan on using the [Novella][] integration, you may want to install it as:
 
 ### Features 🌟
 
-* Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly
-  formatted Markdown
+* Understands multiple documentation styles (Sphinx, Google, NumPy, Pydoc-Markdown specific) and converts them to 
+  properly formatted Markdown
 * Can parse docstrings for variables thanks to [docspec][] (`#:` block before or string literal after the statement)
 * Generates links to other API objects per the documentation syntax (e.g. `#OtherClass` for the Pydoc-Markdown style)
 * Configure the output using a YAML file or `pyProject.toml`, then you're only one command away to generate the
