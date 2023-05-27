@@ -28,13 +28,6 @@ jobs:
     - name: Test
       run: slap test
 
-  changelog-update:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v2
-      - uses: NiklasRosenstein/slap@gha/changelog/update/v1
-
   documentation:
     runs-on: ubuntu-latest
     steps:
@@ -49,33 +42,6 @@ jobs:
       run: slap install --extras docs --no-venv-check
     - name: Build documentation
       run: cd docs && novella --base-url pydoc-markdown/
-    - name: Publish docs
-      uses: JamesIves/github-pages-deploy-action@4.1.4
-      # if: startsWith(github.ref, 'refs/tags/v')
-      with:
-        branch: gh-pages
-        folder: docs/_site
-        ssh-key: ${{ secrets.DEPLOY_KEY }}
-
-  # publish:
-  #   if: startsWith(github.ref, 'refs/tags/v')
-  #   needs: test
-
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Set up Python 3.8
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: 3.8
-  #   - name: Install dependencies
-  #     run: |
-  #       pip install -q shut==0.21.1
-  #   - name: Shut publish
-  #     env:
-  #       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-  #       TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
-  #     run: |
-  #       shut pkg update --verify-tag "$GITHUB_REF"
-  #       shut pkg publish warehouse:pypi --test
-  #       shut pkg publish warehouse:pypi
+    - uses: JamesIves/github-pages-deploy-action@4.1.4
+      if: github.ref == 'refs/heads/develop'
+      with: { branch: gh-pages, folder: docs/_site, ssh-key: "${{ secrets.DEPLOY_KEY }}" }
