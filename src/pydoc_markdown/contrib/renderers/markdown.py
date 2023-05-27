@@ -22,11 +22,9 @@
 from __future__ import annotations
 
 import dataclasses
-
 import io
 import sys
 import typing as t
-
 from pathlib import Path
 
 import docspec
@@ -43,7 +41,6 @@ from pydoc_markdown.interfaces import (
     SourceLinker,
 )
 from pydoc_markdown.util.docspec import ApiSuite, format_function_signature, is_method
-
 from pydoc_markdown.util.misc import escape_except_blockquotes
 
 
@@ -372,7 +369,11 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 fp.write(source_string + "\n\n")
 
         if obj.docstring:
-            docstring = escape_except_blockquotes(obj.docstring.content) if self.escape_html_in_docstring else obj.docstring.content
+            docstring = (
+                escape_except_blockquotes(obj.docstring.content)
+                if self.escape_html_in_docstring
+                else obj.docstring.content
+            )
             lines = docstring.split("\n")
             if self.docstrings_as_blockquote:
                 lines = ["> " + x for x in lines]
