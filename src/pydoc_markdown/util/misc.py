@@ -1,10 +1,12 @@
-"""Misc utils"""
 import html
 import re
 
 
 def escape_except_blockquotes(string: str) -> str:
-    """html-escape a string, except the content in markdown blockquotes"""
+    """
+    Html-escape a string, except the content in markdown blockquotes.
+    """
+
     # Define regex patterns to match blockquotes
     single_quote_pattern = r"`[^`]*`"
     triple_quote_pattern = r"```[\s\S]*?```"

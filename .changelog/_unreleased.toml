@@ -9,3 +9,9 @@ id = "01003f02-89ec-46d5-9809-4cacf51547fa"
 type = "improvement"
 description = "Support parsing all types of docstring formats that are supported by the `docstring_parser` module in `SphinxProcessor`, not just ReST"
 author = "@hippalectryon-0"
+
+[[entries]]
+id = "b2ac1e9f-fcf3-4821-a9dd-5a9e13afd7ba"
+type = "fix"
+description = "No longer HTML-escape text in Markdown code blocks."
+author = "@hippalectryon-0"
