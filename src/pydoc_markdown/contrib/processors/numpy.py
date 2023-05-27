@@ -19,6 +19,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
+from __future__ import annotations
+
 import dataclasses
 import itertools
 import re
@@ -27,14 +29,14 @@ import warnings
 from contextlib import contextmanager
 
 import docspec
-from numpydoc.docscrape import NumpyDocString, Parameter
-from numpydoc.validate import validate
+from numpydoc.docscrape import NumpyDocString, Parameter  # type: ignore[import]
+from numpydoc.validate import validate  # type: ignore[import]
 
 from pydoc_markdown.interfaces import Processor, Resolver
 
 
 @contextmanager
-def _filter_numpydoc_warnings(action: str):
+def _filter_numpydoc_warnings(action: warnings._ActionKind):
     warnings.filterwarnings(action, module="numpydoc.docscrape")
     yield
     warnings.resetwarnings()
@@ -159,9 +161,7 @@ class NumpyProcessor(Processor):
         ]
 
         # Finally, we sort active_sections according to the section order we just determined
-        active_sections = sorted(active_sections.items(), key=lambda x: section_order.index(x[0]))
-
-        for section, keywords in active_sections:
+        for section, keywords in sorted(active_sections.items(), key=lambda x: section_order.index(x[0])):
             lines.extend(self._get_section_contents(docstring, section, keywords))
 
         node.docstring.content = "\n".join(lines)
@@ -217,16 +217,16 @@ class NumpyProcessor(Processor):
 
     @staticmethod
     def _parse_notes_and_references(section: str, contents: list[str]) -> list[str]:
-        contents = "\n".join(contents)
+        content_string = "\n".join(contents)
         citations = re.compile("(\.\. )?\[(?P<ref_id>\w+)][_ ]?")
 
         replacements = {"Notes": "<sup>{ref_id}</sup>", "References": "{ref_id}. "}
 
-        for match in citations.finditer(contents):
+        for match in citations.finditer(content_string):
             ref_id = match.group("ref_id")
-            contents = contents.replace(match.group(0), replacements[section].format(ref_id=ref_id))
+            content_string = content_string.replace(match.group(0), replacements[section].format(ref_id=ref_id))
 
-        return [f"\n**{section}**\n", *contents.splitlines()]
+        return [f"\n**{section}**\n", *content_string.splitlines()]
 
     @staticmethod
     def _parse_examples(contents: list[str]) -> list[str]:

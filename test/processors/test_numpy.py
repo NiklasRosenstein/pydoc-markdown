@@ -1,6 +1,7 @@
 import pytest
 
 from pydoc_markdown.contrib.processors.numpy import NumpyProcessor
+
 from . import assert_processor_result
 
 docstring_a = """
