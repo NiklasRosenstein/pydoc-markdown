@@ -3,6 +3,7 @@ id = "5be79248-7b86-465d-953c-d0c69ab64e8a"
 type = "improvement"
 description = "Implement support for NumPy-style docstrings"
 author = "celsiusnarhwal"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/279"
 issues = [
     "https://github.com/celsiusnarhwal/pydoc-markdown/issues/251",
 ]
