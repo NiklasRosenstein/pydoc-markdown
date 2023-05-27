@@ -73,7 +73,7 @@ class PydocmdProcessor(Processor):
     def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
         docspec.visit(modules, self._process)
 
-    def _process(self, node: docspec.ApiObject):
+    def _process(self, node: docspec.ApiObject) -> None:
         if not node.docstring:
             return
         lines = []
