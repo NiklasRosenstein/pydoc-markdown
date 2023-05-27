@@ -416,7 +416,7 @@ def install_hugo(to: str, version: str | None = None, extended: bool = True) -> 
             shutil.copyfileobj(requests.get(files[filename], stream=True).raw, fp)
         with tarfile.open(path) as archive:
             with open(to, "wb") as fp:
-                shutil.copyfileobj(t.cast(t.IO[bytes], archive.extractfile("hugo")), t.cast(t.IO[bytes], fp))
+                shutil.copyfileobj(t.cast(t.IO[bytes], archive.extractfile("hugo")), t.cast(t.IO[bytes], fp))  # type: ignore[misc]  # See https://github.com/python/mypy/issues/15031  # noqa: E501
 
     chmod.update(to, "+x")
     logger.info('Hugo v%s installed to "%s"', version, to)

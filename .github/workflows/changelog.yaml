@@ -1,0 +1,28 @@
+# This workflow will run on every pull request to the develop branch to do the following:
+#
+# - Insert the Pull Request URL into new changelog entries.
+# - Assert that a new changelog entry has been added in the PR unless a "no changelog" label is added to the PR.
+
+name: "Changelog"
+
+on:
+  pull_request_target: { branches: [ "develop" ] }
+
+jobs:
+  changelog-update:
+    name: "Insert Pull Request URL into new changelog entries"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NiklasRosenstein/slap@gha/changelog/update/v2
+        with: { pr-id: '${{ github.event.pull_request.number }}' }
+
+  assert-new-changelog-entries:
+    name: "At least one new changelog entry must be added"
+    runs-on: ubuntu-latest
+    if: github.base_ref != '' && !contains(github.event.pull_request.labels.*.name, 'no changelog')
+    steps:
+      - uses: actions/checkout@v2
+      - uses: NiklasRosenstein/slap@gha/changelog/assert-added/v2
+        with: { pr-id: '${{ github.event.pull_request.number }}' }
