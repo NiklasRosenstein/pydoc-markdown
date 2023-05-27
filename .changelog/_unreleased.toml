@@ -28,3 +28,9 @@ pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/283"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/169",
 ]
+
+[[entries]]
+id = "c4423f29-5191-4579-b07b-98981799fb44"
+type = "improvement"
+description = "Allow Pyyaml `^6.0` in addition to `^5.0`"
+author = "@NiklasRosenstein"
