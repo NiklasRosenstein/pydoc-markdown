@@ -1,11 +1,5 @@
-@anchor old-style-config
-# Deprecated Configuration
-
-!!! attention
-
-    Using Pydoc-Markdown this way is deprecated since v4.6.0. It is strongly recommended that you
-    use the Novella build backend instead (see {@link getting-started}). This way of using Pydoc-Markdown will
-    likely be removed with the next major version release (5.x).
+@anchor yaml-config
+# YAML Configuration
 
 Pydoc-Markdown can be configured with using via a YAML file. By default, the CLI will look for a file
 called `pydoc-markdown.yaml` (or `.yml`) in the current working directory. (Note that the configuration
@@ -76,7 +70,7 @@ Supports preprocessing features:
   code into the function definition is not supported)
 * Value substitution
 
-Check out the [Read the Docs/Hugo baseURL](readthedocs#hugo-baseurl) documentation for an
+Check out the [Read the Docs/Hugo baseURL](../../examples/hugo/#hugo-baseurl) documentation for an
 example.
 
 ## Loaders
@@ -87,7 +81,7 @@ The key must be a list of loader definitions. Currently there is only the
 
 Example:
 
-```yml
+```yaml
 loaders:
 - type: loadertype1
   key: value
@@ -104,7 +98,7 @@ that order). Many processors do not have any additional options.
 
 Example:
 
-```yml
+```yaml
 processors:
 - type: filter
   documented_only: false
@@ -124,7 +118,7 @@ that they aim to support.
 
 Example:
 
-```yml
+```yaml
 renderer:
   type: mkdocs
   pages:
@@ -138,7 +132,7 @@ renderer:
 
 Example:
 
-```yml
+```yaml
 hooks:
   pre-render:
   - generate-changelog >docs/CHANGELOG.md
@@ -171,28 +165,4 @@ module school._person
 module school._pupil
 | class Pupil
 [ ... ]
-```
-
-## Hugo baseURL
-
-When using Hugo, usually you want to set the `baseURL` configuration so that it can generated
-permalinks properly. If you are building on Read the Docs, chances are that you will have
-multiple versions of the documentation, which all require a different `baseURL`.
-
-Pydoc-Markdown configuration files are pre-processed with a [YTT][]-like templating language.
-
-  [YTT]: https://get-ytt.io/
-
-```yml
-#@ def base_url():
-#@    if env.READTHEDOCS:
-#@      return "https://pydoc-markdown.readthedocs.io/en/" + env.READTHEDOCS_VERSION + "/"
-#@    else:
-#@      return None
-#@ end
-
-renderer:
-  type: hugo
-  config:
-    baseURL: #@ base_url()
 ```

@@ -1,4 +1,4 @@
-# Just generate me some Markdown!
+# CLI and API
 
 If you only want to use Pydoc-Markdown to generate Markdown from Python code, but not use it for anything else
 (such as interfacing with a static site generator), you can of course do that. You can make use of the {@pylink
