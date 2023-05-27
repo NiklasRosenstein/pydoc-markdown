@@ -5,20 +5,23 @@ description = "Create Python API documentation in Markdown format."
 authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
 license = "MIT"
 readme = "readme.md"
-packages = [{include = "pydoc_markdown", from = "src"}]
+packages = [{ include = "pydoc_markdown", from = "src" }]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Intended Audience :: Developers",
-  "Intended Audience :: End Users/Desktop",
-  "Topic :: Software Development :: Code Generators",
-  "Topic :: Utilities",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Utilities",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
 ]
-keywords = [ "documentation", "docs", "generator", "markdown", "pydoc" ]
+keywords = ["documentation", "docs", "generator", "markdown", "pydoc"]
+
+[tool.poetry.urls]
+Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -35,9 +38,6 @@ tomli = "^2.0.0"
 tomli_w = "^1.0.0"
 yapf = ">=0.30.0"
 watchdog = "*"
-
-[tool.poetry.urls]
-Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
