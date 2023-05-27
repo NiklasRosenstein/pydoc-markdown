@@ -41,6 +41,7 @@ id = "71954726-75bc-4000-bfff-c7c2a47cebc6"
 type = "improvement"
 description = "Undeprecated YAML-based configuration for Pydoc-Markdown."
 author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/288"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/286",
 ]
