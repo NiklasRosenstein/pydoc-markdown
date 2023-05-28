@@ -898,16 +898,19 @@ are available <a href="https://niklasrosenstein.github.io/novella/components/tem
 </code></pre></div>
 <p>What is happening here?</p>
 <ol>
-<li>
-<p>The <code>mkdocs</code> pipeline template is applied. The <code>content_directory</code> is the directory that contains your MkDocs
+<li>The <code>mkdocs</code> pipeline template is applied. The <code>content_directory</code> is the directory that contains your MkDocs
    source files. It will be copied to the temporary build location alongside the <code>mkdocs.yml</code> file. Note that your
-   <code>build.novella</code> script should sit next two these files.</p>
-</li>
-<li>
-<p>The <code>preprocess-markdown</code> action that is one of the actions created by the template is retrieved and configured
+   <code>build.novella</code> script should sit next two these files.</li>
+</ol>
+<blockquote>
+<p>Note: You should have <code>mkdocs</code> on your <code>PATH</code> and it should have the <code>mkdocs-material</code> theme installed (the
+default theme that Novella will apply if you don't specify a different one in your <code>mkdocs.yml</code> file or in
+<code>build.novella</code>).</p>
+</blockquote>
+<ol>
+<li>The <code>preprocess-markdown</code> action that is one of the actions created by the template is retrieved and configured
    further. We instruct it to make use of the <code>"pydoc"</code> plugin, which is implemented by Pydoc-Markdown and provides
-   the <code>@pydoc</code> and <code>{@link pydoc:}</code> tags.</p>
-</li>
+   the <code>@pydoc</code> and <code>{@link pydoc:}</code> tags.</li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
