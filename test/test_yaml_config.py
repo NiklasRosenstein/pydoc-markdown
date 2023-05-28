@@ -5,6 +5,7 @@ Test loding the YAML configuration format for Pydoc Markdown.
 from pytest import raises
 
 from pydoc_markdown import PydocMarkdown
+from pydoc_markdown.contrib.renderers.hugo import HugoConfig, HugoRenderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 
 
@@ -59,3 +60,30 @@ def test__PydocMarkdown__load_config__cannot_deserialize_markdown_config_from_ba
                 },
             }
         )
+
+
+def test__PydocMarkdown__load_config__can_deserialize_hugo_with_remainder_values() -> None:
+    pydoc_markdown = PydocMarkdown()
+    pydoc_markdown.load_config(
+        {
+            "renderer": {
+                "type": "hugo",
+                "config": {
+                    "title": "My Docs",
+                    "theme": "antarctica",
+                    "foo": "bar",
+                },
+            },
+        }
+    )
+    assert pydoc_markdown == PydocMarkdown(
+        renderer=HugoRenderer(
+            config=HugoConfig(
+                title="My Docs",
+                theme="antarctica",
+                additional_options={
+                    "foo": "bar",
+                },
+            )
+        )
+    )
