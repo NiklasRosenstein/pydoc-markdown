@@ -4,7 +4,7 @@ version = "4.8.0"
 description = "Create Python API documentation in Markdown format."
 authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
 license = "MIT"
-readme = "readme.md"
+readme = "README.md"
 packages = [{ include = "pydoc_markdown", from = "src" }]
 classifiers = [
     "Development Status :: 3 - Alpha",

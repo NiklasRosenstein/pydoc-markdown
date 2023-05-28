@@ -85,5 +85,7 @@ Feel free to open a topic on [GitHub Discussions](https://github.com/NiklasRosen
 An incomplete list of projects that use Pydoc-Markdown to generate their API documentation. Feel free to open a
 pull request to add your project to this list!
 
+* [CosmPy](https://docs.fetch.ai/CosmPy/)
+* [haystack by deepset](https://docs.haystack.deepset.ai/reference/agent-api)
 * [tensorchord/envd](https://envd.tensorchord.ai/api/starlark/v0/config.html)
 * [tqdm](https://tqdm.github.io/)
