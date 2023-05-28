@@ -38,6 +38,9 @@ If you plan on using the [Novella][] integration, you may want to install it as:
     $ pipx install novella
     $ pipx inject novella pydoc-markdown[novella]
 
+You need at least Python 3.7 to run Pydoc-Markdown. The Python version compatibility of the package you are looking to
+generate documentation for is irrelevant.
+
 ### Features 🌟
 
 * Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly
