@@ -24,8 +24,8 @@ import os
 import typing as t
 from pathlib import Path
 
-import databind.core.dataclasses as dataclasses
 import docspec
+from databind.core import dataclasses
 from nr.util.git import Git, NoCurrentBranchError
 
 from pydoc_markdown.interfaces import Context, SourceLinker

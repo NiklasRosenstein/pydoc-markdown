@@ -38,7 +38,7 @@ from pathlib import Path
 
 import click
 import yaml
-from databind.core.schema import convert_dataclass_to_schema
+from databind.core import convert_dataclass_to_schema
 from docspec import dump_module
 from typeapi import ClassTypeHint
 

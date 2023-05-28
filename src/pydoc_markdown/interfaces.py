@@ -30,7 +30,7 @@ import subprocess
 import typing as t
 
 import docspec
-from databind.core.settings import Union
+from databind.core import Union
 
 if t.TYPE_CHECKING:
     from pydoc_markdown.util.docspec import ApiSuite

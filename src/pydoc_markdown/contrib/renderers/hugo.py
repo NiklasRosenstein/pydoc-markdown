@@ -40,7 +40,7 @@ import requests
 import tomli_w
 import typing_extensions as te
 import yaml
-from databind.core.settings import Remainder
+from databind.core import Remainder
 from nr.util.fs import chmod
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
