@@ -2,6 +2,8 @@
 Test loding the YAML configuration format for Pydoc Markdown.
 """
 
+from textwrap import dedent
+
 from pytest import raises
 
 from pydoc_markdown import PydocMarkdown
@@ -111,3 +113,23 @@ def test__PydocMarkdown__load_config__can_deserialize_docusaurus_renderer() -> N
     )
     assert isinstance(pydoc_markdown.renderer, DocusaurusRenderer)
     assert isinstance(pydoc_markdown.renderer.markdown, CustomizedMarkdownRenderer)
+
+
+def test__PydocMarkdown__load_config__catch_unknown_keys() -> None:
+    pydoc_markdown = PydocMarkdown()
+    pydoc_markdown.load_config(
+        {
+            "renderfoo": {},
+            "renderer": {
+                "type": "markdown",
+                "idontexist": None,
+            },
+        }
+    )
+    assert pydoc_markdown.unknown_fields == [
+        "Unknown key(s) \"{'idontexist'}\" at:\n"
+        "  $: TypeHint(pydoc_markdown.PydocMarkdown)\n"
+        "  .renderer: TypeHint(pydoc_markdown.interfaces.Renderer)\n"
+        "  ^: TypeHint(pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer)",
+        "Unknown key(s) \"{'renderfoo'}\" at:\n  $: TypeHint(pydoc_markdown.PydocMarkdown)",
+    ]
