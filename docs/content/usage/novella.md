@@ -40,6 +40,10 @@ What is happening here?
    source files. It will be copied to the temporary build location alongside the `mkdocs.yml` file. Note that your
    `build.novella` script should sit next two these files.
 
+   > Note: You should have `mkdocs` on your `PATH` and it should have the `mkdocs-material` theme installed (the
+   > default theme that Novella will apply if you don't specify a different one in your `mkdocs.yml` file or in
+   > `build.novella`).
+
 2. The `preprocess-markdown` action that is one of the actions created by the template is retrieved and configured
    further. We instruct it to make use of the `"pydoc"` plugin, which is implemented by Pydoc-Markdown and provides
    the `@pydoc` and `{@pylink}` tags.

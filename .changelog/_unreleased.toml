@@ -45,3 +45,12 @@ pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/288"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/286",
 ]
+
+[[entries]]
+id = "4e48b4c1-06bc-43e2-a848-870a6fa31ae3"
+type = "docs"
+description = "Update docs to inform user that `mkdocs` with `mkdocs-material` must be installed in Novella Usage guide."
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/270",
+]
