@@ -18,6 +18,17 @@ need to use at least Python 3.7.
   [Novella]: https://niklasrosenstein.github.io/novella/
   [Novella build backend]: https://niklasrosenstein.github.io/pydoc-markdown/usage/novella/
 
+__Table of Contents__
+
+* [Installation 📦](#installation-)
+* [Features 🌟](#features-)
+* [News 📢](#news-)
+  * [4.7.0 (Undeprecating YAML configuration)](#470-undeprecating-yaml-configuration)
+  * [4.6.0 (Novella integration)](#460-novella-integration)
+* [Contributing to Pydoc-Markdown 🤝](#contributing-to-pydoc-markdown-)
+* [Questions / Need help? 🤔](#questions--need-help-)
+* [Projects using Pydoc-Markdown 📚](#projects-using-pydoc-markdown-)
+
 ### Installation 📦
 
 You can install Pydoc-Markdown using Pipx:
@@ -61,10 +72,18 @@ The old style of using Pydoc-Markdown with a YAML or PyProject configuration to 
 build is now deprecated but will be maintained for the foreseeable future (at least until the next major version
 bump). It is strongly recommended to migrate your existing projects to using the Novella build backend.
 
-### Contributing to Pydoc-Markdown
+### Contributing to Pydoc-Markdown 🤝
 
 All contributions are welcome! Check out the [Contribution Guidelines][contrib].
 
-### Questions / Need help?
+### Questions / Need help? 🤔
 
 Feel free to open a topic on [GitHub Discussions](https://github.com/NiklasRosenstein/pydoc-markdown/discussions)!
+
+### Projects using Pydoc-Markdown 📚
+
+An incomplete list of projects that use Pydoc-Markdown to generate their API documentation. Feel free to open a
+pull request to add your project to this list!
+
+* [tensorchord/envd](https://envd.tensorchord.ai/api/starlark/v0/config.html)
+* [tqdm](https://tqdm.github.io/)
