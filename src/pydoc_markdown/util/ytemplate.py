@@ -58,7 +58,6 @@ def load(
     yaml_code = []
     it = iter(file_)
     for line in it:
-
         # Parse Python code blocks.
         if line.startswith("#@"):
             block_lines = [line[2:]]

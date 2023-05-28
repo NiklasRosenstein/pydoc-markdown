@@ -38,8 +38,9 @@ from pathlib import Path
 
 import click
 import yaml
-from databind.core import ConcreteType, dataclass_to_schema
+from databind.core import convert_dataclass_to_schema
 from docspec import dump_module
+from typeapi import ClassTypeHint
 
 from pydoc_markdown import PydocMarkdown, __version__, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
@@ -95,9 +96,9 @@ class RenderSession:
 
         if self.render_toc is not None:
             # Find the #MarkdownRenderer field for this renderer.
-            for field in dataclass_to_schema(type(config.renderer)).fields.values():
-                if isinstance(field.type, ConcreteType) and field.type.type == MarkdownRenderer:
-                    markdown: MarkdownRenderer = getattr(config.renderer, field.name)
+            for field_name, field in convert_dataclass_to_schema(type(config.renderer)).fields.items():
+                if isinstance(field.datatype, ClassTypeHint) and field.datatype.type == MarkdownRenderer:
+                    markdown: MarkdownRenderer = getattr(config.renderer, field_name)
                     break
             else:
                 if isinstance(config.renderer, MarkdownRenderer):

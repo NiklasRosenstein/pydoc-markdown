@@ -1,0 +1,6 @@
+[[entries]]
+id = "668aa0e8-7c8c-47d7-a77f-2503f922b107"
+type = "improvement"
+description = "Upgrade from Databind `^1.5.0` to ^4.3.0`. This should not have any impact on the average Pydoc-Markdown user, however there may be some changes necessary for users that have been using the Pydoc-Markdown API beacuse of the changes to Databind between v1 and v4. However, these users should have pinned the major version of databind they're relying on, so this change is not considered breaking for Pydoc-Markdown."
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/289"

@@ -27,10 +27,10 @@ import subprocess
 import typing as t
 from typing import Dict, List, Optional
 
-import databind.core.annotations as A
 import docspec
 import typing_extensions as te
 import yaml
+from databind.core import DeserializeAs
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Builder, Context, Renderer, Resolver, Server
@@ -90,8 +90,7 @@ class MkdocsRenderer(Renderer, Server, Builder):
     pages: Pages[Page] = dataclasses.field(default_factory=Pages)
 
     #: Markdown renderer settings.
-    # TODO (@NiklasRosenstein): Use fieldinfo(serialize_as)
-    markdown: te.Annotated[MarkdownRenderer, A.typeinfo(deserialize_as=CustomizedMarkdownRenderer)] = dataclasses.field(
+    markdown: te.Annotated[MarkdownRenderer, DeserializeAs(CustomizedMarkdownRenderer)] = dataclasses.field(
         default_factory=CustomizedMarkdownRenderer
     )
 

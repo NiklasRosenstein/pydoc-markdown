@@ -40,7 +40,6 @@ class Args(t.Dict[str, t.Any]):
 
 @D.dataclass
 class RenderBlock:
-
     #: The path to the Jinja2 template that is used to render the output files.
     template: str
 
@@ -53,7 +52,6 @@ class RenderBlock:
 
 @D.dataclass
 class Jinja2Renderer(Renderer):
-
     #: Render instructions.
     renders: t.List[RenderBlock]
 

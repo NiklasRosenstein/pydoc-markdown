@@ -31,10 +31,10 @@ import subprocess
 import typing as t
 from pathlib import Path
 
-import databind.core.annotations as A
 import databind.json
 import docspec
 import tomli
+from databind.core import Context as DatabindContext, ExtraKeys, Location, format_context_trace
 
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
@@ -80,7 +80,7 @@ class PydocMarkdown:
     hooks: Hooks = dataclasses.field(default_factory=Hooks)
 
     # Hidden fields are filled at a later point in time and are not (de-) serialized.
-    unknown_fields: t.List[str] = dataclasses.field(default_factory=list)
+    unknown_fields: t.List[str] = dataclasses.field(default_factory=list, init=False)
 
     def __post_init__(self) -> None:
         self.resolver: t.Optional[Resolver] = None
@@ -109,13 +109,23 @@ class PydocMarkdown:
         else:
             data = arg
 
-        unknown_keys = A.collect_unknowns()
-        result = databind.json.new_mapper().deserialize(data, type(self), filename=filename, settings=[unknown_keys()])  # type: ignore[arg-type]  # noqa: E501  # Bad databind typehint
+        unknown_keys: t.List[t.Tuple[DatabindContext, t.Set[str]]] = []
+        result = databind.json.load(
+            data,
+            type(self),
+            filename=filename,
+            settings=[
+                ExtraKeys(
+                    allow=True,
+                    recorder=lambda ctx, extra_keys: unknown_keys.append((ctx, extra_keys)),
+                )
+            ],
+        )  # type: ignore[arg-type]  # noqa: E501  # Bad databind typehint
         vars(self).update(vars(result))
 
-        for loc, keys in unknown_keys:
-            for key in keys:
-                self.unknown_fields.append(str(loc.push_unknown(key).format()))
+        for ctx, keys in unknown_keys:
+            prefix = f'Unknown key(s) "{keys}" at:\n'
+            self.unknown_fields.append(prefix + format_context_trace(ctx))
 
     def init(self, context: Context) -> None:
         """
