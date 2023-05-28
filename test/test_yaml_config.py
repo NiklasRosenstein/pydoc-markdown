@@ -5,6 +5,7 @@ Test loding the YAML configuration format for Pydoc Markdown.
 from pytest import raises
 
 from pydoc_markdown import PydocMarkdown
+from pydoc_markdown.contrib.renderers.docusaurus import CustomizedMarkdownRenderer, DocusaurusRenderer
 from pydoc_markdown.contrib.renderers.hugo import HugoConfig, HugoRenderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 
@@ -84,6 +85,29 @@ def test__PydocMarkdown__load_config__can_deserialize_hugo_with_remainder_values
                 additional_options={
                     "foo": "bar",
                 },
+            ),
+        )
+    )
+
+
+def test__PydocMarkdown__load_config__can_deserialize_docusaurus_renderer() -> None:
+    pydoc_markdown = PydocMarkdown()
+    pydoc_markdown.load_config(
+        {
+            "renderer": {
+                "type": "docusaurus",
+                "markdown": {
+                    "encoding": "foobar",
+                },
+            },
+        }
+    )
+    assert pydoc_markdown == PydocMarkdown(
+        renderer=DocusaurusRenderer(
+            markdown=CustomizedMarkdownRenderer(
+                encoding="foobar",
             )
         )
     )
+    assert isinstance(pydoc_markdown.renderer, DocusaurusRenderer)
+    assert isinstance(pydoc_markdown.renderer.markdown, CustomizedMarkdownRenderer)

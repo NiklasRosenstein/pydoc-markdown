@@ -28,7 +28,9 @@ import typing as t
 from typing import Dict, List, Optional
 
 import docspec
+import typing_extensions as te
 import yaml
+from databind.core import DeserializeAs
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Builder, Context, Renderer, Resolver, Server
@@ -88,12 +90,9 @@ class MkdocsRenderer(Renderer, Server, Builder):
     pages: Pages[Page] = dataclasses.field(default_factory=Pages)
 
     #: Markdown renderer settings.
-    # TODO(@NiklasRosenstein): Should add a "deserialize_as" feature to databind 4.x. See
-    #       https://github.com/NiklasRosenstein/python-databind/issues/46
-    markdown: CustomizedMarkdownRenderer = dataclasses.field(default_factory=CustomizedMarkdownRenderer)
-    # markdown: te.Annotated[MarkdownRenderer, DeserializeAs(CustomizedMarkdownRenderer)] = dataclasses.field(
-    #     default_factory=CustomizedMarkdownRenderer
-    # )
+    markdown: te.Annotated[MarkdownRenderer, DeserializeAs(CustomizedMarkdownRenderer)] = dataclasses.field(
+        default_factory=CustomizedMarkdownRenderer
+    )
 
     #: The name of the site. This will be carried into the `site_name` key
     #: of the #mkdocs_config.
