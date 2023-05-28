@@ -24,3 +24,5 @@ Enumeration to identify possible pet types.
 #### CAT
 
 #### MOUSE
+
+Mice are rare.
