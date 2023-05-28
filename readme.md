@@ -4,8 +4,7 @@
 [![Pypi version](https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge)](https://pypi.org/project/pydoc-markdown/)
 
 Pydoc-Markdown is a tool to create Python API documentation in Markdown format. Instead of executing your Python
-code like so many other documentation tools, it parses it using [docspec][] instead. To run Pydoc-Markdown, you
-need to use at least Python 3.7.
+code like so many other documentation tools, it parses it using [docspec][] instead.
 
 [→ Go to the Documentation 📘][Documentation]
 
