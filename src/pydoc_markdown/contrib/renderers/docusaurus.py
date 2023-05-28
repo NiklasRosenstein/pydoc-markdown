@@ -7,9 +7,7 @@ import os
 import typing as t
 from pathlib import Path
 
-import databind.core.annotations as A
 import docspec
-import typing_extensions as te
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Renderer
@@ -49,9 +47,12 @@ class DocusaurusRenderer(Renderer):
     """
 
     #: The #MarkdownRenderer configuration.
-    markdown: te.Annotated[MarkdownRenderer, A.typeinfo(deserialize_as=CustomizedMarkdownRenderer)] = dataclasses.field(
-        default_factory=CustomizedMarkdownRenderer
-    )
+    # TODO(@NiklasRosenstein): Should add a "deserialize_as" feature to databind 4.x. See
+    #       https://github.com/NiklasRosenstein/python-databind/issues/46
+    markdown: CustomizedMarkdownRenderer = dataclasses.field(default_factory=CustomizedMarkdownRenderer)
+    # markdown: te.Annotated[MarkdownRenderer, DeserializeAs(CustomizedMarkdownRenderer)] = dataclasses.field(
+    #     default_factory=CustomizedMarkdownRenderer
+    # )
 
     #: The path where the docusaurus docs content is. Defaults "docs" folder.
     docs_base_path: str = "docs"

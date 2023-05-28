@@ -125,7 +125,6 @@ class BaseGitSourceLinker(SourceLinker):
 
 @dataclasses.dataclass
 class BaseGitServiceSourceLinker(BaseGitSourceLinker):
-
     #: The repository name, formatted as `owner/repo`.
     repo: str
 

@@ -35,12 +35,12 @@ import tempfile
 import typing as t
 from urllib.parse import urljoin, urlparse
 
-import databind.core.annotations as A
 import docspec
 import requests
 import tomli_w
 import typing_extensions as te
 import yaml
+from databind.core.settings import Remainder
 from nr.util.fs import chmod
 
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
@@ -155,9 +155,8 @@ class HugoConfig:
     #: This field collects all remaining options that do not match any of the above
     #: and will be forwarded directly into the Hugo `config.yaml` when it is rendered
     #: into the build directory.
-    additional_options: te.Annotated[t.Dict[str, t.Any], A.fieldinfo(flat=True)] = dataclasses.field(
-        default_factory=dict
-    )
+    # TODO(@NiklasRosenstein): Test if this still works as expected.
+    additional_options: te.Annotated[t.Dict[str, t.Any], Remainder()] = dataclasses.field(default_factory=dict)
 
     def to_toml(self, fp: t.TextIO) -> None:
         data = self.additional_options.copy()

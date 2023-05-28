@@ -31,10 +31,11 @@ import subprocess
 import typing as t
 from pathlib import Path
 
-import databind.core.annotations as A
 import databind.json
 import docspec
 import tomli
+from databind.core.context import Location
+from databind.core.settings import ExtraKeys
 
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
@@ -109,13 +110,24 @@ class PydocMarkdown:
         else:
             data = arg
 
-        unknown_keys = A.collect_unknowns()
-        result = databind.json.new_mapper().deserialize(data, type(self), filename=filename, settings=[unknown_keys()])  # type: ignore[arg-type]  # noqa: E501  # Bad databind typehint
+        unknown_keys: t.List[t.Tuple[Location, t.Set[str]]] = []
+        result = databind.json.load(
+            data,
+            type(self),
+            filename=filename,
+            settings=[
+                ExtraKeys(
+                    allow=True,
+                    recorder=lambda ctx, extra_keys: unknown_keys.append((ctx.location, extra_keys)),
+                )
+            ],
+        )  # type: ignore[arg-type]  # noqa: E501  # Bad databind typehint
         vars(self).update(vars(result))
 
         for loc, keys in unknown_keys:
             for key in keys:
-                self.unknown_fields.append(str(loc.push_unknown(key).format()))
+                # TODO(@NiklasRosenstein): Nicely format unknown fields.
+                self.unknown_fields.append(str(loc))
 
     def init(self, context: Context) -> None:
         """

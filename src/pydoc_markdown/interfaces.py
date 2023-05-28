@@ -30,7 +30,7 @@ import subprocess
 import typing as t
 
 import docspec
-from databind.core import annotations as A
+from databind.core.settings import Union
 
 if t.TYPE_CHECKING:
     from pydoc_markdown.util.docspec import ApiSuite
@@ -50,11 +50,13 @@ class PluginBase(abc.ABC):
         pass
 
 
-@A.unionclass(
-    A.unionclass.Subtypes.chain(
-        A.unionclass.Subtypes.entrypoint("pydoc_markdown.interfaces.Loader"), A.unionclass.Subtypes.import_()
-    ),
-    style=A.unionclass.Style.flat,
+# TODO(@NiklasRosenstein): Test that this works as expected.
+@Union(
+    [
+        "!pydoc_markdown.interfaces.Loader",
+        "<import>",
+    ],
+    style=Union.FLAT,
 )
 class Loader(PluginBase):
     """
@@ -93,11 +95,13 @@ class ResolverV2(abc.ABC):
         ...
 
 
-@A.unionclass(
-    A.unionclass.Subtypes.chain(
-        A.unionclass.Subtypes.entrypoint("pydoc_markdown.interfaces.Processor"), A.unionclass.Subtypes.import_()
-    ),
-    style=A.unionclass.Style.flat,
+# TODO(@NiklasRosenstein): Test that this works as expected.
+@Union(
+    [
+        "!pydoc_markdown.interfaces.Processor",
+        "<import>",
+    ],
+    style=Union.FLAT,
 )
 class Processor(PluginBase):
     """
@@ -111,11 +115,13 @@ class Processor(PluginBase):
         ...
 
 
-@A.unionclass(
-    A.unionclass.Subtypes.chain(
-        A.unionclass.Subtypes.entrypoint("pydoc_markdown.interfaces.Renderer"), A.unionclass.Subtypes.import_()
-    ),
-    style=A.unionclass.Style.flat,
+# TODO(@NiklasRosenstein): Test that this works as expected.
+@Union(
+    [
+        "!pydoc_markdown.interfaces.Renderer",
+        "<import>",
+    ],
+    style=Union.FLAT,
 )
 class Renderer(PluginBase):
     """
@@ -204,11 +210,13 @@ class Builder(abc.ABC):
         """
 
 
-@A.unionclass(
-    A.unionclass.Subtypes.chain(
-        A.unionclass.Subtypes.entrypoint("pydoc_markdown.interfaces.SourceLinker"), A.unionclass.Subtypes.import_()
-    ),
-    style=A.unionclass.Style.flat,
+# TODO(@NiklasRosenstein): Test that this works as expected.
+@Union(
+    [
+        "!pydoc_markdown.interfaces.SourceLinker",
+        "<import>",
+    ],
+    style=Union.FLAT,
 )
 class SourceLinker(PluginBase):
     """

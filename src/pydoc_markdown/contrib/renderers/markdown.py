@@ -495,7 +495,6 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
 
 @dataclasses.dataclass
 class MarkdownReferenceResolver(Resolver, ResolverV2):
-
     local: bool = True
     global_: bool = False
 
