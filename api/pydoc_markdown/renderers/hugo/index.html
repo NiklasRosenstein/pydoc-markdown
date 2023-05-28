@@ -713,13 +713,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#additional_options" class="md-nav__link">
-    additional_options
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1097,13 +1090,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#additional_options" class="md-nav__link">
-    additional_options
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1293,19 +1279,13 @@ theme: docs/hugo-theme/
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoConfig.languageCode"></a></p>
 <h4 id="languagecode">languageCode</h4>
 <p>Language code. Default: <code>en-us</code></p>
-<p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.additional_options"></a></p>
-<p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoConfig.additional_options"></a></p>
-<h4 id="additional_options">additional_options</h4>
-<p>This field collects all remaining options that do not match any of the above
-and will be forwarded directly into the Hugo <code>config.yaml</code> when it is rendered
-into the build directory.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer"></a></p>
 <h2 id="class-hugorenderer">Class HugoRenderer</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">HugoRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">Builder</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L186">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L185">[view_source]</a></p>
 <p>A renderer that produces Markdown files compatible with <a href="https://gohugo.io/">Hugo</a>. The <code>--bootstrap hugo</code>
 option can be used to create a Pydoc-Markdown configuration file with the Hugo template.</p>
 <ul>
@@ -1356,7 +1336,7 @@ render pass. Defaults to <code>True</code>.</p>
 <h4 id="default_preamble">default_preamble</h4>
 <p>The default Hugo preamble that is applied to every page. Example:</p>
 <div class="highlight"><pre><span></span><code>default_preamble:
-menu: main
+  menu: main
 </code></pre></div>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.markdown"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer.markdown"></a></p>
@@ -1374,9 +1354,9 @@ into a <a href="#pydoc:pydoc_markdown.contrib.renderers.hugo.HugoConfig">HugoCon
 <p>Options for when the Hugo binary is not present and should be downloaded
 automatically. Example:</p>
 <div class="highlight"><pre><span></span><code>get_hugo:
-enabled: true
-version: &#39;0.71&#39;
-extended: true
+  enabled: true
+  version: &#39;0.71&#39;
+  extended: true
 </code></pre></div>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.install_hugo"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.install_hugo"></a></p>
@@ -1385,7 +1365,7 @@ extended: true
                  <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">extended</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L360">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L359">[view_source]</a></p>
 <p>Downloads the latest release of <em>Hugo</em> from <a href="https://github.com/gohugoio/hugo/releases">Github</a></p>
 <p>and places it at the path specified by <em>to</em>. This will install the extended version if it is
 available and <em>extended</em> is set to <code>True</code>.</p>
@@ -1400,14 +1380,14 @@ available and <em>extended</em> is set to <code>True</code>.</p>
 <h4 id="get_github_releases">get_github_releases</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_github_releases</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Generator</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L425">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L424">[view_source]</a></p>
 <p>Returns an iterator for all releases of a Github repository.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.parse_links_header"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.parse_links_header"></a></p>
 <h4 id="parse_links_header">parse_links_header</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">parse_links_header</span><span class="p">(</span><span class="n">link_header</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L440">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L439">[view_source]</a></p>
 <p>Parses the <code>Link</code> HTTP header and returns a map of the links. Logic from
 <a href="https://github.com/eclipse/egit-github/blob/master/org.eclipse.egit.github.core/src/org/eclipse/egit/github/core/client/PageLinks.java#L43-75">PageLinks.java</a>.</p>
 
