@@ -32,6 +32,9 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
         "---\n" "sidebar_label: {relative_module_name}\n" "title: {module_name}\n" "---\n\n"
     )
 
+    add_module_prefix: bool = False
+    use_fixed_header_levels: bool = False
+
 
 @dataclasses.dataclass
 class NextraRenderer(Renderer):

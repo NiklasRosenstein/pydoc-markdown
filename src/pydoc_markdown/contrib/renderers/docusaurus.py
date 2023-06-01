@@ -122,7 +122,6 @@ class DocusaurusRenderer(Renderer):
             "label": self.sidebar_top_level_label,
         }
         self._build_sidebar_tree(sidebar, module_tree)
-        breakpoint()
         if sidebar.get("items"):
             if self.sidebar_top_level_module_label:
                 sidebar["items"][0]["label"] = self.sidebar_top_level_module_label

@@ -16,7 +16,7 @@ If you want to talk about a potential contribution before investing any time, pl
 
 ## Changelog entries
 
-Pydoc-Markdown uses [Slap][] to manage changelogs. You should use the Slam CLI to add a new changelog entry, otherwise
+Pydoc-Markdown uses [Slap][] to manage changelogs. You should use the Slap CLI to add a new changelog entry, otherwise
 you need to manually generate a UUID-4.
 
     $ slap changelog add -t <type> -d <changelog message> [--issue <issue_url>]
