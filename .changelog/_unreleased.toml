@@ -1,0 +1,6 @@
+[[entries]]
+id = "6d05354a-85c8-4761-9924-e420aa0bdccf"
+type = "improvement"
+description = "Improve error message when no Pydoc Markdown configuration is found"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/293"
