@@ -105,7 +105,13 @@ class PydocMarkdown:
             else:
                 data = ytemplate.load(filename, {"env": ytemplate.Attributor(os.environ)})
             if filename == "pyproject.toml":
-                data = data["tool"]["pydoc-markdown"]
+                try:
+                    data = data["tool"]["pydoc-markdown"]
+                except KeyError:
+                    raise RuntimeError(
+                        "Could not find configuration in pyproject.toml. Make sure you have a [tool.pydoc-markdown] "
+                        "section, or create a pydoc-markdown.yaml file."
+                    )
         else:
             data = arg
 
