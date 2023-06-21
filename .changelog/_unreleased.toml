@@ -13,3 +13,12 @@ author = "@NiklasRosenstein"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/292",
 ]
+
+[[entries]]
+id = "ea0fdbdb-6467-482b-ac97-0dd313b5f05d"
+type = "fix"
+description = "Fix `NoMatchingConverter` for `TypeHint(typing.List[~T_Page])` by making the `Page` type a concrete subclass of the old `Page` class now called `GenericPage`. This is needed to correctly define a recursive type that Databind can de/serialize. The `Page` type stays backwards compatible at runtime for cases when it is used as a generic (e.g. `class MyPage(Page[MyPage]):`) to not break existing code."
+author = "@NiklasRosenstein"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/291",
+]
