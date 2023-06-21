@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydoc-markdown"
-version = "4.8.0"
+version = "4.8.1"
 description = "Create Python API documentation in Markdown format."
 authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
 license = "MIT"
