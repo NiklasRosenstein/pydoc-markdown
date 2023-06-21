@@ -10,4 +10,7 @@ def test__Pages__is_still_subscriptable_for_backwards_compatibility() -> None:
     [#291]: https://github.com/NiklasRosenstein/pydoc-markdown/issues/291
     """
 
-    assert Page[int] == GenericPage[int]
+    class CustomPage(Page["CustomPage"]):  # type: ignore[type-arg]
+        pass
+
+    assert Page[CustomPage] == GenericPage[CustomPage]  # type: ignore[misc]

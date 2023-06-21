@@ -40,7 +40,7 @@ import docspec
 
 from pydoc_markdown.interfaces import SinglePageRenderer
 
-T_Page = t.TypeVar("T_Page", bound="Page")
+T_Page = t.TypeVar("T_Page", bound="GenericPage")
 logger = logging.getLogger(__name__)
 
 
@@ -175,7 +175,7 @@ class GenericPage(t.Generic[T_Page]):
                 src_path = os.path.join(context_directory, self.source)
                 logger.info('Writing "%s" (source: "%s")', filename, src_path)
                 with open(src_path, "rb") as src:
-                    shutil.copyfileobj(src, fp.buffer)
+                    shutil.copyfileobj(src, fp.buffer)  # type: ignore[misc]  # Fixed in https://github.com/python/mypy/pull/14975  # noqa: E501
             else:
                 logger.info('Rendering "%s"', filename)
                 renderer.render_single_page(fp, self.filtered_modules(modules), self.title)
@@ -188,4 +188,4 @@ class Page(GenericPage["Page"]):
         was still called #Page.
         """
 
-        return GenericPage[item]
+        return GenericPage[item]  # type: ignore[valid-type,return-value]
