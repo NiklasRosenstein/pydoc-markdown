@@ -50,7 +50,6 @@ class PluginBase(abc.ABC):
         pass
 
 
-# TODO(@NiklasRosenstein): Test that this works as expected.
 @Union(
     [
         "!pydoc_markdown.interfaces.Loader",
@@ -95,7 +94,6 @@ class ResolverV2(abc.ABC):
         ...
 
 
-# TODO(@NiklasRosenstein): Test that this works as expected.
 @Union(
     [
         "!pydoc_markdown.interfaces.Processor",
@@ -115,7 +113,6 @@ class Processor(PluginBase):
         ...
 
 
-# TODO(@NiklasRosenstein): Test that this works as expected.
 @Union(
     [
         "!pydoc_markdown.interfaces.Renderer",
@@ -210,7 +207,6 @@ class Builder(abc.ABC):
         """
 
 
-# TODO(@NiklasRosenstein): Test that this works as expected.
 @Union(
     [
         "!pydoc_markdown.interfaces.SourceLinker",
