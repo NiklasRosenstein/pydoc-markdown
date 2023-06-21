@@ -1,10 +1,10 @@
 from databind.json import load
 
-from pydoc_markdown.contrib.renderers.mkdocs import MkdocsRenderer
+from pydoc_markdown.contrib.renderers.hugo import HugoPage, HugoRenderer
 from pydoc_markdown.util.pages import Page
 
 
-def test_deserialize_mkdocs_renderer() -> None:
+def test_deserialize_hugo_renderer() -> None:
     payload = {
         "pages": [
             {
@@ -21,15 +21,15 @@ def test_deserialize_mkdocs_renderer() -> None:
             }
         ]
     }
-    renderer = load(payload, MkdocsRenderer)
-    assert renderer == MkdocsRenderer(
+    renderer = load(payload, HugoRenderer)
+    assert renderer == HugoRenderer(
         pages=[
-            Page(
+            HugoPage(
                 title="Home",
                 name="index",
                 source="README.md",
                 children=[
-                    Page(
+                    HugoPage(
                         title="Child",
                         name="child",
                         source="child.md",

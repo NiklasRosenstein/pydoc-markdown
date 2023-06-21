@@ -22,3 +22,9 @@ author = "@NiklasRosenstein"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/291",
 ]
+
+[[entries]]
+id = "e8de4099-d322-4e0c-a3c8-f77191aa4b6b"
+type = "tests"
+description = "Add unit tests to deserialize Mkdocs and Hugo example configuration."
+author = "@NiklasRosenstein"
