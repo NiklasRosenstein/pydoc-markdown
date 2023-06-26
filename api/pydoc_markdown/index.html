@@ -15,7 +15,7 @@
         <link rel="next" href="interfaces/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.16">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.17">
     
     
       
@@ -851,7 +851,7 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span> <span class="nc">PydocMarkdown</span><span class="p">()</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L60">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L61">[view_source]</a></p>
 <p>This object represents the main configuration for Pydoc-Markdown.</p>
 <p><a id="pydoc_markdown.PydocMarkdown.loaders"></a></p>
 <p><a id="pydoc:pydoc_markdown.PydocMarkdown.loaders"></a></p>
@@ -877,7 +877,7 @@ are executed with the current <code>SHELL</code>.</p>
 <h4 id="load_config">load_config</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L89">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L90">[view_source]</a></p>
 <p>Loads the configuration from a nested data structure or filename as specified per the <em>data</em></p>
 <p>argument. If a filename is specified, it may be a JSON, YAML or TOML file. If the name of the
 TOML file is <code>pyproject.yoml</code>, the configuration will be read from the <code>[tool.pydoc-markdown]</code>
@@ -891,7 +891,7 @@ section.</p>
 <h4 id="init">init</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L136">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L137">[view_source]</a></p>
 <p>Initialize all plugins with the specified <em>context</em>. Cannot be called multiple times.
 If omitted, the plugins will be initialized with a default context before the load,
 process or render phase.</p>
@@ -900,21 +900,21 @@ process or render phase.</p>
 <h4 id="load_modules">load_modules</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">load_modules</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L157">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L158">[view_source]</a></p>
 <p>Loads modules via the <a href="#pydoc:pydoc_markdown.PydocMarkdown.loaders">loaders</a>.</p>
 <p><a id="pydoc_markdown.PydocMarkdown.process"></a></p>
 <p><a id="pydoc:pydoc_markdown.PydocMarkdown.process"></a></p>
 <h4 id="process">process</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L169">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L170">[view_source]</a></p>
 <p>Process modules via the <a href="#pydoc:pydoc_markdown.PydocMarkdown.processors">processors</a>.</p>
 <p><a id="pydoc_markdown.PydocMarkdown.render"></a></p>
 <p><a id="pydoc:pydoc_markdown.PydocMarkdown.render"></a></p>
 <h4 id="render">render</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span> <span class="n">run_hooks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L180">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/src/pydoc_markdown/__init__.py#L181">[view_source]</a></p>
 <p>Render modules via the <a href="#pydoc:pydoc_markdown.PydocMarkdown.renderer">renderer</a>.</p>
 
 
@@ -961,7 +961,7 @@ process or render phase.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.indexes", "navigation.instant", "navigation.sections", "navigation.tracking", "navigation.top", "toc.follow", "navigation.sections"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a51614de.min.js"></script>
+      <script src="../../assets/javascripts/bundle.b425cdc4.min.js"></script>
       
     
   </body>
