@@ -29,12 +29,12 @@ import logging
 import os
 import subprocess
 import typing as t
-import typing_extensions as te
 from pathlib import Path
 
 import databind.json
 import docspec
 import tomli
+import typing_extensions as te
 from databind.core import Alias, Context as DatabindContext, ExtraKeys, format_context_trace
 
 from pydoc_markdown.contrib.loaders.python import PythonLoader
