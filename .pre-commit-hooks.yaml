@@ -6,5 +6,6 @@
   entry: pydoc-markdown
   language: python
   language_version: python3
+  pass_filenames: false
   types_or: [python, pyi]
   require_serial: true
