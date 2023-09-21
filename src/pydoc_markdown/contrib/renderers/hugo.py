@@ -46,7 +46,7 @@ from nr.util.fs import chmod
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Builder, Context, Renderer, Resolver, Server
 from pydoc_markdown.util.knownfiles import KnownFiles
-from pydoc_markdown.util.pages import Page, Pages
+from pydoc_markdown.util.pages import GenericPage, Page, Pages
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class GetHugo:
 
 
 @dataclasses.dataclass
-class HugoPage(Page["HugoPage"]):
+class HugoPage(GenericPage["HugoPage"]):
     """
     A subclass of #Page which adds Hugo-specific overrides.
 

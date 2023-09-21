@@ -1,0 +1,11 @@
+release-date = "2023-06-26"
+
+[[entries]]
+id = "e7dfe5ac-5b5d-41fe-9b6c-433c5045ec89"
+type = "fix"
+description = "Fix key aliases for `pre-render` and `post-render` keys in `Hooks` configuration"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/295"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/291",
+]

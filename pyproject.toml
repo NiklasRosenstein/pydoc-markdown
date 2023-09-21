@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydoc-markdown"
-version = "4.8.0"
+version = "4.8.2"
 description = "Create Python API documentation in Markdown format."
 authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
 license = "MIT"
@@ -26,8 +26,8 @@ Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
 [tool.poetry.dependencies]
 python = "^3.8"
 click = ">=7.1,<9.0"
-"databind.core" = "^4.3.0"
-"databind.json" = "^4.3.0"
+"databind.core" = "^4.4.0"
+"databind.json" = "^4.4.0"
 docspec = "^2.2.1"
 docspec-python = "^2.2.1"
 docstring-parser = "^0.11"
@@ -110,7 +110,7 @@ tag-format = "v{version}"
 dev-extras = []
 
 [tool.slap.test]
-pytest = "pytest test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov -vv"
+pytest = "pytest src/ test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov -vv"
 mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_markdown/novella"
 isort = "isort src test --check-only"
 black = "black src test --check"

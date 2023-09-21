@@ -1,0 +1,35 @@
+release-date = "2023-06-21"
+
+[[entries]]
+id = "6d05354a-85c8-4761-9924-e420aa0bdccf"
+type = "improvement"
+description = "Improve error message when no Pydoc Markdown configuration is found"
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/293"
+
+[[entries]]
+id = "483b7c50-c4be-47a5-b17c-e844c666ab29"
+type = "fix"
+description = "Upgrade to Databind `^4.4.0` which fixes the \"`ForwardRef` cannot be parameterized\" error."
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/294"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/292",
+]
+
+[[entries]]
+id = "ea0fdbdb-6467-482b-ac97-0dd313b5f05d"
+type = "fix"
+description = "Fix `NoMatchingConverter` for `TypeHint(typing.List[~T_Page])` by making the `Page` type a concrete subclass of the old `Page` class now called `GenericPage`. This is needed to correctly define a recursive type that Databind can de/serialize. The `Page` type stays backwards compatible at runtime for cases when it is used as a generic (e.g. `class MyPage(Page[MyPage]):`) to not break existing code."
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/294"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/291",
+]
+
+[[entries]]
+id = "e8de4099-d322-4e0c-a3c8-f77191aa4b6b"
+type = "tests"
+description = "Add unit tests to deserialize Mkdocs and Hugo example configuration."
+author = "@NiklasRosenstein"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/294"

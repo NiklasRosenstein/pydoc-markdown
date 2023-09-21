@@ -1,0 +1,11 @@
+- id: pydoc-markdown
+  name: pydoc-markdown
+  description: >-
+    Run pydoc-markdown. Use a configuration file
+    or command line arguments to get a custom behavior.
+  entry: pydoc-markdown
+  language: python
+  language_version: python3
+  pass_filenames: false
+  types_or: [python, pyi]
+  require_serial: true

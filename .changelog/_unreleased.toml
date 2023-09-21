@@ -1,5 +1,7 @@
 [[entries]]
-id = "95961813-2008-4677-836b-4bc3b30d38b5"
-type = "improvement"
-description = "Adds Nextra support"
-author = "ian.k.eaves@gmail.com"
+id = "8b34930f-7112-4ecc-b18e-deb740ca42ac"
+type = "feature"
+description = "Add a pre-commit hook for pydoc-markdown."
+author = "@RomainTT"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/298"
+

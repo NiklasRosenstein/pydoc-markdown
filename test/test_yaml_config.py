@@ -6,7 +6,7 @@ from textwrap import dedent
 
 from pytest import raises
 
-from pydoc_markdown import PydocMarkdown
+from pydoc_markdown import Hooks, PydocMarkdown
 from pydoc_markdown.contrib.renderers.docusaurus import CustomizedMarkdownRenderer, DocusaurusRenderer
 from pydoc_markdown.contrib.renderers.hugo import HugoConfig, HugoRenderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
@@ -133,3 +133,17 @@ def test__PydocMarkdown__load_config__catch_unknown_keys() -> None:
         "  ^: TypeHint(pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer)",
         "Unknown key(s) \"{'renderfoo'}\" at:\n  $: TypeHint(pydoc_markdown.PydocMarkdown)",
     ]
+
+
+def test__PydocMarkdown__load_config__can_deserialize_pre_post_render_hooks() -> None:
+    pydoc_markdown = PydocMarkdown()
+    pydoc_markdown.load_config(
+        {
+            "hooks": {
+                "pre-render": ["echo foo"],
+                "post-render": ["echo bar"],
+            }
+        }
+    )
+
+    assert pydoc_markdown.hooks == Hooks(["echo foo"], ["echo bar"])

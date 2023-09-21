@@ -34,7 +34,8 @@ from pathlib import Path
 import databind.json
 import docspec
 import tomli
-from databind.core import Context as DatabindContext, ExtraKeys, Location, format_context_trace
+import typing_extensions as te
+from databind.core import Alias, Context as DatabindContext, ExtraKeys, format_context_trace
 
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
@@ -45,15 +46,15 @@ from pydoc_markdown.interfaces import Builder, Context, Loader, Processor, Rende
 from pydoc_markdown.util import ytemplate
 
 __author__ = "Niklas Rosenstein <rosensteinniklas@gmail.com>"
-__version__ = "4.8.0"
+__version__ = "4.8.2"
 
 logger = logging.getLogger(__name__)
 
 
 @dataclasses.dataclass
 class Hooks:
-    pre_render: t.List[str] = dataclasses.field(default_factory=list, metadata={"alias": "pre-render"})
-    post_render: t.List[str] = dataclasses.field(default_factory=list, metadata={"alias": "post-render"})
+    pre_render: te.Annotated[t.List[str], Alias("pre-render")] = dataclasses.field(default_factory=list)
+    post_render: te.Annotated[t.List[str], Alias("post-render")] = dataclasses.field(default_factory=list)
 
 
 @dataclasses.dataclass
@@ -105,7 +106,13 @@ class PydocMarkdown:
             else:
                 data = ytemplate.load(filename, {"env": ytemplate.Attributor(os.environ)})
             if filename == "pyproject.toml":
-                data = data["tool"]["pydoc-markdown"]
+                try:
+                    data = data["tool"]["pydoc-markdown"]
+                except KeyError:
+                    raise RuntimeError(
+                        "Could not find configuration in pyproject.toml. Make sure you have a [tool.pydoc-markdown] "
+                        "section, or create a pydoc-markdown.yaml file."
+                    )
         else:
             data = arg
 
