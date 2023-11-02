@@ -4,3 +4,9 @@ type = "feature"
 description = "Add a pre-commit hook for pydoc-markdown."
 author = "@RomainTT"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/298"
+
+[[entries]]
+id = "cdd3b4c8-9aa6-4f06-b2ca-1a06274810d7"
+type = "docs"
+description = "fix typo in docs index"
+author = "samueltan3972@gmail.com"
