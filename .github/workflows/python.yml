@@ -18,6 +18,7 @@ jobs:
       matrix:
         python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.x" ]
     steps:
+    - uses: actions/checkout@v2
     - uses: ./.github/actions/install
       with:
         python_version: ${{ matrix.python-version }}

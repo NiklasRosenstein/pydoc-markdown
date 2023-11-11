@@ -6,7 +6,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
     - uses: NiklasRosenstein/slap@gha/install/v1
     - name: Set up Python ${inputs.python_version}
       uses: actions/setup-python@v2
