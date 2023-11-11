@@ -4,3 +4,9 @@ type = "feature"
 description = "Add a pre-commit hook for pydoc-markdown."
 author = "@RomainTT"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/298"
+
+[[entries]]
+id = "cbec74c9-4d3f-4c65-9d57-73d024ce17fa"
+type = "improvement"
+description = "Bump minimum version of `databind.core` and `databind.json` to `^4.4.2` to ensure Python 3.12 support"
+author = "@NiklasRosenstein"
