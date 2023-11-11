@@ -1,0 +1,12 @@
+loaders:
+  - type: python
+    search_path: [../src]
+processors:
+  - type: filter
+    skip_empty_modules: true
+  - type: smart
+  - type: crossref
+renderer:
+  type: nextra
+  docs_base_path: docs
+  relative_output_path: pages

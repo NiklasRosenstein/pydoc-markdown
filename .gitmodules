@@ -1,0 +1,3 @@
+[submodule "examples/nextra/docs"]
+	path = examples/nextra/docs
+	url = https://github.com/shuding/nextra-docs-template
