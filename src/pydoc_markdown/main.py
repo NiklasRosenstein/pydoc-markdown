@@ -330,7 +330,7 @@ def cli(
                 "mkdocs": static.DEFAULT_MKDOCS_CONFIG,
                 "hugo": static.DEFAULT_HUGO_CONFIG,
                 "docusaurus": static.DEFAULT_DOCUSAURUS_CONFIG,
-                "nextra": static.DEFAULT_NEXTRA_CONFIG
+                "nextra": static.DEFAULT_NEXTRA_CONFIG,
             }
             with open(filename, "w") as fp:
                 fp.write(source[bootstrap])

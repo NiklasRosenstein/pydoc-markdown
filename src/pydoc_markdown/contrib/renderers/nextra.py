@@ -106,4 +106,3 @@ class NextraRenderer(Renderer):
 
             # only update the relative module tree if the file is not empty
             relative_module_tree["edges"].append(os.path.splitext(str(filepath.relative_to(self.docs_base_path)))[0])
-
