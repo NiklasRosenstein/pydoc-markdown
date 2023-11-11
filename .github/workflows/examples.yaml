@@ -1,0 +1,14 @@
+name: Examples
+
+on:
+  push:
+    branches: [ "develop" ]
+    tags: [ "*" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/install
