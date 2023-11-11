@@ -12,3 +12,4 @@ runs:
       with: { python-version: "${inputs.python_version}" }
     - name: Install
       run: slap install --no-venv-check
+      shell: bash
