@@ -195,7 +195,7 @@ def error(*args) -> t.NoReturn:
 @click.version_option(__version__)
 @click.option(
     "--bootstrap",
-    type=click.Choice(["base", "mkdocs", "hugo", "readthedocs", "docusaurus"]),
+    type=click.Choice(["base", "mkdocs", "hugo", "readthedocs", "docusaurus", "nextra"]),
     help="Create a Pydoc-Markdown configuration file in the current working directory.",
 )
 @click.option("--verbose", "-v", count=True, help="Increase log verbosity.")
