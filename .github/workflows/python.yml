@@ -19,12 +19,9 @@ jobs:
         python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.x" ]
     steps:
     - uses: actions/checkout@v2
-    - uses: NiklasRosenstein/slap@gha/install/v1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with: { python-version: "${{ matrix.python-version }}" }
-    - name: Install
-      run: slap install --no-venv-check
+    - uses: ./.github/actions/install
+      with:
+        python_version: ${{ matrix.python-version }}
     - name: Test
       run: slap test
 

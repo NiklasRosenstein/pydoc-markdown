@@ -1,0 +1,42 @@
+name: Examples
+
+on:
+  push:
+    branches: [ "develop" ]
+    tags: [ "*" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  docusaurs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install
+      - run: cd examples/docusaurus && pydoc-markdown
+      - run: cd examples/docusaurus/docusaurus-example && npm install && npm run build
+        with:
+          name: docosaurus-site
+          path: docusaurus-example/build/site
+
+  mkdocs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install
+      - run: pipx install mkdocs
+      - run: cd examples/mkdocs && pydoc-markdown --build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: mkdocs-site
+          path: build/docs/site
+
+  hugo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install
+      - run: cd examples/hugo && pydoc-markdown --build
+        with:
+          name: hugo-site
+          path: build/docs/site
