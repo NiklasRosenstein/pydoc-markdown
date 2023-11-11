@@ -7,9 +7,9 @@ runs:
   using: "composite"
   steps:
     - uses: NiklasRosenstein/slap@gha/install/v1
-    - name: Set up Python ${inputs.python_version}
+    - name: Set up Python ${{inputs.python_version}}
       uses: actions/setup-python@v2
-      with: { python-version: ${inputs.python_version} }
+      with: { python-version: "${{inputs.python_version}}" }
     - name: Install
       run: slap install --no-venv-check
       shell: bash
