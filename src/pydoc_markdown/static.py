@@ -84,6 +84,7 @@ renderer:
           contents: [ my_project, my_project.* ]
 """.lstrip()
 
+#: Default configuration for Docusaurus to use Pydoc-Markdown.
 DEFAULT_DOCUSAURUS_CONFIG = """
 loaders:
   - type: python
@@ -98,6 +99,21 @@ renderer:
   relative_output_path: reference
   relative_sidebar_path: sidebar.json
   sidebar_top_level_label: 'Reference'
+""".lstrip()
+
+#: Default configuration for Nextra to use Pydoc-Markdown.
+DEFAULT_NEXTRA_CONFIG = """
+loaders:
+  - type: python
+processors:
+  - type: filter
+    skip_empty_modules: true
+  - type: smart
+  - type: crossref
+renderer:
+  type: nextra
+  docs_base_path: docs
+  relative_output_path: pages
 """.lstrip()
 
 

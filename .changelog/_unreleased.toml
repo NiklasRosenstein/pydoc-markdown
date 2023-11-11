@@ -4,3 +4,4 @@ type = "feature"
 description = "Add a pre-commit hook for pydoc-markdown."
 author = "@RomainTT"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/298"
+
