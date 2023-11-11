@@ -8,8 +8,28 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  test:
+  docusaurs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/install
+      - run: cd examples/docusaurus && pydoc-markdown
+      - run: cd examples/docusaurus/docusaurus-example && npm install && npm run build
+
+  mkdocs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install
+      - run: pipx install mkdocs
+      - run: cd examples/mkdocs && pydoc-markdown
+      - run: cd examples/mkdocs/build/docs && mkdocs build
+
+  hugo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install
+      - run: curl https://github.com/gohugoio/hugo/releases/download/v0.120.4/hugo_0.120.4_linux-amd64.tar.gz -L | tar -C /usr/local/bin -xz hugo
+      - run: cd examples/hugo && pydoc-markdown
+      - run: cd examples/hugo/build/docs && hugo build
