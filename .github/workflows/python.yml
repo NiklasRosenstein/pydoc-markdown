@@ -42,6 +42,6 @@ jobs:
       run: slap install --extras docs --no-venv-check
     - name: Build documentation
       run: cd docs && novella --base-url pydoc-markdown/
-    - uses: JamesIves/github-pages-deploy-action@4.1.4
+    - uses: JamesIves/github-pages-deploy-action@v4.5.0
       if: github.ref == 'refs/heads/develop'
       with: { branch: gh-pages, folder: docs/_site, ssh-key: "${{ secrets.DEPLOY_KEY }}" }
