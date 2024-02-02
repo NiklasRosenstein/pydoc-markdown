@@ -3,6 +3,9 @@
 ![Python versions](https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge)
 [![Pypi version](https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge)](https://pypi.org/project/pydoc-markdown/)
 
+> __Disclaimer__: I don't find enough time to properly maintain and develop this project. If you want to generate
+> docstrings for your Python project with MkDocs, consider [mkdocstrings](https://mkdocstrings.github.io/) instead.
+
 Pydoc-Markdown is a tool to create Python API documentation in Markdown format. Instead of executing your Python
 code like so many other documentation tools, it parses it using [docspec][] instead.
 
