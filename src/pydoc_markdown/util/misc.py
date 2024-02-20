@@ -16,13 +16,13 @@ def escape_except_blockquotes(string: str) -> str:
 
     # Replace all blockquotes with placeholder tokens to preserve their contents
     for i, match in enumerate(blockquote_matches):
-        string = string.replace(match, f"BLOCKQUOTE_TOKEN_{i}")
+        string = string.replace(match, f"BLOCKQUOTE_TOKEN_{i}_END")
 
     # Escape the remaining string
     escaped_string = html.escape(string)
 
     # Replace the placeholder tokens with their original contents
     for i, match in enumerate(blockquote_matches):
-        escaped_string = escaped_string.replace(f"BLOCKQUOTE_TOKEN_{i}", match)
+        escaped_string = escaped_string.replace(f"BLOCKQUOTE_TOKEN_{i}_END", match)
 
     return escaped_string
