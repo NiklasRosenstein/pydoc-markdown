@@ -89,6 +89,6 @@ An incomplete list of projects that use Pydoc-Markdown to generate their API doc
 pull request to add your project to this list!
 
 * [CosmPy](https://docs.fetch.ai/CosmPy/)
-* [haystack by deepset](https://docs.haystack.deepset.ai/reference/agent-api)
+* [haystack by deepset](https://docs.haystack.deepset.ai/)
 * [tensorchord/envd](https://envd.tensorchord.ai/api/starlark/v0/config.html)
 * [tqdm](https://tqdm.github.io/)
