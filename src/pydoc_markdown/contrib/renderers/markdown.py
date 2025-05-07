@@ -41,7 +41,7 @@ from pydoc_markdown.interfaces import (
     SourceLinker,
 )
 from pydoc_markdown.util.docspec import ApiSuite, format_function_signature, is_method
-from pydoc_markdown.util.misc import escape_except_blockquotes
+from pydoc_markdown.util.misc import escape_except_blockquotes, escape_curly_brackets
 
 
 def dotted_name(obj: docspec.ApiObject) -> str:
@@ -212,6 +212,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     #: Escape html in docstring. Default to False.
     escape_html_in_docstring: bool = False
 
+    #: Escape { and } in docstring. Default to False.
+    escape_curly_braces_in_docstring: bool = False
+
     #: Render Novella `@anchor` tags before headings.
     render_novella_anchors: bool = False
 
@@ -374,6 +377,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 if self.escape_html_in_docstring
                 else obj.docstring.content
             )
+            if self.escape_curly_braces_in_docstring:
+                docstring = escape_curly_brackets(docstring)
             lines = docstring.split("\n")
             if self.docstrings_as_blockquote:
                 lines = ["> " + x for x in lines]

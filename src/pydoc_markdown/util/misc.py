@@ -26,3 +26,10 @@ def escape_except_blockquotes(string: str) -> str:
         escaped_string = escaped_string.replace(f"BLOCKQUOTE_TOKEN_{i}_END", match)
 
     return escaped_string
+
+def escape_curly_brackets(string: str) -> str:
+    """
+    Escape curly brackets in a string.
+    """
+
+    return string.replace("{", "\\{").replace("}", "\\}")
