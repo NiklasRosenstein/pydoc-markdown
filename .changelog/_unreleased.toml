@@ -25,3 +25,9 @@ type = "fix"
 description = "Fix `escape_except_blockquotes` option for greater than 9 blockquotes in a docstring"
 author = "@jackgerrits"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/317"
+
+[[entries]]
+id = "01971878-9eb9-72a3-9bfd-d972c111930f"
+type = "docs"
+description = "Fix links to docspec"
+author = "@rafalkrupinski"
