@@ -7,7 +7,7 @@
 > docstrings for your Python project with MkDocs, consider [mkdocstrings](https://mkdocstrings.github.io/) instead.
 
 Pydoc-Markdown is a tool to create Python API documentation in Markdown format. Instead of executing your Python
-code like so many other documentation tools, it parses it using [docspec][https://niklasrosenstein.github.io/python-docspec/] instead.
+code like so many other documentation tools, it parses it using [docspec](https://niklasrosenstein.github.io/python-docspec/) instead.
 
 [→ Go to the Documentation 📘][Documentation]
 
