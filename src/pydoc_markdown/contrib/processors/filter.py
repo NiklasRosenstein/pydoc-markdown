@@ -79,17 +79,18 @@ class FilterProcessor(Processor):
         members = getattr(obj, "members", [])
 
         def _check():
-            if members:
+            if self.do_not_filter_modules and isinstance(obj, docspec.Module):
                 return True
             if self.skip_empty_modules and isinstance(obj, docspec.Module) and not members:
                 return False
-            if self.do_not_filter_modules and isinstance(obj, docspec.Module):
-                return True
-            if self.documented_only and not obj.docstring:
-                return False
             if self.exclude_private and obj.name.startswith("_") and not obj.name.endswith("_"):
                 return False
+            if members:
+                return True
             if self.exclude_special and obj.name in self.SPECIAL_MEMBERS:
+                return False
+            # Positioning this here will allow classes with no docstrings to be included
+            if self.documented_only and not obj.docstring:
                 return False
             return True
 
