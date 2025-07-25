@@ -127,6 +127,9 @@ class PythonLoader(Loader):
                     elif isinstance(item, docspec_python.DiscoveryResult.Package):
                         packages.append(item.name)
 
+        modules.sort()
+        packages.sort()
+
         logger.info(
             "Load Python modules (search_path: %r, modules: %r, packages: %r, discover: %s)",
             search_path,
