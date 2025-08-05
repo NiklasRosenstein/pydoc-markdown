@@ -32,3 +32,9 @@ type = "docs"
 description = "Fix links to docspec"
 author = "@rafalkrupinski"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/337"
+
+[[entries]]
+id = "bdae0469-fd87-40be-aaae-7a9c08c074da"
+type = "improvement"
+description = "Sort within the Markdown renderer"
+author = "usmfi@student.kit.edu"
