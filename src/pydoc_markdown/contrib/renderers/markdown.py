@@ -195,6 +195,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         }
     )
 
+    #: Sort the members of API objects by name
+    sort_alphabetically: bool = True
+
     #: A plugin that implements the #SourceLinker interface to provide links to the
     #: source code of API objects. If this field is specified, the renderer will
     #: place links to the source code in the generated Markdown files.
@@ -243,7 +246,12 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             title = title.split(".")[-1]
         fp.write("  " * level + "* [{}](#{})\n".format(title, object_id))
         level += 1
-        for child in getattr(obj, "members", []):
+
+        members = getattr(obj, "members", [])
+        if self.sort_alphabetically:
+            members = sorted(members, key=lambda m: m.name.lower())
+
+        for child in members:
             self._render_toc(fp, level, child)
 
     def _render_header(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
@@ -383,7 +391,12 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     def _render_recursive(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
         self._render_object(fp, level, obj)
         level += 1
-        for member in getattr(obj, "members", []):
+
+        members = getattr(obj, "members", [])
+        if self.sort_alphabetically:
+            members = sorted(members, key=lambda m: m.name.lower())
+
+        for member in members:
             self._render_recursive(fp, level, member)
 
     def _get_title(self, obj: docspec.ApiObject) -> str:
@@ -450,6 +463,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         if self.render_page_title:
             fp.write("# {}\n\n".format(page_title))
 
+        # Sort modules alphabetically by name for consistent ordering
+        if self.sort_alphabetically:
+            modules = sorted(modules, key=lambda m: m.name.lower())
+
         if self.render_toc:
             if self.render_toc_title:
                 if self.render_page_title:
@@ -458,8 +475,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 else:
                     fp.write("# {}\n\n".format(self.render_toc_title))
 
-            for m in modules:
-                self._render_toc(fp, 0, m)
+                for m in modules:
+                    self._render_toc(fp, 0, m)
             fp.write("\n")
         for m in modules:
             self._render_recursive(fp, 1, m)
