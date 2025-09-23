@@ -29,7 +29,25 @@ def escape_except_blockquotes(string: str) -> str:
 
 def escape_curly_brackets(string: str) -> str:
     """
-    Escape curly brackets in a string.
+    Escape curly brackets in a string, except those inside code blocks or inline code.
     """
 
-    return string.replace("{", "\\{").replace("}", "\\}")
+    # Define regex patterns to match code blocks and inline code
+    single_quote_pattern = r"`[^`]*`"
+    triple_quote_pattern = r"```[\s\S]*?```"
+
+    # Find all code blocks and inline code in the string
+    code_matches = re.findall(f"({triple_quote_pattern}|{single_quote_pattern})", string)
+
+    # Replace all code blocks/inline code with placeholder tokens to preserve their contents
+    for i, match in enumerate(code_matches):
+        string = string.replace(match, f"CODE_TOKEN_{i}_END")
+
+    # Escape curly brackets in the remaining string
+    escaped_string = string.replace("{", "\\{").replace("}", "\\}")
+
+    # Replace the placeholder tokens with their original contents
+    for i, match in enumerate(code_matches):
+        escaped_string = escaped_string.replace(f"CODE_TOKEN_{i}_END", match)
+
+    return escaped_string
