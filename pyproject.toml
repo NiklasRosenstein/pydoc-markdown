@@ -47,7 +47,7 @@ mypy = "*"
 types-deprecated = "*"
 types-requests = "*"
 types-PyYAML = "*"
-isort = "^5.10.1"
+isort = "^8.0.0"
 black = "*"
 
 [tool.poetry.group.novella]
