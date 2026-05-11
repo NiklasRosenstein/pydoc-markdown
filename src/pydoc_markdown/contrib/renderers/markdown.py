@@ -350,6 +350,73 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         fp.write(code)
         fp.write("\n```\n\n")
 
+    def _uniquify_markdown_references(self, docstring: str, obj: docspec.ApiObject) -> str:
+        """
+        Uniquify Markdown reference-style link IDs in docstrings to prevent conflicts.
+
+        Searches for reference-style links like [text][id] and their definitions [id]: url,
+        and renames IDs by prefixing them with the object name to ensure global uniqueness.
+
+        Args:
+            docstring: The docstring content
+            obj: The API object whose docstring this is
+
+        Returns:
+            The docstring with uniquified reference IDs
+        """
+        import re
+
+        # Pattern for reference-style links: [text][id]
+        link_pattern = re.compile(r'\[([^\]]+)\]\[([^\]]+)\]')
+        # Pattern for reference definitions: [id]: url
+        def_pattern = re.compile(r'^\[([^\]]+)\]:\s+(.+)$', re.MULTILINE)
+
+        # Find all reference IDs used in this docstring
+        ref_ids = set()
+        for match in link_pattern.finditer(docstring):
+            ref_id = match.group(2)
+            if ref_id:
+                ref_ids.add(ref_id)
+
+        # Find all reference definitions
+        ref_defs = {}
+        for match in def_pattern.finditer(docstring):
+            ref_id = match.group(1)
+            if ref_id in ref_ids:
+                ref_defs[ref_id] = match.group(2)
+
+        # If no references found, return unchanged
+        if not ref_ids or not ref_defs:
+            return docstring
+
+        # Create a mapping from old ID to new ID
+        # Prefix with object name to ensure global uniqueness
+        obj_name = obj.name
+        id_mapping = {}
+        for ref_id in ref_ids:
+            if ref_id in ref_defs:
+                new_id = f"{obj_name}-{ref_id}"
+                id_mapping[ref_id] = new_id
+
+        # Apply the mapping to the docstring
+        result = docstring
+        for old_id, new_id in id_mapping.items():
+            # Replace reference uses: [text][old_id]
+            result = re.sub(
+                r'\[([^\]]+)\]\[' + re.escape(old_id) + r'\]',
+                r'[\1][' + new_id + ']',
+                result
+            )
+            # Replace reference definitions: [old_id]: url
+            result = re.sub(
+                r'^\[' + re.escape(old_id) + r'\]:',
+                '[' + new_id + ']:',
+                result,
+                flags=re.MULTILINE
+            )
+
+        return result
+
     def _render_object(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
         if not isinstance(obj, docspec.Module) or self.render_module_header:
             self._render_header(fp, level, obj)
@@ -374,6 +441,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 if self.escape_html_in_docstring
                 else obj.docstring.content
             )
+            # Uniquify markdown references to prevent conflicts
+            docstring = self._uniquify_markdown_references(docstring, obj)
             lines = docstring.split("\n")
             if self.docstrings_as_blockquote:
                 lines = ["> " + x for x in lines]
