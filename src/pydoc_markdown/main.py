@@ -37,6 +37,7 @@ import webbrowser
 from pathlib import Path
 
 import click
+import tomli
 import yaml
 from databind.core import convert_dataclass_to_schema
 from docspec import dump_module
@@ -321,9 +322,15 @@ def cli(
                 print("created", filename)
 
         else:
-            existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
-            if existing_file:
-                error("file already exists: {!r}".format(existing_file))
+            for existing_file in config_filenames:
+                if os.path.isfile(existing_file):
+                    if existing_file == "pyproject.toml":
+                        with open(existing_file, "rb") as fp:
+                            data = tomli.load(fp)
+                        if "tool" in data and "pydoc-markdown" in data["tool"]:
+                            error("file already exists: {!r} (contains [tool.pydoc-markdown])".format(existing_file))
+                        continue
+                    error("file already exists: {!r}".format(existing_file))
             filename = config_filenames[0]
             source = {
                 "base": static.DEFAULT_CONFIG,
