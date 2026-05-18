@@ -32,3 +32,10 @@ type = "docs"
 description = "Fix links to docspec"
 author = "@rafalkrupinski"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/337"
+
+[[entries]]
+id = "61726e1f-3d36-4277-abc0-6923d6a7b0c1"
+type = "fix"
+description = "Uniquify Markdown reference-style link IDs across API objects to prevent collisions when multiple objects use the same numeric reference (e.g., `[text][0]`)"
+author = "@kimjune01"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/352"
