@@ -123,10 +123,10 @@ renderer uses it to format code in generated documentation.
   the Ruff migration lands, so repository guidance continues to match the
   commands available on each branch.
 
-Status: implemented and independently reviewed on `codex/ruff-tooling`; awaiting
-PR approval and merge. Ruff lint/format checks, Python 3.8 compilation, and all
-73 tests pass. The four existing mypy errors on Python 3.14 remain scoped to PR
-1B.
+Status: implemented and independently reviewed in
+[#354](https://github.com/NiklasRosenstein/pydoc-markdown/pull/354); awaiting PR
+approval and merge. Ruff lint/format checks, Python 3.8 compilation, and all 73
+tests pass. The four existing mypy errors on Python 3.14 remain scoped to PR 1B.
 
 ### PR 1B: Restore the compatibility baseline
 
