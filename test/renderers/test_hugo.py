@@ -1,7 +1,6 @@
 from databind.json import load
 
 from pydoc_markdown.contrib.renderers.hugo import HugoPage, HugoRenderer
-from pydoc_markdown.util.pages import Page
 
 
 def test_deserialize_hugo_renderer() -> None:

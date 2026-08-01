@@ -28,9 +28,7 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
     escape_html_in_docstring: bool = True
 
     #: Conforms to Docusaurus header format.
-    render_module_header_template: str = (
-        "---\n" "sidebar_label: {relative_module_name}\n" "title: {module_name}\n" "---\n\n"
-    )
+    render_module_header_template: str = "---\nsidebar_label: {relative_module_name}\ntitle: {module_name}\n---\n\n"
 
 
 @dataclasses.dataclass

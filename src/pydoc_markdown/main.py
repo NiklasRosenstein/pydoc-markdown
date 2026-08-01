@@ -82,7 +82,7 @@ class RenderSession:
 
         # Update configuration per command-line options.
         if self.modules or self.packages or self.search_path or self.py2 is not None:
-            loader = next((l for l in config.loaders if isinstance(l, PythonLoader)), None)
+            loader = next((item for item in config.loaders if isinstance(item, PythonLoader)), None)
             if not loader:
                 error("no python loader found")
             if self.modules:

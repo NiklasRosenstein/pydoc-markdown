@@ -19,7 +19,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-""" Utils for Pydoc-Markdown using the Watchdog library. """
+"""Utils for Pydoc-Markdown using the Watchdog library."""
 
 import logging
 import os

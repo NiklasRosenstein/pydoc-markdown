@@ -103,7 +103,7 @@ class BaseGitSourceLinker(SourceLinker):
         else:
             project_root = git.get_toplevel()
             if not project_root:
-                raise RuntimeError(f'Path "%s" is not in a Git repository', context.directory)
+                raise RuntimeError('Path "%s" is not in a Git repository', context.directory)
             self._project_root = project_root
 
         self._sha = git.rev_parse("HEAD")

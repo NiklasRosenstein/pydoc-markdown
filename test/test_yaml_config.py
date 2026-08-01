@@ -2,8 +2,6 @@
 Test loding the YAML configuration format for Pydoc Markdown.
 """
 
-from textwrap import dedent
-
 from pytest import raises
 
 from pydoc_markdown import Hooks, PydocMarkdown

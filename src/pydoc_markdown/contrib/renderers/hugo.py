@@ -46,7 +46,7 @@ from nr.util.fs import chmod
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Builder, Context, Renderer, Resolver, Server
 from pydoc_markdown.util.knownfiles import KnownFiles
-from pydoc_markdown.util.pages import GenericPage, Page, Pages
+from pydoc_markdown.util.pages import GenericPage, Pages
 
 logger = logging.getLogger(__name__)
 
@@ -78,12 +78,10 @@ class HugoPage(GenericPage["HugoPage"]):
 
 class HugoTheme(abc.ABC):
     @abc.abstractproperty
-    def name(self) -> str:
-        ...
+    def name(self) -> str: ...
 
     @abc.abstractmethod
-    def install(self, theme_dir: str) -> None:
-        ...
+    def install(self, theme_dir: str) -> None: ...
 
 
 @dataclasses.dataclass
@@ -293,7 +291,7 @@ class HugoRenderer(Renderer, Server, Builder):
             for file_ in known_files.load():
                 try:
                     os.remove(file_.name)
-                except FileNotFoundError as exc:
+                except FileNotFoundError:
                     pass
 
         # Render the pages.
