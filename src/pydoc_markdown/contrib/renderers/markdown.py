@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import dataclasses
 import io
+import re
 import sys
 import typing as t
 from pathlib import Path
@@ -48,12 +49,500 @@ def dotted_name(obj: docspec.ApiObject) -> str:
     return ".".join(x.name for x in obj.path)
 
 
+_REFERENCE_DEFINITION_START_RE = re.compile(r"(?m)^ {0,3}\[")
+_FENCE_RE = re.compile(r"^( {0,3})(`{3,}|~{3,})(.*?)(?:\r?\n)?$")
+_LIST_MARKER_RE = re.compile(r"(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)")
+_HTML_BLOCK_RE = re.compile(
+    r"(?i)^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|"
+    r"details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|"
+    r"hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|search|section|"
+    r"summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?:[ \t]|/?>|$)"
+)
+_HTML_TAG_ONLY_RE = re.compile(r"(?i)^ {0,3}</?[a-z][^>]*>[ \t]*$")
+
+
+@dataclasses.dataclass
+class _ReferenceUsage:
+    start: int
+    end: int
+    append: bool = False
+
+
+@dataclasses.dataclass
+class _DocstringReferences:
+    obj: docspec.ApiObject
+    content: str
+    definitions: t.Dict[str, t.List[t.Tuple[int, int]]] = dataclasses.field(default_factory=dict)
+    links: t.Dict[str, t.List[_ReferenceUsage]] = dataclasses.field(default_factory=dict)
+
+
+def _normalize_reference_label(label: str) -> str:
+    return " ".join(label.split()).casefold()
+
+
+def _is_escaped(text: str, offset: int) -> bool:
+    backslashes = 0
+    offset -= 1
+    while offset >= 0 and text[offset] == "\\":
+        backslashes += 1
+        offset -= 1
+    return backslashes % 2 == 1
+
+
+def _strip_blockquote_prefix(line: str) -> str:
+    """Strips Markdown blockquote markers, retaining other container indentation."""
+
+    offset = 0
+    while True:
+        start = offset
+        spaces = 0
+        while offset < len(line) and line[offset] == " " and spaces < 3:
+            offset += 1
+            spaces += 1
+        if offset >= len(line) or line[offset] != ">":
+            return line[start:]
+        offset += 1
+        if offset < len(line) and line[offset] in " \t":
+            offset += 1
+
+
+def _strip_container_prefix(line: str) -> str:
+    """Strips blockquote and one-line list markers for fence detection."""
+
+    line = _strip_blockquote_prefix(line)
+    offset = 0
+    while offset < len(line) and line[offset] == " " and offset < 3:
+        offset += 1
+    match = _LIST_MARKER_RE.match(line, offset)
+    return line[match.end() :] if match else line
+
+
+def _strip_indent(line: str, width: int) -> str:
+    """Strips up to *width* columns of container indentation from a line."""
+
+    offset = 0
+    column = 0
+    while offset < len(line) and column < width and line[offset] in " \t":
+        if line[offset] == " ":
+            column += 1
+        else:
+            column += 4 - column % 4
+        offset += 1
+    return line[offset:] if column >= width else line
+
+
+def _leading_indent(line: str) -> int:
+    width = 0
+    for char in line:
+        if char == " ":
+            width += 1
+        elif char == "\t":
+            width += 4 - width % 4
+        else:
+            break
+    return width
+
+
+def _list_content_indent(line: str) -> t.Optional[int]:
+    """Returns the absolute indentation where a list item's content begins."""
+
+    offset = 0
+    while offset < len(line) and line[offset] == " " and offset < 3:
+        offset += 1
+    match = _LIST_MARKER_RE.match(line, offset)
+    return match.end() if match else None
+
+
+def _mask_html_tags(mask: bytearray, text: str, start: int, end: int) -> None:
+    """Masks inline HTML tags so brackets in attributes are never treated as links."""
+
+    offset = start
+    while offset < end:
+        opening = text.find("<", offset, end)
+        if opening < 0:
+            return
+        if opening + 1 >= end or text[opening + 1] not in "!?/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz":
+            offset = opening + 1
+            continue
+        quote: t.Optional[str] = None
+        closing = opening + 1
+        while closing < end:
+            char = text[closing]
+            if quote:
+                if char == quote:
+                    quote = None
+            elif char in "\"'":
+                quote = char
+            elif char == ">":
+                closing += 1
+                mask[opening:closing] = b"\1" * (closing - opening)
+                offset = closing
+                break
+            closing += 1
+        else:
+            return
+
+
+def _markdown_protected_mask(text: str) -> bytearray:
+    """Returns a conservative mask for code and raw HTML contexts."""
+
+    mask = bytearray(len(text))
+    fence: t.Optional[t.Tuple[str, int, int]] = None
+    html_end: t.Optional[str] = None
+    in_html_block = False
+    in_indented_code = False
+    list_content_indent: t.Optional[int] = None
+    previous_blank = True
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        line_end = offset + len(line)
+        line_body = line.rstrip("\r\n")
+        content_after_quotes = _strip_blockquote_prefix(line_body)
+        blank = not content_after_quotes.strip()
+
+        if fence is not None:
+            mask[offset:line_end] = b"\1" * len(line)
+            quoted_content = _strip_blockquote_prefix(line_body)
+            match = _FENCE_RE.match(_strip_indent(quoted_content, fence[2]))
+            if (
+                match
+                and match.group(2)[0] == fence[0]
+                and len(match.group(2)) >= fence[1]
+                and not match.group(3).strip()
+            ):
+                fence = None
+            previous_blank = blank
+            offset = line_end
+            continue
+
+        if in_html_block:
+            mask[offset:line_end] = b"\1" * len(line)
+            if (html_end and html_end in line_body.lower()) or (not html_end and blank):
+                html_end = None
+                in_html_block = False
+            previous_blank = blank
+            offset = line_end
+            continue
+
+        match = _FENCE_RE.match(_strip_container_prefix(line_body))
+        if match and (match.group(2)[0] != "`" or "`" not in match.group(3)):
+            quoted_content = _strip_blockquote_prefix(line_body)
+            fence = (
+                match.group(2)[0],
+                len(match.group(2)),
+                _list_content_indent(quoted_content) or 0,
+            )
+            mask[offset:line_end] = b"\1" * len(line)
+            previous_blank = blank
+            offset = line_end
+            continue
+
+        container_content = _strip_container_prefix(line_body)
+        lowered = container_content.lower()
+        if lowered.lstrip().startswith("<!--"):
+            in_html_block = "-->" not in lowered
+            html_end = "-->" if in_html_block else None
+        elif re.match(r"^ {0,3}<!\[CDATA\[", container_content):
+            html_end = "]]>"
+            in_html_block = html_end not in container_content
+        elif re.match(r"^ {0,3}<\?", container_content):
+            html_end = "?>"
+            in_html_block = html_end not in container_content
+        elif re.match(r"^ {0,3}<![A-Z]", container_content):
+            html_end = ">"
+            in_html_block = html_end not in container_content
+        elif re.match(r"^ {0,3}<(?:script|pre|style|textarea)(?:[ \t>]|$)", lowered):
+            tag = re.match(r"^ {0,3}<([a-z]+)", lowered)
+            assert tag
+            html_end = "</{}>".format(tag.group(1))
+            in_html_block = html_end not in lowered
+        elif _HTML_BLOCK_RE.match(container_content) or _HTML_TAG_ONLY_RE.match(container_content):
+            in_html_block = True
+            html_end = None
+        if in_html_block or html_end:
+            mask[offset:line_end] = b"\1" * len(line)
+            if html_end and html_end in lowered:
+                html_end = None
+                in_html_block = False
+            previous_blank = blank
+            offset = line_end
+            continue
+
+        indent = _leading_indent(content_after_quotes)
+        new_list_content_indent = _list_content_indent(content_after_quotes)
+        if new_list_content_indent is not None:
+            list_content_indent = new_list_content_indent
+        elif list_content_indent is not None and not blank and indent < list_content_indent and previous_blank:
+            list_content_indent = None
+        relative_indent = (
+            indent - list_content_indent
+            if list_content_indent is not None and indent >= list_content_indent
+            else indent
+        )
+        if in_indented_code:
+            if blank or relative_indent >= 4:
+                mask[offset:line_end] = b"\1" * len(line)
+                previous_blank = blank
+                offset = line_end
+                continue
+            in_indented_code = False
+        if relative_indent >= 4 and previous_blank:
+            in_indented_code = True
+            mask[offset:line_end] = b"\1" * len(line)
+            previous_blank = blank
+            offset = line_end
+            continue
+
+        _mask_html_tags(mask, text, offset, line_end)
+        previous_blank = blank
+        offset = line_end
+
+    offset = 0
+    while offset < len(text):
+        if mask[offset] or text[offset] != "`" or _is_escaped(text, offset):
+            offset += 1
+            continue
+        end = offset + 1
+        while end < len(text) and text[end] == "`":
+            end += 1
+        delimiter_length = end - offset
+        closing = end
+        while closing < len(text):
+            if mask[closing] or text[closing] != "`" or _is_escaped(text, closing):
+                closing += 1
+                continue
+            closing_end = closing + 1
+            while closing_end < len(text) and text[closing_end] == "`":
+                closing_end += 1
+            if closing_end - closing == delimiter_length:
+                mask[offset:closing_end] = b"\1" * (closing_end - offset)
+                offset = closing_end
+                break
+            closing = closing_end
+        else:
+            offset = end
+
+    return mask
+
+
+def _overlaps_mask(mask: bytearray, start: int, end: int) -> bool:
+    return any(mask[start:end])
+
+
+def _overlaps_spans(start: int, end: int, spans: t.Iterable[t.Tuple[int, int]]) -> bool:
+    return any(start < span_end and span_start < end for span_start, span_end in spans)
+
+
+def _find_closing_bracket(text: str, opening: int, nested: bool = False) -> t.Optional[int]:
+    depth = 1
+    offset = opening + 1
+    previous_newline = False
+    while offset < len(text):
+        char = text[offset]
+        if char == "\\":
+            offset += 2
+            previous_newline = False
+            continue
+        if char in "\r\n":
+            if previous_newline:
+                return None
+            previous_newline = True
+            offset += 2 if char == "\r" and offset + 1 < len(text) and text[offset + 1] == "\n" else 1
+            continue
+        previous_newline = False
+        if nested and char == "[":
+            depth += 1
+        elif char == "]":
+            depth -= 1
+            if depth == 0:
+                return offset
+        offset += 1
+    return None
+
+
+def _find_closing_parenthesis(text: str, opening: int) -> int:
+    depth = 1
+    offset = opening + 1
+    while offset < len(text):
+        if text[offset] == "\\":
+            offset += 2
+            continue
+        if text[offset] == "(":
+            depth += 1
+        elif text[offset] == ")":
+            depth -= 1
+            if depth == 0:
+                return offset
+        offset += 1
+    return opening
+
+
+def _image_reference_openings(text: str, start: int, end: int) -> t.List[int]:
+    """Returns the bracket offsets of unescaped images in a link's text."""
+
+    result: t.List[int] = []
+    offset = start
+    while True:
+        offset = text.find("![", offset, end)
+        if offset < 0:
+            return result
+        if not _is_escaped(text, offset):
+            result.append(offset + 1)
+        offset += 2
+
+
+def _analyze_docstring_references(obj: docspec.ApiObject, content: str) -> _DocstringReferences:
+    result = _DocstringReferences(obj, content)
+    protected_mask = _markdown_protected_mask(content)
+    definition_spans: t.List[t.Tuple[int, int]] = []
+    reference_label_spans: t.List[t.Tuple[int, int]] = []
+    inline_link_spans: t.List[t.Tuple[int, int]] = []
+    inline_image_openings: t.Set[int] = set()
+
+    for match in _REFERENCE_DEFINITION_START_RE.finditer(content):
+        opening = match.end() - 1
+        closing = _find_closing_bracket(content, opening)
+        if closing is None or closing + 1 >= len(content) or content[closing + 1] != ":":
+            continue
+        if _overlaps_mask(protected_mask, match.start(), closing + 2) or _is_escaped(content, opening):
+            continue
+        label_span = (opening + 1, closing)
+        label = _normalize_reference_label(content[slice(*label_span)])
+        if not label:
+            continue
+        result.definitions.setdefault(label, []).append(label_span)
+        definition_spans.append((match.start(), closing + 2))
+
+    offset = 0
+    while offset < len(content):
+        opening = content.find("[", offset)
+        if opening < 0:
+            break
+        if protected_mask[opening] or _is_escaped(content, opening):
+            offset = opening + 1
+            continue
+        if _overlaps_spans(opening, opening + 1, reference_label_spans):
+            offset = opening + 1
+            continue
+        if opening not in inline_image_openings and _overlaps_spans(opening, opening + 1, inline_link_spans):
+            offset = opening + 1
+            continue
+        closing = _find_closing_bracket(content, opening, nested=True)
+        if closing is None or _overlaps_mask(protected_mask, opening, closing + 1):
+            offset = opening + 1
+            continue
+        if _overlaps_spans(opening, closing + 1, definition_spans):
+            offset = closing + 1
+            continue
+
+        if closing + 1 < len(content) and content[closing + 1] == "(":
+            inline_end = _find_closing_parenthesis(content, closing + 1) + 1
+            nested_images = _image_reference_openings(content, opening + 1, closing)
+            if nested_images:
+                inline_link_spans.append((opening, inline_end))
+                inline_image_openings.update(nested_images)
+                offset = opening + 1
+            else:
+                offset = inline_end
+            continue
+
+        if closing + 1 < len(content) and content[closing + 1] == "[":
+            label_opening = closing + 1
+            label_closing = _find_closing_bracket(content, label_opening)
+            if label_closing is None or _overlaps_mask(protected_mask, label_opening, label_closing + 1):
+                offset = closing + 1
+                continue
+            label_text = content[label_opening + 1 : label_closing] or content[opening + 1 : closing]
+            label_span = (label_opening + 1, label_closing)
+            reference_label_spans.append((label_opening, label_closing + 1))
+            append = False
+            offset = opening + 1 if _image_reference_openings(content, opening + 1, closing) else label_closing + 1
+        else:
+            label_text = content[opening + 1 : closing]
+            if "[" in label_text or "]" in label_text:
+                offset = closing + 1
+                continue
+            label_span = (opening + 1, closing)
+            append = not _normalize_reference_label(label_text).startswith("^")
+            offset = closing + 1
+
+        label = _normalize_reference_label(label_text)
+        if label:
+            usage = _ReferenceUsage(closing + 1, closing + 1, append=True) if append else _ReferenceUsage(*label_span)
+            result.links.setdefault(label, []).append(usage)
+
+    return result
+
+
+def _iter_objects(objects: t.Iterable[docspec.ApiObject]) -> t.Iterator[docspec.ApiObject]:
+    for obj in objects:
+        yield obj
+        yield from _iter_objects(getattr(obj, "members", []))
+
+
+def _reference_slug(value: str) -> str:
+    return re.sub(r"[^a-zA-Z0-9_.-]+", "-", value).strip("-.") or "object"
+
+
+def _rewrite_reference_labels(analysis: _DocstringReferences, labels: t.Dict[str, str]) -> str:
+    replacements: t.List[t.Tuple[int, int, str]] = []
+    for label, replacement in labels.items():
+        replacements.extend((start, end, replacement) for start, end in analysis.definitions[label])
+        replacements.extend(
+            (usage.start, usage.end, "[{}]".format(replacement) if usage.append else replacement)
+            for usage in analysis.links[label]
+        )
+
+    content = analysis.content
+    for start, end, replacement in sorted(replacements, reverse=True):
+        content = content[:start] + replacement + content[end:]
+    return content
+
+
+def _namespace_duplicate_references(objects: t.Iterable[docspec.ApiObject]) -> t.Dict[int, str]:
+    """Rewrites reference labels that would otherwise collide on one rendered page."""
+
+    analyses = [
+        _analyze_docstring_references(obj, obj.docstring.content) for obj in _iter_objects(objects) if obj.docstring
+    ]
+    owners: t.Dict[str, t.List[_DocstringReferences]] = {}
+    used_labels: t.Set[str] = set()
+    for analysis in analyses:
+        for label in analysis.definitions:
+            owners.setdefault(label, []).append(analysis)
+        used_labels.update(analysis.definitions)
+        used_labels.update(analysis.links)
+
+    rewritten: t.Dict[int, str] = {}
+    for analysis in analyses:
+        replacements: t.Dict[str, str] = {}
+        for label in analysis.definitions:
+            if len(owners[label]) < 2 or label not in analysis.links:
+                continue
+            prefix = "^" if label.startswith("^") else ""
+            label_slug = label[1:] if prefix else label
+            base = prefix + "pydoc-{}-{}".format(
+                _reference_slug(dotted_name(analysis.obj)), _reference_slug(label_slug)
+            )
+            replacement = base
+            suffix = 2
+            while _normalize_reference_label(replacement) in used_labels:
+                replacement = "{}-{}".format(base, suffix)
+                suffix += 1
+            used_labels.add(_normalize_reference_label(replacement))
+            replacements[label] = replacement
+        if replacements:
+            rewritten[id(analysis.obj)] = _rewrite_reference_labels(analysis, replacements)
+    return rewritten
+
+
 @dataclasses.dataclass
 class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     """
     Produces Markdown files. This renderer is often used by other renderers, such as
     #MkdocsRenderer and #HugoRenderer. It provides a wide variety of options to customize
-    the generated Markdown files.
+    the generated Markdown files. Reference-style link labels that are duplicated across
+    API-object docstrings on the same page are automatically namespaced per object.
 
     ### Options
     """
@@ -354,7 +843,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         fp.write(code)
         fp.write("\n```\n\n")
 
-    def _render_object(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
+    def _render_object(self, fp: t.TextIO, level: int, obj: docspec.ApiObject, namespaced_docstrings: t.Dict[int, str]):
         if not isinstance(obj, docspec.Module) or self.render_module_header:
             self._render_header(fp, level, obj)
 
@@ -373,22 +862,21 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 fp.write(source_string + "\n\n")
 
         if obj.docstring:
-            docstring = (
-                escape_except_blockquotes(obj.docstring.content)
-                if self.escape_html_in_docstring
-                else obj.docstring.content
-            )
+            content = namespaced_docstrings.get(id(obj), obj.docstring.content)
+            docstring = escape_except_blockquotes(content) if self.escape_html_in_docstring else content
             lines = docstring.split("\n")
             if self.docstrings_as_blockquote:
                 lines = ["> " + x for x in lines]
             fp.write("\n".join(lines))
             fp.write("\n\n")
 
-    def _render_recursive(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
-        self._render_object(fp, level, obj)
+    def _render_recursive(
+        self, fp: t.TextIO, level: int, obj: docspec.ApiObject, namespaced_docstrings: t.Dict[int, str]
+    ):
+        self._render_object(fp, level, obj, namespaced_docstrings)
         level += 1
         for member in getattr(obj, "members", []):
-            self._render_recursive(fp, level, member)
+            self._render_recursive(fp, level, member, namespaced_docstrings)
 
     def _get_title(self, obj: docspec.ApiObject) -> str:
         title = obj.name
@@ -472,13 +960,14 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             for m in modules:
                 self._render_toc(fp, 0, m)
             fp.write("\n")
+        namespaced_docstrings = _namespace_duplicate_references(modules)
         for m in modules:
-            self._render_recursive(fp, 1, m)
+            self._render_recursive(fp, 1, m, namespaced_docstrings)
 
     # SingleObjectRenderer
 
     def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None:
-        self._render_recursive(fp, 0, obj)
+        self._render_recursive(fp, 0, obj, _namespace_duplicate_references([obj]))
 
     # Renderer
 

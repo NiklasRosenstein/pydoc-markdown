@@ -96,3 +96,21 @@ def test_markdown_renderer_explicit_page_title_takes_precedence() -> None:
     renderer.render_single_page(fp, [], "Specific Page")
 
     assert fp.getvalue() == "# Specific Page\n\n"
+
+
+def test_markdown_renderer_preserves_unique_reference_labels() -> None:
+    module = load_string_as_module(
+        Path("unique_reference.py"),
+        '''def func():
+    """Links to [example][0].
+
+    [0]: https://example.com
+    """
+''',
+    )
+    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
+    renderer.init(Context("."))
+
+    assert renderer.render_to_string([module]) == (
+        "#### func\n\nLinks to [example][0].\n\n[0]: https://example.com\n\n"
+    )
