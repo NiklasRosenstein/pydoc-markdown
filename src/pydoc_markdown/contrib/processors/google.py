@@ -72,6 +72,10 @@ class GoogleProcessor(Processor):
         * For module TODOs
         * You have to also use ``sphinx.ext.todo`` extension
 
+    Relative indentation in section bodies is preserved. In `Example:` and `Examples:` sections, a four-space
+    indented body without a fenced code block remains a Markdown literal block. In these sections, the structural
+    Google-style indentation is removed from fenced code blocks so that their fences render correctly.
+
     @doc:fmt:google
     """
 
@@ -118,24 +122,93 @@ class GoogleProcessor(Processor):
     def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
         docspec.visit(modules, self._process)
 
-    def _process(self, node: docspec.ApiObject):
+    @staticmethod
+    def _get_indentation(line: str) -> int:
+        return len(line) - len(line.lstrip())
+
+    @classmethod
+    def _remove_indentation(cls, line: str, indentation: int) -> str:
+        return line[min(cls._get_indentation(line), indentation) :]
+
+    def _format_section(self, keyword: str, raw_lines: t.List[str]) -> t.List[str]:
+        section_indent = next((self._get_indentation(line) for line in raw_lines if line.strip()), 0)
+        has_codeblock = any(line.lstrip().startswith("```") for line in raw_lines)
+        is_example = keyword in ("Example", "Examples")
+
+        # An indented, unfenced Examples section is a Markdown literal block. Keep its indentation intact.
+        if is_example and not has_codeblock:
+            return [line if line else "  " for line in raw_lines]
+
+        result: t.List[str] = []
+        in_codeblock = False
+        codeblock_indent = 0
+        after_parameter = False
+        continuation_indent: t.Optional[int] = None
+
+        for raw_line in raw_lines:
+            line = raw_line.strip()
+            normalized_line = self._remove_indentation(raw_line, section_indent).rstrip()
+
+            if line.startswith("```"):
+                if not in_codeblock:
+                    codeblock_indent = self._get_indentation(raw_line) if is_example else 0
+                in_codeblock = not in_codeblock
+                result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
+                continue
+
+            if in_codeblock:
+                result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
+                continue
+
+            param_match = None
+            for param_re in self._param_res:
+                param_match = param_re.match(line)
+                if param_match:
+                    if "type" in param_match.groupdict():
+                        result.append("- `{param}` _{type}_ - {desc}".format(**param_match.groupdict()))
+                    else:
+                        result.append("- `{param}` - {desc}".format(**param_match.groupdict()))
+                    after_parameter = True
+                    continuation_indent = None
+                    break
+
+            if param_match:
+                continue
+
+            if not line:
+                result.append("  ")
+                continue
+
+            if after_parameter:
+                line_indent = self._get_indentation(raw_line)
+                if continuation_indent is None:
+                    continuation_indent = line_indent
+                relative_indent = max(line_indent - continuation_indent, 0)
+                result.append("  " + " " * relative_indent + line)
+            else:
+                result.append("  " + normalized_line)
+
+        return result
+
+    def _process(self, node: docspec.ApiObject) -> None:
         if not node.docstring:
             return
 
-        lines = []
+        lines: t.List[str] = []
         current_lines: t.List[str] = []
         in_codeblock = False
-        keyword = None
+        keyword: t.Optional[str] = None
 
-        def _commit():
+        def _commit() -> None:
             if keyword:
-                generate_sections_markdown(lines, {keyword: current_lines})
+                generate_sections_markdown(lines, {keyword: self._format_section(keyword, current_lines)})
             else:
                 lines.extend(current_lines)
             current_lines.clear()
 
         for line in node.docstring.content.split("\n"):
-            if line.lstrip().startswith("```"):
+            stripped_line = line.strip()
+            if stripped_line.startswith("```"):
                 in_codeblock = not in_codeblock
                 current_lines.append(line)
                 continue
@@ -144,27 +217,16 @@ class GoogleProcessor(Processor):
                 current_lines.append(line)
                 continue
 
-            line = line.strip()
-            if line in self._keywords_map:
+            if stripped_line in self._keywords_map:
                 _commit()
-                keyword = self._keywords_map[line]
+                keyword = self._keywords_map[stripped_line]
                 continue
 
             if keyword is None:
-                lines.append(line)
+                lines.append(stripped_line)
                 continue
 
-            for param_re in self._param_res:
-                param_match = param_re.match(line)
-                if param_match:
-                    if "type" in param_match.groupdict():
-                        current_lines.append("- `{param}` _{type}_ - {desc}".format(**param_match.groupdict()))
-                    else:
-                        current_lines.append("- `{param}` - {desc}".format(**param_match.groupdict()))
-                    break
-
-            if not param_match:
-                current_lines.append("  {line}".format(line=line))
+            current_lines.append(line)
 
         _commit()
         node.docstring.content = "\n".join(lines)

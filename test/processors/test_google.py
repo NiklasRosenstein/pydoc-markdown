@@ -98,12 +98,76 @@ def test_google_processor(processor=None):
 
   **Examples**:
 
-    ```
-    print("Hello World")
-    ```
+  ```
+  print("Hello World")
+  ```
   
   **Returns**:
 
   - `any` - Something funny.
+  """,
+    )
+
+    # Regression test for https://github.com/NiklasRosenstein/pydoc-markdown/issues/182.
+    assert_processor_result(
+        processor or GoogleProcessor(),
+        """
+  Examples:
+
+      analysis_instance = make_analysis(DATA_PATH,
+                              ["first.c3d", "second.c3d"],
+  """,
+        """
+  **Examples**:
+
+
+      analysis_instance = make_analysis(DATA_PATH,
+                              ["first.c3d", "second.c3d"],
+  """,
+    )
+
+    # Regression test for https://github.com/NiklasRosenstein/pydoc-markdown/issues/296.
+    assert_processor_result(
+        processor or GoogleProcessor(),
+        """
+  Examples:
+
+      How to use:
+
+      ```python
+      # A comment
+      if True:
+          print("Hello")
+      ```
+  """,
+        """
+  **Examples**:
+
+
+    How to use:
+
+  ```python
+  # A comment
+  if True:
+      print("Hello")
+  ```
+  """,
+    )
+
+    # Regression test for https://github.com/NiklasRosenstein/pydoc-markdown/issues/320.
+    assert_processor_result(
+        processor or GoogleProcessor(),
+        """
+  Args:
+    items: A nested list.
+      - Test
+        - nested
+  """,
+        """
+  **Arguments**:
+
+  - `items` - A nested list.
+    - Test
+      - nested
   """,
     )
