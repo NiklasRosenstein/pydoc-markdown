@@ -305,7 +305,7 @@ class HugoRenderer(Renderer, Server, Builder):
                 filename = item.filename(page_content_dir, ".md", index_name="_index", skip_empty_pages=False)
                 if not filename:
                     continue
-                self._render_page(item.page.filtered_modules(modules), item.page, filename)
+                self._render_page(modules, item.page, filename)
                 known_files.append(filename)
 
             # Render the config file.

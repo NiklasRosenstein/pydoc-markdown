@@ -67,3 +67,9 @@ type = "improvement"
 description = "Make automatically discovered module ordering deterministic."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/356"
+
+[[entries]]
+id = "c8e24923-31f4-4c77-a4a7-d18cbbb7cf31"
+type = "feature"
+description = "Allow YAML-defined pages to exclude API objects with glob patterns."
+author = "rosensteinniklas@gmail.com"
