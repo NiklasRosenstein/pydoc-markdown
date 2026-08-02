@@ -25,7 +25,12 @@ import typing as t
 
 import docspec
 
-from pydoc_markdown.contrib.processors.sphinx import generate_sections_markdown
+from pydoc_markdown.contrib.processors.sphinx import (
+    fence_doctest_blocks,
+    generate_sections_markdown,
+    get_markdown_fence_opener,
+    is_markdown_fence_closer,
+)
 from pydoc_markdown.interfaces import Processor, Resolver
 
 
@@ -74,6 +79,10 @@ class GoogleProcessor(Processor):
 
     @doc:fmt:google
     """
+
+    #: Wrap doctest blocks from Example and Examples sections in Python Markdown fences.
+    #: Disabled by default so that upgrading does not rewrite existing documentation.
+    render_doctest_examples: bool = False
 
     _param_res = [
         re.compile(r"^(?P<param>\S+):\s+(?P<desc>.+)$"),
@@ -124,23 +133,28 @@ class GoogleProcessor(Processor):
 
         lines = []
         current_lines: t.List[str] = []
-        in_codeblock = False
+        markdown_fence: t.Optional[t.Tuple[str, int]] = None
         keyword = None
 
         def _commit():
             if keyword:
-                generate_sections_markdown(lines, {keyword: current_lines})
+                section_lines = current_lines
+                if self.render_doctest_examples and keyword in ("Example", "Examples"):
+                    section_lines = fence_doctest_blocks("\n".join(section_lines)).split("\n")
+                generate_sections_markdown(lines, {keyword: section_lines})
             else:
                 lines.extend(current_lines)
             current_lines.clear()
 
         for line in node.docstring.content.split("\n"):
-            if line.lstrip().startswith("```"):
-                in_codeblock = not in_codeblock
+            if markdown_fence is not None:
                 current_lines.append(line)
+                if is_markdown_fence_closer(line, markdown_fence):
+                    markdown_fence = None
                 continue
 
-            if in_codeblock:
+            markdown_fence = get_markdown_fence_opener(line)
+            if markdown_fence is not None:
                 current_lines.append(line)
                 continue
 
@@ -152,6 +166,10 @@ class GoogleProcessor(Processor):
 
             if keyword is None:
                 lines.append(line)
+                continue
+
+            if self.render_doctest_examples and keyword in ("Example", "Examples"):
+                current_lines.append(line)
                 continue
 
             for param_re in self._param_res:

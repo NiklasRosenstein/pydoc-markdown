@@ -101,3 +101,12 @@ pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/360"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/259",
 ]
+
+[[entries]]
+id = "ca3903fb-3f4e-45b2-873a-337d65ab8d50"
+type = "feature"
+description = "Optionally render doctest blocks from Example sections as fenced Python Markdown."
+author = "rosensteinniklas@gmail.com"
+issues = [
+    "https://github.com/NiklasRosenstein/pydoc-markdown/issues/327",
+]

@@ -59,6 +59,74 @@ def _markdown_list_item(value: str) -> str:
     return "- " + value.replace("\n", "\n  ")
 
 
+_MARKDOWN_FENCE_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
+
+
+def get_markdown_fence_opener(line: str) -> t.Optional[t.Tuple[str, int]]:
+    """Return the character and length of a Markdown fence opener, if any."""
+
+    match = _MARKDOWN_FENCE_RE.match(line.lstrip())
+    if not match:
+        return None
+    fence = match.group("fence")
+    if fence[0] == "`" and "`" in match.group("info"):
+        return None
+    return fence[0], len(fence)
+
+
+def is_markdown_fence_closer(line: str, fence: t.Tuple[str, int]) -> bool:
+    """Return whether *line* closes the Markdown fence described by *fence*."""
+
+    character, minimum_length = fence
+    stripped = line.strip()
+    return len(stripped) >= minimum_length and all(value == character for value in stripped)
+
+
+def fence_doctest_blocks(text: str) -> str:
+    """Wrap doctest blocks in a Python Markdown fence.
+
+    The caller is responsible for limiting *text* to an Example or Examples section. A block starts
+    with a ``>>>`` prompt and ends at the next blank line. Existing Markdown fences are preserved.
+    """
+
+    lines: t.List[str] = []
+    in_doctest = False
+    markdown_fence: t.Optional[t.Tuple[str, int]] = None
+
+    for line in text.split("\n"):
+        stripped = line.lstrip()
+
+        if in_doctest:
+            if not stripped:
+                lines.extend(["```", line])
+                in_doctest = False
+            else:
+                lines.append(line)
+            continue
+
+        if markdown_fence is not None:
+            lines.append(line)
+            if is_markdown_fence_closer(line, markdown_fence):
+                markdown_fence = None
+            continue
+
+        markdown_fence = get_markdown_fence_opener(line)
+        if markdown_fence is not None:
+            lines.append(line)
+            continue
+
+        if re.match(r"^>>>($|\s)", stripped):
+            lines.extend(["```python", stripped])
+            in_doctest = True
+        else:
+            lines.append(line)
+
+    if in_doctest:
+        lines.append("```")
+
+    return "\n".join(lines)
+
+
 @dataclasses.dataclass
 class SphinxProcessor(Processor):
     """
@@ -84,6 +152,10 @@ class SphinxProcessor(Processor):
     """
 
     style: docstring_parser.DocstringStyle = docstring_parser.DocstringStyle.AUTO
+
+    #: Wrap doctest blocks from Example and Examples sections in Python Markdown fences.
+    #: Disabled by default so that upgrading does not rewrite existing documentation.
+    render_doctest_examples: bool = False
 
     _KEYWORDS = {
         "Arguments": [
@@ -207,6 +279,16 @@ class SphinxProcessor(Processor):
                 converted[heading] = [_markdown_list_item(entry) for entry in entries]
         return converted
 
+    def _convert_examples(self, examples: t.List[docstring_parser.common.DocstringExample]) -> t.List[str]:
+        chunks = []
+        for example in examples:
+            chunk = example.description or ""
+            if example.snippet:
+                chunk = example.snippet + ("\n" + chunk if chunk else "")
+            if chunk:
+                chunks.append(fence_doctest_blocks(chunk))
+        return "\n".join(chunks).split("\n") if chunks else []
+
     def _process(self, node: docspec.ApiObject) -> None:
         if not node.docstring:
             return
@@ -252,6 +334,8 @@ class SphinxProcessor(Processor):
                 ]
             else:
                 components[heading] = entries
+        if self.render_doctest_examples:
+            components["Examples"] = self._convert_examples(parsed_docstring.examples)
 
         if parsed_docstring.short_description:
             lines.append(parsed_docstring.short_description)

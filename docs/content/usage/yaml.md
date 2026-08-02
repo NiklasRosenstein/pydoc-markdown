@@ -134,6 +134,21 @@ processors:
 
 The default `smart` processor also detects NumPy-style docstrings automatically.
 
+Doctest prompts in `Example` and `Examples` sections can optionally be rendered as fenced Python code blocks. The
+option is disabled by default and does not rewrite doctest-looking text outside those sections. Enable it for both
+formats used by the `smart` processor as follows:
+
+```yaml
+processors:
+- type: filter
+- type: smart
+  google:
+    render_doctest_examples: true
+  sphinx:
+    render_doctest_examples: true
+- type: crossref
+```
+
 ## Renderer
 
 The `$.renderer` defines the renderer to use when running `pydoc-markdown` without arguments.
