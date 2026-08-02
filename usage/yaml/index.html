@@ -1412,6 +1412,8 @@ language (see <a href="#yaml-preprocessing">YAML Preprocessing</a>).</p>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index</span>
 <span class="w">    </span><span class="nt">contents</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">school.*</span>
+<span class="w">    </span><span class="nt">exclude</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">school.admin</span>
 </code></pre></div>
 <h3 id="pyproject-example">PyProject Example</h3>
 <div class="highlight"><pre><span></span><code><span class="k">[[tool.pydoc-markdown.loaders]]</span>
@@ -1425,7 +1427,13 @@ language (see <a href="#yaml-preprocessing">YAML Preprocessing</a>).</p>
 <span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;API Documentation&quot;</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;index&quot;</span>
 <span class="n">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;school.*&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="n">exclude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;school.admin&quot;</span><span class="w"> </span><span class="p">]</span>
 </code></pre></div>
+<p>The <code>contents</code> and <code>exclude</code> options are lists of glob patterns matched against the absolute names of API objects.
+Exclusions are applied after <code>contents</code> and take precedence, so excluding a module or class also removes all of its
+members while retaining any ancestors needed by other included objects. For example, the configuration above includes
+objects below <code>school</code> except for the <code>school.admin</code> module and its members. Use the
+<a href="../api/pydoc_markdown/processors"><code>filter</code> processor</a> when an exclusion should apply globally instead of to one page.</p>
 <h2 id="yaml-preprocessing">YAML Preprocessing</h2>
 <blockquote>
 <p><em>New in Pydoc-Markdown 3.3.0. See also <code>pydoc_markdown.util.ytemplate</code></em></p>
