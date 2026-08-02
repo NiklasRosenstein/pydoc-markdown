@@ -14,9 +14,11 @@ classifiers = [
     "Topic :: Utilities",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 keywords = ["documentation", "docs", "generator", "markdown", "pydoc"]
 
@@ -24,10 +26,13 @@ keywords = ["documentation", "docs", "generator", "markdown", "pydoc"]
 Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 click = ">=7.1,<9.0"
-"databind.core" = "^4.4.2"
-"databind.json" = "^4.4.2"
+databind = ">=4.5.0,<5.0.0"
+# docspec still requires these proxy distributions. Exclude their broken 4.5.2
+# release until it migrates to the consolidated Databind package.
+databind-core = ">=4.5.0,<5.0.0,!=4.5.2"
+databind-json = ">=4.5.0,<5.0.0,!=4.5.2"
 docspec = "^2.2.1"
 docspec-python = "^2.2.1"
 docstring-parser = "^0.11"
@@ -37,16 +42,17 @@ requests = "^2.23.0"
 PyYAML = ">=5.0,<7.0"
 tomli = "^2.0.0"
 tomli_w = "^1.0.0"
+typeapi = ">=2.3.0,<3.0.0"
 yapf = ">=0.30.0"
 watchdog = "*"
 
 [tool.poetry.dev-dependencies]
-pytest = "*"
-pytest-coverage = "*"
-mypy = "*"
-types-deprecated = "*"
-types-requests = "*"
-types-PyYAML = "*"
+pytest = "==9.1.1"
+pytest-cov = "==7.1.0"
+mypy = "==2.3.0"
+types-deprecated = "==1.3.1.20260728"
+types-requests = "==2.33.0.20260712"
+types-PyYAML = "==6.0.12.20260724"
 ruff = "==0.16.0"
 
 [tool.poetry.group.novella]
@@ -120,7 +126,7 @@ ruff-format = "ruff format --check src test"
 
 [tool.ruff]
 line-length = 120
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]

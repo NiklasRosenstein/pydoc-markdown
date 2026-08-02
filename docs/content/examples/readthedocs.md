@@ -14,7 +14,7 @@ __Example__
     version: 2
     mkdocs: {}  # tell readthedocs to use mkdocs
     python:
-      version: 3.7
+      version: "3.10"
       install:
       - method: pip
         extra_requirements:
