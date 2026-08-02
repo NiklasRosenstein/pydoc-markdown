@@ -57,7 +57,7 @@ def watch_paths(paths: List[str], recursive: bool = False) -> Tuple[BaseObserver
     observer = Observer()
 
     for directory in directories:
-        observer.schedule(event_handler, directory, recursive)
+        observer.schedule(event_handler, directory, recursive=recursive)
     observer.start()
 
     return observer, event
