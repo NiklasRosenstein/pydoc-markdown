@@ -455,6 +455,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             page_title = self.page_title
 
         if self.render_page_title:
+            if page_title is None:
+                raise ValueError(
+                    "page_title is required when render_page_title is enabled (set MarkdownRenderer.page_title or pass page_title)."
+                )
             fp.write("# {}\n\n".format(page_title))
 
         if self.render_toc:

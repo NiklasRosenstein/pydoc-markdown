@@ -23,7 +23,7 @@ pydoc-markdown -m my_module '{
       type: markdown,
       descriptive_class_title: false,
       render_page_title: true,
-      page_title: API Documentation,
+      page_title: "API Documentation",
       render_toc: true
     }
   }' > my_module.md
