@@ -154,7 +154,7 @@ class GoogleProcessor(Processor):
 
             if line.startswith("```"):
                 if not in_codeblock:
-                    codeblock_indent = self._get_indentation(raw_line) if is_example else 0
+                    codeblock_indent = min(section_indent, self._get_indentation(raw_line)) if is_example else 0
                 in_codeblock = not in_codeblock
                 result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
                 continue

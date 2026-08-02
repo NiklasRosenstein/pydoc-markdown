@@ -195,3 +195,11 @@ def test_google_processor_rebases_mixed_indentation_in_example_fences():
         "Examples:\n\tHow to use:\n    ```python\n\tif True:\n    \tprint('yes')\n\t```",
         "**Examples**:\n\n  How to use:\n```python\nif True:\n    print('yes')\n```",
     )
+
+
+def test_google_processor_preserves_nested_example_fence_indentation():
+    assert_processor_result(
+        GoogleProcessor(),
+        ("Examples:\n    - With code:\n        ```python\n        if True:\n            print('yes')\n        ```"),
+        ("**Examples**:\n\n  - With code:\n    ```python\n    if True:\n        print('yes')\n    ```"),
+    )
