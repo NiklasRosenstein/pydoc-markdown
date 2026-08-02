@@ -124,11 +124,14 @@ class GoogleProcessor(Processor):
 
     @staticmethod
     def _get_indentation(line: str) -> int:
-        return len(line) - len(line.lstrip())
+        leading_whitespace = line[: len(line) - len(line.lstrip())]
+        return len(leading_whitespace.expandtabs(4))
 
     @classmethod
     def _remove_indentation(cls, line: str, indentation: int) -> str:
-        return line[min(cls._get_indentation(line), indentation) :]
+        leading_length = len(line) - len(line.lstrip())
+        leading_whitespace = line[:leading_length].expandtabs(4)
+        return leading_whitespace[min(len(leading_whitespace), indentation) :] + line[leading_length:]
 
     def _format_section(self, keyword: str, raw_lines: t.List[str]) -> t.List[str]:
         section_indent = next((self._get_indentation(line) for line in raw_lines if line.strip()), 0)

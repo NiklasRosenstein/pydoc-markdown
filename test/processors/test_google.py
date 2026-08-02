@@ -171,3 +171,27 @@ def test_google_processor(processor=None):
       - nested
   """,
     )
+
+
+def test_google_processor_preserves_tab_indented_nested_lists():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Args:\n\titems: A nested list.\n\t\t- Test\n\t\t\t- nested",
+        "**Arguments**:\n\n- `items` - A nested list.\n  - Test\n      - nested",
+    )
+
+
+def test_google_processor_rebases_mixed_indentation_by_markdown_columns():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Args:\n    items: A nested list.\n\t\t- Test\n\t    \t- nested",
+        "**Arguments**:\n\n- `items` - A nested list.\n  - Test\n      - nested",
+    )
+
+
+def test_google_processor_rebases_mixed_indentation_in_example_fences():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Examples:\n\tHow to use:\n    ```python\n\tif True:\n    \tprint('yes')\n\t```",
+        "**Examples**:\n\n  How to use:\n```python\nif True:\n    print('yes')\n```",
+    )
