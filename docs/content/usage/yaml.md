@@ -36,6 +36,8 @@ renderer:
     name: index
     contents:
     - school.*
+    exclude:
+    - school.admin
 ```
 
 ### PyProject Example
@@ -52,7 +54,14 @@ type = "mkdocs"
 title = "API Documentation"
 name = "index"
 contents = [ "school.*" ]
+exclude = [ "school.admin" ]
 ```
+
+The `contents` and `exclude` options are lists of glob patterns matched against the absolute names of API objects.
+Exclusions are applied after `contents` and take precedence, so excluding a module or class also removes all of its
+members while retaining any ancestors needed by other included objects. For example, the configuration above includes
+objects below `school` except for the `school.admin` module and its members. Use the
+[`filter` processor](../api/pydoc_markdown/processors) when an exclusion should apply globally instead of to one page.
 
 ## YAML Preprocessing
 

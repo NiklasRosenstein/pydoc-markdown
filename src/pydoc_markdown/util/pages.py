@@ -102,6 +102,11 @@ class GenericPage(t.Generic[T_Page]):
     #: objects to include for rendering in the page.
     contents: t.Optional[t.List[str]] = None
 
+    #: A list of glob patterns that match the absolute unique names of API
+    #: objects to exclude from #contents. Exclusions take precedence over
+    #: inclusions.
+    exclude: t.Optional[t.List[str]] = dataclasses.field(default=None, kw_only=True)
+
     #: A list of pages that are children of this page.
     children: t.List["T_Page"] = dataclasses.field(default_factory=list)
 
@@ -122,19 +127,24 @@ class GenericPage(t.Generic[T_Page]):
     def filtered_modules(self, modules: t.List[docspec.Module]) -> t.List[docspec.Module]:
         """
         Creates a copy of the module graph where only the API objects selected
-        via #Page.contents are visible.
+        via #Page.contents and not matched by #Page.exclude are visible.
         """
 
         modules = copy.deepcopy(modules)
         matched_contents = set()
 
         def _match(obj: docspec.ApiObject) -> bool:
+            path = ".".join(x.name for x in obj.path)
+            matches_contents = False
             if self.contents:
-                path = ".".join(x.name for x in obj.path)
                 for x in self.contents:
                     if fnmatch.fnmatch(path, x):
                         matched_contents.add(x)
-                        return True
+                        matches_contents = True
+            if self.exclude and any(fnmatch.fnmatch(path, x) for x in self.exclude):
+                return False
+            if matches_contents:
+                return True
             if getattr(obj, "members", []):
                 return True
             return False

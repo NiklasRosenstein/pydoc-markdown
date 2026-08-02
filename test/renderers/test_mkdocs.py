@@ -16,6 +16,7 @@ def test_deserialize_mkdocs_renderer() -> None:
                         "title": "Child",
                         "name": "child",
                         "source": "child.md",
+                        "exclude": ["package.internal"],
                     }
                 ],
             }
@@ -33,6 +34,7 @@ def test_deserialize_mkdocs_renderer() -> None:
                         title="Child",
                         name="child",
                         source="child.md",
+                        exclude=["package.internal"],
                     )
                 ],
             ),
