@@ -117,6 +117,15 @@ class GenericPage(t.Generic[T_Page]):
     def has_content(self) -> bool:
         return bool(self.source or self.contents)
 
+    def resolve_source_path(self, context_directory: str) -> t.Optional[str]:
+        """Resolve #source relative to the plugin context directory."""
+
+        if not self.source:
+            return None
+        if os.path.isabs(self.source):
+            return self.source
+        return os.path.normpath(os.path.join(context_directory, self.source))
+
     def iter_hierarchy(self, parent_chain: t.List[GenericPage] | None = None) -> t.Iterable[IterHierarchyItem]:
         if parent_chain is None:
             parent_chain = []
@@ -182,7 +191,8 @@ class GenericPage(t.Generic[T_Page]):
             if write_prefix:
                 write_prefix(fp)
             if self.source:
-                src_path = os.path.join(context_directory, self.source)
+                src_path = self.resolve_source_path(context_directory)
+                assert src_path is not None
                 logger.info('Writing "%s" (source: "%s")', filename, src_path)
                 with open(src_path, "rb") as src:
                     shutil.copyfileobj(src, fp.buffer)  # type: ignore[misc]  # Fixed in https://github.com/python/mypy/pull/14975  # noqa: E501

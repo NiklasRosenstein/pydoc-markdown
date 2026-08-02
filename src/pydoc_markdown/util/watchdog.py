@@ -39,7 +39,8 @@ class _CallbackEventHandler(FileSystemEventHandler):
         self._filter_paths = filter_paths
 
     def on_any_event(self, event):
-        if self._filter_paths and event.src_path not in self._filter_paths:
+        event_paths = (event.src_path, getattr(event, "dest_path", None))
+        if self._filter_paths and not any(path in self._filter_paths for path in event_paths if path):
             return
         self._callback(event)
 

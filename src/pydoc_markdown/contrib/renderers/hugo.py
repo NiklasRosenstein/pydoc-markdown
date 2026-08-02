@@ -322,6 +322,15 @@ class HugoRenderer(Renderer, Server, Builder):
         #   renderer does not implement linking across multiple pages.
         return self.markdown.get_resolver(modules)
 
+    def get_watch_files(self) -> t.Iterable[str]:
+        context = getattr(self, "_context", None)
+        if context is None:
+            raise RuntimeError("HugoRenderer must be initialized before retrieving watch files")
+        for item in self.pages.iter_hierarchy():
+            source_path = item.page.resolve_source_path(context.directory)
+            if source_path is not None:
+                yield source_path
+
     # Server
 
     def get_server_url(self) -> str:

@@ -63,6 +63,11 @@ members while retaining any ancestors needed by other included objects. For exam
 objects below `school` except for the `school.admin` module and its members. Use the
 [`filter` processor](../api/pydoc_markdown/processors) when an exclusion should apply globally instead of to one page.
 
+A page can instead use `source` to copy an existing file into the generated site. Relative source paths are resolved
+from the directory containing the Pydoc-Markdown configuration file; absolute paths are used unchanged. With the
+`--server` option, MkDocs and Hugo source pages (including nested pages) are watched and trigger a fresh render when
+they change.
+
 ## YAML Preprocessing
 
   [YTT]: https://get-ytt.io/

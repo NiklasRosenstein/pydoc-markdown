@@ -135,6 +135,16 @@ class Renderer(PluginBase):
     def get_resolver(self, modules: t.List[docspec.Module]) -> t.Optional[Resolver]:
         return None
 
+    def get_watch_files(self) -> t.Iterable[str]:
+        """
+        Returns additional input files that should be watched when the renderer is used with the
+        live-preview server. Paths should be resolved relative to the renderer's #Context.
+
+        The default implementation returns no files.
+        """
+
+        return ()
+
     @abc.abstractmethod
     def render(self, modules: t.List[docspec.Module]) -> None: ...
 
