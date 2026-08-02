@@ -33,8 +33,8 @@ click = ">=7.1,<9.0"
 databind = ">=4.5.0,<5.0.0"
 # docspec still requires these proxy distributions. Exclude their broken 4.5.2
 # release until it migrates to the consolidated Databind package.
-"databind.core" = ">=4.5.0,<5.0.0,!=4.5.2"
-"databind.json" = ">=4.5.0,<5.0.0,!=4.5.2"
+databind-core = ">=4.5.0,<5.0.0,!=4.5.2"
+databind-json = ">=4.5.0,<5.0.0,!=4.5.2"
 docspec = "^2.2.1"
 docspec-python = "^2.2.1"
 docstring-parser = "^0.11"
