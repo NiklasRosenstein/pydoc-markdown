@@ -1434,6 +1434,10 @@ Exclusions are applied after <code>contents</code> and take precedence, so exclu
 members while retaining any ancestors needed by other included objects. For example, the configuration above includes
 objects below <code>school</code> except for the <code>school.admin</code> module and its members. Use the
 <a href="../api/pydoc_markdown/processors"><code>filter</code> processor</a> when an exclusion should apply globally instead of to one page.</p>
+<p>A page can instead use <code>source</code> to copy an existing file into the generated site. Relative source paths are resolved
+from the directory containing the Pydoc-Markdown configuration file; absolute paths are used unchanged. With the
+<code>--server</code> option, MkDocs and Hugo source pages (including nested pages) are watched and trigger a fresh render when
+they change.</p>
 <h2 id="yaml-preprocessing">YAML Preprocessing</h2>
 <blockquote>
 <p><em>New in Pydoc-Markdown 3.3.0. See also <code>pydoc_markdown.util.ytemplate</code></em></p>

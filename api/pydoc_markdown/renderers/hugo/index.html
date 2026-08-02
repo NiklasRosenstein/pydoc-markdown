@@ -1966,7 +1966,7 @@ automatically. Example:</p>
                  <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">extended</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L357">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L366">[view_source]</a></p>
 <p>Downloads the latest release of <em>Hugo</em> from <a href="https://github.com/gohugoio/hugo/releases">Github</a></p>
 <p>and places it at the path specified by <em>to</em>. This will install the extended version if it is
 available and <em>extended</em> is set to <code>True</code>.</p>
@@ -1981,14 +1981,14 @@ available and <em>extended</em> is set to <code>True</code>.</p>
 <h4 id="get_github_releases">get_github_releases</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_github_releases</span><span class="p">(</span><span class="n">repo</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Generator</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L422">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L431">[view_source]</a></p>
 <p>Returns an iterator for all releases of a Github repository.</p>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.parse_links_header"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.parse_links_header"></a></p>
 <h4 id="parse_links_header">parse_links_header</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_links_header</span><span class="p">(</span><span class="n">link_header</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L437">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L446">[view_source]</a></p>
 <p>Parses the <code>Link</code> HTTP header and returns a map of the links. Logic from
 <a href="https://github.com/eclipse/egit-github/blob/master/org.eclipse.egit.github.core/src/org/eclipse/egit/github/core/client/PageLinks.java#L43-75">PageLinks.java</a>.</p>
 
