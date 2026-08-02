@@ -135,6 +135,7 @@ class RenderSession:
         config.render(modules)
 
         watch_files = set(m.location.filename for m in modules)
+        watch_files.update(config.renderer.get_watch_files())
         if isinstance(self.config, str):
             watch_files.add(self.config)
 

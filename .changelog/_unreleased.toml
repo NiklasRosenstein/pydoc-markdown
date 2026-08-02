@@ -74,3 +74,9 @@ type = "feature"
 description = "Allow renderer pages to exclude API objects with glob patterns."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/358"
+
+[[entries]]
+id = "f95ef068-b953-40a9-bf82-00e8e2991972"
+type = "fix"
+description = "Watch configured page source files when serving MkDocs and Hugo output."
+author = "rosensteinniklas@gmail.com"

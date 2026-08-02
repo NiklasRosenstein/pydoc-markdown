@@ -1,4 +1,5 @@
 import io
+import os
 
 import pytest
 from docspec_python import parse_python_module
@@ -51,6 +52,16 @@ def test__GenericPage__exclude_does_not_change_positional_arguments() -> None:
 
     assert page.children is children
     assert page.exclude is None
+
+
+def test__GenericPage__resolve_source_path_uses_context_and_preserves_absolute_paths(tmp_path) -> None:
+    relative_page = Page("Relative", source=os.path.join("docs", "..", "README.md"))
+    absolute_source = str(tmp_path / "absolute.md")
+    absolute_page = Page("Absolute", source=absolute_source)
+
+    assert relative_page.resolve_source_path(str(tmp_path)) == str(tmp_path / "README.md")
+    assert absolute_page.resolve_source_path(str(tmp_path / "ignored")) == absolute_source
+    assert Page("Generated").resolve_source_path(str(tmp_path)) is None
 
 
 def test__GenericPage__filtered_modules__applies_exclusions_and_retains_ancestors() -> None:
