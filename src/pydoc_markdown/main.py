@@ -37,6 +37,7 @@ import webbrowser
 from pathlib import Path
 
 import click
+import tomli
 import yaml
 from databind.core import convert_dataclass_to_schema
 from docspec import dump_module
@@ -48,9 +49,31 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
 
-config_filenames = ["pydoc-markdown.yml", "pydoc-markdown.yaml", "pyproject.toml"]
+yaml_config_filenames = ["pydoc-markdown.yml", "pydoc-markdown.yaml"]
+config_filenames = [*yaml_config_filenames, "pyproject.toml"]
 default_config_notice = "Using this option will disable loading the default configuration file."
 logger = logging.getLogger(__name__)
+
+
+def _pyproject_has_pydoc_markdown_config(filename: str = "pyproject.toml") -> bool:
+    if not os.path.isfile(filename):
+        return False
+    try:
+        with open(filename, "rb") as fp:
+            data = tomli.load(fp)
+    except tomli.TOMLDecodeError:
+        return False
+    tool_config = data.get("tool")
+    return isinstance(tool_config, dict) and "pydoc-markdown" in tool_config
+
+
+def _find_implicit_config() -> t.Optional[str]:
+    yaml_config = next((x for x in yaml_config_filenames if os.path.exists(x)), None)
+    if yaml_config is not None:
+        return yaml_config
+    if _pyproject_has_pydoc_markdown_config():
+        return "pyproject.toml"
+    return None
 
 
 class RenderSession:
@@ -329,18 +352,23 @@ def cli(
                 print("created", filename)
 
         else:
-            existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
+            existing_file = next((x for x in yaml_config_filenames if os.path.lexists(x)), None)
+            if existing_file is None and _pyproject_has_pydoc_markdown_config():
+                existing_file = "pyproject.toml"
             if existing_file:
                 error("file already exists: {!r}".format(existing_file))
-            filename = config_filenames[0]
+            filename = yaml_config_filenames[0]
             source = {
                 "base": static.DEFAULT_CONFIG,
                 "mkdocs": static.DEFAULT_MKDOCS_CONFIG,
                 "hugo": static.DEFAULT_HUGO_CONFIG,
                 "docusaurus": static.DEFAULT_DOCUSAURUS_CONFIG,
             }
-            with open(filename, "w") as fp:
-                fp.write(source[bootstrap])
+            try:
+                with open(filename, "x") as fp:
+                    fp.write(source[bootstrap])
+            except FileExistsError:
+                error("file already exists: {!r}".format(filename))
             print("created", filename)
 
         return
@@ -366,11 +394,20 @@ def cli(
     # Load the configuration.
     if config and (config.lstrip().startswith("{") or "\n" in config):
         config = yaml.safe_load(config)
-    if config is None and load_implicit_config:
-        try:
-            config = next((x for x in config_filenames if os.path.exists(x)))
-        except StopIteration:
-            error("config file not found.")
+    if config is None:
+        implicit_config = _find_implicit_config()
+        if load_implicit_config:
+            if implicit_config is None:
+                error("config file not found.")
+            config = implicit_config
+        elif implicit_config is not None:
+            print(
+                "warning: quick CLI options disable implicit configuration loading; "
+                "ignoring {!r}. Pass the configuration filename explicitly to apply CLI overrides to it.".format(
+                    implicit_config
+                ),
+                file=sys.stderr,
+            )
 
     session = RenderSession(
         config=config, render_toc=render_toc, search_path=search_path, modules=modules, packages=packages, py2=py2
