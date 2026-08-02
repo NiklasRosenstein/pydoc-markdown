@@ -45,7 +45,8 @@ class PythonLoader(Loader):
     loaded and how to configure the parser.
 
     With no #modules or #packages set, the #PythonLoader will discover available modules
-    in the current and `src/` directory.
+    in the current and `src/` directory. Automatically discovered modules are returned
+    in name order; explicitly configured modules and packages retain their configured order.
 
     __lib2to3 Quirks__
 
@@ -135,13 +136,16 @@ class PythonLoader(Loader):
             do_discover,
         )
 
-        return docspec_python.load_python_modules(
+        loaded_modules = docspec_python.load_python_modules(
             modules=modules,
             packages=packages,
             search_path=search_path,
             options=self.parser,
             encoding=self.encoding,
         )
+        if do_discover:
+            return sorted(loaded_modules, key=lambda module: module.name)
+        return loaded_modules
 
     # PluginBase
 
