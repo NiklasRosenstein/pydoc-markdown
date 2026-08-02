@@ -189,7 +189,8 @@ class MkdocsRenderer(Renderer, Server, Builder):
         return self.markdown.get_resolver(modules)
 
     def get_watch_files(self) -> t.Iterable[str]:
-        assert self._context
+        if self._context is None:
+            raise RuntimeError("MkdocsRenderer must be initialized before retrieving watch files")
         for item in self.pages.iter_hierarchy():
             source_path = item.page.resolve_source_path(self._context.directory)
             if source_path is not None:

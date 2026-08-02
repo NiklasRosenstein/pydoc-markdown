@@ -1,3 +1,4 @@
+import pytest
 from databind.json import load
 
 from pydoc_markdown.contrib.renderers.hugo import HugoPage, HugoRenderer
@@ -80,3 +81,8 @@ def test_hugo_renderer_watches_nested_page_sources(tmp_path) -> None:
     renderer.init(Context(directory=str(tmp_path)))
 
     assert list(renderer.get_watch_files()) == [str(tmp_path / "relative.md"), absolute_source]
+
+
+def test_hugo_renderer_watch_files_requires_initialization() -> None:
+    with pytest.raises(RuntimeError, match="initialized"):
+        list(HugoRenderer().get_watch_files())
