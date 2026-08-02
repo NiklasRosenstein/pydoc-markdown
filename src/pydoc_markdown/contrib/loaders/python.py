@@ -139,6 +139,7 @@ class PythonLoader(Loader):
         )
 
         if do_discover:
+
             def load_discovered_modules() -> t.Iterator[docspec.Module]:
                 for package in packages:
                     files.extend(docspec_python.iter_package_files(package, search_path))
