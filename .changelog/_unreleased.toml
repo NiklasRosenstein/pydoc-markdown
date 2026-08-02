@@ -53,3 +53,9 @@ type = "breaking change"
 description = "Raise the minimum supported Python version to 3.10."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/355"
+
+[[entries]]
+id = "b211059d-51aa-4a41-b7af-bbbdec84bd67"
+type = "feature"
+description = "Allow setting a fallback page title for standalone Markdown rendering."
+author = "rosensteinniklas@gmail.com"

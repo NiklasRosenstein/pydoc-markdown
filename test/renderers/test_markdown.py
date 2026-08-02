@@ -78,3 +78,21 @@ def test_markdown_renderer(filename: str) -> None:
     config.processor.process(modules, None)
     result = config.renderer.render_to_string(modules)
     assert_text_equals(result, case.output)
+
+
+def test_markdown_renderer_page_title_fallback() -> None:
+    renderer = databind.json.load(
+        {"render_page_title": True, "page_title": "API Documentation"},
+        MarkdownRenderer,
+    )
+
+    assert renderer.render_to_string([]) == "# API Documentation\n\n"
+
+
+def test_markdown_renderer_explicit_page_title_takes_precedence() -> None:
+    renderer = MarkdownRenderer(render_page_title=True, page_title="API Documentation")
+    fp = io.StringIO()
+
+    renderer.render_single_page(fp, [], "Specific Page")
+
+    assert fp.getvalue() == "# Specific Page\n\n"
