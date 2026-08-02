@@ -81,3 +81,17 @@ type = "fix"
 description = "Watch configured page source files when serving MkDocs and Hugo output."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/359"
+
+[[entries]]
+id = "2e13eb74-d3cb-4c7d-a8b6-6371ac0be803"
+type = "feature"
+description = "Support NumPy-style docstrings and explicit docstring style selection in the Sphinx processor."
+author = "rosensteinniklas@gmail.com"
+issues = ["https://github.com/NiklasRosenstein/pydoc-markdown/issues/251"]
+
+[[entries]]
+id = "be78a721-0822-43eb-a1b3-f8710f6e215f"
+type = "fix"
+description = "Preserve the first line's indentation in space-indented ReST code blocks."
+author = "rosensteinniklas@gmail.com"
+issues = ["https://github.com/NiklasRosenstein/pydoc-markdown/issues/259"]

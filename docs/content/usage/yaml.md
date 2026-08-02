@@ -120,6 +120,20 @@ processors:
 - type: crossref
 ```
 
+The `sphinx` processor uses [`docstring-parser`](https://pypi.org/project/docstring-parser/) and supports ReST/Sphinx,
+Google, NumPy and Epydoc docstrings. Its `style` option accepts `AUTO` (the default), `REST`, `GOOGLE`, `NUMPYDOC` or
+`EPYDOC`. For example, to require NumPy-style docstrings instead of auto-detecting the format:
+
+```yaml
+processors:
+- type: filter
+- type: sphinx
+  style: NUMPYDOC
+- type: crossref
+```
+
+The default `smart` processor also detects NumPy-style docstrings automatically.
+
 ## Renderer
 
 The `$.renderer` defines the renderer to use when running `pydoc-markdown` without arguments.

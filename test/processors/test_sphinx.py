@@ -1,4 +1,5 @@
 import pytest
+from docstring_parser import DocstringStyle
 
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
@@ -57,6 +58,66 @@ md_with_param_type_returns_rtype = """
   **Returns**:
 
   `str`: Some eggs from foo and bar
+  """
+
+numpy_docstring = """
+  Compute a result.
+
+  Parameters
+  ----------
+  x : int
+      Input value.
+  label : str, optional
+      Label for the result.
+
+  Returns
+  -------
+  bool
+      Whether the operation succeeded.
+
+  Raises
+  ------
+  ValueError
+      If x is negative.
+  """
+
+numpy_markdown = """
+  Compute a result.
+
+  **Arguments**:
+
+  - `x` (`int`): Input value.
+  - `label` (`str`): Label for the result.
+
+  **Raises**:
+
+  - `ValueError`: If x is negative.
+
+  **Returns**:
+
+  `bool`: Whether the operation succeeded.
+  """
+
+four_space_indented_code_block = """
+  Example:
+
+      >>> url = URL('https://foo.bar')
+      >>> print(url)
+      https://foo.bar
+
+  :param url: Link to a remote file.
+  """
+
+four_space_indented_code_block_markdown = """
+  Example:
+
+      >>> url = URL('https://foo.bar')
+      >>> print(url)
+      https://foo.bar
+
+  **Arguments**:
+
+  - `url`: Link to a remote file.
   """
 
 md_with_param = """
@@ -185,3 +246,23 @@ def test_sphinx_with_codeblocks(processor):
 def test_sphinx_with_param_type_returns_rtype(processor):
     """Test sphinx processor with param, type, returns, rtype keywords"""
     assert_processor_result(processor, docstring_with_param_type_returns_rtype, md_with_param_type_returns_rtype)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_docstring(processor):
+    assert_processor_result(processor, numpy_docstring, numpy_markdown)
+
+
+def test_explicit_numpy_docstring_style():
+    processor = SphinxProcessor(style=DocstringStyle.NUMPYDOC)
+    assert_processor_result(processor, numpy_docstring, numpy_markdown)
+
+
+@pytest.mark.parametrize(
+    "processor",
+    [SphinxProcessor(), SphinxProcessor(style=DocstringStyle.REST), SmartProcessor()],
+)
+def test_four_space_indented_code_block(processor):
+    """Regression test for the exact report in #259."""
+
+    assert_processor_result(processor, four_space_indented_code_block, four_space_indented_code_block_markdown)

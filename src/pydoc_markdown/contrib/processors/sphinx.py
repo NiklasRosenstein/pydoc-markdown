@@ -20,7 +20,9 @@
 # IN THE SOFTWARE.
 
 import dataclasses
+import inspect
 import logging
+import re
 import typing as t
 
 import docspec
@@ -54,8 +56,9 @@ def generate_sections_markdown(lines, sections):
 @dataclasses.dataclass
 class SphinxProcessor(Processor):
     """
-    This processor parses ReST/Sphinx-style function documentation and converts it into
-    Markdown syntax.
+    This processor parses ReST/Sphinx, Google, NumPy and Epydoc-style function documentation
+    and converts it into Markdown syntax. Set #style to select a specific format, or leave it
+    as #docstring_parser.DocstringStyle.AUTO to detect the format automatically.
 
     Example:
 
@@ -73,6 +76,8 @@ class SphinxProcessor(Processor):
 
     @doc:fmt:sphinx
     """
+
+    style: docstring_parser.DocstringStyle = docstring_parser.DocstringStyle.AUTO
 
     _KEYWORDS = {
         "Arguments": [
@@ -94,7 +99,18 @@ class SphinxProcessor(Processor):
     }
 
     def check_docstring_format(self, docstring: str) -> bool:
-        return any(f":{k}" in docstring for _, value in self._KEYWORDS.items() for k in value)
+        if self.style in (docstring_parser.DocstringStyle.AUTO, docstring_parser.DocstringStyle.REST):
+            if any(f":{k}" in docstring for _, value in self._KEYWORDS.items() for k in value):
+                return True
+
+        if self.style not in (docstring_parser.DocstringStyle.AUTO, docstring_parser.DocstringStyle.NUMPYDOC):
+            return False
+
+        try:
+            parsed = docstring_parser.parse(docstring, docstring_parser.DocstringStyle.AUTO)
+        except docstring_parser.ParseError:
+            return False
+        return parsed.style == docstring_parser.DocstringStyle.NUMPYDOC
 
     def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
         docspec.visit(modules, self._process)
@@ -148,7 +164,8 @@ class SphinxProcessor(Processor):
         lines = []
         components: t.Dict[str, t.List[str]] = {}
 
-        parsed_docstring = docstring_parser.parse(node.docstring.content, docstring_parser.DocstringStyle.AUTO)
+        parsed_docstring = docstring_parser.parse(node.docstring.content, self.style)
+        self._restore_rest_description_indentation(node.docstring.content, parsed_docstring)
         components["Arguments"] = self._convert_params(parsed_docstring.params)
         components["Raises"] = self._convert_raises(parsed_docstring.raises)
         return_doc = self._convert_returns(parsed_docstring.returns)
@@ -164,3 +181,33 @@ class SphinxProcessor(Processor):
 
         generate_sections_markdown(lines, components)
         node.docstring.content = "\n".join(lines)
+
+    @staticmethod
+    def _restore_rest_description_indentation(text: str, parsed_docstring: docstring_parser.Docstring) -> None:
+        """Restore indentation stripped from the first line of a ReST long description.
+
+        ``docstring_parser`` strips all leading whitespace from the long-description chunk. This
+        loses the first line's indentation when an indented Markdown code block immediately follows
+        the short description. Only restore the prefix when the parsed line otherwise matches the
+        source, leaving the parser's normalization unchanged for ordinary prose.
+        """
+
+        if parsed_docstring.style != docstring_parser.DocstringStyle.REST or not parsed_docstring.long_description:
+            return
+
+        cleaned = inspect.cleandoc(text)
+        metadata = re.search("^:", cleaned, flags=re.MULTILINE)
+        description = cleaned[: metadata.start()] if metadata else cleaned
+        parts = description.split("\n", 1)
+        if len(parts) == 1:
+            return
+
+        source_long_description = parts[1].lstrip("\r\n")
+        if not source_long_description:
+            return
+
+        source_first_line = source_long_description.splitlines()[0]
+        parsed_first_line = parsed_docstring.long_description.splitlines()[0]
+        indentation = source_first_line[: len(source_first_line) - len(source_first_line.lstrip())]
+        if indentation and source_first_line.lstrip() == parsed_first_line:
+            parsed_docstring.long_description = indentation + parsed_docstring.long_description
