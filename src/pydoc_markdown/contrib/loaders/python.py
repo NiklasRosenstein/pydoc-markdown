@@ -105,6 +105,7 @@ class PythonLoader(Loader):
         modules = list(self.modules or [])
         packages = list(self.packages or [])
         do_discover = self.modules is None and self.packages is None
+        files: t.List[t.Tuple[str, str]] = []
 
         if do_discover:
             for path in search_path:
@@ -125,6 +126,7 @@ class PythonLoader(Loader):
                         continue
                     if isinstance(item, docspec_python.DiscoveryResult.Module):
                         modules.append(item.name)
+                        files.append((item.name, item.filename))
                     elif isinstance(item, docspec_python.DiscoveryResult.Package):
                         packages.append(item.name)
 
@@ -136,16 +138,26 @@ class PythonLoader(Loader):
             do_discover,
         )
 
-        loaded_modules = docspec_python.load_python_modules(
+        if do_discover:
+            def load_discovered_modules() -> t.Iterator[docspec.Module]:
+                for package in packages:
+                    files.extend(docspec_python.iter_package_files(package, search_path))
+                files.sort(key=lambda item: item[0])
+                yield from docspec_python.load_python_modules(
+                    files=files,
+                    options=self.parser,
+                    encoding=self.encoding,
+                )
+
+            return load_discovered_modules()
+
+        return docspec_python.load_python_modules(
             modules=modules,
             packages=packages,
             search_path=search_path,
             options=self.parser,
             encoding=self.encoding,
         )
-        if do_discover:
-            return sorted(loaded_modules, key=lambda module: module.name)
-        return loaded_modules
 
     # PluginBase
 
