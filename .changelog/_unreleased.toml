@@ -59,9 +59,11 @@ id = "b211059d-51aa-4a41-b7af-bbbdec84bd67"
 type = "feature"
 description = "Allow setting a fallback page title for standalone Markdown rendering."
 author = "rosensteinniklas@gmail.com"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/356"
 
 [[entries]]
 id = "89d0181f-c678-427b-81c9-6c0171f24cc9"
 type = "improvement"
 description = "Make automatically discovered module ordering deterministic."
 author = "rosensteinniklas@gmail.com"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/356"
