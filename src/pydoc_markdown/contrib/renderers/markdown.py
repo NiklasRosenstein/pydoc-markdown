@@ -222,6 +222,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     #: a file relative to the context directory (usually the working directory).
     format_code_style: str = "pep8"
 
+    #: The title of the page when one is not supplied by a parent renderer and
+    #: #render_page_title is enabled.
+    page_title: t.Optional[str] = None
+
     def __post_init__(self) -> None:
         self._resolver = MarkdownReferenceResolver()
 
@@ -447,7 +451,14 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     def render_single_page(
         self, fp: t.TextIO, modules: t.List[docspec.Module], page_title: t.Optional[str] = None
     ) -> None:
+        if page_title is None:
+            page_title = self.page_title
+
         if self.render_page_title:
+            if page_title is None:
+                raise ValueError(
+                    "page_title is required when render_page_title is enabled (set MarkdownRenderer.page_title or pass page_title)."
+                )
             fp.write("# {}\n\n".format(page_title))
 
         if self.render_toc:
