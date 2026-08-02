@@ -7,7 +7,6 @@ from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.renderers.docusaurus import DocusaurusRenderer
-from pydoc_markdown.interfaces import Context
 
 from ..utils import assert_text_equals
 
@@ -33,7 +32,6 @@ def test_full_processing():
     init_md = docs_path / "reference" / "a_test_package" / "module" / "__init__.md"
     wrong_module_init_md = docs_path / "reference" / "a_test_package" / "module.md"
     suff_md = docs_path / "reference" / "a_test_package" / "module" / "stuff.md"
-    other_suff_md = docs_path / "reference" / "a_test_package" / "module" / "other_stuff.md"
     assert (docs_path / "reference").is_dir()
     assert sidebar.exists()
     assert suff_md.exists()

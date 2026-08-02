@@ -32,8 +32,8 @@ Important locations:
   generic annotations that require Python 3.9.
 - Follow the existing typing style, including `typing` imported as `t` where
   surrounding code does so.
-- Let Black and isort determine Python formatting. The configured line length
-  is 120 characters. Avoid unrelated formatting churn.
+- Let Ruff determine Python formatting and import ordering. The configured line
+  length is 120 characters. Avoid unrelated formatting churn.
 - Do not edit generated output such as `htmlcov/`, `docs/_site/`, build
   directories, or caches.
 - Update user-facing documentation when behavior, configuration, CLI flags, or
@@ -63,9 +63,9 @@ Before handing off a code change, run the canonical project checks:
 slap test
 ```
 
-The configured suite runs pytest with coverage, mypy, isort checks, and Black
-checks. If a full run is not possible, run the relevant pytest target plus the
-affected static checks and report what was not run.
+The configured suite runs pytest with coverage, mypy, Ruff lint checks, and Ruff
+format checks. If a full run is not possible, run the relevant pytest target
+plus the affected static checks and report what was not run.
 
 Useful project commands:
 
@@ -73,6 +73,8 @@ Useful project commands:
 slap install --no-venv-check
 slap run fmt
 slap run docs:build
+ruff check src test
+ruff format --check src test
 ```
 
 Documentation builds require the docs extras, matching CI:

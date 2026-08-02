@@ -276,7 +276,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         else:
             header_template = level * "#" + " {title}"
         if self.render_novella_anchors:
-            fp.write(f"@anchor pydoc:" + ".".join(x.name for x in obj.path) + "\n")
+            fp.write("@anchor pydoc:" + ".".join(x.name for x in obj.path) + "\n")
         fp.write(header_template.format(title=self._get_title(obj)))
         fp.write("\n\n")
 
@@ -312,7 +312,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         result = self._yapf_code(result + ": pass").rpartition(":")[0].strip()
 
         if add_method_bar and self._is_method(func):
-            result = "\n".join(" | " + l for l in result.split("\n"))
+            result = "\n".join(" | " + line for line in result.split("\n"))
         return result
 
     def _format_classdef_signature(self, cls: docspec.Class) -> str:

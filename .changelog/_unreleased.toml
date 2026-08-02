@@ -32,3 +32,10 @@ type = "docs"
 description = "Fix links to docspec"
 author = "@rafalkrupinski"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/337"
+
+[[entries]]
+id = "b2fff564-06c4-4c00-8cd4-32a1949d7ae7"
+type = "improvement"
+description = "Replace Black and isort development checks with Ruff and restore mypy compatibility across the supported Python matrix."
+author = "rosensteinniklas@gmail.com"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/354"

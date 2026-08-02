@@ -82,7 +82,7 @@ class RenderSession:
 
         # Update configuration per command-line options.
         if self.modules or self.packages or self.search_path or self.py2 is not None:
-            loader = next((l for l in config.loaders if isinstance(l, PythonLoader)), None)
+            loader = next((item for item in config.loaders if isinstance(item, PythonLoader)), None)
             if not loader:
                 error("no python loader found")
             if self.modules:
@@ -149,8 +149,7 @@ class RenderSession:
         serves an HTML page from the renderer output on the fly.
         """
 
-        if not isinstance(config.renderer, Server):
-            error("renderer {!r} cannot be used with --server".format(type(config.renderer).__name__))
+        renderer = _get_server_renderer(config)
 
         observer, event, process = None, None, None
         watch_files = []
@@ -161,21 +160,22 @@ class RenderSession:
                 if not event or event.is_set():
                     if event:
                         config = self.load()
+                        renderer = _get_server_renderer(config)
                     logger.info("Rendering.")
                     watch_files = self.render(config)
                     if observer:
                         observer.stop()
                     observer, event = watch_paths(watch_files)
                     if process:
-                        process = config.renderer.reload_server(process)
+                        process = renderer.reload_server(process)
 
                 # If the process doesn't exist, start it.
                 if process is None:
                     logger.info("Starting MkDocs serve.")
-                    process = config.renderer.start_server()
+                    process = renderer.start_server()
                     if open_browser:
                         open_browser = False
-                        webbrowser.open(config.renderer.get_server_url())
+                        webbrowser.open(renderer.get_server_url())
 
                 event.wait(0.5)
         finally:
@@ -183,6 +183,13 @@ class RenderSession:
                 observer.stop()
             if process:
                 process.terminate()
+
+
+def _get_server_renderer(config: PydocMarkdown) -> Server:
+    renderer = config.renderer
+    if not isinstance(renderer, Server):
+        error("renderer {!r} cannot be used with --server".format(type(renderer).__name__))
+    return renderer
 
 
 def error(*args) -> t.NoReturn:

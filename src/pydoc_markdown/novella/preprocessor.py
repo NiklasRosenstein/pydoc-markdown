@@ -76,12 +76,10 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
         )
 
     @t.overload
-    def loader(self) -> Loader:
-        ...
+    def loader(self) -> Loader: ...
 
     @t.overload
-    def loader(self, loader: str | Loader, closure: t.Callable[[Loader], t.Any] | None) -> None:
-        ...
+    def loader(self, loader: str | Loader, closure: t.Callable[[Loader], t.Any] | None) -> None: ...
 
     def loader(self, loader=None, closure=None):
         if loader is not None:
@@ -96,12 +94,10 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
             return self._loader
 
     @t.overload
-    def renderer(self) -> SingleObjectRenderer:
-        ...
+    def renderer(self) -> SingleObjectRenderer: ...
 
     @t.overload
-    def renderer(self, renderer: str | Loader, closure: t.Callable[[Loader], t.Any] | None) -> None:
-        ...
+    def renderer(self, renderer: str | Loader, closure: t.Callable[[Loader], t.Any] | None) -> None: ...
 
     def renderer(self, renderer=None, closure=None):
         if renderer is not None:
@@ -136,7 +132,7 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
         context = Context(str(Path.cwd()))
         self._loader.init(context)
         self._renderer.init(context)
-        suite = self._load_api_suite()
+        self._load_api_suite()
 
         for file in files:
             tags = [t for t in parse_block_tags(file.content) if t.name == "pydoc"]

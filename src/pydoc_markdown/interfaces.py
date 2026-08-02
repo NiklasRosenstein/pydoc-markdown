@@ -65,8 +65,7 @@ class Loader(PluginBase):
     """
 
     @abc.abstractmethod
-    def load(self) -> t.Iterable[docspec.Module]:
-        ...
+    def load(self) -> t.Iterable[docspec.Module]: ...
 
 
 class LoaderError(Exception):
@@ -79,8 +78,7 @@ class Resolver(abc.ABC):
     """
 
     @abc.abstractmethod
-    def resolve_ref(self, scope: docspec.ApiObject, ref: str) -> t.Optional[str]:
-        ...
+    def resolve_ref(self, scope: docspec.ApiObject, ref: str) -> t.Optional[str]: ...
 
 
 class ResolverV2(abc.ABC):
@@ -90,8 +88,9 @@ class ResolverV2(abc.ABC):
     """
 
     @abc.abstractmethod
-    def resolve_reference(self, suite: "ApiSuite", scope: docspec.ApiObject, ref: str) -> t.Optional[docspec.ApiObject]:
-        ...
+    def resolve_reference(
+        self, suite: "ApiSuite", scope: docspec.ApiObject, ref: str
+    ) -> t.Optional[docspec.ApiObject]: ...
 
 
 @Union(
@@ -109,8 +108,7 @@ class Processor(PluginBase):
     """
 
     @abc.abstractmethod
-    def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
-        ...
+    def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None: ...
 
 
 @Union(
@@ -138,8 +136,7 @@ class Renderer(PluginBase):
         return None
 
     @abc.abstractmethod
-    def render(self, modules: t.List[docspec.Module]) -> None:
-        ...
+    def render(self, modules: t.List[docspec.Module]) -> None: ...
 
 
 class SinglePageRenderer(PluginBase):
@@ -150,8 +147,7 @@ class SinglePageRenderer(PluginBase):
     @abc.abstractmethod
     def render_single_page(
         self, fp: t.TextIO, modules: t.List[docspec.Module], page_title: t.Optional[str] = None
-    ) -> None:
-        ...
+    ) -> None: ...
 
 
 class SingleObjectRenderer(PluginBase):
@@ -160,8 +156,7 @@ class SingleObjectRenderer(PluginBase):
     """
 
     @abc.abstractmethod
-    def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None:
-        ...
+    def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None: ...
 
 
 class Server(abc.ABC):
@@ -174,12 +169,10 @@ class Server(abc.ABC):
     """
 
     @abc.abstractmethod
-    def get_server_url(self) -> str:
-        ...
+    def get_server_url(self) -> str: ...
 
     @abc.abstractmethod
-    def start_server(self) -> subprocess.Popen:
-        ...
+    def start_server(self) -> subprocess.Popen: ...
 
     def reload_server(self, process: subprocess.Popen) -> subprocess.Popen:
         """
@@ -221,5 +214,4 @@ class SourceLinker(PluginBase):
     """
 
     @abc.abstractmethod
-    def get_source_url(self, obj: docspec.ApiObject) -> t.Optional[str]:
-        ...
+    def get_source_url(self, obj: docspec.ApiObject) -> t.Optional[str]: ...
