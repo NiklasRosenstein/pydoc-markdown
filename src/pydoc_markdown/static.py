@@ -107,7 +107,7 @@ READTHEDOCS_FILES = {
 version: 2
 mkdocs: {}  # tell readthedocs to use mkdocs
 python:
-  version: 3.8
+  version: 3.10
   install:
   - method: pip
     path: .

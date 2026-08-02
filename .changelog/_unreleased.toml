@@ -43,6 +43,12 @@ pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/354"
 [[entries]]
 id = "01080370-e6b9-4bc2-921a-30649ff379fb"
 type = "fix"
-description = "Use consolidated Databind, exclude the broken 4.5.2 proxy packages, and require TypeAPI 2.3.0 to keep configuration loading compatible across Python 3.8–3.14."
+description = "Use consolidated Databind, exclude the broken 4.5.2 proxy packages, and require TypeAPI 2.3.0 to keep configuration loading compatible across supported Python versions."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/355"
+
+[[entries]]
+id = "630f7c60-6631-4e19-8c9e-ea15119f530f"
+type = "breaking change"
+description = "Raise the minimum supported Python version to 3.10."
+author = "rosensteinniklas@gmail.com"

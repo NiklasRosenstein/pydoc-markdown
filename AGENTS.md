@@ -4,7 +4,7 @@ This file applies to the entire repository.
 
 ## Project overview
 
-Pydoc-Markdown is a Python 3.8+ CLI and library that parses Python source with
+Pydoc-Markdown is a Python 3.10+ CLI and library that parses Python source with
 `docspec` and renders API documentation. The package uses a plugin architecture
 for loaders, processors, renderers, and source linkers.
 
@@ -27,9 +27,8 @@ Important locations:
 - Inspect the relevant interface and nearby implementation before changing a
   plugin. When adding a built-in plugin, keep the Poetry entry-point tables in
   `pyproject.toml` in sync.
-- Maintain Python 3.8 compatibility. In particular, avoid syntax introduced in
-  later versions, such as `X | None`, structural pattern matching, or built-in
-  generic annotations that require Python 3.9.
+- Maintain Python 3.10 compatibility. Avoid syntax introduced in later Python
+  versions unless the compatibility floor is intentionally raised.
 - Follow the existing typing style, including `typing` imported as `t` where
   surrounding code does so.
 - Let Ruff determine Python formatting and import ordering. The configured line
@@ -101,6 +100,6 @@ Trivial changes may omit an entry when they would use the repository's
 Before completing work:
 
 1. Review the diff for accidental or generated-file changes.
-2. Confirm new code remains compatible with Python 3.8.
+2. Confirm new code remains compatible with Python 3.10.
 3. Run focused tests and, when practical, `slap test`.
 4. Ensure documentation and changelog coverage match the user-visible impact.
