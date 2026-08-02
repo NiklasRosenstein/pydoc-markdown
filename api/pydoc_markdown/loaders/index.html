@@ -1360,7 +1360,8 @@
 <code>docspec_python</code>. See the options below to control which modules and packages are being
 loaded and how to configure the parser.</p>
 <p>With no <code>modules</code> or <a href="#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader.packages">packages</a> set, the <a href="#pydoc:pydoc_markdown.contrib.loaders.python.PythonLoader">PythonLoader</a> will discover available modules
-in the current and <code>src/</code> directory.</p>
+in the current and <code>src/</code> directory. Automatically discovered modules are returned
+in name order; explicitly configured modules and packages retain their configured order.</p>
 <p><strong>lib2to3 Quirks</strong></p>
 <p>Pydoc-Markdown doesn't execute your Python code but instead relies on the
 <code>lib2to3</code> parser. This means it also inherits any quirks of <code>lib2to3</code>.</p>
