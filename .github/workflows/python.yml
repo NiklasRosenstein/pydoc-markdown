@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.x" ]
+        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "3.x" ]
     steps:
     - uses: actions/checkout@v2
     - uses: NiklasRosenstein/slap@gha/install/v1
@@ -27,6 +27,33 @@ jobs:
       run: slap install --no-venv-check
     - name: Test
       run: slap test
+
+  compatibility:
+    name: Runtime config (Python ${{ matrix.python-version }}, Databind ${{ matrix.databind-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - python-version: "3.8"
+          databind-version: "4.5.0"
+        - python-version: "3.10"
+          databind-version: "4.5.2"
+        - python-version: "3.14"
+          databind-version: "4.5.0"
+        - python-version: "3.14"
+          databind-version: "4.5.5"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with: { python-version: "${{ matrix.python-version }}" }
+    - name: Install runtime with Databind ${{ matrix.databind-version }}
+      run: python -m pip install . "databind==${{ matrix.databind-version }}" "typeapi==2.3.0"
+    - name: Check dependency consistency
+      run: python -m pip check
+    - name: Load configuration
+      run: python test/test_config_smoke.py
 
   documentation:
     runs-on: ubuntu-latest
