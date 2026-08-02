@@ -73,7 +73,12 @@ def load(
         # Inline replacements.
         index = line.find("#@")
         if index > 0:
-            line = line[:index] + json.dumps(eval(line[index + 2 :], context, context)) + "\n"
+            expr = line[index + 2 :].strip()
+            if expr in context:
+                value = context[expr]
+            else:
+                raise ValueError("undefined variable in inline expression: {!r}".format(expr))
+            line = line[:index] + json.dumps(value) + "\n"
 
         yaml_code.append(line)
 
