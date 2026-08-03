@@ -234,3 +234,69 @@ def b():
     assert "[pydoc-reference_syntax.a-html]: https://html-a.example" in result
     assert "An [invalid] definition remains plain text." in result
     assert "[invalid]: foo\\ bar" in result
+
+
+def test_markdown_renderer_tracks_reference_container_state() -> None:
+    module = load_string_as_module(
+        Path("reference_containers.py"),
+        '''def a():
+    """An invalid inline link still contains an [outer](a b) shortcut.
+
+    - A list-relative [listed] reference.
+
+        [listed]: https://listed-a.example
+
+    A continuation-only footnote [^note].
+
+    [^note]:
+        Footnote A.
+
+    A URI autolink stays intact: <https://host.example/[autolink]>.
+
+    > <div>
+    A reference after the quoted HTML block is [html-block].
+
+    [outer]: https://outer-a.example
+    [autolink]: https://autolink-a.example
+    [html-block]: https://html-a.example
+    """
+
+def b():
+    """An invalid inline link still contains an [outer](a b) shortcut.
+
+    - A list-relative [listed] reference.
+
+        [listed]: https://listed-b.example
+
+    A continuation-only footnote [^note].
+
+    [^note]:
+        Footnote B.
+
+    A URI autolink stays intact: <https://host.example/[autolink]>.
+
+    > <div>
+    A reference after the quoted HTML block is [html-block].
+
+    [outer]: https://outer-b.example
+    [autolink]: https://autolink-b.example
+    [html-block]: https://html-b.example
+    """
+''',
+    )
+    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
+    renderer.init(Context("."))
+
+    result = renderer.render_to_string([module])
+
+    assert "[outer][pydoc-reference_containers.a-outer](a b)" in result
+    assert "[pydoc-reference_containers.a-outer]: https://outer-a.example" in result
+    assert "[listed][pydoc-reference_containers.a-listed]" in result
+    assert "[pydoc-reference_containers.a-listed]: https://listed-a.example" in result
+    assert "[^pydoc-reference_containers.a-note]" in result
+    assert "[^pydoc-reference_containers.a-note]:\n    Footnote A." in result
+    assert result.count("<https://host.example/[autolink]>") == 2
+    assert "[autolink]: https://autolink-a.example" in result
+    assert "[autolink]: https://autolink-b.example" in result
+    assert "[html-block][pydoc-reference_containers.a-html-block]" in result
+    assert "[pydoc-reference_containers.a-html-block]: https://html-a.example" in result

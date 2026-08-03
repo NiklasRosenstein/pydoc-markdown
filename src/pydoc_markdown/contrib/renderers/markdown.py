@@ -68,6 +68,7 @@ _INLINE_HTML_TAG_RE = re.compile(
     r"[ \t\r\n]*/?>"
     r")"
 )
+_URI_AUTOLINK_RE = re.compile(r"<[a-z][a-z0-9+.-]{1,31}:[^ <>]*>", re.IGNORECASE)
 _ESCAPABLE_PUNCTUATION_RE = re.compile(r"[!-/:-@\[-`{-~]")
 
 
@@ -195,7 +196,7 @@ def _list_content_indent(line: str) -> t.Optional[int]:
 
 
 def _reference_definition_end(text: str, colon: int, footnote: bool = False) -> t.Optional[int]:
-    """Validates a reference definition and returns the end of its first line."""
+    """Validates a reference definition and returns the end of its definition span."""
 
     line_end = len(text)
     for newline in (text.find("\n", colon + 1), text.find("\r", colon + 1)):
@@ -206,7 +207,30 @@ def _reference_definition_end(text: str, colon: int, footnote: bool = False) -> 
     while offset < line_end and text[offset] in " \t":
         offset += 1
     if offset >= line_end:
-        return None
+        if not footnote:
+            return None
+        next_start = line_end
+        if text.startswith("\r\n", next_start):
+            next_start += 2
+        elif next_start < len(text) and text[next_start] in "\r\n":
+            next_start += 1
+        else:
+            return None
+        next_end = len(text)
+        for newline in (text.find("\n", next_start), text.find("\r", next_start)):
+            if newline >= 0:
+                next_end = min(next_end, newline)
+        definition_start = max(text.rfind("\n", 0, colon), text.rfind("\r", 0, colon)) + 1
+        definition_line = text[definition_start:line_end]
+        continuation_line = text[next_start:next_end]
+        if _blockquote_depth(definition_line) != _blockquote_depth(continuation_line):
+            return None
+        definition_content = _strip_blockquote_prefix(definition_line)
+        continuation_content = _strip_blockquote_prefix(continuation_line)
+        list_indent = _list_content_indent(definition_content) or 0
+        if _leading_indent(continuation_content) < list_indent + 4 or not continuation_content.strip():
+            return None
+        return next_end
     if footnote:
         return line_end
 
@@ -290,7 +314,7 @@ def _reference_definition_end(text: str, colon: int, footnote: bool = False) -> 
 
 
 def _mask_html_tags(mask: bytearray, text: str, start: int, end: int) -> None:
-    """Masks inline HTML tags so brackets in attributes are never treated as links."""
+    """Masks inline HTML and URI autolinks so their brackets are not treated as links."""
 
     offset = start
     while offset < end:
@@ -299,6 +323,12 @@ def _mask_html_tags(mask: bytearray, text: str, start: int, end: int) -> None:
             return
         if opening + 1 >= end or text[opening + 1] not in "!?/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz":
             offset = opening + 1
+            continue
+        autolink_closing = text.find(">", opening + 1, end)
+        if autolink_closing >= 0 and _URI_AUTOLINK_RE.fullmatch(text[opening : autolink_closing + 1]):
+            autolink_closing += 1
+            mask[opening:autolink_closing] = b"\1" * (autolink_closing - opening)
+            offset = autolink_closing
             continue
         quote: t.Optional[str] = None
         closing = opening + 1
@@ -329,6 +359,7 @@ def _markdown_protected_mask(text: str) -> bytearray:
     fence: t.Optional[t.Tuple[str, int, int, int]] = None
     html_end: t.Optional[str] = None
     in_html_block = False
+    html_container: t.Optional[t.Tuple[int, int]] = None
     in_indented_code = False
     list_content_indent: t.Optional[int] = None
     previous_blank = True
@@ -361,13 +392,24 @@ def _markdown_protected_mask(text: str) -> bytearray:
                 continue
 
         if in_html_block:
-            mask[offset:line_end] = b"\1" * len(line)
-            if (html_end and html_end in line_body.lower()) or (not html_end and blank):
+            assert html_container is not None
+            quoted_content = _strip_blockquote_prefix(line_body)
+            container_ended = _blockquote_depth(line_body) < html_container[1] or (
+                html_container[0] > 0 and not blank and _leading_indent(quoted_content) < html_container[0]
+            )
+            if container_ended:
                 html_end = None
                 in_html_block = False
-            previous_blank = blank
-            offset = line_end
-            continue
+                html_container = None
+            else:
+                mask[offset:line_end] = b"\1" * len(line)
+                if (html_end and html_end in line_body.lower()) or (not html_end and blank):
+                    html_end = None
+                    in_html_block = False
+                    html_container = None
+                previous_blank = blank
+                offset = line_end
+                continue
 
         match = _FENCE_RE.match(_strip_container_prefix(line_body))
         if match and (match.group(2)[0] != "`" or "`" not in match.group(3)):
@@ -406,10 +448,16 @@ def _markdown_protected_mask(text: str) -> bytearray:
             in_html_block = True
             html_end = None
         if in_html_block or html_end:
+            quoted_content = _strip_blockquote_prefix(line_body)
+            html_container = (
+                _list_content_indent(quoted_content) or 0,
+                _blockquote_depth(line_body),
+            )
             mask[offset:line_end] = b"\1" * len(line)
             if html_end and html_end in lowered:
                 html_end = None
                 in_html_block = False
+                html_container = None
             previous_blank = blank
             offset = line_end
             continue
@@ -653,14 +701,36 @@ def _analyze_docstring_references(obj: docspec.ApiObject, content: str) -> _Docs
     inline_image_openings: t.Set[int] = set()
 
     definition_starts: t.List[t.Tuple[int, int]] = []
+    definition_list_indent: t.Optional[int] = None
+    previous_blank = True
     line_offset = 0
     for line in content.splitlines(keepends=True):
         line_body = line.rstrip("\r\n")
-        container_content = _strip_container_prefix(line_body)
+        content_after_quotes = _strip_blockquote_prefix(line_body)
+        blank = not content_after_quotes.strip()
+        new_list_content_indent = _list_content_indent(content_after_quotes)
+        if new_list_content_indent is not None:
+            definition_list_indent = new_list_content_indent
+        elif (
+            definition_list_indent is not None
+            and not blank
+            and _leading_indent(content_after_quotes) < definition_list_indent
+            and previous_blank
+        ):
+            definition_list_indent = None
+        relative_content = (
+            _strip_indent(content_after_quotes, definition_list_indent)
+            if definition_list_indent is not None
+            and _leading_indent(content_after_quotes) >= definition_list_indent
+            and new_list_content_indent is None
+            else line_body
+        )
+        container_content = _strip_container_prefix(relative_content)
         container_offset = len(line_body) - len(container_content)
         match = _REFERENCE_DEFINITION_START_RE.match(container_content)
         if match:
             definition_starts.append((line_offset + container_offset + match.end() - 1, line_offset))
+        previous_blank = blank
         line_offset += len(line)
 
     for opening, line_start in definition_starts:
@@ -703,18 +773,16 @@ def _analyze_docstring_references(obj: docspec.ApiObject, content: str) -> _Docs
 
         if closing + 1 < len(content) and content[closing + 1] == "(":
             inline_closing = _find_closing_parenthesis(content, closing + 1)
-            if inline_closing is None or not _is_valid_inline_link(content, closing + 1, inline_closing):
-                offset = closing + 2
+            if inline_closing is not None and _is_valid_inline_link(content, closing + 1, inline_closing):
+                inline_end = inline_closing + 1
+                nested_images = _image_reference_openings(content, opening + 1, closing)
+                if nested_images:
+                    inline_link_spans.append((opening, inline_end))
+                    inline_image_openings.update(nested_images)
+                    offset = opening + 1
+                else:
+                    offset = inline_end
                 continue
-            inline_end = inline_closing + 1
-            nested_images = _image_reference_openings(content, opening + 1, closing)
-            if nested_images:
-                inline_link_spans.append((opening, inline_end))
-                inline_image_openings.update(nested_images)
-                offset = opening + 1
-            else:
-                offset = inline_end
-            continue
 
         if closing + 1 < len(content) and content[closing + 1] == "[":
             label_opening = closing + 1
