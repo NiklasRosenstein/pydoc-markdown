@@ -28,6 +28,43 @@ import docspec
 from pydoc_markdown.contrib.processors.sphinx import generate_sections_markdown
 from pydoc_markdown.interfaces import Processor, Resolver
 
+_MARKDOWN_FENCE_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
+_MarkdownFence = t.Tuple[str, int, int]
+
+
+def _split_markdown_blockquote_prefix(line: str) -> t.Tuple[str, int]:
+    line = line.lstrip()
+    depth = 0
+    while line.startswith(">"):
+        depth += 1
+        line = line[1:]
+        if line.startswith((" ", "\t")):
+            line = line[1:]
+        line = line.lstrip()
+    return line, depth
+
+
+def _get_markdown_fence(line: str) -> t.Optional[_MarkdownFence]:
+    content, blockquote_depth = _split_markdown_blockquote_prefix(line)
+    match = _MARKDOWN_FENCE_RE.match(content)
+    if not match:
+        return None
+    fence = match.group("fence")
+    if fence[0] == "`" and "`" in match.group("info"):
+        return None
+    return fence[0], len(fence), blockquote_depth
+
+
+def _is_markdown_fence_closer(line: str, fence: _MarkdownFence) -> bool:
+    character, minimum_length, blockquote_depth = fence
+    stripped, candidate_blockquote_depth = _split_markdown_blockquote_prefix(line)
+    stripped = stripped.strip()
+    return (
+        len(stripped) >= minimum_length
+        and all(value == character for value in stripped)
+        and candidate_blockquote_depth == blockquote_depth
+    )
+
 
 @dataclasses.dataclass
 class GoogleProcessor(Processor):
@@ -71,6 +108,10 @@ class GoogleProcessor(Processor):
     Todo:
         * For module TODOs
         * You have to also use ``sphinx.ext.todo`` extension
+
+    Relative indentation in section bodies is preserved. In `Example:` and `Examples:` sections, an indented body
+    without a fenced code block remains a Markdown literal block. Structural Google-style indentation is removed
+    from fenced code blocks so that their fences render correctly.
 
     @doc:fmt:google
     """
@@ -118,53 +159,144 @@ class GoogleProcessor(Processor):
     def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
         docspec.visit(modules, self._process)
 
-    def _process(self, node: docspec.ApiObject):
+    @staticmethod
+    def _get_indentation(line: str) -> int:
+        leading_whitespace = line[: len(line) - len(line.lstrip())]
+        return len(leading_whitespace.expandtabs(4))
+
+    @classmethod
+    def _remove_indentation(cls, line: str, indentation: int) -> str:
+        leading_length = len(line) - len(line.lstrip())
+        leading_whitespace = line[:leading_length].expandtabs(4)
+        return leading_whitespace[min(len(leading_whitespace), indentation) :] + line[leading_length:]
+
+    def _format_section(self, keyword: str, raw_lines: t.List[str]) -> t.List[str]:
+        section_indent = min((self._get_indentation(line) for line in raw_lines if line.strip()), default=0)
+        has_codeblock = any(_get_markdown_fence(line) is not None for line in raw_lines)
+        is_example = keyword in ("Example", "Examples")
+
+        # An indented, unfenced Examples section is a Markdown literal block. Keep its indentation intact.
+        if is_example and not has_codeblock:
+            return [line if line else "  " for line in raw_lines]
+
+        result: t.List[str] = []
+        markdown_fence: t.Optional[_MarkdownFence] = None
+        codeblock_indent = 0
+        codeblock_prefix = ""
+        after_parameter = False
+        continuation_indent: t.Optional[int] = None
+
+        for raw_line in raw_lines:
+            line = raw_line.strip()
+            normalized_line = self._remove_indentation(raw_line, section_indent).rstrip()
+
+            if markdown_fence is not None:
+                result.append(codeblock_prefix + self._remove_indentation(raw_line, codeblock_indent).rstrip())
+                if _is_markdown_fence_closer(line, markdown_fence):
+                    markdown_fence = None
+                continue
+
+            markdown_fence = _get_markdown_fence(line)
+            if markdown_fence is not None:
+                preserve_indent = 2 if markdown_fence[2] else 0
+                codeblock_indent = min(max(section_indent - preserve_indent, 0), self._get_indentation(raw_line))
+                rebased = self._remove_indentation(raw_line, codeblock_indent).rstrip()
+                rebased_indent = self._get_indentation(rebased)
+                container_content_indent: t.Optional[int] = None
+                for previous_index in range(len(result) - 1, -1, -1):
+                    previous = result[previous_index]
+                    if not previous.strip():
+                        continue
+                    previous_indent = self._get_indentation(previous)
+                    if previous_indent > rebased_indent:
+                        continue
+                    is_nested = self._get_indentation(raw_line) > self._get_indentation(raw_lines[previous_index])
+                    list_match = re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous)
+                    if list_match and is_nested:
+                        container_content_indent = len(list_match.group().expandtabs(4))
+                        if list_match.end() == len(previous):
+                            container_content_indent += 1
+                    admonition_match = re.match(r"^\s*(?:!!!|\?{3}\+?)(?:[ \t]+|$)", previous)
+                    if admonition_match and is_nested:
+                        container_content_indent = previous_indent + 4
+                    break
+                codeblock_prefix = (
+                    " " * max(container_content_indent - rebased_indent, 0)
+                    if container_content_indent is not None and rebased_indent
+                    else ""
+                )
+                result.append(codeblock_prefix + rebased)
+                continue
+
+            param_match = None
+            for param_re in self._param_res:
+                param_match = param_re.match(line)
+                if param_match:
+                    if "type" in param_match.groupdict():
+                        result.append("- `{param}` _{type}_ - {desc}".format(**param_match.groupdict()))
+                    else:
+                        result.append("- `{param}` - {desc}".format(**param_match.groupdict()))
+                    after_parameter = True
+                    continuation_indent = None
+                    break
+
+            if param_match:
+                continue
+
+            if not line:
+                result.append("  ")
+                continue
+
+            if after_parameter:
+                line_indent = self._get_indentation(raw_line)
+                if continuation_indent is None:
+                    continuation_indent = line_indent
+                relative_indent = max(line_indent - continuation_indent, 0)
+                result.append("  " + " " * relative_indent + line)
+            else:
+                result.append("  " + normalized_line)
+
+        return result
+
+    def _process(self, node: docspec.ApiObject) -> None:
         if not node.docstring:
             return
 
-        lines = []
+        lines: t.List[str] = []
         current_lines: t.List[str] = []
-        in_codeblock = False
-        keyword = None
+        markdown_fence: t.Optional[_MarkdownFence] = None
+        keyword: t.Optional[str] = None
 
-        def _commit():
+        def _commit() -> None:
             if keyword:
-                generate_sections_markdown(lines, {keyword: current_lines})
+                generate_sections_markdown(lines, {keyword: self._format_section(keyword, current_lines)})
             else:
                 lines.extend(current_lines)
             current_lines.clear()
 
         for line in node.docstring.content.split("\n"):
-            if line.lstrip().startswith("```"):
-                in_codeblock = not in_codeblock
+            stripped_line = line.strip()
+            if markdown_fence is not None:
+                current_lines.append(line)
+                if _is_markdown_fence_closer(stripped_line, markdown_fence):
+                    markdown_fence = None
+                continue
+
+            markdown_fence = _get_markdown_fence(stripped_line)
+            if markdown_fence is not None:
                 current_lines.append(line)
                 continue
 
-            if in_codeblock:
-                current_lines.append(line)
-                continue
-
-            line = line.strip()
-            if line in self._keywords_map:
+            if stripped_line in self._keywords_map:
                 _commit()
-                keyword = self._keywords_map[line]
+                keyword = self._keywords_map[stripped_line]
                 continue
 
             if keyword is None:
-                lines.append(line)
+                current_lines.append(stripped_line)
                 continue
 
-            for param_re in self._param_res:
-                param_match = param_re.match(line)
-                if param_match:
-                    if "type" in param_match.groupdict():
-                        current_lines.append("- `{param}` _{type}_ - {desc}".format(**param_match.groupdict()))
-                    else:
-                        current_lines.append("- `{param}` - {desc}".format(**param_match.groupdict()))
-                    break
-
-            if not param_match:
-                current_lines.append("  {line}".format(line=line))
+            current_lines.append(line)
 
         _commit()
         node.docstring.content = "\n".join(lines)

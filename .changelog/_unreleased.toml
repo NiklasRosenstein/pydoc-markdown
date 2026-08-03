@@ -81,3 +81,10 @@ type = "fix"
 description = "Watch configured page source files when serving MkDocs and Hugo output."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/359"
+
+[[entries]]
+id = "98f2a0a7-eedb-4baf-ae39-28d8eeff37c7"
+type = "fix"
+description = "Preserve relative indentation in Google-style docstring sections and render example code blocks correctly."
+author = "rosensteinniklas@gmail.com"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/363"
