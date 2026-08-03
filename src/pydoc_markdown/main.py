@@ -63,6 +63,9 @@ def _pyproject_has_pydoc_markdown_config(filename: str = "pyproject.toml") -> bo
             data = tomli.load(fp)
     except tomli.TOMLDecodeError:
         return False
+    except OSError as exc:
+        logger.warning("could not inspect %r: %s; treating it as configured", filename, exc)
+        return True
     tool_config = data.get("tool")
     return isinstance(tool_config, dict) and "pydoc-markdown" in tool_config
 
