@@ -1,4 +1,6 @@
 import pytest
+from docstring_parser import DocstringStyle
+from docstring_parser.common import Docstring, DocstringMeta, DocstringParam
 
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
@@ -57,6 +59,225 @@ md_with_param_type_returns_rtype = """
   **Returns**:
 
   `str`: Some eggs from foo and bar
+  """
+
+numpy_docstring = """
+  Compute a result.
+
+  Parameters
+  ----------
+  x : int
+      Input value.
+  label : str, optional
+      Label for the result.
+
+  Returns
+  -------
+  bool
+      Whether the operation succeeded.
+
+  Raises
+  ------
+  ValueError
+      If x is negative.
+
+      Check the input before retrying.
+  """
+
+numpy_markdown = """
+  Compute a result.
+
+  **Arguments**:
+
+  - `x` (`int`): Input value.
+  - `label` (`str`, optional): Label for the result.
+
+  **Raises**:
+
+  - `ValueError`: If x is negative.
+
+    Check the input before retrying.
+
+  **Returns**:
+
+  `bool`: Whether the operation succeeded.
+  """
+
+numpy_docstring_with_raises_and_warnings = """
+  Validate a result.
+
+  Raises
+  ------
+  ValueError
+      If the result is invalid.
+
+  Warns
+  -----
+  UserWarning
+      If the result is incomplete.
+
+  Warnings
+  --------
+  Results may change in future versions.
+  """
+
+numpy_raises_and_warnings_markdown = """
+  Validate a result.
+
+  **Raises**:
+
+  - `ValueError`: If the result is invalid.
+
+  **Warnings**:
+
+  - `UserWarning`: If the result is incomplete.
+  - Results may change in future versions.
+  """
+
+numpy_docstring_with_other_parameters = """
+  Configure a result.
+
+  Parameters
+  ----------
+  value : int
+      Primary input.
+
+  Other Parameters
+  ----------------
+  label : str
+      Advanced label.
+  """
+
+numpy_other_parameters_markdown = """
+  Configure a result.
+
+  **Arguments**:
+
+  - `value` (`int`): Primary input.
+
+  **Other Parameters**:
+
+  - `label` (`str`): Advanced label.
+  """
+
+numpy_docstring_with_parameter_details = """
+  Configure values.
+
+  Parameters
+  ----------
+  value : int
+      First paragraph.
+
+      Second paragraph.
+  label : str
+  """
+
+numpy_parameter_details_markdown = """
+  Configure values.
+
+  **Arguments**:
+
+  - `value` (`int`): First paragraph.
+
+    Second paragraph.
+  - `label` (`str`):
+  """
+
+numpy_docstring_with_multiline_returns = """
+  Compute results.
+
+  Returns
+  -------
+  value : int
+      First paragraph.
+
+      Second paragraph.
+
+          example()
+  label : str
+      Result label.
+  """
+
+numpy_multiline_returns_markdown = """
+  Compute results.
+
+  **Returns**:
+
+  - `value` (`int`): First paragraph.
+
+    Second paragraph.
+
+        example()
+  - `label` (`str`): Result label.
+  """
+
+numpy_docstring_with_additional_sections = """
+  Generate results.
+
+  Yields
+  ------
+  int
+      The next value.
+
+  Returns
+  -------
+  count : int
+      Number of results.
+  label : str
+      Result label.
+
+  Examples
+  --------
+  >>> list(generate())
+  [1]
+
+  Notes
+  -----
+  Results are generated lazily.
+  """
+
+numpy_additional_sections_markdown = """
+  Generate results.
+
+  **Returns**:
+
+  - `count` (`int`): Number of results.
+  - `label` (`str`): Result label.
+
+  **Yields**:
+
+  `int`: The next value.
+
+  **Examples**:
+
+  >>> list(generate())
+  [1]
+
+  **Notes**:
+
+  Results are generated lazily.
+  """
+
+four_space_indented_code_block = """
+  Example:
+
+      >>> url = URL('https://foo.bar')
+      >>> print(url)
+      https://foo.bar
+
+  :param url: Link to a remote file.
+  """
+
+four_space_indented_code_block_markdown = """
+  Example:
+
+      >>> url = URL('https://foo.bar')
+      >>> print(url)
+      https://foo.bar
+
+  **Arguments**:
+
+  - `url`: Link to a remote file.
   """
 
 md_with_param = """
@@ -126,7 +347,7 @@ md_with_multiline_param = """
   **Arguments**:
 
   - `foolong`: This parameter has a particularly long description
-  that requires multiple lines.
+    that requires multiple lines.
   """
 
 
@@ -185,3 +406,96 @@ def test_sphinx_with_codeblocks(processor):
 def test_sphinx_with_param_type_returns_rtype(processor):
     """Test sphinx processor with param, type, returns, rtype keywords"""
     assert_processor_result(processor, docstring_with_param_type_returns_rtype, md_with_param_type_returns_rtype)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_docstring(processor):
+    assert_processor_result(processor, numpy_docstring, numpy_markdown)
+
+
+def test_explicit_numpy_docstring_style():
+    processor = SphinxProcessor(style=DocstringStyle.NUMPYDOC)
+    assert_processor_result(processor, numpy_docstring, numpy_markdown)
+
+
+@pytest.mark.parametrize(
+    "processor",
+    [SphinxProcessor(), SphinxProcessor(style=DocstringStyle.NUMPYDOC), SmartProcessor()],
+)
+def test_numpy_warnings_are_kept_separate_from_raises(processor):
+    assert_processor_result(processor, numpy_docstring_with_raises_and_warnings, numpy_raises_and_warnings_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_other_parameters_are_kept_separate_from_arguments(processor):
+    assert_processor_result(processor, numpy_docstring_with_other_parameters, numpy_other_parameters_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_parameter_details_remain_inside_list_items(processor):
+    assert_processor_result(processor, numpy_docstring_with_parameter_details, numpy_parameter_details_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_multiline_returns_remain_inside_list_items(processor):
+    assert_processor_result(processor, numpy_docstring_with_multiline_returns, numpy_multiline_returns_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_additional_sections_are_preserved(processor):
+    assert_processor_result(processor, numpy_docstring_with_additional_sections, numpy_additional_sections_markdown)
+
+
+@pytest.mark.parametrize(
+    ("style", "docstring", "expected"),
+    [
+        (
+            DocstringStyle.GOOGLE,
+            "Summary.\n\nExample:\n    >>> example()",
+            "Summary.\n\n**Examples**:\n\n>>> example()",
+        ),
+        (
+            DocstringStyle.EPYDOC,
+            "Summary.\n@note: Keep this.",
+            "Summary.\n\n**Notes**:\n\nKeep this.",
+        ),
+    ],
+)
+def test_explicit_styles_preserve_unhandled_metadata(style, docstring, expected):
+    assert_processor_result(SphinxProcessor(style=style), docstring, expected)
+
+
+def test_structured_metadata_preserves_identifiers():
+    parsed = Docstring(DocstringStyle.NUMPYDOC)
+    parsed.meta.append(DocstringMeta(["method", "build(value)"], "Build a value."))
+    parsed.meta.append(DocstringMeta(["method", "save()"], "Save it."))
+
+    assert SphinxProcessor._convert_metadata(parsed, []) == {
+        "Methods": ["- `build(value)`: Build a value.", "- `save()`: Save it."]
+    }
+
+
+def test_explicit_google_style_keeps_attributes_separate_from_arguments():
+    assert_processor_result(
+        SphinxProcessor(style=DocstringStyle.GOOGLE),
+        "Summary.\n\nArgs:\n    x (int): Input.\n\nAttributes:\n    value (str): Stored.",
+        ("Summary.\n\n**Arguments**:\n\n- `x` (`int`): Input.\n\n**Attributes**:\n\n- `value` (`str`): Stored."),
+    )
+
+
+def test_parameter_qualifiers_are_preserved():
+    parameter = DocstringParam(["param", "limit"], "Maximum count.", "limit", "int", True, "10")
+
+    assert SphinxProcessor()._convert_params([parameter]) == [
+        "- `limit` (`int`, optional, default: `10`): Maximum count."
+    ]
+
+
+@pytest.mark.parametrize(
+    "processor",
+    [SphinxProcessor(), SphinxProcessor(style=DocstringStyle.REST), SmartProcessor()],
+)
+def test_four_space_indented_code_block(processor):
+    """Regression test for the exact report in #259."""
+
+    assert_processor_result(processor, four_space_indented_code_block, four_space_indented_code_block_markdown)

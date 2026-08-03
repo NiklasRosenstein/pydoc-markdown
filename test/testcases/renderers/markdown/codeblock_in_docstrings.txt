@@ -28,7 +28,7 @@ def func() -> None
 
 Example:
 
->>> url = URL('https://foo.bar')
+    >>> url = URL('https://foo.bar')
     >>> print(url)
     https://foo.bar
 

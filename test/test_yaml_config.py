@@ -2,9 +2,11 @@
 Test loding the YAML configuration format for Pydoc Markdown.
 """
 
+from docstring_parser import DocstringStyle
 from pytest import raises
 
 from pydoc_markdown import Hooks, PydocMarkdown
+from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
 from pydoc_markdown.contrib.renderers.docusaurus import CustomizedMarkdownRenderer, DocusaurusRenderer
 from pydoc_markdown.contrib.renderers.hugo import HugoConfig, HugoRenderer
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
@@ -14,6 +16,13 @@ def test__PydocMarkdown__load_config__empty_input() -> None:
     pydoc_markdown = PydocMarkdown()
     pydoc_markdown.load_config({})
     assert pydoc_markdown == PydocMarkdown()
+
+
+def test__PydocMarkdown__load_config__can_select_docstring_style() -> None:
+    for name, style in [("AUTO", DocstringStyle.AUTO), ("NUMPYDOC", DocstringStyle.NUMPYDOC)]:
+        pydoc_markdown = PydocMarkdown()
+        pydoc_markdown.load_config({"processors": [{"type": "sphinx", "style": name}]})
+        assert pydoc_markdown.processors == [SphinxProcessor(style=style)]
 
 
 def test__PydocMarkdown__load_config__can_deserialize_markdown_config_from_entrypoint_name() -> None:
