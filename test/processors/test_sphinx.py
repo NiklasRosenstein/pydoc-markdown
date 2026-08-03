@@ -1,5 +1,6 @@
 import pytest
 from docstring_parser import DocstringStyle
+from docstring_parser.common import Docstring, DocstringMeta
 
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
@@ -308,6 +309,32 @@ def test_explicit_numpy_docstring_style():
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
 def test_numpy_additional_sections_are_preserved(processor):
     assert_processor_result(processor, numpy_docstring_with_additional_sections, numpy_additional_sections_markdown)
+
+
+@pytest.mark.parametrize(
+    ("style", "docstring", "expected"),
+    [
+        (
+            DocstringStyle.GOOGLE,
+            "Summary.\n\nExample:\n    >>> example()",
+            "Summary.\n\n**Examples**:\n\n>>> example()",
+        ),
+        (
+            DocstringStyle.EPYDOC,
+            "Summary.\n@note: Keep this.",
+            "Summary.\n\n**Notes**:\n\nKeep this.",
+        ),
+    ],
+)
+def test_explicit_styles_preserve_unhandled_metadata(style, docstring, expected):
+    assert_processor_result(SphinxProcessor(style=style), docstring, expected)
+
+
+def test_structured_metadata_preserves_identifiers():
+    parsed = Docstring(DocstringStyle.NUMPYDOC)
+    parsed.meta.append(DocstringMeta(["method", "build(value)"], "Build a value."))
+
+    assert SphinxProcessor._convert_metadata(parsed, []) == {"Methods": ["`build(value)`: Build a value."]}
 
 
 @pytest.mark.parametrize(

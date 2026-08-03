@@ -164,18 +164,30 @@ class SphinxProcessor(Processor):
         return converted
 
     @staticmethod
-    def _convert_numpy_metadata(
+    def _convert_metadata(
         parsed_docstring: docstring_parser.Docstring, handled: t.Iterable[docstring_parser.common.DocstringMeta]
     ) -> t.Dict[str, t.List[str]]:
-        """Preserve NumPy sections that do not have a dedicated converter."""
+        """Preserve parsed sections that do not have a dedicated converter."""
 
         handled_ids = {id(entry) for entry in handled}
         converted: t.Dict[str, t.List[str]] = {}
         for entry in parsed_docstring.meta:
             if id(entry) in handled_ids or not entry.args:
                 continue
-            heading = entry.args[0].replace("_", " ").title()
-            converted.setdefault(heading, []).append(entry.description or "")
+            heading_key = entry.args[0].replace("_", " ").casefold()
+            heading = {
+                "attribute": "Attributes",
+                "example": "Examples",
+                "method": "Methods",
+                "note": "Notes",
+                "reference": "References",
+                "warning": "Warnings",
+            }.get(heading_key, heading_key.title())
+            description = entry.description or ""
+            identifier = " ".join(entry.args[1:])
+            if identifier:
+                description = "`{}`: {}".format(identifier, description)
+            converted.setdefault(heading, []).append(description)
         return converted
 
     def _process(self, node: docspec.ApiObject) -> None:
@@ -193,9 +205,8 @@ class SphinxProcessor(Processor):
         yields = [entry for entry in parsed_docstring.many_returns if entry.is_generator]
         components["Returns"] = self._convert_returns(returns)
         components["Yields"] = self._convert_returns(yields)
-        if parsed_docstring.style == docstring_parser.DocstringStyle.NUMPYDOC:
-            handled = [*parsed_docstring.params, *parsed_docstring.raises, *parsed_docstring.many_returns]
-            components.update(self._convert_numpy_metadata(parsed_docstring, handled))
+        handled = [*parsed_docstring.params, *parsed_docstring.raises, *parsed_docstring.many_returns]
+        components.update(self._convert_metadata(parsed_docstring, handled))
 
         if parsed_docstring.short_description:
             lines.append(parsed_docstring.short_description)
