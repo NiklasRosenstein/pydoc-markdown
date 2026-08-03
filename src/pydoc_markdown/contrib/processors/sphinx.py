@@ -188,6 +188,9 @@ class SphinxProcessor(Processor):
             if identifier:
                 description = "`{}`: {}".format(identifier, description)
             converted.setdefault(heading, []).append(description)
+        for heading, entries in converted.items():
+            if len(entries) > 1:
+                converted[heading] = ["- " + entry for entry in entries]
         return converted
 
     def _process(self, node: docspec.ApiObject) -> None:
@@ -199,7 +202,14 @@ class SphinxProcessor(Processor):
 
         parsed_docstring = docstring_parser.parse(node.docstring.content, self.style)
         self._restore_rest_description_indentation(node.docstring.content, parsed_docstring)
-        components["Arguments"] = self._convert_params(parsed_docstring.params)
+        attribute_params = [
+            entry
+            for entry in parsed_docstring.params
+            if entry.args and entry.args[0].casefold() in ("attribute", "cvar", "ivar", "var")
+        ]
+        argument_params = [entry for entry in parsed_docstring.params if entry not in attribute_params]
+        components["Arguments"] = self._convert_params(argument_params)
+        components["Attributes"] = self._convert_params(attribute_params)
         components["Raises"] = self._convert_raises(parsed_docstring.raises)
         returns = [entry for entry in parsed_docstring.many_returns if not entry.is_generator]
         yields = [entry for entry in parsed_docstring.many_returns if entry.is_generator]

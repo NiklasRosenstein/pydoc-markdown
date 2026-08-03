@@ -333,8 +333,19 @@ def test_explicit_styles_preserve_unhandled_metadata(style, docstring, expected)
 def test_structured_metadata_preserves_identifiers():
     parsed = Docstring(DocstringStyle.NUMPYDOC)
     parsed.meta.append(DocstringMeta(["method", "build(value)"], "Build a value."))
+    parsed.meta.append(DocstringMeta(["method", "save()"], "Save it."))
 
-    assert SphinxProcessor._convert_metadata(parsed, []) == {"Methods": ["`build(value)`: Build a value."]}
+    assert SphinxProcessor._convert_metadata(parsed, []) == {
+        "Methods": ["- `build(value)`: Build a value.", "- `save()`: Save it."]
+    }
+
+
+def test_explicit_google_style_keeps_attributes_separate_from_arguments():
+    assert_processor_result(
+        SphinxProcessor(style=DocstringStyle.GOOGLE),
+        "Summary.\n\nArgs:\n    x (int): Input.\n\nAttributes:\n    value (str): Stored.",
+        ("Summary.\n\n**Arguments**:\n\n- `x` (`int`): Input.\n\n**Attributes**:\n\n- `value` (`str`): Stored."),
+    )
 
 
 @pytest.mark.parametrize(
