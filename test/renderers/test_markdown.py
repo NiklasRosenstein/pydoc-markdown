@@ -148,3 +148,39 @@ def b():
 def test_markdown_list_content_indentation_uses_visual_columns() -> None:
     assert _list_content_indent("-\tcontent") == 4
     assert _list_content_indent("1.\tcontent") == 4
+
+
+def test_markdown_renderer_analyzes_escaped_docstrings() -> None:
+    module = load_string_as_module(
+        Path("escaped_html.py"),
+        '''def a():
+    """<div>
+    [x]
+    </div>
+
+    [x]: https://a.example
+    """
+
+def b():
+    """<div>
+    [x]
+    </div>
+
+    [x]: https://b.example
+    """
+''',
+    )
+    renderer = MarkdownRenderer(
+        insert_header_anchors=False,
+        render_module_header=False,
+        signature_code_block=False,
+        escape_html_in_docstring=True,
+    )
+    renderer.init(Context("."))
+
+    result = renderer.render_to_string([module])
+
+    assert "&lt;div&gt;\n[x][pydoc-escaped_html.a-x]\n&lt;/div&gt;" in result
+    assert "[pydoc-escaped_html.a-x]: https://a.example" in result
+    assert "&lt;div&gt;\n[x][pydoc-escaped_html.b-x]\n&lt;/div&gt;" in result
+    assert "[pydoc-escaped_html.b-x]: https://b.example" in result

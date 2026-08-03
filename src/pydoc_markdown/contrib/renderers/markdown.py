@@ -206,7 +206,25 @@ def _reference_definition_end(text: str, colon: int, footnote: bool = False) -> 
     while offset < line_end and text[offset] in " \t":
         offset += 1
     if offset == line_end:
-        return line_end
+        next_start = line_end
+        if text.startswith("\r\n", next_start):
+            next_start += 2
+        elif next_start < len(text) and text[next_start] in "\r\n":
+            next_start += 1
+        else:
+            return line_end
+
+        next_end = len(text)
+        for newline in (text.find("\n", next_start), text.find("\r", next_start)):
+            if newline >= 0:
+                next_end = min(next_end, newline)
+        continuation = _strip_container_prefix(text[next_start:next_end])
+        continuation_offset = next_end - len(continuation)
+        title_match = re.match(r" {0,3}([\"'(])", continuation)
+        if not title_match:
+            return line_end
+        offset = continuation_offset + title_match.end() - 1
+        line_end = next_end
 
     opener = text[offset]
     closer = {'"': '"', "'": "'", "(": ")"}.get(opener)
@@ -473,7 +491,7 @@ def _analyze_docstring_references(obj: docspec.ApiObject, content: str) -> _Docs
     line_offset = 0
     for line in content.splitlines(keepends=True):
         line_body = line.rstrip("\r\n")
-        container_content = _strip_blockquote_prefix(line_body)
+        container_content = _strip_container_prefix(line_body)
         container_offset = len(line_body) - len(container_content)
         match = _REFERENCE_DEFINITION_START_RE.match(container_content)
         if match:
@@ -583,13 +601,17 @@ def _rewrite_reference_labels(analysis: _DocstringReferences, labels: t.Dict[str
 
 
 def _namespace_duplicate_references(
-    objects: t.Iterable[docspec.ApiObject], namespace_all: bool = False
+    objects: t.Iterable[docspec.ApiObject],
+    namespace_all: bool = False,
+    transform: t.Optional[t.Callable[[str], str]] = None,
 ) -> t.Dict[int, str]:
     """Rewrites reference labels that would otherwise collide on one rendered page."""
 
-    analyses = [
-        _analyze_docstring_references(obj, obj.docstring.content) for obj in _iter_objects(objects) if obj.docstring
-    ]
+    analyses = []
+    for obj in _iter_objects(objects):
+        if obj.docstring:
+            content = transform(obj.docstring.content) if transform else obj.docstring.content
+            analyses.append(_analyze_docstring_references(obj, content))
     owners: t.Dict[str, t.List[_DocstringReferences]] = {}
     used_labels: t.Set[str] = set()
     for analysis in analyses:
@@ -947,8 +969,11 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 fp.write(source_string + "\n\n")
 
         if obj.docstring:
-            content = namespaced_docstrings.get(id(obj), obj.docstring.content)
-            docstring = escape_except_blockquotes(content) if self.escape_html_in_docstring else content
+            if id(obj) in namespaced_docstrings:
+                docstring = namespaced_docstrings[id(obj)]
+            else:
+                content = obj.docstring.content
+                docstring = escape_except_blockquotes(content) if self.escape_html_in_docstring else content
             lines = docstring.split("\n")
             if self.docstrings_as_blockquote:
                 lines = ["> " + x for x in lines]
@@ -1045,7 +1070,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             for m in modules:
                 self._render_toc(fp, 0, m)
             fp.write("\n")
-        namespaced_docstrings = _namespace_duplicate_references(modules)
+        transform = escape_except_blockquotes if self.escape_html_in_docstring else None
+        namespaced_docstrings = _namespace_duplicate_references(modules, transform=transform)
         for m in modules:
             self._render_recursive(fp, 1, m, namespaced_docstrings)
 
@@ -1053,7 +1079,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
 
     def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None:
         # Novella and other integrations may concatenate several independently rendered objects onto one page.
-        self._render_recursive(fp, 0, obj, _namespace_duplicate_references([obj], namespace_all=True))
+        transform = escape_except_blockquotes if self.escape_html_in_docstring else None
+        self._render_recursive(
+            fp, 0, obj, _namespace_duplicate_references([obj], namespace_all=True, transform=transform)
+        )
 
     # Renderer
 
