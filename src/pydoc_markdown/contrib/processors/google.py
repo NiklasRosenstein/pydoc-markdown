@@ -181,9 +181,16 @@ class GoogleProcessor(Processor):
             if markdown_fence is not None:
                 codeblock_indent = min(section_indent, self._get_indentation(raw_line))
                 rebased = self._remove_indentation(raw_line, codeblock_indent).rstrip()
-                previous = next((value for value in reversed(result) if value.strip()), "")
-                nested_in_list = re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous)
                 rebased_indent = self._get_indentation(rebased)
+                nested_in_list = False
+                for previous in reversed(result):
+                    if not previous.strip():
+                        continue
+                    previous_indent = self._get_indentation(previous)
+                    if previous_indent > rebased_indent:
+                        continue
+                    nested_in_list = bool(re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous))
+                    break
                 codeblock_prefix = " " * max(4 - rebased_indent, 0) if nested_in_list and rebased_indent else ""
                 result.append(codeblock_prefix + rebased)
                 continue

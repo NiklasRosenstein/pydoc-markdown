@@ -235,3 +235,11 @@ def test_google_processor_preserves_two_space_list_fence_nesting():
         "Examples:\n    - With code:\n      ```python\n      print('yes')\n      ```",
         "**Examples**:\n\n  - With code:\n    ```python\n    print('yes')\n    ```",
     )
+
+
+def test_google_processor_tracks_list_nesting_across_prose():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Examples:\n    - With code:\n      Description.\n      ```python\n      print('yes')\n      ```",
+        "**Examples**:\n\n  - With code:\n    Description.\n    ```python\n    print('yes')\n    ```",
+    )
