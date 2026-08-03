@@ -14,7 +14,13 @@ def a():
     An inline outer link [![CI][badge]](https://ci.example).
     A blockquote [reference][quoted].
     A list-container [reference][listed].
+    An alternating-container [reference][nested].
     A titled [reference][titled].
+    An inline title [link](/url "tip ) [titled]") stays unchanged.
+    A paragraph followed by a type-7 tag
+    <span>
+    [titled]
+    </span>
     An invalid [empty definition] stays unchanged.
     Raw HTML stays unchanged: <span data-ref="[0]"></span>.
     Code stays unchanged: `[code][0]` and \[escaped\]\[0\].
@@ -82,6 +88,7 @@ def a():
     [^note]: Footnote A.
     > [quoted]: https://quoted-a.example
     - [listed]: https://listed-a.example
+    - > [nested]: https://nested-a.example
     [titled]: https://titled-a.example
       "Tooltip [titled]"
     [empty definition]:
@@ -98,7 +105,13 @@ def b():
     An inline outer link [![CI][badge]](https://ci.example).
     A blockquote [reference][quoted].
     A list-container [reference][listed].
+    An alternating-container [reference][nested].
     A titled [reference][titled].
+    An inline title [link](/url "tip ) [titled]") stays unchanged.
+    A paragraph followed by a type-7 tag
+    <span>
+    [titled]
+    </span>
     An invalid [empty definition] stays unchanged.
     Raw HTML stays unchanged: <span data-ref="[0]"></span>.
 
@@ -160,6 +173,7 @@ def b():
     [^note]: Footnote B.
     > [quoted]: https://quoted-b.example
     - [listed]: https://listed-b.example
+    - > [nested]: https://nested-b.example
     [titled]: https://titled-b.example
       "Tooltip [titled]"
     [empty definition]:
@@ -189,7 +203,13 @@ A nested [![CI][pydoc-reference_style_links.a-badge-2]][pydoc-reference_style_li
 An inline outer link [![CI][pydoc-reference_style_links.a-badge-2]](https://ci.example).
 A blockquote [reference][pydoc-reference_style_links.a-quoted].
 A list-container [reference][pydoc-reference_style_links.a-listed].
+An alternating-container [reference][pydoc-reference_style_links.a-nested].
 A titled [reference][pydoc-reference_style_links.a-titled].
+An inline title [link](/url "tip ) [titled]") stays unchanged.
+A paragraph followed by a type-7 tag
+<span>
+[titled][pydoc-reference_style_links.a-titled]
+</span>
 An invalid [empty definition] stays unchanged.
 Raw HTML stays unchanged: <span data-ref="[0]"></span>.
 Code stays unchanged: `[code][0]` and \[escaped\]\[0\].
@@ -256,6 +276,7 @@ Following the container fence is [another link][pydoc-reference_style_links.a-0-
 [^pydoc-reference_style_links.a-note]: Footnote A.
 > [pydoc-reference_style_links.a-quoted]: https://quoted-a.example
 - [pydoc-reference_style_links.a-listed]: https://listed-a.example
+- > [pydoc-reference_style_links.a-nested]: https://nested-a.example
 [pydoc-reference_style_links.a-titled]: https://titled-a.example
   "Tooltip [titled]"
 [empty definition]:
@@ -270,7 +291,13 @@ A nested [![CI][pydoc-reference_style_links.b-badge]][pydoc-reference_style_link
 An inline outer link [![CI][pydoc-reference_style_links.b-badge]](https://ci.example).
 A blockquote [reference][pydoc-reference_style_links.b-quoted].
 A list-container [reference][pydoc-reference_style_links.b-listed].
+An alternating-container [reference][pydoc-reference_style_links.b-nested].
 A titled [reference][pydoc-reference_style_links.b-titled].
+An inline title [link](/url "tip ) [titled]") stays unchanged.
+A paragraph followed by a type-7 tag
+<span>
+[titled][pydoc-reference_style_links.b-titled]
+</span>
 An invalid [empty definition] stays unchanged.
 Raw HTML stays unchanged: <span data-ref="[0]"></span>.
 
@@ -331,6 +358,7 @@ Following the container fence is [another link][pydoc-reference_style_links.b-0-
 [^pydoc-reference_style_links.b-note]: Footnote B.
 > [pydoc-reference_style_links.b-quoted]: https://quoted-b.example
 - [pydoc-reference_style_links.b-listed]: https://listed-b.example
+- > [pydoc-reference_style_links.b-nested]: https://nested-b.example
 [pydoc-reference_style_links.b-titled]: https://titled-b.example
   "Tooltip [titled]"
 [empty definition]:

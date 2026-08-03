@@ -107,14 +107,20 @@ def _strip_blockquote_prefix(line: str) -> str:
 
 
 def _strip_container_prefix(line: str) -> str:
-    """Strips blockquote and one-line list markers for fence detection."""
+    """Strips nested blockquote and one-line list container markers."""
 
-    line = _strip_blockquote_prefix(line)
-    offset = 0
-    while offset < len(line) and line[offset] == " " and offset < 3:
-        offset += 1
-    match = _LIST_MARKER_RE.match(line, offset)
-    return line[match.end() :] if match else line
+    while True:
+        stripped = _strip_blockquote_prefix(line)
+        if stripped != line:
+            line = stripped
+            continue
+        offset = 0
+        while offset < len(line) and line[offset] == " " and offset < 3:
+            offset += 1
+        match = _LIST_MARKER_RE.match(line, offset)
+        if not match:
+            return line
+        line = line[match.end() :]
 
 
 def _strip_indent(line: str, width: int) -> str:
@@ -344,7 +350,7 @@ def _markdown_protected_mask(text: str) -> bytearray:
             assert tag
             html_end = "</{}>".format(tag.group(1))
             in_html_block = html_end not in lowered
-        elif _HTML_BLOCK_RE.match(container_content) or _HTML_TAG_ONLY_RE.match(container_content):
+        elif _HTML_BLOCK_RE.match(container_content) or (previous_blank and _HTML_TAG_ONLY_RE.match(container_content)):
             in_html_block = True
             html_end = None
         if in_html_block or html_end:
@@ -451,11 +457,17 @@ def _find_closing_bracket(text: str, opening: int, nested: bool = False) -> t.Op
 def _find_closing_parenthesis(text: str, opening: int) -> int:
     depth = 1
     offset = opening + 1
+    quote: t.Optional[str] = None
     while offset < len(text):
         if text[offset] == "\\":
             offset += 2
             continue
-        if text[offset] == "(":
+        if quote:
+            if text[offset] == quote:
+                quote = None
+        elif text[offset] in "\"'":
+            quote = text[offset]
+        elif text[offset] == "(":
             depth += 1
         elif text[offset] == ")":
             depth -= 1
