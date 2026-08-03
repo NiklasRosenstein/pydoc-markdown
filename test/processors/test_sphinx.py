@@ -250,8 +250,10 @@ numpy_additional_sections_markdown = """
 
   **Examples**:
 
+  ```python
   >>> list(generate())
   [1]
+  ```
 
   **Notes**:
 
@@ -271,9 +273,11 @@ four_space_indented_code_block = """
 four_space_indented_code_block_markdown = """
   Example:
 
-      >>> url = URL('https://foo.bar')
-      >>> print(url)
-      https://foo.bar
+  ```python
+  >>> url = URL('https://foo.bar')
+  >>> print(url)
+  https://foo.bar
+  ```
 
   **Arguments**:
 
@@ -452,7 +456,7 @@ def test_numpy_additional_sections_are_preserved(processor):
         (
             DocstringStyle.GOOGLE,
             "Summary.\n\nExample:\n    >>> example()",
-            "Summary.\n\n**Examples**:\n\n>>> example()",
+            "Summary.\n\n**Examples**:\n\n```python\n>>> example()\n```",
         ),
         (
             DocstringStyle.EPYDOC,

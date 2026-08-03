@@ -28,9 +28,11 @@ def func() -> None
 
 Example:
 
-    >>> url = URL('https://foo.bar')
-    >>> print(url)
-    https://foo.bar
+```python
+>>> url = URL('https://foo.bar')
+>>> print(url)
+https://foo.bar
+```
 
 **Arguments**:
 

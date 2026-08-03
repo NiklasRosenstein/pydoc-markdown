@@ -42,9 +42,11 @@ This is a docstring.
 None
 Example:
 
-    >>> import os
-    >>> os.getenv('PYTHON')
-    'python'
+```python
+>>> import os
+>>> os.getenv('PYTHON')
+'python'
+```
 
 Or check out this code:
 

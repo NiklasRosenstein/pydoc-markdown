@@ -32,9 +32,11 @@ This is a docstring.
 
 Example:
 
-    >>> import os
-    >>> os.getenv('PYTHON')
-    'python'
+```python
+>>> import os
+>>> os.getenv('PYTHON')
+'python'
+```
 
 Or check out this code:
 
