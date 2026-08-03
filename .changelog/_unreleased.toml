@@ -81,3 +81,10 @@ type = "fix"
 description = "Watch configured page source files when serving MkDocs and Hugo output."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/359"
+
+[[entries]]
+id = "eb94b1fa-1a25-4b01-9402-901c5a05b06b"
+type = "fix"
+description = "Prevent reference-style Markdown links in separate API docstrings from redefining each other."
+author = "rosensteinniklas@gmail.com"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/364"

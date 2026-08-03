@@ -1,0 +1,420 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+  signature_code_block: false
+----
+def a():
+    r"""Links to [a][0], [collapsed][], [shortcut], [Case A][Case Label],
+    [escaped][escaped\]] and [multiline][multi
+    label]. Footnote [^note].
+
+    An [inline link](https://inline.example), [image link][image], ![an image][image], and [unrelated brackets].
+    A nested [![CI][badge]][target].
+    An inline outer link [![CI][badge]](https://ci.example).
+    A blockquote [reference][quoted].
+    A list-container [reference][listed].
+    An alternating-container [reference][nested].
+    A titled [reference][titled].
+    An inline title [link](/url "tip ) [titled]") stays unchanged.
+    Invalid inline [not-inline](a b [titled]) exposes nested.
+    A paragraph followed by a type-7 tag
+    <span>
+    [titled]
+    </span>
+    An invalid [empty definition] stays unchanged.
+    Raw HTML stays unchanged: <span data-ref="[0]"></span>.
+    Code stays unchanged: `[code][0]` and \[escaped\]\[0\].
+
+    A paragraph continues
+        with [an indented link][0].
+    - A list item
+        continues with [a list link][0].
+    - A loose list item
+
+        continues with [a loose list link][0].
+
+    ```markdown
+    [fenced][0]
+    [0]: https://fenced.example
+    ```
+
+    Indented code stays unchanged:
+
+        [indented code][0]
+        [0]: https://indented.example
+
+    >
+    >     [quoted indented code][0]
+
+    > ```markdown
+    > [quoted fence][0]
+    > ```
+
+    - ```markdown
+      [list fence][0]
+      ```
+
+    -   ```markdown
+        [container fence][0]
+        ```
+    Following the container fence is [another link][0].
+
+    > ```markdown
+    > [quoted unclosed fence][leaky]
+    Following the quoted fence is [leaky].
+
+    - ```markdown
+      [list unclosed fence][list-leaky]
+    Following the list fence is [list-leaky].
+
+    <div data-ref="[0]">
+    [html block][0]
+    </div>
+
+    <![CDATA[
+    [CDATA block][0]
+    ]]>
+
+    <?processing
+    [processing instruction][0]
+    ?>
+
+    <!DECLARATION
+    [declaration block][0]
+    >
+
+    [0]: https://a.example
+    [collapsed]: https://collapsed-a.example
+    [shortcut]: https://shortcut-a.example
+    [Case Label]: https://case-a.example
+    [image]: https://image-a.example
+    [badge]: https://badge-a.example
+    [target]: https://target-a.example
+    [escaped\]]: https://escaped-a.example
+    [multi
+    label]: https://multiline-a.example
+    [^note]: Footnote A.
+    > [quoted]: https://quoted-a.example
+    - [listed]: https://listed-a.example
+    - > [nested]: https://nested-a.example
+    [titled]: https://titled-a.example
+      "Tooltip [titled]"
+    [leaky]: https://leaky-a.example
+    [list-leaky]: https://list-leaky-a.example
+    [empty definition]:
+    """
+
+
+def b():
+    r"""Links to [b][0], [collapsed][], [shortcut], [Case B][case label],
+    [escaped][escaped\]] and [multiline][multi
+    label]. Footnote [^note].
+
+    An [inline link](https://inline.example), [image link][image], ![an image][image], and [unrelated brackets].
+    A nested [![CI][badge]][target].
+    An inline outer link [![CI][badge]](https://ci.example).
+    A blockquote [reference][quoted].
+    A list-container [reference][listed].
+    An alternating-container [reference][nested].
+    A titled [reference][titled].
+    An inline title [link](/url "tip ) [titled]") stays unchanged.
+    Invalid inline [not-inline](a b [titled]) exposes nested.
+    A paragraph followed by a type-7 tag
+    <span>
+    [titled]
+    </span>
+    An invalid [empty definition] stays unchanged.
+    Raw HTML stays unchanged: <span data-ref="[0]"></span>.
+
+    A paragraph continues
+        with [an indented link][0].
+    - A list item
+        continues with [a list link][0].
+    - A loose list item
+
+        continues with [a loose list link][0].
+
+    Indented code stays unchanged:
+
+        [indented code][0]
+        [0]: https://indented.example
+
+    >
+    >     [quoted indented code][0]
+
+    > ```markdown
+    > [quoted fence][0]
+    > ```
+
+    - ```markdown
+      [list fence][0]
+      ```
+
+    -   ```markdown
+        [container fence][0]
+        ```
+    Following the container fence is [another link][0].
+
+    > ```markdown
+    > [quoted unclosed fence][leaky]
+    Following the quoted fence is [leaky].
+
+    - ```markdown
+      [list unclosed fence][list-leaky]
+    Following the list fence is [list-leaky].
+
+    <div data-ref="[0]">
+    [html block][0]
+    </div>
+
+    <![CDATA[
+    [CDATA block][0]
+    ]]>
+
+    <?processing
+    [processing instruction][0]
+    ?>
+
+    <!DECLARATION
+    [declaration block][0]
+    >
+
+    [0]: https://b.example
+    [collapsed]: https://collapsed-b.example
+    [shortcut]: https://shortcut-b.example
+    [case label]: https://case-b.example
+    [image]: https://image-b.example
+    [badge]: https://badge-b.example
+    [target]: https://target-b.example
+    [escaped\]]: https://escaped-b.example
+    [multi
+    label]: https://multiline-b.example
+    [^note]: Footnote B.
+    > [quoted]: https://quoted-b.example
+    - [listed]: https://listed-b.example
+    - > [nested]: https://nested-b.example
+    [titled]: https://titled-b.example
+      "Tooltip [titled]"
+    [leaky]: https://leaky-b.example
+    [list-leaky]: https://list-leaky-b.example
+    [empty definition]:
+    """
+
+
+def collision():
+    """Keeps an existing [generated-looking label][pydoc-reference_style_links.a-0].
+
+    [pydoc-reference_style_links.a-0]: https://existing.example
+    """
+
+
+def usage_collision():
+    """An unresolved [pydoc-reference_style_links.b-0] stays unresolved.
+    A nested unresolved [![badge][pydoc-reference_style_links.a-badge]](https://ci.example) stays unresolved.
+    Other inline [text [pydoc-reference_style_links.a-badge-2]](https://example/[ignored]) stays unchanged.
+    """
+----
+#### a
+
+Links to [a][pydoc-reference_style_links.a-0-2], [collapsed][pydoc-reference_style_links.a-collapsed], [shortcut][pydoc-reference_style_links.a-shortcut], [Case A][pydoc-reference_style_links.a-case-label],
+[escaped][pydoc-reference_style_links.a-escaped] and [multiline][pydoc-reference_style_links.a-multi-label]. Footnote [^pydoc-reference_style_links.a-note].
+
+An [inline link](https://inline.example), [image link][pydoc-reference_style_links.a-image], ![an image][pydoc-reference_style_links.a-image], and [unrelated brackets].
+A nested [![CI][pydoc-reference_style_links.a-badge-2]][pydoc-reference_style_links.a-target].
+An inline outer link [![CI][pydoc-reference_style_links.a-badge-2]](https://ci.example).
+A blockquote [reference][pydoc-reference_style_links.a-quoted].
+A list-container [reference][pydoc-reference_style_links.a-listed].
+An alternating-container [reference][pydoc-reference_style_links.a-nested].
+A titled [reference][pydoc-reference_style_links.a-titled].
+An inline title [link](/url "tip ) [titled]") stays unchanged.
+Invalid inline [not-inline](a b [titled][pydoc-reference_style_links.a-titled]) exposes nested.
+A paragraph followed by a type-7 tag
+<span>
+[titled][pydoc-reference_style_links.a-titled]
+</span>
+An invalid [empty definition] stays unchanged.
+Raw HTML stays unchanged: <span data-ref="[0]"></span>.
+Code stays unchanged: `[code][0]` and \[escaped\]\[0\].
+
+A paragraph continues
+    with [an indented link][pydoc-reference_style_links.a-0-2].
+- A list item
+    continues with [a list link][pydoc-reference_style_links.a-0-2].
+- A loose list item
+
+    continues with [a loose list link][pydoc-reference_style_links.a-0-2].
+
+```markdown
+[fenced][0]
+[0]: https://fenced.example
+```
+
+Indented code stays unchanged:
+
+    [indented code][0]
+    [0]: https://indented.example
+
+>
+>     [quoted indented code][0]
+
+> ```markdown
+> [quoted fence][0]
+> ```
+
+- ```markdown
+  [list fence][0]
+  ```
+
+-   ```markdown
+    [container fence][0]
+    ```
+Following the container fence is [another link][pydoc-reference_style_links.a-0-2].
+
+> ```markdown
+> [quoted unclosed fence][leaky]
+Following the quoted fence is [leaky][pydoc-reference_style_links.a-leaky].
+
+- ```markdown
+  [list unclosed fence][list-leaky]
+Following the list fence is [list-leaky][pydoc-reference_style_links.a-list-leaky].
+
+<div data-ref="[0]">
+[html block][0]
+</div>
+
+<![CDATA[
+[CDATA block][0]
+]]>
+
+<?processing
+[processing instruction][0]
+?>
+
+<!DECLARATION
+[declaration block][0]
+>
+
+[pydoc-reference_style_links.a-0-2]: https://a.example
+[pydoc-reference_style_links.a-collapsed]: https://collapsed-a.example
+[pydoc-reference_style_links.a-shortcut]: https://shortcut-a.example
+[pydoc-reference_style_links.a-case-label]: https://case-a.example
+[pydoc-reference_style_links.a-image]: https://image-a.example
+[pydoc-reference_style_links.a-badge-2]: https://badge-a.example
+[pydoc-reference_style_links.a-target]: https://target-a.example
+[pydoc-reference_style_links.a-escaped]: https://escaped-a.example
+[pydoc-reference_style_links.a-multi-label]: https://multiline-a.example
+[^pydoc-reference_style_links.a-note]: Footnote A.
+> [pydoc-reference_style_links.a-quoted]: https://quoted-a.example
+- [pydoc-reference_style_links.a-listed]: https://listed-a.example
+- > [pydoc-reference_style_links.a-nested]: https://nested-a.example
+[pydoc-reference_style_links.a-titled]: https://titled-a.example
+  "Tooltip [titled]"
+[pydoc-reference_style_links.a-leaky]: https://leaky-a.example
+[pydoc-reference_style_links.a-list-leaky]: https://list-leaky-a.example
+[empty definition]:
+
+#### b
+
+Links to [b][pydoc-reference_style_links.b-0-2], [collapsed][pydoc-reference_style_links.b-collapsed], [shortcut][pydoc-reference_style_links.b-shortcut], [Case B][pydoc-reference_style_links.b-case-label],
+[escaped][pydoc-reference_style_links.b-escaped] and [multiline][pydoc-reference_style_links.b-multi-label]. Footnote [^pydoc-reference_style_links.b-note].
+
+An [inline link](https://inline.example), [image link][pydoc-reference_style_links.b-image], ![an image][pydoc-reference_style_links.b-image], and [unrelated brackets].
+A nested [![CI][pydoc-reference_style_links.b-badge]][pydoc-reference_style_links.b-target].
+An inline outer link [![CI][pydoc-reference_style_links.b-badge]](https://ci.example).
+A blockquote [reference][pydoc-reference_style_links.b-quoted].
+A list-container [reference][pydoc-reference_style_links.b-listed].
+An alternating-container [reference][pydoc-reference_style_links.b-nested].
+A titled [reference][pydoc-reference_style_links.b-titled].
+An inline title [link](/url "tip ) [titled]") stays unchanged.
+Invalid inline [not-inline](a b [titled][pydoc-reference_style_links.b-titled]) exposes nested.
+A paragraph followed by a type-7 tag
+<span>
+[titled][pydoc-reference_style_links.b-titled]
+</span>
+An invalid [empty definition] stays unchanged.
+Raw HTML stays unchanged: <span data-ref="[0]"></span>.
+
+A paragraph continues
+    with [an indented link][pydoc-reference_style_links.b-0-2].
+- A list item
+    continues with [a list link][pydoc-reference_style_links.b-0-2].
+- A loose list item
+
+    continues with [a loose list link][pydoc-reference_style_links.b-0-2].
+
+Indented code stays unchanged:
+
+    [indented code][0]
+    [0]: https://indented.example
+
+>
+>     [quoted indented code][0]
+
+> ```markdown
+> [quoted fence][0]
+> ```
+
+- ```markdown
+  [list fence][0]
+  ```
+
+-   ```markdown
+    [container fence][0]
+    ```
+Following the container fence is [another link][pydoc-reference_style_links.b-0-2].
+
+> ```markdown
+> [quoted unclosed fence][leaky]
+Following the quoted fence is [leaky][pydoc-reference_style_links.b-leaky].
+
+- ```markdown
+  [list unclosed fence][list-leaky]
+Following the list fence is [list-leaky][pydoc-reference_style_links.b-list-leaky].
+
+<div data-ref="[0]">
+[html block][0]
+</div>
+
+<![CDATA[
+[CDATA block][0]
+]]>
+
+<?processing
+[processing instruction][0]
+?>
+
+<!DECLARATION
+[declaration block][0]
+>
+
+[pydoc-reference_style_links.b-0-2]: https://b.example
+[pydoc-reference_style_links.b-collapsed]: https://collapsed-b.example
+[pydoc-reference_style_links.b-shortcut]: https://shortcut-b.example
+[pydoc-reference_style_links.b-case-label]: https://case-b.example
+[pydoc-reference_style_links.b-image]: https://image-b.example
+[pydoc-reference_style_links.b-badge]: https://badge-b.example
+[pydoc-reference_style_links.b-target]: https://target-b.example
+[pydoc-reference_style_links.b-escaped]: https://escaped-b.example
+[pydoc-reference_style_links.b-multi-label]: https://multiline-b.example
+[^pydoc-reference_style_links.b-note]: Footnote B.
+> [pydoc-reference_style_links.b-quoted]: https://quoted-b.example
+- [pydoc-reference_style_links.b-listed]: https://listed-b.example
+- > [pydoc-reference_style_links.b-nested]: https://nested-b.example
+[pydoc-reference_style_links.b-titled]: https://titled-b.example
+  "Tooltip [titled]"
+[pydoc-reference_style_links.b-leaky]: https://leaky-b.example
+[pydoc-reference_style_links.b-list-leaky]: https://list-leaky-b.example
+[empty definition]:
+
+#### collision
+
+Keeps an existing [generated-looking label][pydoc-reference_style_links.a-0].
+
+[pydoc-reference_style_links.a-0]: https://existing.example
+
+#### usage\_collision
+
+An unresolved [pydoc-reference_style_links.b-0] stays unresolved.
+A nested unresolved [![badge][pydoc-reference_style_links.a-badge]](https://ci.example) stays unresolved.
+Other inline [text [pydoc-reference_style_links.a-badge-2]](https://example/[ignored]) stays unchanged.
