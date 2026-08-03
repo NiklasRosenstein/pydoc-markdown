@@ -323,3 +323,11 @@ def test_google_processor_does_not_close_top_level_fence_with_quoted_delimiter()
         ("Examples:\n    ```text\n    > ```\n    still fenced\n    ```\nReturns:\n    str: Done."),
         ("**Examples**:\n\n```text\n> ```\nstill fenced\n```\n\n**Returns**:\n\n- `str` - Done."),
     )
+
+
+def test_google_processor_keeps_blockquoted_fence_sibling_to_list():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Examples:\n    - Plain item\n    > ```python\n    > print('quoted')\n    > ```",
+        "**Examples**:\n\n  - Plain item\n  > ```python\n  > print('quoted')\n  > ```",
+    )
