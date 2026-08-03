@@ -80,6 +80,8 @@ numpy_docstring = """
   ------
   ValueError
       If x is negative.
+
+      Check the input before retrying.
   """
 
 numpy_markdown = """
@@ -93,6 +95,8 @@ numpy_markdown = """
   **Raises**:
 
   - `ValueError`: If x is negative.
+
+    Check the input before retrying.
 
   **Returns**:
 

@@ -128,7 +128,7 @@ class SphinxProcessor(Processor):
         """
         converted_lines = []
         for entry in raises:
-            converted_lines.append("- `{}`: {}".format(entry.type_name, entry.description))
+            converted_lines.append(_markdown_list_item("`{}`: {}".format(entry.type_name, entry.description or "")))
         return converted_lines
 
     def _convert_params(self, params: t.List[docstring_parser.common.DocstringParam]) -> list:
