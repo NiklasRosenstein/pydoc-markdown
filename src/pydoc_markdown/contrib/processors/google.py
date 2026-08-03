@@ -202,7 +202,7 @@ class GoogleProcessor(Processor):
                 codeblock_indent = min(max(section_indent - preserve_indent, 0), self._get_indentation(raw_line))
                 rebased = self._remove_indentation(raw_line, codeblock_indent).rstrip()
                 rebased_indent = self._get_indentation(rebased)
-                list_content_indent: t.Optional[int] = None
+                container_content_indent: t.Optional[int] = None
                 for previous_index in range(len(result) - 1, -1, -1):
                     previous = result[previous_index]
                     if not previous.strip():
@@ -210,17 +210,19 @@ class GoogleProcessor(Processor):
                     previous_indent = self._get_indentation(previous)
                     if previous_indent > rebased_indent:
                         continue
+                    is_nested = self._get_indentation(raw_line) > self._get_indentation(raw_lines[previous_index])
                     list_match = re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous)
-                    if list_match and self._get_indentation(raw_line) > self._get_indentation(
-                        raw_lines[previous_index]
-                    ):
-                        list_content_indent = len(list_match.group().expandtabs(4))
+                    if list_match and is_nested:
+                        container_content_indent = len(list_match.group().expandtabs(4))
                         if list_match.end() == len(previous):
-                            list_content_indent += 1
+                            container_content_indent += 1
+                    admonition_match = re.match(r"^\s*(?:!!!|\?{3}\+?)(?:[ \t]+|$)", previous)
+                    if admonition_match and is_nested:
+                        container_content_indent = previous_indent + 4
                     break
                 codeblock_prefix = (
-                    " " * max(list_content_indent - rebased_indent, 0)
-                    if list_content_indent is not None and rebased_indent
+                    " " * max(container_content_indent - rebased_indent, 0)
+                    if container_content_indent is not None and rebased_indent
                     else ""
                 )
                 result.append(codeblock_prefix + rebased)

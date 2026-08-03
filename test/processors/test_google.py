@@ -331,3 +331,11 @@ def test_google_processor_keeps_blockquoted_fence_sibling_to_list():
         "Examples:\n    - Plain item\n    > ```python\n    > print('quoted')\n    > ```",
         "**Examples**:\n\n  - Plain item\n  > ```python\n  > print('quoted')\n  > ```",
     )
+
+
+def test_google_processor_preserves_admonition_fence_nesting():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Examples:\n    !!! note\n        ```python\n        print('nested')\n        ```",
+        "**Examples**:\n\n  !!! note\n      ```python\n      print('nested')\n      ```",
+    )
