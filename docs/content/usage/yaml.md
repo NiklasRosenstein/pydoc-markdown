@@ -6,7 +6,21 @@ called `pydoc-markdown.yaml` (or `.yml`) in the current working directory. (Note
 is not read from file when using the `-m,--module`, `-p,--package` and other options that are intended
 for invoking Pydoc-Markdown without a configuration file).
 
-> __Tip__: The `--bootstrap` and `--bootstrap-mkdocs` options can be used to write a template configuration file.
+> __Tip__: The `--bootstrap` option can be used to write a template configuration file.
+
+## Bootstrapping a configuration
+
+Run `pydoc-markdown --bootstrap <template>` from the root of your Python project, where `<template>` is one of
+`base`, `mkdocs`, `hugo`, `readthedocs` or `docusaurus`. Except for the multi-file `readthedocs` template, this creates
+`pydoc-markdown.yml` in the current directory. Bootstrapping stops instead of shadowing an existing
+`[tool.pydoc-markdown]` table or replacing an existing `pydoc-markdown.yml` or `pydoc-markdown.yaml` path.
+
+By default, the CLI loads `pydoc-markdown.yml`, `pydoc-markdown.yaml` or the `[tool.pydoc-markdown]` table in
+`pyproject.toml`, in that order. The quick CLI options `-m`, `-p`, `-I` and `--py2` construct a configuration directly
+from command-line arguments, which bypasses these project configuration files. The CLI warns when a local
+configuration file is ignored for this reason. To combine quick options with a project configuration, pass its
+filename explicitly; for example, `pydoc-markdown pydoc-markdown.yml -I src` loads the file and applies `-I src` as
+an override.
 
 If you use the YAML configuration, the configuration file is pre-processed with a [YTT][]-like templating
 language (see [YAML Preprocessing](#yaml-preprocessing)).
