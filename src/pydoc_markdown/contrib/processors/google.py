@@ -29,32 +29,41 @@ from pydoc_markdown.contrib.processors.sphinx import generate_sections_markdown
 from pydoc_markdown.interfaces import Processor, Resolver
 
 _MARKDOWN_FENCE_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
+_MarkdownFence = t.Tuple[str, int, int]
 
 
-def _strip_markdown_blockquote_prefix(line: str) -> str:
+def _split_markdown_blockquote_prefix(line: str) -> t.Tuple[str, int]:
     line = line.lstrip()
+    depth = 0
     while line.startswith(">"):
+        depth += 1
         line = line[1:]
         if line.startswith((" ", "\t")):
             line = line[1:]
         line = line.lstrip()
-    return line
+    return line, depth
 
 
-def _get_markdown_fence(line: str) -> t.Optional[t.Tuple[str, int]]:
-    match = _MARKDOWN_FENCE_RE.match(_strip_markdown_blockquote_prefix(line))
+def _get_markdown_fence(line: str) -> t.Optional[_MarkdownFence]:
+    content, blockquote_depth = _split_markdown_blockquote_prefix(line)
+    match = _MARKDOWN_FENCE_RE.match(content)
     if not match:
         return None
     fence = match.group("fence")
     if fence[0] == "`" and "`" in match.group("info"):
         return None
-    return fence[0], len(fence)
+    return fence[0], len(fence), blockquote_depth
 
 
-def _is_markdown_fence_closer(line: str, fence: t.Tuple[str, int]) -> bool:
-    character, minimum_length = fence
-    stripped = _strip_markdown_blockquote_prefix(line).strip()
-    return len(stripped) >= minimum_length and all(value == character for value in stripped)
+def _is_markdown_fence_closer(line: str, fence: _MarkdownFence) -> bool:
+    character, minimum_length, blockquote_depth = fence
+    stripped, candidate_blockquote_depth = _split_markdown_blockquote_prefix(line)
+    stripped = stripped.strip()
+    return (
+        len(stripped) >= minimum_length
+        and all(value == character for value in stripped)
+        and candidate_blockquote_depth == blockquote_depth
+    )
 
 
 @dataclasses.dataclass
@@ -171,7 +180,7 @@ class GoogleProcessor(Processor):
             return [line if line else "  " for line in raw_lines]
 
         result: t.List[str] = []
-        markdown_fence: t.Optional[t.Tuple[str, int]] = None
+        markdown_fence: t.Optional[_MarkdownFence] = None
         codeblock_indent = 0
         codeblock_prefix = ""
         after_parameter = False
@@ -189,7 +198,7 @@ class GoogleProcessor(Processor):
 
             markdown_fence = _get_markdown_fence(line)
             if markdown_fence is not None:
-                preserve_indent = 2 if raw_line.lstrip().startswith(">") else 0
+                preserve_indent = 2 if markdown_fence[2] else 0
                 codeblock_indent = min(max(section_indent - preserve_indent, 0), self._get_indentation(raw_line))
                 rebased = self._remove_indentation(raw_line, codeblock_indent).rstrip()
                 rebased_indent = self._get_indentation(rebased)
@@ -250,7 +259,7 @@ class GoogleProcessor(Processor):
 
         lines: t.List[str] = []
         current_lines: t.List[str] = []
-        markdown_fence: t.Optional[t.Tuple[str, int]] = None
+        markdown_fence: t.Optional[_MarkdownFence] = None
         keyword: t.Optional[str] = None
 
         def _commit() -> None:

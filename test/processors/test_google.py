@@ -315,3 +315,11 @@ def test_google_processor_accounts_for_empty_list_marker_separator():
             "     ```"
         ),
     )
+
+
+def test_google_processor_does_not_close_top_level_fence_with_quoted_delimiter():
+    assert_processor_result(
+        GoogleProcessor(),
+        ("Examples:\n    ```text\n    > ```\n    still fenced\n    ```\nReturns:\n    str: Done."),
+        ("**Examples**:\n\n```text\n> ```\nstill fenced\n```\n\n**Returns**:\n\n- `str` - Done."),
+    )
