@@ -68,7 +68,11 @@ _INLINE_HTML_TAG_RE = re.compile(
     r"[ \t\r\n]*/?>"
     r")"
 )
-_URI_AUTOLINK_RE = re.compile(r"<[a-z][a-z0-9+.-]{1,31}:[^ <>]*>", re.IGNORECASE)
+_INLINE_RAW_HTML_RE = re.compile(
+    r"(?:<!--(?:[^-]|-(?!-))*-->|<\?.*?\?>|<!\[CDATA\[.*?\]\]>|<![A-Z][^>]*>)",
+    re.DOTALL,
+)
+_URI_AUTOLINK_RE = re.compile(r"<[a-z][a-z0-9+.-]{1,31}:[^\s<>]*>", re.IGNORECASE)
 _ESCAPABLE_PUNCTUATION_RE = re.compile(r"[!-/:-@\[-`{-~]")
 
 
@@ -321,6 +325,16 @@ def _mask_html_tags(mask: bytearray, text: str, start: int, end: int) -> None:
         opening = text.find("<", offset, end)
         if opening < 0:
             return
+        if mask[opening]:
+            offset = opening + 1
+            continue
+        raw_html = _INLINE_RAW_HTML_RE.match(text, opening, end)
+        if raw_html:
+            closing = raw_html.end()
+            if not any(mask[opening:closing]):
+                mask[opening:closing] = b"\1" * (closing - opening)
+            offset = closing
+            continue
         if opening + 1 >= end or text[opening + 1] not in "!?/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz":
             offset = opening + 1
             continue
@@ -414,10 +428,17 @@ def _markdown_protected_mask(text: str) -> bytearray:
         match = _FENCE_RE.match(_strip_container_prefix(line_body))
         if match and (match.group(2)[0] != "`" or "`" not in match.group(3)):
             quoted_content = _strip_blockquote_prefix(line_body)
+            fence_list_indent = _list_content_indent(quoted_content)
+            if (
+                fence_list_indent is None
+                and list_content_indent is not None
+                and _leading_indent(quoted_content) >= list_content_indent
+            ):
+                fence_list_indent = list_content_indent
             fence = (
                 match.group(2)[0],
                 len(match.group(2)),
-                _list_content_indent(quoted_content) or 0,
+                fence_list_indent or 0,
                 _blockquote_depth(line_body),
             )
             mask[offset:line_end] = b"\1" * len(line)
@@ -487,9 +508,10 @@ def _markdown_protected_mask(text: str) -> bytearray:
             offset = line_end
             continue
 
-        _mask_html_tags(mask, text, offset, line_end)
         previous_blank = blank
         offset = line_end
+
+    _mask_html_tags(mask, text, 0, len(text))
 
     offset = 0
     while offset < len(text):
@@ -828,7 +850,7 @@ def _rewrite_reference_labels(analysis: _DocstringReferences, labels: t.Dict[str
         replacements.extend((start, end, replacement) for start, end in analysis.definitions[label])
         replacements.extend(
             (usage.start, usage.end, "[{}]".format(replacement) if usage.append else replacement)
-            for usage in analysis.links[label]
+            for usage in analysis.links.get(label, [])
         )
 
     content = analysis.content
@@ -861,8 +883,9 @@ def _namespace_duplicate_references(
     for analysis in analyses:
         replacements: t.Dict[str, str] = {}
         for label in analysis.definitions:
-            if (not namespace_all and len(owners[label]) < 2) or label not in analysis.links:
-                continue
+            if not namespace_all:
+                if len(owners[label]) < 2 or label not in analysis.links:
+                    continue
             prefix = "^" if label.startswith("^") else ""
             label_slug = label[1:] if prefix else label
             base = prefix + "pydoc-{}-{}".format(

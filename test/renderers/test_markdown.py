@@ -252,12 +252,21 @@ def test_markdown_renderer_tracks_reference_container_state() -> None:
         Footnote A.
 
     A URI autolink stays intact: <https://host.example/[autolink]>.
+    Inline raw HTML stays intact: Text <!-- [comment] -->.
+    Other raw HTML stays intact: <?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>.
+
+    - A list item
+      ```markdown
+      [ignored][list-fence]
+    A reference after the unclosed list fence is [list-fence].
 
     > <div>
     A reference after the quoted HTML block is [html-block].
 
     [outer]: https://outer-a.example
     [autolink]: https://autolink-a.example
+    [comment]: https://comment-a.example
+    [list-fence]: https://fence-a.example
     [html-block]: https://html-a.example
     """
 
@@ -274,12 +283,21 @@ def b():
         Footnote B.
 
     A URI autolink stays intact: <https://host.example/[autolink]>.
+    Inline raw HTML stays intact: Text <!-- [comment] -->.
+    Other raw HTML stays intact: <?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>.
+
+    - A list item
+      ```markdown
+      [ignored][list-fence]
+    A reference after the unclosed list fence is [list-fence].
 
     > <div>
     A reference after the quoted HTML block is [html-block].
 
     [outer]: https://outer-b.example
     [autolink]: https://autolink-b.example
+    [comment]: https://comment-b.example
+    [list-fence]: https://fence-b.example
     [html-block]: https://html-b.example
     """
 ''',
@@ -298,5 +316,46 @@ def b():
     assert result.count("<https://host.example/[autolink]>") == 2
     assert "[autolink]: https://autolink-a.example" in result
     assert "[autolink]: https://autolink-b.example" in result
+    assert result.count("Text <!-- [comment] -->") == 2
+    assert result.count("<?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>") == 2
+    assert "[comment]: https://comment-a.example" in result
+    assert "[comment]: https://comment-b.example" in result
+    assert "[ignored][list-fence]" in result
+    assert "[list-fence][pydoc-reference_containers.a-list-fence]" in result
+    assert "[pydoc-reference_containers.a-list-fence]: https://fence-a.example" in result
     assert "[html-block][pydoc-reference_containers.a-html-block]" in result
     assert "[pydoc-reference_containers.a-html-block]: https://html-a.example" in result
+
+
+def test_markdown_renderer_namespaces_unused_definitions_for_separate_objects() -> None:
+    first = load_string_as_module(
+        Path("first.py"),
+        '''def a():
+    """An unused generated-looking definition.
+
+    [pydoc-m.a-x]: https://wrong.example
+    """
+''',
+        module_name="m",
+    )
+    second = load_string_as_module(
+        Path("second.py"),
+        '''def a():
+    """A used [x] definition.
+
+    [x]: https://right.example
+    """
+''',
+        module_name="m",
+    )
+    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
+    renderer.init(Context("."))
+    fp = io.StringIO()
+
+    renderer.render_object(fp, first.members[0], {})
+    renderer.render_object(fp, second.members[0], {})
+
+    result = fp.getvalue()
+    assert "[pydoc-m.a-pydoc-m.a-x]: https://wrong.example" in result
+    assert "[x][pydoc-m.a-x]" in result
+    assert "[pydoc-m.a-x]: https://right.example" in result
