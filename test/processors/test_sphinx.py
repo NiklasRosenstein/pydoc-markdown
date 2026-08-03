@@ -156,6 +156,29 @@ numpy_other_parameters_markdown = """
   - `label` (`str`): Advanced label.
   """
 
+numpy_docstring_with_parameter_details = """
+  Configure values.
+
+  Parameters
+  ----------
+  value : int
+      First paragraph.
+
+      Second paragraph.
+  label : str
+  """
+
+numpy_parameter_details_markdown = """
+  Configure values.
+
+  **Arguments**:
+
+  - `value` (`int`): First paragraph.
+
+    Second paragraph.
+  - `label` (`str`):
+  """
+
 numpy_docstring_with_multiline_returns = """
   Compute results.
 
@@ -320,7 +343,7 @@ md_with_multiline_param = """
   **Arguments**:
 
   - `foolong`: This parameter has a particularly long description
-  that requires multiple lines.
+    that requires multiple lines.
   """
 
 
@@ -402,6 +425,11 @@ def test_numpy_warnings_are_kept_separate_from_raises(processor):
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
 def test_numpy_other_parameters_are_kept_separate_from_arguments(processor):
     assert_processor_result(processor, numpy_docstring_with_other_parameters, numpy_other_parameters_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_parameter_details_remain_inside_list_items(processor):
+    assert_processor_result(processor, numpy_docstring_with_parameter_details, numpy_parameter_details_markdown)
 
 
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])

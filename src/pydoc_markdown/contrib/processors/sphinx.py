@@ -147,8 +147,10 @@ class SphinxProcessor(Processor):
                 qualifiers.append("default: `{}`".format(param.default))
             details = " ({})".format(", ".join(qualifiers)) if qualifiers else ""
             converted.append(
-                "- `{name}`{details}: {description}".format(
-                    name=param.arg_name, details=details, description=param.description
+                _markdown_list_item(
+                    "`{name}`{details}: {description}".format(
+                        name=param.arg_name, details=details, description=param.description or ""
+                    )
                 )
             )
         return converted
