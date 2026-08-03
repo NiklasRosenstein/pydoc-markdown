@@ -51,14 +51,13 @@ def dotted_name(obj: docspec.ApiObject) -> str:
 
 _REFERENCE_DEFINITION_START_RE = re.compile(r"^ {0,3}\[")
 _FENCE_RE = re.compile(r"^( {0,3})(`{3,}|~{3,})(.*?)(?:\r?\n)?$")
-_LIST_MARKER_RE = re.compile(r"(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)")
+_LIST_MARKER_RE = re.compile(r"(?:[-+*]|\d{1,9}[.)])(?:(?:[ \t]{1,4})(?![ \t])|[ \t]|$)")
 _HTML_BLOCK_RE = re.compile(
     r"(?i)^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|"
     r"details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|"
     r"hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|search|section|"
     r"summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?:[ \t]|/?>|$)"
 )
-_HTML_TAG_ONLY_RE = re.compile(r"(?i)^ {0,3}</?[a-z][^>]*>[ \t]*$")
 _INLINE_HTML_TAG_RE = re.compile(
     r"(?ix)(?:"
     r"</[a-z][a-z0-9-]*[ \t\r\n]*>"
@@ -74,6 +73,7 @@ _INLINE_RAW_HTML_RE = re.compile(
 )
 _URI_AUTOLINK_RE = re.compile(r"<[a-z][a-z0-9+.-]{1,31}:[^\s<>]*>", re.IGNORECASE)
 _ESCAPABLE_PUNCTUATION_RE = re.compile(r"[!-/:-@\[-`{-~]")
+_MAX_REFERENCE_LABEL_LENGTH = 999
 
 
 @dataclasses.dataclass
@@ -366,6 +366,13 @@ def _mask_html_tags(mask: bytearray, text: str, start: int, end: int) -> None:
             return
 
 
+def _is_html_tag_only(line: str) -> bool:
+    """Returns whether *line* is a complete type-7 HTML block tag."""
+
+    content = line.lstrip(" ")
+    return len(line) - len(content) <= 3 and _INLINE_HTML_TAG_RE.fullmatch(content.rstrip(" \t")) is not None
+
+
 def _markdown_protected_mask(text: str) -> bytearray:
     """Returns a conservative mask for code and raw HTML contexts."""
 
@@ -465,7 +472,7 @@ def _markdown_protected_mask(text: str) -> bytearray:
             assert tag
             html_end = "</{}>".format(tag.group(1))
             in_html_block = html_end not in lowered
-        elif _HTML_BLOCK_RE.match(container_content) or (previous_blank and _HTML_TAG_ONLY_RE.match(container_content)):
+        elif _HTML_BLOCK_RE.match(container_content) or (previous_blank and _is_html_tag_only(container_content)):
             in_html_block = True
             html_end = None
         if in_html_block or html_end:
@@ -552,8 +559,9 @@ def _overlaps_spans(start: int, end: int, spans: t.Iterable[t.Tuple[int, int]]) 
 def _find_closing_bracket(text: str, opening: int, nested: bool = False) -> t.Optional[int]:
     depth = 1
     offset = opening + 1
+    scan_end = min(len(text), opening + _MAX_REFERENCE_LABEL_LENGTH + 2)
     previous_newline = False
-    while offset < len(text):
+    while offset < scan_end:
         char = text[offset]
         if char == "\\":
             offset += 2
@@ -844,6 +852,13 @@ def _reference_slug(value: str) -> str:
     return re.sub(r"[^a-zA-Z0-9_.-]+", "-", value).strip("-.") or "object"
 
 
+def _reference_namespace(value: str) -> str:
+    """Encodes an object name injectively under Markdown's case-insensitive label matching."""
+
+    safe = b"abcdefghijklmnopqrstuvwxyz0123456789_.-"
+    return "".join(chr(byte) if byte in safe else "%{:02X}".format(byte) for byte in value.encode("utf-8")) or "object"
+
+
 def _rewrite_reference_labels(analysis: _DocstringReferences, labels: t.Dict[str, str]) -> str:
     replacements: t.List[t.Tuple[int, int, str]] = []
     for label, replacement in labels.items():
@@ -889,7 +904,7 @@ def _namespace_duplicate_references(
             prefix = "^" if label.startswith("^") else ""
             label_slug = label[1:] if prefix else label
             base = prefix + "pydoc-{}-{}".format(
-                _reference_slug(dotted_name(analysis.obj)), _reference_slug(label_slug)
+                _reference_namespace(dotted_name(analysis.obj)), _reference_slug(label_slug)
             )
             replacement = base
             suffix = 2

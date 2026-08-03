@@ -12,7 +12,7 @@ from docspec_python import ParserOptions, parse_python_module
 from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
-from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer, _list_content_indent
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer, _find_closing_bracket, _list_content_indent
 from pydoc_markdown.interfaces import Context, Processor
 
 from ..utils import assert_text_equals, get_testcases_for, load_testcase
@@ -255,6 +255,12 @@ def test_markdown_renderer_tracks_reference_container_state() -> None:
     Inline raw HTML stays intact: Text <!-- [comment] -->.
     Other raw HTML stays intact: <?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>.
 
+    <tag [type-seven]>
+    A reference after the invalid type-7 tag is [type-seven].
+
+    An [padding] shortcut has only an indented-code pseudo-definition.
+    -     [padding]: https://padding-a.example
+
     - A list item
       ```markdown
       [ignored][list-fence]
@@ -267,6 +273,7 @@ def test_markdown_renderer_tracks_reference_container_state() -> None:
     [autolink]: https://autolink-a.example
     [comment]: https://comment-a.example
     [list-fence]: https://fence-a.example
+    [type-seven]: https://type-seven-a.example
     [html-block]: https://html-a.example
     """
 
@@ -286,6 +293,12 @@ def b():
     Inline raw HTML stays intact: Text <!-- [comment] -->.
     Other raw HTML stays intact: <?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>.
 
+    <tag [type-seven]>
+    A reference after the invalid type-7 tag is [type-seven].
+
+    An [padding] shortcut has only an indented-code pseudo-definition.
+    -     [padding]: https://padding-b.example
+
     - A list item
       ```markdown
       [ignored][list-fence]
@@ -298,6 +311,7 @@ def b():
     [autolink]: https://autolink-b.example
     [comment]: https://comment-b.example
     [list-fence]: https://fence-b.example
+    [type-seven]: https://type-seven-b.example
     [html-block]: https://html-b.example
     """
 ''',
@@ -323,6 +337,11 @@ def b():
     assert "[ignored][list-fence]" in result
     assert "[list-fence][pydoc-reference_containers.a-list-fence]" in result
     assert "[pydoc-reference_containers.a-list-fence]: https://fence-a.example" in result
+    assert "<tag [type-seven][pydoc-reference_containers.a-type-seven]>" in result
+    assert "[type-seven][pydoc-reference_containers.a-type-seven]" in result
+    assert "[pydoc-reference_containers.a-type-seven]: https://type-seven-a.example" in result
+    assert "An [padding] shortcut has only an indented-code pseudo-definition." in result
+    assert "-     [padding]: https://padding-a.example" in result
     assert "[html-block][pydoc-reference_containers.a-html-block]" in result
     assert "[pydoc-reference_containers.a-html-block]: https://html-a.example" in result
 
@@ -359,3 +378,40 @@ def test_markdown_renderer_namespaces_unused_definitions_for_separate_objects() 
     assert "[pydoc-m.a-pydoc-m.a-x]: https://wrong.example" in result
     assert "[x][pydoc-m.a-x]" in result
     assert "[pydoc-m.a-x]: https://right.example" in result
+
+
+def test_markdown_renderer_encodes_unicode_object_namespaces() -> None:
+    module = load_string_as_module(
+        Path("unicode_names.py"),
+        '''def é():
+    """A used [x] definition.
+
+    [x]: https://e-acute.example
+    """
+
+def ß():
+    """Another used [x] definition.
+
+    [x]: https://eszett.example
+    """
+''',
+        module_name="m",
+    )
+    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
+    renderer.init(Context("."))
+    fp = io.StringIO()
+
+    renderer.render_object(fp, module.members[0], {})
+    renderer.render_object(fp, module.members[1], {})
+
+    result = fp.getvalue()
+    assert "[x][pydoc-m.%C3%A9-x]" in result
+    assert "[pydoc-m.%C3%A9-x]: https://e-acute.example" in result
+    assert "[x][pydoc-m.%C3%9F-x]" in result
+    assert "[pydoc-m.%C3%9F-x]: https://eszett.example" in result
+
+
+def test_markdown_reference_label_scan_is_bounded() -> None:
+    assert _find_closing_bracket("[" + "a" * 999 + "]", 0) == 1000
+    assert _find_closing_bracket("[" + "a" * 1000 + "]", 0) is None
+    assert _find_closing_bracket("[" * 10_000 + "]", 0, nested=True) is None
