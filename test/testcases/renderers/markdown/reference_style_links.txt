@@ -12,6 +12,8 @@ def a():
     An [inline link](https://inline.example), [image link][image], ![an image][image], and [unrelated brackets].
     A nested [![CI][badge]][target].
     An inline outer link [![CI][badge]](https://ci.example).
+    A blockquote [reference][quoted].
+    An invalid [empty definition] stays unchanged.
     Raw HTML stays unchanged: <span data-ref="[0]"></span>.
     Code stays unchanged: `[code][0]` and \[escaped\]\[0\].
 
@@ -76,6 +78,8 @@ def a():
     [multi
     label]: https://multiline-a.example
     [^note]: Footnote A.
+    > [quoted]: https://quoted-a.example
+    [empty definition]:
     """
 
 
@@ -87,6 +91,8 @@ def b():
     An [inline link](https://inline.example), [image link][image], ![an image][image], and [unrelated brackets].
     A nested [![CI][badge]][target].
     An inline outer link [![CI][badge]](https://ci.example).
+    A blockquote [reference][quoted].
+    An invalid [empty definition] stays unchanged.
     Raw HTML stays unchanged: <span data-ref="[0]"></span>.
 
     A paragraph continues
@@ -145,6 +151,8 @@ def b():
     [multi
     label]: https://multiline-b.example
     [^note]: Footnote B.
+    > [quoted]: https://quoted-b.example
+    [empty definition]:
     """
 
 
@@ -169,6 +177,8 @@ Links to [a][pydoc-reference_style_links.a-0-2], [collapsed][pydoc-reference_sty
 An [inline link](https://inline.example), [image link][pydoc-reference_style_links.a-image], ![an image][pydoc-reference_style_links.a-image], and [unrelated brackets].
 A nested [![CI][pydoc-reference_style_links.a-badge-2]][pydoc-reference_style_links.a-target].
 An inline outer link [![CI][pydoc-reference_style_links.a-badge-2]](https://ci.example).
+A blockquote [reference][pydoc-reference_style_links.a-quoted].
+An invalid [empty definition] stays unchanged.
 Raw HTML stays unchanged: <span data-ref="[0]"></span>.
 Code stays unchanged: `[code][0]` and \[escaped\]\[0\].
 
@@ -232,6 +242,8 @@ Following the container fence is [another link][pydoc-reference_style_links.a-0-
 [pydoc-reference_style_links.a-escaped]: https://escaped-a.example
 [pydoc-reference_style_links.a-multi-label]: https://multiline-a.example
 [^pydoc-reference_style_links.a-note]: Footnote A.
+> [pydoc-reference_style_links.a-quoted]: https://quoted-a.example
+[empty definition]:
 
 #### b
 
@@ -241,6 +253,8 @@ Links to [b][pydoc-reference_style_links.b-0-2], [collapsed][pydoc-reference_sty
 An [inline link](https://inline.example), [image link][pydoc-reference_style_links.b-image], ![an image][pydoc-reference_style_links.b-image], and [unrelated brackets].
 A nested [![CI][pydoc-reference_style_links.b-badge]][pydoc-reference_style_links.b-target].
 An inline outer link [![CI][pydoc-reference_style_links.b-badge]](https://ci.example).
+A blockquote [reference][pydoc-reference_style_links.b-quoted].
+An invalid [empty definition] stays unchanged.
 Raw HTML stays unchanged: <span data-ref="[0]"></span>.
 
 A paragraph continues
@@ -298,6 +312,8 @@ Following the container fence is [another link][pydoc-reference_style_links.b-0-
 [pydoc-reference_style_links.b-escaped]: https://escaped-b.example
 [pydoc-reference_style_links.b-multi-label]: https://multiline-b.example
 [^pydoc-reference_style_links.b-note]: Footnote B.
+> [pydoc-reference_style_links.b-quoted]: https://quoted-b.example
+[empty definition]:
 
 #### collision
 

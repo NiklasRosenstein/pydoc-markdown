@@ -49,7 +49,7 @@ def dotted_name(obj: docspec.ApiObject) -> str:
     return ".".join(x.name for x in obj.path)
 
 
-_REFERENCE_DEFINITION_START_RE = re.compile(r"(?m)^ {0,3}\[")
+_REFERENCE_DEFINITION_START_RE = re.compile(r"^ {0,3}\[")
 _FENCE_RE = re.compile(r"^( {0,3})(`{3,}|~{3,})(.*?)(?:\r?\n)?$")
 _LIST_MARKER_RE = re.compile(r"(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)")
 _HTML_BLOCK_RE = re.compile(
@@ -143,6 +143,15 @@ def _leading_indent(line: str) -> int:
     return width
 
 
+def _visual_width(text: str) -> int:
+    """Returns the number of Markdown columns occupied by *text*."""
+
+    width = 0
+    for char in text:
+        width += 4 - width % 4 if char == "\t" else 1
+    return width
+
+
 def _list_content_indent(line: str) -> t.Optional[int]:
     """Returns the absolute indentation where a list item's content begins."""
 
@@ -150,7 +159,68 @@ def _list_content_indent(line: str) -> t.Optional[int]:
     while offset < len(line) and line[offset] == " " and offset < 3:
         offset += 1
     match = _LIST_MARKER_RE.match(line, offset)
-    return match.end() if match else None
+    return _visual_width(line[: match.end()]) if match else None
+
+
+def _reference_definition_end(text: str, colon: int, footnote: bool = False) -> t.Optional[int]:
+    """Validates a reference definition and returns the end of its first line."""
+
+    line_end = len(text)
+    for newline in (text.find("\n", colon + 1), text.find("\r", colon + 1)):
+        if newline >= 0:
+            line_end = min(line_end, newline)
+
+    offset = colon + 1
+    while offset < line_end and text[offset] in " \t":
+        offset += 1
+    if offset >= line_end:
+        return None
+    if footnote:
+        return line_end
+
+    if text[offset] == "<":
+        destination_start = offset + 1
+        offset = destination_start
+        while offset < line_end and (text[offset] != ">" or _is_escaped(text, offset)):
+            offset += 1
+        if offset >= line_end or offset == destination_start:
+            return None
+        offset += 1
+    else:
+        destination_start = offset
+        depth = 0
+        while offset < line_end and (not text[offset].isspace() or depth):
+            if text[offset] == "\\":
+                offset += 2
+                continue
+            if text[offset] == "(":
+                depth += 1
+            elif text[offset] == ")":
+                if depth == 0:
+                    break
+                depth -= 1
+            offset += 1
+        if offset == destination_start or depth:
+            return None
+
+    while offset < line_end and text[offset] in " \t":
+        offset += 1
+    if offset == line_end:
+        return line_end
+
+    opener = text[offset]
+    closer = {'"': '"', "'": "'", "(": ")"}.get(opener)
+    if closer is None:
+        return None
+    offset += 1
+    while offset < line_end and (text[offset] != closer or _is_escaped(text, offset)):
+        offset += 1
+    if offset >= line_end:
+        return None
+    offset += 1
+    while offset < line_end and text[offset] in " \t":
+        offset += 1
+    return line_end if offset == line_end else None
 
 
 def _mask_html_tags(mask: bytearray, text: str, start: int, end: int) -> None:
@@ -399,19 +469,32 @@ def _analyze_docstring_references(obj: docspec.ApiObject, content: str) -> _Docs
     inline_link_spans: t.List[t.Tuple[int, int]] = []
     inline_image_openings: t.Set[int] = set()
 
-    for match in _REFERENCE_DEFINITION_START_RE.finditer(content):
-        opening = match.end() - 1
+    definition_starts: t.List[t.Tuple[int, int]] = []
+    line_offset = 0
+    for line in content.splitlines(keepends=True):
+        line_body = line.rstrip("\r\n")
+        container_content = _strip_blockquote_prefix(line_body)
+        container_offset = len(line_body) - len(container_content)
+        match = _REFERENCE_DEFINITION_START_RE.match(container_content)
+        if match:
+            definition_starts.append((line_offset + container_offset + match.end() - 1, line_offset))
+        line_offset += len(line)
+
+    for opening, line_start in definition_starts:
         closing = _find_closing_bracket(content, opening)
         if closing is None or closing + 1 >= len(content) or content[closing + 1] != ":":
             continue
-        if _overlaps_mask(protected_mask, match.start(), closing + 2) or _is_escaped(content, opening):
+        if _overlaps_mask(protected_mask, opening, closing + 2) or _is_escaped(content, opening):
             continue
         label_span = (opening + 1, closing)
         label = _normalize_reference_label(content[slice(*label_span)])
         if not label:
             continue
+        definition_end = _reference_definition_end(content, closing + 1, label.startswith("^"))
+        if definition_end is None:
+            continue
         result.definitions.setdefault(label, []).append(label_span)
-        definition_spans.append((match.start(), closing + 2))
+        definition_spans.append((line_start, definition_end))
 
     offset = 0
     while offset < len(content):
@@ -499,7 +582,9 @@ def _rewrite_reference_labels(analysis: _DocstringReferences, labels: t.Dict[str
     return content
 
 
-def _namespace_duplicate_references(objects: t.Iterable[docspec.ApiObject]) -> t.Dict[int, str]:
+def _namespace_duplicate_references(
+    objects: t.Iterable[docspec.ApiObject], namespace_all: bool = False
+) -> t.Dict[int, str]:
     """Rewrites reference labels that would otherwise collide on one rendered page."""
 
     analyses = [
@@ -517,7 +602,7 @@ def _namespace_duplicate_references(objects: t.Iterable[docspec.ApiObject]) -> t
     for analysis in analyses:
         replacements: t.Dict[str, str] = {}
         for label in analysis.definitions:
-            if len(owners[label]) < 2 or label not in analysis.links:
+            if (not namespace_all and len(owners[label]) < 2) or label not in analysis.links:
                 continue
             prefix = "^" if label.startswith("^") else ""
             label_slug = label[1:] if prefix else label
@@ -967,7 +1052,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     # SingleObjectRenderer
 
     def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None:
-        self._render_recursive(fp, 0, obj, _namespace_duplicate_references([obj]))
+        # Novella and other integrations may concatenate several independently rendered objects onto one page.
+        self._render_recursive(fp, 0, obj, _namespace_duplicate_references([obj], namespace_all=True))
 
     # Renderer
 

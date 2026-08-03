@@ -12,7 +12,7 @@ from docspec_python import ParserOptions, parse_python_module
 from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
-from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer, _list_content_indent
 from pydoc_markdown.interfaces import Context, Processor
 
 from ..utils import assert_text_equals, get_testcases_for, load_testcase
@@ -114,3 +114,37 @@ def test_markdown_renderer_preserves_unique_reference_labels() -> None:
     assert renderer.render_to_string([module]) == (
         "#### func\n\nLinks to [example][0].\n\n[0]: https://example.com\n\n"
     )
+
+
+def test_markdown_renderer_namespaces_separately_rendered_objects() -> None:
+    module = load_string_as_module(
+        Path("separate_objects.py"),
+        '''def a():
+    """Links to [A][0].
+
+    [0]: https://a.example
+    """
+
+def b():
+    """Links to [B][0].
+
+    [0]: https://b.example
+    """
+''',
+    )
+    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
+    renderer.init(Context("."))
+    fp = io.StringIO()
+
+    renderer.render_object(fp, module.members[0], {})
+    renderer.render_object(fp, module.members[1], {})
+
+    assert "[A][pydoc-separate_objects.a-0]" in fp.getvalue()
+    assert "[pydoc-separate_objects.a-0]: https://a.example" in fp.getvalue()
+    assert "[B][pydoc-separate_objects.b-0]" in fp.getvalue()
+    assert "[pydoc-separate_objects.b-0]: https://b.example" in fp.getvalue()
+
+
+def test_markdown_list_content_indentation_uses_visual_columns() -> None:
+    assert _list_content_indent("-\tcontent") == 4
+    assert _list_content_indent("1.\tcontent") == 4
