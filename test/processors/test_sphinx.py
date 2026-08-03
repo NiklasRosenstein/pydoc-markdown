@@ -1,6 +1,6 @@
 import pytest
 from docstring_parser import DocstringStyle
-from docstring_parser.common import Docstring, DocstringMeta
+from docstring_parser.common import Docstring, DocstringMeta, DocstringParam
 
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
@@ -88,7 +88,7 @@ numpy_markdown = """
   **Arguments**:
 
   - `x` (`int`): Input value.
-  - `label` (`str`): Label for the result.
+  - `label` (`str`, optional): Label for the result.
 
   **Raises**:
 
@@ -346,6 +346,14 @@ def test_explicit_google_style_keeps_attributes_separate_from_arguments():
         "Summary.\n\nArgs:\n    x (int): Input.\n\nAttributes:\n    value (str): Stored.",
         ("Summary.\n\n**Arguments**:\n\n- `x` (`int`): Input.\n\n**Attributes**:\n\n- `value` (`str`): Stored."),
     )
+
+
+def test_parameter_qualifiers_are_preserved():
+    parameter = DocstringParam(["param", "limit"], "Maximum count.", "limit", "int", True, "10")
+
+    assert SphinxProcessor()._convert_params([parameter]) == [
+        "- `limit` (`int`, optional, default: `10`): Maximum count."
+    ]
 
 
 @pytest.mark.parametrize(

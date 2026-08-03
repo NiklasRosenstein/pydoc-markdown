@@ -132,14 +132,19 @@ class SphinxProcessor(Processor):
         """
         converted = []
         for param in params:
-            if param.type_name is None:
-                converted.append("- `{name}`: {description}".format(name=param.arg_name, description=param.description))
-            else:
-                converted.append(
-                    "- `{name}` (`{type}`): {description}".format(
-                        name=param.arg_name, type=param.type_name, description=param.description
-                    )
+            qualifiers = []
+            if param.type_name:
+                qualifiers.append("`{}`".format(param.type_name))
+            if param.is_optional:
+                qualifiers.append("optional")
+            if param.default is not None:
+                qualifiers.append("default: `{}`".format(param.default))
+            details = " ({})".format(", ".join(qualifiers)) if qualifiers else ""
+            converted.append(
+                "- `{name}`{details}: {description}".format(
+                    name=param.arg_name, details=details, description=param.description
                 )
+            )
         return converted
 
     def _convert_returns(self, returns: t.List[docstring_parser.common.DocstringReturns]) -> t.List[str]:
