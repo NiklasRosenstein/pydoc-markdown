@@ -227,3 +227,11 @@ def test_google_processor_rebases_tilde_fences_in_examples():
         "Examples:\n    ~~~python\n    print('yes')\n    ~~~",
         "**Examples**:\n\n~~~python\nprint('yes')\n~~~",
     )
+
+
+def test_google_processor_preserves_two_space_list_fence_nesting():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Examples:\n    - With code:\n      ```python\n      print('yes')\n      ```",
+        "**Examples**:\n\n  - With code:\n    ```python\n    print('yes')\n    ```",
+    )

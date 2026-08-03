@@ -163,6 +163,7 @@ class GoogleProcessor(Processor):
         result: t.List[str] = []
         markdown_fence: t.Optional[t.Tuple[str, int]] = None
         codeblock_indent = 0
+        codeblock_prefix = ""
         after_parameter = False
         continuation_indent: t.Optional[int] = None
 
@@ -171,7 +172,7 @@ class GoogleProcessor(Processor):
             normalized_line = self._remove_indentation(raw_line, section_indent).rstrip()
 
             if markdown_fence is not None:
-                result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
+                result.append(codeblock_prefix + self._remove_indentation(raw_line, codeblock_indent).rstrip())
                 if _is_markdown_fence_closer(line, markdown_fence):
                     markdown_fence = None
                 continue
@@ -179,7 +180,12 @@ class GoogleProcessor(Processor):
             markdown_fence = _get_markdown_fence(line)
             if markdown_fence is not None:
                 codeblock_indent = min(section_indent, self._get_indentation(raw_line))
-                result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
+                rebased = self._remove_indentation(raw_line, codeblock_indent).rstrip()
+                previous = next((value for value in reversed(result) if value.strip()), "")
+                nested_in_list = re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous)
+                rebased_indent = self._get_indentation(rebased)
+                codeblock_prefix = " " * max(4 - rebased_indent, 0) if nested_in_list and rebased_indent else ""
+                result.append(codeblock_prefix + rebased)
                 continue
 
             param_match = None
