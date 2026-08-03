@@ -53,6 +53,12 @@ def generate_sections_markdown(lines, sections):
             lines.extend(section)
 
 
+def _markdown_list_item(value: str) -> str:
+    """Format multiline content as a Markdown list item."""
+
+    return "- " + value.replace("\n", "\n  ")
+
+
 @dataclasses.dataclass
 class SphinxProcessor(Processor):
     """
@@ -165,7 +171,7 @@ class SphinxProcessor(Processor):
             converted.append(prefix + (entry.description or ""))
 
         if len(converted) > 1:
-            return ["- " + entry for entry in converted]
+            return [_markdown_list_item(entry) for entry in converted]
         return converted
 
     @staticmethod
@@ -198,7 +204,7 @@ class SphinxProcessor(Processor):
             converted.setdefault(heading, []).append(description)
         for heading, entries in converted.items():
             if len(entries) > 1:
-                converted[heading] = ["- " + entry for entry in entries]
+                converted[heading] = [_markdown_list_item(entry) for entry in entries]
         return converted
 
     def _process(self, node: docspec.ApiObject) -> None:
@@ -215,9 +221,15 @@ class SphinxProcessor(Processor):
             for entry in parsed_docstring.params
             if entry.args and entry.args[0].casefold() in ("attribute", "cvar", "ivar", "var")
         ]
-        argument_params = [entry for entry in parsed_docstring.params if entry not in attribute_params]
+        other_params = [
+            entry for entry in parsed_docstring.params if entry.args and entry.args[0].casefold() == "other_param"
+        ]
+        argument_params = [
+            entry for entry in parsed_docstring.params if entry not in attribute_params and entry not in other_params
+        ]
         components["Arguments"] = self._convert_params(argument_params)
         components["Attributes"] = self._convert_params(attribute_params)
+        components["Other Parameters"] = self._convert_params(other_params)
         warnings = [
             entry
             for entry in parsed_docstring.raises
@@ -232,7 +244,14 @@ class SphinxProcessor(Processor):
         components["Returns"] = self._convert_returns(returns)
         components["Yields"] = self._convert_returns(yields)
         handled = [*parsed_docstring.params, *parsed_docstring.raises, *parsed_docstring.many_returns]
-        components.update(self._convert_metadata(parsed_docstring, handled))
+        for heading, entries in self._convert_metadata(parsed_docstring, handled).items():
+            if components.get(heading) and entries:
+                combined = [*components[heading], *entries]
+                components[heading] = [
+                    entry if entry.startswith("- ") else _markdown_list_item(entry) for entry in combined
+                ]
+            else:
+                components[heading] = entries
 
         if parsed_docstring.short_description:
             lines.append(parsed_docstring.short_description)

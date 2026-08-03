@@ -111,6 +111,10 @@ numpy_docstring_with_raises_and_warnings = """
   -----
   UserWarning
       If the result is incomplete.
+
+  Warnings
+  --------
+  Results may change in future versions.
   """
 
 numpy_raises_and_warnings_markdown = """
@@ -123,6 +127,61 @@ numpy_raises_and_warnings_markdown = """
   **Warnings**:
 
   - `UserWarning`: If the result is incomplete.
+  - Results may change in future versions.
+  """
+
+numpy_docstring_with_other_parameters = """
+  Configure a result.
+
+  Parameters
+  ----------
+  value : int
+      Primary input.
+
+  Other Parameters
+  ----------------
+  label : str
+      Advanced label.
+  """
+
+numpy_other_parameters_markdown = """
+  Configure a result.
+
+  **Arguments**:
+
+  - `value` (`int`): Primary input.
+
+  **Other Parameters**:
+
+  - `label` (`str`): Advanced label.
+  """
+
+numpy_docstring_with_multiline_returns = """
+  Compute results.
+
+  Returns
+  -------
+  value : int
+      First paragraph.
+
+      Second paragraph.
+
+          example()
+  label : str
+      Result label.
+  """
+
+numpy_multiline_returns_markdown = """
+  Compute results.
+
+  **Returns**:
+
+  - `value` (`int`): First paragraph.
+
+    Second paragraph.
+
+        example()
+  - `label` (`str`): Result label.
   """
 
 numpy_docstring_with_additional_sections = """
@@ -338,6 +397,16 @@ def test_explicit_numpy_docstring_style():
 )
 def test_numpy_warnings_are_kept_separate_from_raises(processor):
     assert_processor_result(processor, numpy_docstring_with_raises_and_warnings, numpy_raises_and_warnings_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_other_parameters_are_kept_separate_from_arguments(processor):
+    assert_processor_result(processor, numpy_docstring_with_other_parameters, numpy_other_parameters_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_multiline_returns_remain_inside_list_items(processor):
+    assert_processor_result(processor, numpy_docstring_with_multiline_returns, numpy_multiline_returns_markdown)
 
 
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
