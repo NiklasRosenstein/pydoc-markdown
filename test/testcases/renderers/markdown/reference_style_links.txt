@@ -17,6 +17,7 @@ def a():
     An alternating-container [reference][nested].
     A titled [reference][titled].
     An inline title [link](/url "tip ) [titled]") stays unchanged.
+    Invalid inline [not-inline](a b [titled]) exposes nested.
     A paragraph followed by a type-7 tag
     <span>
     [titled]
@@ -59,6 +60,14 @@ def a():
         ```
     Following the container fence is [another link][0].
 
+    > ```markdown
+    > [quoted unclosed fence][leaky]
+    Following the quoted fence is [leaky].
+
+    - ```markdown
+      [list unclosed fence][list-leaky]
+    Following the list fence is [list-leaky].
+
     <div data-ref="[0]">
     [html block][0]
     </div>
@@ -91,6 +100,8 @@ def a():
     - > [nested]: https://nested-a.example
     [titled]: https://titled-a.example
       "Tooltip [titled]"
+    [leaky]: https://leaky-a.example
+    [list-leaky]: https://list-leaky-a.example
     [empty definition]:
     """
 
@@ -108,6 +119,7 @@ def b():
     An alternating-container [reference][nested].
     A titled [reference][titled].
     An inline title [link](/url "tip ) [titled]") stays unchanged.
+    Invalid inline [not-inline](a b [titled]) exposes nested.
     A paragraph followed by a type-7 tag
     <span>
     [titled]
@@ -144,6 +156,14 @@ def b():
         ```
     Following the container fence is [another link][0].
 
+    > ```markdown
+    > [quoted unclosed fence][leaky]
+    Following the quoted fence is [leaky].
+
+    - ```markdown
+      [list unclosed fence][list-leaky]
+    Following the list fence is [list-leaky].
+
     <div data-ref="[0]">
     [html block][0]
     </div>
@@ -176,6 +196,8 @@ def b():
     - > [nested]: https://nested-b.example
     [titled]: https://titled-b.example
       "Tooltip [titled]"
+    [leaky]: https://leaky-b.example
+    [list-leaky]: https://list-leaky-b.example
     [empty definition]:
     """
 
@@ -206,6 +228,7 @@ A list-container [reference][pydoc-reference_style_links.a-listed].
 An alternating-container [reference][pydoc-reference_style_links.a-nested].
 A titled [reference][pydoc-reference_style_links.a-titled].
 An inline title [link](/url "tip ) [titled]") stays unchanged.
+Invalid inline [not-inline](a b [titled][pydoc-reference_style_links.a-titled]) exposes nested.
 A paragraph followed by a type-7 tag
 <span>
 [titled][pydoc-reference_style_links.a-titled]
@@ -248,6 +271,14 @@ Indented code stays unchanged:
     ```
 Following the container fence is [another link][pydoc-reference_style_links.a-0-2].
 
+> ```markdown
+> [quoted unclosed fence][leaky]
+Following the quoted fence is [leaky][pydoc-reference_style_links.a-leaky].
+
+- ```markdown
+  [list unclosed fence][list-leaky]
+Following the list fence is [list-leaky][pydoc-reference_style_links.a-list-leaky].
+
 <div data-ref="[0]">
 [html block][0]
 </div>
@@ -279,6 +310,8 @@ Following the container fence is [another link][pydoc-reference_style_links.a-0-
 - > [pydoc-reference_style_links.a-nested]: https://nested-a.example
 [pydoc-reference_style_links.a-titled]: https://titled-a.example
   "Tooltip [titled]"
+[pydoc-reference_style_links.a-leaky]: https://leaky-a.example
+[pydoc-reference_style_links.a-list-leaky]: https://list-leaky-a.example
 [empty definition]:
 
 #### b
@@ -294,6 +327,7 @@ A list-container [reference][pydoc-reference_style_links.b-listed].
 An alternating-container [reference][pydoc-reference_style_links.b-nested].
 A titled [reference][pydoc-reference_style_links.b-titled].
 An inline title [link](/url "tip ) [titled]") stays unchanged.
+Invalid inline [not-inline](a b [titled][pydoc-reference_style_links.b-titled]) exposes nested.
 A paragraph followed by a type-7 tag
 <span>
 [titled][pydoc-reference_style_links.b-titled]
@@ -330,6 +364,14 @@ Indented code stays unchanged:
     ```
 Following the container fence is [another link][pydoc-reference_style_links.b-0-2].
 
+> ```markdown
+> [quoted unclosed fence][leaky]
+Following the quoted fence is [leaky][pydoc-reference_style_links.b-leaky].
+
+- ```markdown
+  [list unclosed fence][list-leaky]
+Following the list fence is [list-leaky][pydoc-reference_style_links.b-list-leaky].
+
 <div data-ref="[0]">
 [html block][0]
 </div>
@@ -361,6 +403,8 @@ Following the container fence is [another link][pydoc-reference_style_links.b-0-
 - > [pydoc-reference_style_links.b-nested]: https://nested-b.example
 [pydoc-reference_style_links.b-titled]: https://titled-b.example
   "Tooltip [titled]"
+[pydoc-reference_style_links.b-leaky]: https://leaky-b.example
+[pydoc-reference_style_links.b-list-leaky]: https://list-leaky-b.example
 [empty definition]:
 
 #### collision

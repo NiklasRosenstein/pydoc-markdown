@@ -106,6 +106,22 @@ def _strip_blockquote_prefix(line: str) -> str:
             offset += 1
 
 
+def _blockquote_depth(line: str) -> int:
+    """Returns the number of leading Markdown blockquote containers."""
+
+    depth = 0
+    while True:
+        offset = 0
+        while offset < len(line) and line[offset] == " " and offset < 3:
+            offset += 1
+        if offset >= len(line) or line[offset] != ">":
+            return depth
+        depth += 1
+        line = line[offset + 1 :]
+        if line.startswith((" ", "\t")):
+            line = line[1:]
+
+
 def _strip_container_prefix(line: str) -> str:
     """Strips nested blockquote and one-line list container markers."""
 
@@ -281,7 +297,7 @@ def _markdown_protected_mask(text: str) -> bytearray:
     """Returns a conservative mask for code and raw HTML contexts."""
 
     mask = bytearray(len(text))
-    fence: t.Optional[t.Tuple[str, int, int]] = None
+    fence: t.Optional[t.Tuple[str, int, int, int]] = None
     html_end: t.Optional[str] = None
     in_html_block = False
     in_indented_code = False
@@ -295,19 +311,25 @@ def _markdown_protected_mask(text: str) -> bytearray:
         blank = not content_after_quotes.strip()
 
         if fence is not None:
-            mask[offset:line_end] = b"\1" * len(line)
             quoted_content = _strip_blockquote_prefix(line_body)
-            match = _FENCE_RE.match(_strip_indent(quoted_content, fence[2]))
-            if (
-                match
-                and match.group(2)[0] == fence[0]
-                and len(match.group(2)) >= fence[1]
-                and not match.group(3).strip()
-            ):
+            container_ended = _blockquote_depth(line_body) < fence[3] or (
+                fence[2] > 0 and not blank and _leading_indent(quoted_content) < fence[2]
+            )
+            if container_ended:
                 fence = None
-            previous_blank = blank
-            offset = line_end
-            continue
+            else:
+                mask[offset:line_end] = b"\1" * len(line)
+                match = _FENCE_RE.match(_strip_indent(quoted_content, fence[2]))
+                if (
+                    match
+                    and match.group(2)[0] == fence[0]
+                    and len(match.group(2)) >= fence[1]
+                    and not match.group(3).strip()
+                ):
+                    fence = None
+                previous_blank = blank
+                offset = line_end
+                continue
 
         if in_html_block:
             mask[offset:line_end] = b"\1" * len(line)
@@ -325,6 +347,7 @@ def _markdown_protected_mask(text: str) -> bytearray:
                 match.group(2)[0],
                 len(match.group(2)),
                 _list_content_indent(quoted_content) or 0,
+                _blockquote_depth(line_body),
             )
             mask[offset:line_end] = b"\1" * len(line)
             previous_blank = blank
@@ -454,7 +477,7 @@ def _find_closing_bracket(text: str, opening: int, nested: bool = False) -> t.Op
     return None
 
 
-def _find_closing_parenthesis(text: str, opening: int) -> int:
+def _find_closing_parenthesis(text: str, opening: int) -> t.Optional[int]:
     depth = 1
     offset = opening + 1
     quote: t.Optional[str] = None
@@ -474,7 +497,67 @@ def _find_closing_parenthesis(text: str, opening: int) -> int:
             if depth == 0:
                 return offset
         offset += 1
-    return opening
+    return None
+
+
+def _is_valid_inline_link(text: str, opening: int, closing: int) -> bool:
+    """Validates the destination and optional title inside an inline link."""
+
+    if re.search(r"(?:\r\n|[\r\n])[ \t]*(?:\r\n|[\r\n])", text[opening + 1 : closing]):
+        return False
+
+    offset = opening + 1
+    while offset < closing and text[offset].isspace():
+        offset += 1
+    if offset == closing:
+        return True
+
+    if text[offset] == "<":
+        offset += 1
+        destination_start = offset
+        while offset < closing and (text[offset] != ">" or _is_escaped(text, offset)):
+            if text[offset] in "\r\n<":
+                return False
+            offset += 1
+        if offset == closing or offset == destination_start:
+            return False
+        offset += 1
+    else:
+        destination_start = offset
+        depth = 0
+        while offset < closing and (not text[offset].isspace() or depth):
+            if text[offset] == "\\":
+                offset += 2
+                continue
+            if text[offset] in "<>":
+                return False
+            if text[offset] == "(":
+                depth += 1
+            elif text[offset] == ")":
+                if depth == 0:
+                    return False
+                depth -= 1
+            offset += 1
+        if offset == destination_start or depth:
+            return False
+
+    while offset < closing and text[offset].isspace():
+        offset += 1
+    if offset == closing:
+        return True
+
+    title_closer = {'"': '"', "'": "'", "(": ")"}.get(text[offset])
+    if title_closer is None:
+        return False
+    offset += 1
+    while offset < closing and (text[offset] != title_closer or _is_escaped(text, offset)):
+        offset += 1
+    if offset == closing:
+        return False
+    offset += 1
+    while offset < closing and text[offset].isspace():
+        offset += 1
+    return offset == closing
 
 
 def _image_reference_openings(text: str, start: int, end: int) -> t.List[int]:
@@ -549,7 +632,11 @@ def _analyze_docstring_references(obj: docspec.ApiObject, content: str) -> _Docs
             continue
 
         if closing + 1 < len(content) and content[closing + 1] == "(":
-            inline_end = _find_closing_parenthesis(content, closing + 1) + 1
+            inline_closing = _find_closing_parenthesis(content, closing + 1)
+            if inline_closing is None or not _is_valid_inline_link(content, closing + 1, inline_closing):
+                offset = closing + 2
+                continue
+            inline_end = inline_closing + 1
             nested_images = _image_reference_openings(content, opening + 1, closing)
             if nested_images:
                 inline_link_spans.append((opening, inline_end))
