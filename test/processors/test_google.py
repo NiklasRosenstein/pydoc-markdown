@@ -243,3 +243,39 @@ def test_google_processor_tracks_list_nesting_across_prose():
         "Examples:\n    - With code:\n      Description.\n      ```python\n      print('yes')\n      ```",
         "**Examples**:\n\n  - With code:\n    Description.\n    ```python\n    print('yes')\n    ```",
     )
+
+
+def test_google_processor_preserves_preamble_order_around_tilde_fences():
+    assert_processor_result(
+        GoogleProcessor(),
+        "~~~python\nprint('before')\n~~~\nAfter the fence.\nArgs:\n    value: A value.",
+        "~~~python\nprint('before')\n~~~\nAfter the fence.\n\n**Arguments**:\n\n- `value` - A value.",
+    )
+
+
+def test_google_processor_indents_fences_to_ordered_list_content():
+    assert_processor_result(
+        GoogleProcessor(),
+        (
+            "Examples:\n"
+            "    1. One digit:\n"
+            "       ```python\n"
+            "       print('one')\n"
+            "       ```\n"
+            "    10. Two digits:\n"
+            "        ```python\n"
+            "        print('ten')\n"
+            "        ```"
+        ),
+        (
+            "**Examples**:\n\n"
+            "  1. One digit:\n"
+            "     ```python\n"
+            "     print('one')\n"
+            "     ```\n"
+            "  10. Two digits:\n"
+            "      ```python\n"
+            "      print('ten')\n"
+            "      ```"
+        ),
+    )

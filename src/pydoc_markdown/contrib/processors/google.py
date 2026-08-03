@@ -182,16 +182,22 @@ class GoogleProcessor(Processor):
                 codeblock_indent = min(section_indent, self._get_indentation(raw_line))
                 rebased = self._remove_indentation(raw_line, codeblock_indent).rstrip()
                 rebased_indent = self._get_indentation(rebased)
-                nested_in_list = False
+                list_content_indent: t.Optional[int] = None
                 for previous in reversed(result):
                     if not previous.strip():
                         continue
                     previous_indent = self._get_indentation(previous)
                     if previous_indent > rebased_indent:
                         continue
-                    nested_in_list = bool(re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous))
+                    list_match = re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous)
+                    if list_match:
+                        list_content_indent = len(list_match.group().expandtabs(4))
                     break
-                codeblock_prefix = " " * max(4 - rebased_indent, 0) if nested_in_list and rebased_indent else ""
+                codeblock_prefix = (
+                    " " * max(list_content_indent - rebased_indent, 0)
+                    if list_content_indent is not None and rebased_indent
+                    else ""
+                )
                 result.append(codeblock_prefix + rebased)
                 continue
 
@@ -260,7 +266,7 @@ class GoogleProcessor(Processor):
                 continue
 
             if keyword is None:
-                lines.append(stripped_line)
+                current_lines.append(stripped_line)
                 continue
 
             current_lines.append(line)
