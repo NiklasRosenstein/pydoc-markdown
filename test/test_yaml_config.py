@@ -7,6 +7,7 @@ from pytest import raises
 
 from pydoc_markdown import Hooks, PydocMarkdown
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
+from pydoc_markdown.contrib.processors.pydocmd import PydocmdProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
 from pydoc_markdown.contrib.renderers.docusaurus import CustomizedMarkdownRenderer, DocusaurusRenderer
@@ -27,23 +28,25 @@ def test__PydocMarkdown__load_config__can_select_docstring_style() -> None:
         assert pydoc_markdown.processors == [SphinxProcessor(style=style)]
 
 
-def test__PydocMarkdown__load_config__can_enable_doctest_examples() -> None:
+def test__PydocMarkdown__load_config__can_disable_doctest_blocks() -> None:
     pydoc_markdown = PydocMarkdown()
     pydoc_markdown.load_config(
         {
             "processors": [
                 {
                     "type": "smart",
-                    "google": {"render_doctest_examples": True},
-                    "sphinx": {"render_doctest_examples": True},
+                    "google": {"render_doctest_blocks": False},
+                    "pydocmd": {"render_doctest_blocks": False},
+                    "sphinx": {"render_doctest_blocks": False},
                 }
             ]
         }
     )
     assert pydoc_markdown.processors == [
         SmartProcessor(
-            google=GoogleProcessor(render_doctest_examples=True),
-            sphinx=SphinxProcessor(render_doctest_examples=True),
+            google=GoogleProcessor(render_doctest_blocks=False),
+            pydocmd=PydocmdProcessor(render_doctest_blocks=False),
+            sphinx=SphinxProcessor(render_doctest_blocks=False),
         )
     ]
 

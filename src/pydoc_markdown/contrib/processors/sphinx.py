@@ -60,71 +60,262 @@ def _markdown_list_item(value: str) -> str:
 
 
 _MARKDOWN_FENCE_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
+_MARKDOWN_CONTAINER_RE = re.compile(r"^(?:[ \t]*(?:[-+*]|\d{1,9}[.)])|[ \t]*(?:!!!|\?\?\?))[ \t]+")
+_MARKDOWN_SECTION_RE = re.compile(r"^[ \t]*\S.*:[ \t]*$")
 
 
-def get_markdown_fence_opener(line: str) -> t.Optional[t.Tuple[str, int]]:
+def _leading_width(line: str) -> int:
+    whitespace = line[: len(line) - len(line.lstrip())]
+    return len(whitespace.expandtabs(4))
+
+
+def _split_blockquote_prefix(line: str, container_indent: int = 0) -> t.Tuple[str, str]:
+    offset = 0
+    column = 0
+    while offset < len(line) and column < container_indent and line[offset] in " \t":
+        if line[offset] == " ":
+            column += 1
+        else:
+            column += 4 - column % 4
+        offset += 1
+    if column < container_indent:
+        offset = 0
+    found_quote = False
+    while True:
+        marker = offset
+        spaces = 0
+        while marker < len(line) and line[marker] == " " and spaces < 3:
+            marker += 1
+            spaces += 1
+        if line.startswith(">>>", marker):
+            return (line[:offset], line[offset:]) if found_quote else ("", line)
+        if marker >= len(line) or line[marker] != ">":
+            return (line[:offset], line[offset:]) if found_quote else ("", line)
+        found_quote = True
+        offset = marker + 1
+        if offset < len(line) and line[offset] in " \t":
+            offset += 1
+
+
+def _active_container_indent(lines: t.Iterable[str], quote_prefix: str, current_indent: int) -> int:
+    """Returns the content indentation of the active list or admonition container."""
+
+    minimum_child_indent = current_indent
+    for previous in reversed(list(lines)):
+        if not previous.strip():
+            continue
+        previous_quote_prefix, previous_content = _split_blockquote_prefix(previous)
+        if previous_quote_prefix != quote_prefix:
+            break
+        match = _MARKDOWN_CONTAINER_RE.match(previous_content)
+        if match:
+            content_indent = len(match.group().expandtabs(4))
+            if content_indent <= current_indent and minimum_child_indent >= content_indent:
+                return content_indent
+        elif _MARKDOWN_SECTION_RE.match(previous_content):
+            content_indent = _leading_width(previous_content) + 4
+            if content_indent <= current_indent and minimum_child_indent >= content_indent:
+                return content_indent
+        minimum_child_indent = min(minimum_child_indent, _leading_width(previous_content))
+    return 0
+
+
+def get_markdown_fence_opener(line: str, container_indent: int = 0) -> t.Optional[t.Tuple[str, int, int]]:
     """Return the character and length of a Markdown fence opener, if any."""
 
+    opener_indent = _leading_width(line)
+    if opener_indent > container_indent + 3:
+        return None
     match = _MARKDOWN_FENCE_RE.match(line.lstrip())
     if not match:
         return None
     fence = match.group("fence")
     if fence[0] == "`" and "`" in match.group("info"):
         return None
-    return fence[0], len(fence)
+    return fence[0], len(fence), container_indent
 
 
-def is_markdown_fence_closer(line: str, fence: t.Tuple[str, int]) -> bool:
+def is_markdown_fence_closer(line: str, fence: t.Tuple[str, int, int]) -> bool:
     """Return whether *line* closes the Markdown fence described by *fence*."""
 
-    character, minimum_length = fence
+    character, minimum_length, container_indent = fence
+    if _leading_width(line) > container_indent + 3:
+        return False
     stripped = line.strip()
     return len(stripped) >= minimum_length and all(value == character for value in stripped)
 
 
-def fence_doctest_blocks(text: str) -> str:
+def fence_doctest_blocks(text: str, replacement: t.Optional[t.Callable[[str], str]] = None) -> str:
     """Wrap doctest blocks in a Python Markdown fence.
 
-    The caller is responsible for limiting *text* to an Example or Examples section. A block starts
-    with a ``>>>`` prompt and ends at the next blank line. Existing Markdown fences are preserved.
+    A block starts with a ``>>>`` prompt and ends at the next blank line. Existing Markdown fences
+    are preserved, and generated fences are long enough not to collide with the block's contents.
     """
 
     lines: t.List[str] = []
-    in_doctest = False
-    markdown_fence: t.Optional[t.Tuple[str, int]] = None
+    doctest_lines: t.List[str] = []
+    doctest_indent = 0
+    doctest_prefix = ""
+    doctest_source_prefix = ""
+    doctest_quote_prefix = ""
+    markdown_fence: t.Optional[t.Tuple[str, int, int]] = None
+    markdown_fence_quote_depth = 0
+    markdown_fence_container_indent = 0
+
+    def flush_doctest() -> None:
+        if not doctest_lines:
+            return
+        longest_run = max(
+            (len(match.group()) for line in doctest_lines for match in re.finditer(r"`+", line)), default=0
+        )
+        fence = "`" * max(3, longest_run + 1)
+        rendered = "\n".join(
+            [
+                doctest_prefix + fence + "python",
+                *(doctest_prefix + line for line in doctest_lines),
+                doctest_prefix + fence,
+            ]
+        )
+        if replacement:
+            lines.append(doctest_source_prefix + replacement(rendered))
+        else:
+            lines.extend(rendered.split("\n"))
+        doctest_lines.clear()
 
     for line in text.split("\n"):
-        stripped = line.lstrip()
+        structural_indent = _active_container_indent(lines, "", _leading_width(line))
+        quote_prefix, unquoted_line = _split_blockquote_prefix(line, structural_indent)
+        stripped = unquoted_line.lstrip()
 
-        if in_doctest:
-            if not stripped:
-                lines.extend(["```", line])
-                in_doctest = False
+        if doctest_lines:
+            if quote_prefix != doctest_quote_prefix:
+                flush_doctest()
+            elif not stripped:
+                flush_doctest()
+                lines.append(line)
+                continue
+            leading_length = len(unquoted_line) - len(stripped)
+            if quote_prefix == doctest_quote_prefix and leading_length >= doctest_indent:
+                doctest_lines.append(unquoted_line[min(doctest_indent, leading_length) :])
+                continue
+            if doctest_lines:
+                flush_doctest()
+
+        if markdown_fence is not None:
+            quote_depth = quote_prefix.count(">")
+            container_ended = (markdown_fence_quote_depth and quote_depth < markdown_fence_quote_depth) or (
+                markdown_fence_container_indent
+                and stripped
+                and _leading_width(unquoted_line) < markdown_fence_container_indent
+            )
+            if container_ended:
+                markdown_fence = None
             else:
                 lines.append(line)
-            continue
+                if quote_depth == markdown_fence_quote_depth and is_markdown_fence_closer(
+                    unquoted_line, markdown_fence
+                ):
+                    markdown_fence = None
+                continue
 
+        container_indent = _active_container_indent(lines, quote_prefix, _leading_width(unquoted_line))
+        markdown_fence = get_markdown_fence_opener(unquoted_line, container_indent)
         if markdown_fence is not None:
-            lines.append(line)
-            if is_markdown_fence_closer(line, markdown_fence):
-                markdown_fence = None
-            continue
-
-        markdown_fence = get_markdown_fence_opener(line)
-        if markdown_fence is not None:
+            markdown_fence_quote_depth = quote_prefix.count(">")
+            markdown_fence_container_indent = container_indent
             lines.append(line)
             continue
 
         if re.match(r"^>>>($|\s)", stripped):
-            lines.extend(["```python", stripped])
-            in_doctest = True
+            doctest_indent = len(unquoted_line) - len(stripped)
+            doctest_quote_prefix = quote_prefix
+            doctest_source_prefix = quote_prefix + unquoted_line[:doctest_indent]
+            doctest_prefix = quote_prefix
+            for previous in reversed(lines):
+                if not previous.strip():
+                    continue
+                _, previous_content = _split_blockquote_prefix(previous)
+                if _leading_width(previous_content) >= doctest_indent:
+                    continue
+                if re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous_content) or re.match(
+                    r"^\s*(?:!!!|\?\?\?)(?:[ \t]+|$)", previous_content
+                ):
+                    doctest_prefix += unquoted_line[:doctest_indent]
+                break
+            doctest_lines.append(stripped)
         else:
             lines.append(line)
 
-    if in_doctest:
-        lines.append("```")
+    flush_doctest()
 
     return "\n".join(lines)
+
+
+def _protect_doctest_blocks(text: str) -> t.Tuple[str, t.Dict[str, str]]:
+    replacements: t.Dict[str, str] = {}
+
+    def replace(block: str) -> str:
+        index = len(replacements)
+        token = "__PYDOC_MARKDOWN_DOCTEST_BLOCK_{}__".format(index)
+        while token in text or token in replacements or any(token in value for value in replacements.values()):
+            index += 1
+            token = "__PYDOC_MARKDOWN_DOCTEST_BLOCK_{}__".format(index)
+        replacements[token] = block
+        return token
+
+    return fence_doctest_blocks(text, replace), replacements
+
+
+def _restore_doctest_blocks(content: str, replacements: t.Dict[str, str]) -> str:
+    """Restore protected doctests, keeping embedded field descriptions valid Markdown."""
+
+    def preceding_container_indent(offset: int) -> int:
+        minimum_child_indent: t.Optional[int] = None
+        previous_content = content[:offset].rstrip("\r\n")
+        for previous_line in reversed(previous_content.splitlines()):
+            if not previous_line.strip():
+                continue
+            marker = _MARKDOWN_CONTAINER_RE.match(previous_line)
+            if marker:
+                container_indent = len(marker.group().expandtabs(4))
+                if minimum_child_indent is None or minimum_child_indent >= container_indent:
+                    return container_indent
+            line_indent = _leading_width(previous_line)
+            if line_indent == 0:
+                return 0
+            minimum_child_indent = (
+                line_indent if minimum_child_indent is None else min(minimum_child_indent, line_indent)
+            )
+        return 0
+
+    for token, block in replacements.items():
+        standalone_pattern = r"(?m)^[ \t]*(?:>[ \t]?)*[ \t]*{}[ \t]*$".format(re.escape(token))
+
+        def restore_standalone(match: t.Match[str]) -> str:
+            container_indent = preceding_container_indent(match.start())
+            if not container_indent:
+                return block
+            indent = " " * container_indent
+            indented_block = "\n".join(indent + line for line in block.splitlines())
+            return "\n" + indented_block
+
+        content, count = re.subn(standalone_pattern, restore_standalone, content)
+        if count:
+            continue
+
+        embedded_pattern = r"(?m)^(?P<prefix>[^\r\n]*\S)[ \t]*{}[ \t]*$".format(re.escape(token))
+
+        def restore_embedded(match: t.Match[str]) -> str:
+            prefix = match.group("prefix").rstrip()
+            marker = _MARKDOWN_CONTAINER_RE.match(prefix)
+            indent = " " * (len(marker.group().expandtabs(4)) if marker else _leading_width(prefix))
+            indented_block = "\n".join(indent + line for line in block.splitlines())
+            return prefix + "\n\n" + indented_block
+
+        content, count = re.subn(embedded_pattern, restore_embedded, content)
+        if not count:
+            content = content.replace(token, block)
+    return content
 
 
 @dataclasses.dataclass
@@ -153,9 +344,8 @@ class SphinxProcessor(Processor):
 
     style: docstring_parser.DocstringStyle = docstring_parser.DocstringStyle.AUTO
 
-    #: Wrap doctest blocks from Example and Examples sections in Python Markdown fences.
-    #: Disabled by default so that upgrading does not rewrite existing documentation.
-    render_doctest_examples: bool = False
+    #: Wrap doctest prompt blocks in collision-safe Python Markdown fences.
+    render_doctest_blocks: bool = True
 
     _KEYWORDS = {
         "Arguments": [
@@ -279,16 +469,6 @@ class SphinxProcessor(Processor):
                 converted[heading] = [_markdown_list_item(entry) for entry in entries]
         return converted
 
-    def _convert_examples(self, examples: t.List[docstring_parser.common.DocstringExample]) -> t.List[str]:
-        chunks = []
-        for example in examples:
-            chunk = example.description or ""
-            if example.snippet:
-                chunk = example.snippet + ("\n" + chunk if chunk else "")
-            if chunk:
-                chunks.append(fence_doctest_blocks(chunk))
-        return "\n".join(chunks).split("\n") if chunks else []
-
     def _process(self, node: docspec.ApiObject) -> None:
         if not node.docstring:
             return
@@ -296,8 +476,12 @@ class SphinxProcessor(Processor):
         lines = []
         components: t.Dict[str, t.List[str]] = {}
 
-        parsed_docstring = docstring_parser.parse(node.docstring.content, self.style)
-        self._restore_rest_description_indentation(node.docstring.content, parsed_docstring)
+        content = node.docstring.content
+        protected_doctests: t.Dict[str, str] = {}
+        if self.render_doctest_blocks:
+            content, protected_doctests = _protect_doctest_blocks(content)
+        parsed_docstring = docstring_parser.parse(content, self.style)
+        self._restore_rest_description_indentation(content, parsed_docstring)
         attribute_params = [
             entry
             for entry in parsed_docstring.params
@@ -334,8 +518,6 @@ class SphinxProcessor(Processor):
                 ]
             else:
                 components[heading] = entries
-        if self.render_doctest_examples:
-            components["Examples"] = self._convert_examples(parsed_docstring.examples)
 
         if parsed_docstring.short_description:
             lines.append(parsed_docstring.short_description)
@@ -345,7 +527,7 @@ class SphinxProcessor(Processor):
             lines.append("")
 
         generate_sections_markdown(lines, components)
-        node.docstring.content = "\n".join(lines)
+        node.docstring.content = _restore_doctest_blocks("\n".join(lines), protected_doctests)
 
     @staticmethod
     def _restore_rest_description_indentation(text: str, parsed_docstring: docstring_parser.Docstring) -> None:

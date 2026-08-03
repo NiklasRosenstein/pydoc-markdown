@@ -134,18 +134,21 @@ processors:
 
 The default `smart` processor also detects NumPy-style docstrings automatically.
 
-Doctest prompts in `Example` and `Examples` sections can optionally be rendered as fenced Python code blocks. The
-option is disabled by default and does not rewrite doctest-looking text outside those sections. Enable it for both
-formats used by the `smart` processor as follows:
+Doctest prompt blocks are rendered as fenced Python code by default wherever they occur in a processed docstring.
+Existing Markdown fences are preserved, and generated fences expand when necessary so doctest output cannot close
+them accidentally. To keep doctest blocks unchanged, disable the behavior for both formats used by the `smart`
+processor:
 
 ```yaml
 processors:
 - type: filter
 - type: smart
   google:
-    render_doctest_examples: true
+    render_doctest_blocks: false
+  pydocmd:
+    render_doctest_blocks: false
   sphinx:
-    render_doctest_examples: true
+    render_doctest_blocks: false
 - type: crossref
 ```
 

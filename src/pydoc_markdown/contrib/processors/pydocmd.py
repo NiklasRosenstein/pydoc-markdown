@@ -25,6 +25,14 @@ import typing as t
 
 import docspec
 
+from pydoc_markdown.contrib.processors.sphinx import (
+    _active_container_indent,
+    _leading_width,
+    _split_blockquote_prefix,
+    fence_doctest_blocks,
+    get_markdown_fence_opener,
+    is_markdown_fence_closer,
+)
 from pydoc_markdown.interfaces import Processor, Resolver
 
 # TODO @NiklasRosenstein Figure out a way to mark text linking to other
@@ -70,20 +78,55 @@ class PydocmdProcessor(Processor):
     @doc:fmt:pydocmd
     """
 
+    #: Wrap doctest prompt blocks in collision-safe Python Markdown fences.
+    render_doctest_blocks: bool = True
+
     def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
         docspec.visit(modules, self._process)
 
     def _process(self, node: docspec.ApiObject):
         if not node.docstring:
             return
+        content = node.docstring.content
+        if self.render_doctest_blocks:
+            content = fence_doctest_blocks(content)
         lines = []
-        codeblock_opened = False
+        markdown_fence: t.Optional[t.Tuple[str, int, int]] = None
+        markdown_fence_quote_depth = 0
+        markdown_fence_container_indent = 0
         current_section = None
-        for line in node.docstring.content.split("\n"):
-            if line.startswith("```"):
-                codeblock_opened = not codeblock_opened
-            if not codeblock_opened:
-                line, current_section = self._preprocess_line(line, current_section)
+        content_lines = content.split("\n")
+        for index, line in enumerate(content_lines):
+            quote_prefix, unquoted_line = _split_blockquote_prefix(line)
+            if markdown_fence is not None:
+                quote_depth = quote_prefix.count(">")
+                stripped = unquoted_line.lstrip()
+                container_ended = (markdown_fence_quote_depth and quote_depth < markdown_fence_quote_depth) or (
+                    markdown_fence_container_indent
+                    and stripped
+                    and _leading_width(unquoted_line) < markdown_fence_container_indent
+                )
+                if container_ended:
+                    markdown_fence = None
+                else:
+                    lines.append(line)
+                    if quote_depth == markdown_fence_quote_depth and is_markdown_fence_closer(
+                        unquoted_line, markdown_fence
+                    ):
+                        markdown_fence = None
+                    continue
+
+            container_indent = _active_container_indent(
+                content_lines[:index], quote_prefix, _leading_width(unquoted_line)
+            )
+            markdown_fence = get_markdown_fence_opener(unquoted_line, container_indent)
+            if markdown_fence is not None:
+                markdown_fence_quote_depth = quote_prefix.count(">")
+                markdown_fence_container_indent = container_indent
+                lines.append(line)
+                continue
+
+            line, current_section = self._preprocess_line(line, current_section)
             lines.append(line)
         node.docstring.content = "\n".join(lines)
 

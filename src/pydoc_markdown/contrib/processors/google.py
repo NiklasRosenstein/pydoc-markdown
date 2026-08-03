@@ -26,6 +26,8 @@ import typing as t
 import docspec
 
 from pydoc_markdown.contrib.processors.sphinx import (
+    _active_container_indent,
+    _leading_width,
     fence_doctest_blocks,
     generate_sections_markdown,
     get_markdown_fence_opener,
@@ -80,9 +82,8 @@ class GoogleProcessor(Processor):
     @doc:fmt:google
     """
 
-    #: Wrap doctest blocks from Example and Examples sections in Python Markdown fences.
-    #: Disabled by default so that upgrading does not rewrite existing documentation.
-    render_doctest_examples: bool = False
+    #: Wrap doctest prompt blocks in collision-safe Python Markdown fences.
+    render_doctest_blocks: bool = True
 
     _param_res = [
         re.compile(r"^(?P<param>\S+):\s+(?P<desc>.+)$"),
@@ -131,29 +132,32 @@ class GoogleProcessor(Processor):
         if not node.docstring:
             return
 
+        content = node.docstring.content
+        if self.render_doctest_blocks:
+            content = fence_doctest_blocks(content)
+
         lines = []
         current_lines: t.List[str] = []
-        markdown_fence: t.Optional[t.Tuple[str, int]] = None
+        markdown_fence: t.Optional[t.Tuple[str, int, int]] = None
         keyword = None
 
         def _commit():
             if keyword:
-                section_lines = current_lines
-                if self.render_doctest_examples and keyword in ("Example", "Examples"):
-                    section_lines = fence_doctest_blocks("\n".join(section_lines)).split("\n")
-                generate_sections_markdown(lines, {keyword: section_lines})
+                generate_sections_markdown(lines, {keyword: current_lines})
             else:
                 lines.extend(current_lines)
             current_lines.clear()
 
-        for line in node.docstring.content.split("\n"):
+        content_lines = content.split("\n")
+        for index, line in enumerate(content_lines):
             if markdown_fence is not None:
                 current_lines.append(line)
                 if is_markdown_fence_closer(line, markdown_fence):
                     markdown_fence = None
                 continue
 
-            markdown_fence = get_markdown_fence_opener(line)
+            container_indent = _active_container_indent(content_lines[:index], "", _leading_width(line))
+            markdown_fence = get_markdown_fence_opener(line, container_indent or (4 if keyword else 0))
             if markdown_fence is not None:
                 current_lines.append(line)
                 continue
@@ -166,10 +170,6 @@ class GoogleProcessor(Processor):
 
             if keyword is None:
                 lines.append(line)
-                continue
-
-            if self.render_doctest_examples and keyword in ("Example", "Examples"):
-                current_lines.append(line)
                 continue
 
             for param_re in self._param_res:

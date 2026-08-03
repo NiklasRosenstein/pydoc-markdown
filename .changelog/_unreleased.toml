@@ -105,7 +105,7 @@ issues = [
 [[entries]]
 id = "ca3903fb-3f4e-45b2-873a-337d65ab8d50"
 type = "feature"
-description = "Optionally render doctest blocks from Example sections as fenced Python Markdown."
+description = "Render doctest prompt blocks as collision-safe fenced Python Markdown, with an opt-out."
 author = "rosensteinniklas@gmail.com"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/327",
