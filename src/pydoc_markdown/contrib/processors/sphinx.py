@@ -142,20 +142,41 @@ class SphinxProcessor(Processor):
                 )
         return converted
 
-    def _convert_returns(self, returns: t.Optional[docstring_parser.common.DocstringReturns]) -> str:
-        """Convert a DocstringReturns object to a markdown string.
+    def _convert_returns(self, returns: t.List[docstring_parser.common.DocstringReturns]) -> t.List[str]:
+        """Convert DocstringReturns objects to Markdown lines.
 
-        :return: A markdown formatted string
+        :return: Markdown-formatted lines
         """
-        if returns is not None:
-            if returns.type_name:
-                type_data = "`{}`: ".format(returns.type_name)
+        converted = []
+        for entry in returns:
+            if entry.return_name and entry.type_name:
+                prefix = "`{}` (`{}`): ".format(entry.return_name, entry.type_name)
+            elif entry.return_name:
+                prefix = "`{}`: ".format(entry.return_name)
+            elif entry.type_name:
+                prefix = "`{}`: ".format(entry.type_name)
             else:
-                type_data = ""
-            return_data = type_data + (returns.description or "")
-        else:
-            return_data = ""
-        return return_data
+                prefix = ""
+            converted.append(prefix + (entry.description or ""))
+
+        if len(converted) > 1:
+            return ["- " + entry for entry in converted]
+        return converted
+
+    @staticmethod
+    def _convert_numpy_metadata(
+        parsed_docstring: docstring_parser.Docstring, handled: t.Iterable[docstring_parser.common.DocstringMeta]
+    ) -> t.Dict[str, t.List[str]]:
+        """Preserve NumPy sections that do not have a dedicated converter."""
+
+        handled_ids = {id(entry) for entry in handled}
+        converted: t.Dict[str, t.List[str]] = {}
+        for entry in parsed_docstring.meta:
+            if id(entry) in handled_ids or not entry.args:
+                continue
+            heading = entry.args[0].replace("_", " ").title()
+            converted.setdefault(heading, []).append(entry.description or "")
+        return converted
 
     def _process(self, node: docspec.ApiObject) -> None:
         if not node.docstring:
@@ -168,9 +189,13 @@ class SphinxProcessor(Processor):
         self._restore_rest_description_indentation(node.docstring.content, parsed_docstring)
         components["Arguments"] = self._convert_params(parsed_docstring.params)
         components["Raises"] = self._convert_raises(parsed_docstring.raises)
-        return_doc = self._convert_returns(parsed_docstring.returns)
-        if return_doc:
-            components["Returns"] = [return_doc]
+        returns = [entry for entry in parsed_docstring.many_returns if not entry.is_generator]
+        yields = [entry for entry in parsed_docstring.many_returns if entry.is_generator]
+        components["Returns"] = self._convert_returns(returns)
+        components["Yields"] = self._convert_returns(yields)
+        if parsed_docstring.style == docstring_parser.DocstringStyle.NUMPYDOC:
+            handled = [*parsed_docstring.params, *parsed_docstring.raises, *parsed_docstring.many_returns]
+            components.update(self._convert_numpy_metadata(parsed_docstring, handled))
 
         if parsed_docstring.short_description:
             lines.append(parsed_docstring.short_description)

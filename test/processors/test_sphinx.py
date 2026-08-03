@@ -98,6 +98,53 @@ numpy_markdown = """
   `bool`: Whether the operation succeeded.
   """
 
+numpy_docstring_with_additional_sections = """
+  Generate results.
+
+  Yields
+  ------
+  int
+      The next value.
+
+  Returns
+  -------
+  count : int
+      Number of results.
+  label : str
+      Result label.
+
+  Examples
+  --------
+  >>> list(generate())
+  [1]
+
+  Notes
+  -----
+  Results are generated lazily.
+  """
+
+numpy_additional_sections_markdown = """
+  Generate results.
+
+  **Returns**:
+
+  - `count` (`int`): Number of results.
+  - `label` (`str`): Result label.
+
+  **Yields**:
+
+  `int`: The next value.
+
+  **Examples**:
+
+  >>> list(generate())
+  [1]
+
+  **Notes**:
+
+  Results are generated lazily.
+  """
+
 four_space_indented_code_block = """
   Example:
 
@@ -256,6 +303,11 @@ def test_numpy_docstring(processor):
 def test_explicit_numpy_docstring_style():
     processor = SphinxProcessor(style=DocstringStyle.NUMPYDOC)
     assert_processor_result(processor, numpy_docstring, numpy_markdown)
+
+
+@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+def test_numpy_additional_sections_are_preserved(processor):
+    assert_processor_result(processor, numpy_docstring_with_additional_sections, numpy_additional_sections_markdown)
 
 
 @pytest.mark.parametrize(
