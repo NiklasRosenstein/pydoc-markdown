@@ -279,3 +279,39 @@ def test_google_processor_indents_fences_to_ordered_list_content():
             "      ```"
         ),
     )
+
+
+def test_google_processor_rebases_blockquoted_example_fences():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Examples:\n    > ```python\n    > print('quoted')\n    > ```",
+        "**Examples**:\n\n  > ```python\n  > print('quoted')\n  > ```",
+    )
+
+
+def test_google_processor_accounts_for_empty_list_marker_separator():
+    assert_processor_result(
+        GoogleProcessor(),
+        (
+            "Examples:\n"
+            "    -\n"
+            "      ```python\n"
+            "      print('bullet')\n"
+            "      ```\n"
+            "    1.\n"
+            "       ```python\n"
+            "       print('ordered')\n"
+            "       ```"
+        ),
+        (
+            "**Examples**:\n\n"
+            "  -\n"
+            "    ```python\n"
+            "    print('bullet')\n"
+            "    ```\n"
+            "  1.\n"
+            "     ```python\n"
+            "     print('ordered')\n"
+            "     ```"
+        ),
+    )

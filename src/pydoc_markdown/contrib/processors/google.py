@@ -31,8 +31,18 @@ from pydoc_markdown.interfaces import Processor, Resolver
 _MARKDOWN_FENCE_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
 
 
+def _strip_markdown_blockquote_prefix(line: str) -> str:
+    line = line.lstrip()
+    while line.startswith(">"):
+        line = line[1:]
+        if line.startswith((" ", "\t")):
+            line = line[1:]
+        line = line.lstrip()
+    return line
+
+
 def _get_markdown_fence(line: str) -> t.Optional[t.Tuple[str, int]]:
-    match = _MARKDOWN_FENCE_RE.match(line.lstrip())
+    match = _MARKDOWN_FENCE_RE.match(_strip_markdown_blockquote_prefix(line))
     if not match:
         return None
     fence = match.group("fence")
@@ -43,7 +53,7 @@ def _get_markdown_fence(line: str) -> t.Optional[t.Tuple[str, int]]:
 
 def _is_markdown_fence_closer(line: str, fence: t.Tuple[str, int]) -> bool:
     character, minimum_length = fence
-    stripped = line.strip()
+    stripped = _strip_markdown_blockquote_prefix(line).strip()
     return len(stripped) >= minimum_length and all(value == character for value in stripped)
 
 
@@ -179,7 +189,8 @@ class GoogleProcessor(Processor):
 
             markdown_fence = _get_markdown_fence(line)
             if markdown_fence is not None:
-                codeblock_indent = min(section_indent, self._get_indentation(raw_line))
+                preserve_indent = 2 if raw_line.lstrip().startswith(">") else 0
+                codeblock_indent = min(max(section_indent - preserve_indent, 0), self._get_indentation(raw_line))
                 rebased = self._remove_indentation(raw_line, codeblock_indent).rstrip()
                 rebased_indent = self._get_indentation(rebased)
                 list_content_indent: t.Optional[int] = None
@@ -192,6 +203,8 @@ class GoogleProcessor(Processor):
                     list_match = re.match(r"^\s*(?:[-+*]|\d{1,9}[.)])(?:[ \t]+|$)", previous)
                     if list_match:
                         list_content_indent = len(list_match.group().expandtabs(4))
+                        if list_match.end() == len(previous):
+                            list_content_indent += 1
                     break
                 codeblock_prefix = (
                     " " * max(list_content_indent - rebased_indent, 0)
