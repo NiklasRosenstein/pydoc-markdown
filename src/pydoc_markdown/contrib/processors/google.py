@@ -28,6 +28,24 @@ import docspec
 from pydoc_markdown.contrib.processors.sphinx import generate_sections_markdown
 from pydoc_markdown.interfaces import Processor, Resolver
 
+_MARKDOWN_FENCE_RE = re.compile(r"^(?P<fence>`{3,}|~{3,})(?P<info>.*)$")
+
+
+def _get_markdown_fence(line: str) -> t.Optional[t.Tuple[str, int]]:
+    match = _MARKDOWN_FENCE_RE.match(line.lstrip())
+    if not match:
+        return None
+    fence = match.group("fence")
+    if fence[0] == "`" and "`" in match.group("info"):
+        return None
+    return fence[0], len(fence)
+
+
+def _is_markdown_fence_closer(line: str, fence: t.Tuple[str, int]) -> bool:
+    character, minimum_length = fence
+    stripped = line.strip()
+    return len(stripped) >= minimum_length and all(value == character for value in stripped)
+
 
 @dataclasses.dataclass
 class GoogleProcessor(Processor):
@@ -135,7 +153,7 @@ class GoogleProcessor(Processor):
 
     def _format_section(self, keyword: str, raw_lines: t.List[str]) -> t.List[str]:
         section_indent = min((self._get_indentation(line) for line in raw_lines if line.strip()), default=0)
-        has_codeblock = any(line.lstrip().startswith("```") for line in raw_lines)
+        has_codeblock = any(_get_markdown_fence(line) is not None for line in raw_lines)
         is_example = keyword in ("Example", "Examples")
 
         # An indented, unfenced Examples section is a Markdown literal block. Keep its indentation intact.
@@ -143,7 +161,7 @@ class GoogleProcessor(Processor):
             return [line if line else "  " for line in raw_lines]
 
         result: t.List[str] = []
-        in_codeblock = False
+        markdown_fence: t.Optional[t.Tuple[str, int]] = None
         codeblock_indent = 0
         after_parameter = False
         continuation_indent: t.Optional[int] = None
@@ -152,14 +170,15 @@ class GoogleProcessor(Processor):
             line = raw_line.strip()
             normalized_line = self._remove_indentation(raw_line, section_indent).rstrip()
 
-            if line.startswith("```"):
-                if not in_codeblock:
-                    codeblock_indent = min(section_indent, self._get_indentation(raw_line))
-                in_codeblock = not in_codeblock
+            if markdown_fence is not None:
                 result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
+                if _is_markdown_fence_closer(line, markdown_fence):
+                    markdown_fence = None
                 continue
 
-            if in_codeblock:
+            markdown_fence = _get_markdown_fence(line)
+            if markdown_fence is not None:
+                codeblock_indent = min(section_indent, self._get_indentation(raw_line))
                 result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
                 continue
 
@@ -199,7 +218,7 @@ class GoogleProcessor(Processor):
 
         lines: t.List[str] = []
         current_lines: t.List[str] = []
-        in_codeblock = False
+        markdown_fence: t.Optional[t.Tuple[str, int]] = None
         keyword: t.Optional[str] = None
 
         def _commit() -> None:
@@ -211,12 +230,14 @@ class GoogleProcessor(Processor):
 
         for line in node.docstring.content.split("\n"):
             stripped_line = line.strip()
-            if stripped_line.startswith("```"):
-                in_codeblock = not in_codeblock
+            if markdown_fence is not None:
                 current_lines.append(line)
+                if _is_markdown_fence_closer(stripped_line, markdown_fence):
+                    markdown_fence = None
                 continue
 
-            if in_codeblock:
+            markdown_fence = _get_markdown_fence(stripped_line)
+            if markdown_fence is not None:
                 current_lines.append(line)
                 continue
 

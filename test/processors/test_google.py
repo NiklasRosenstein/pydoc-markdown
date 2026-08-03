@@ -219,3 +219,11 @@ def test_google_processor_rebases_fences_outside_examples():
         "Notes:\n    ```python\n    print('yes')\n    ```",
         "**Notes**:\n\n```python\nprint('yes')\n```",
     )
+
+
+def test_google_processor_rebases_tilde_fences_in_examples():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Examples:\n    ~~~python\n    print('yes')\n    ~~~",
+        "**Examples**:\n\n~~~python\nprint('yes')\n~~~",
+    )
