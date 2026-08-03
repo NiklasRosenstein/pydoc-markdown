@@ -99,6 +99,32 @@ numpy_markdown = """
   `bool`: Whether the operation succeeded.
   """
 
+numpy_docstring_with_raises_and_warnings = """
+  Validate a result.
+
+  Raises
+  ------
+  ValueError
+      If the result is invalid.
+
+  Warns
+  -----
+  UserWarning
+      If the result is incomplete.
+  """
+
+numpy_raises_and_warnings_markdown = """
+  Validate a result.
+
+  **Raises**:
+
+  - `ValueError`: If the result is invalid.
+
+  **Warnings**:
+
+  - `UserWarning`: If the result is incomplete.
+  """
+
 numpy_docstring_with_additional_sections = """
   Generate results.
 
@@ -304,6 +330,14 @@ def test_numpy_docstring(processor):
 def test_explicit_numpy_docstring_style():
     processor = SphinxProcessor(style=DocstringStyle.NUMPYDOC)
     assert_processor_result(processor, numpy_docstring, numpy_markdown)
+
+
+@pytest.mark.parametrize(
+    "processor",
+    [SphinxProcessor(), SphinxProcessor(style=DocstringStyle.NUMPYDOC), SmartProcessor()],
+)
+def test_numpy_warnings_are_kept_separate_from_raises(processor):
+    assert_processor_result(processor, numpy_docstring_with_raises_and_warnings, numpy_raises_and_warnings_markdown)
 
 
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])

@@ -189,6 +189,9 @@ class SphinxProcessor(Processor):
                 "warning": "Warnings",
             }.get(heading_key, heading_key.title())
             description = entry.description or ""
+            snippet = getattr(entry, "snippet", None)
+            if heading_key in ("example", "examples") and snippet:
+                description = "{}\n{}".format(snippet, description) if description else snippet
             identifier = " ".join(entry.args[1:])
             if identifier:
                 description = "`{}`: {}".format(identifier, description)
@@ -215,7 +218,15 @@ class SphinxProcessor(Processor):
         argument_params = [entry for entry in parsed_docstring.params if entry not in attribute_params]
         components["Arguments"] = self._convert_params(argument_params)
         components["Attributes"] = self._convert_params(attribute_params)
-        components["Raises"] = self._convert_raises(parsed_docstring.raises)
+        warnings = [
+            entry
+            for entry in parsed_docstring.raises
+            if getattr(entry, "is_warning", False)
+            or (entry.args and entry.args[0].replace("_", " ").casefold() in ("warn", "warns", "warning", "warnings"))
+        ]
+        raises = [entry for entry in parsed_docstring.raises if entry not in warnings]
+        components["Raises"] = self._convert_raises(raises)
+        components["Warnings"] = self._convert_raises(warnings)
         returns = [entry for entry in parsed_docstring.many_returns if not entry.is_generator]
         yields = [entry for entry in parsed_docstring.many_returns if entry.is_generator]
         components["Returns"] = self._convert_returns(returns)
