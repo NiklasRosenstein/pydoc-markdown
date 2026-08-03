@@ -59,6 +59,16 @@ _HTML_BLOCK_RE = re.compile(
     r"summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?:[ \t]|/?>|$)"
 )
 _HTML_TAG_ONLY_RE = re.compile(r"(?i)^ {0,3}</?[a-z][^>]*>[ \t]*$")
+_INLINE_HTML_TAG_RE = re.compile(
+    r"(?ix)(?:"
+    r"</[a-z][a-z0-9-]*[ \t\r\n]*>"
+    r"|<[a-z][a-z0-9-]*"
+    r"(?:[ \t\r\n]+[a-z_:][a-z0-9_.:-]*"
+    r"(?:[ \t\r\n]*=[ \t\r\n]*(?:[^ \t\r\n\"'=<>`]+|'[^']*'|\"[^\"]*\"))?)*"
+    r"[ \t\r\n]*/?>"
+    r")"
+)
+_ESCAPABLE_PUNCTUATION_RE = re.compile(r"[!-/:-@\[-`{-~]")
 
 
 @dataclasses.dataclass
@@ -212,7 +222,7 @@ def _reference_definition_end(text: str, colon: int, footnote: bool = False) -> 
         destination_start = offset
         depth = 0
         while offset < line_end and (not text[offset].isspace() or depth):
-            if text[offset] == "\\":
+            if text[offset] == "\\" and offset + 1 < line_end and _ESCAPABLE_PUNCTUATION_RE.fullmatch(text[offset + 1]):
                 offset += 2
                 continue
             if text[offset] == "(":
@@ -240,7 +250,23 @@ def _reference_definition_end(text: str, colon: int, footnote: bool = False) -> 
         for newline in (text.find("\n", next_start), text.find("\r", next_start)):
             if newline >= 0:
                 next_end = min(next_end, newline)
-        continuation = _strip_container_prefix(text[next_start:next_end])
+        definition_start = max(text.rfind("\n", 0, colon), text.rfind("\r", 0, colon)) + 1
+        definition_line = text[definition_start:line_end]
+        continuation_line = text[next_start:next_end]
+        definition_quotes = _blockquote_depth(definition_line)
+        continuation_quotes = _blockquote_depth(continuation_line)
+        definition_content = _strip_blockquote_prefix(definition_line)
+        continuation_content = _strip_blockquote_prefix(continuation_line)
+        definition_list_indent = _list_content_indent(definition_content)
+        continuation_in_same_list = (
+            _list_content_indent(continuation_content) is None
+            if definition_list_indent is None
+            else _leading_indent(continuation_content) >= definition_list_indent
+        )
+        if definition_quotes != continuation_quotes or not continuation_in_same_list:
+            return line_end
+
+        continuation = _strip_container_prefix(continuation_line)
         continuation_offset = next_end - len(continuation)
         title_match = re.match(r" {0,3}([\"'(])", continuation)
         if not title_match:
@@ -285,8 +311,11 @@ def _mask_html_tags(mask: bytearray, text: str, start: int, end: int) -> None:
                 quote = char
             elif char == ">":
                 closing += 1
-                mask[opening:closing] = b"\1" * (closing - opening)
-                offset = closing
+                if _INLINE_HTML_TAG_RE.fullmatch(text[opening:closing]):
+                    mask[opening:closing] = b"\1" * (closing - opening)
+                    offset = closing
+                    break
+                offset = opening + 1
                 break
             closing += 1
         else:
@@ -478,24 +507,65 @@ def _find_closing_bracket(text: str, opening: int, nested: bool = False) -> t.Op
 
 
 def _find_closing_parenthesis(text: str, opening: int) -> t.Optional[int]:
-    depth = 1
+    """Finds an inline link's closing parenthesis without treating quotes in its destination as title delimiters."""
+
     offset = opening + 1
-    quote: t.Optional[str] = None
+    while offset < len(text) and text[offset].isspace():
+        offset += 1
+
+    if offset < len(text) and text[offset] == "<":
+        offset += 1
+        while offset < len(text) and (text[offset] != ">" or _is_escaped(text, offset)):
+            offset += 1
+        if offset < len(text):
+            offset += 1
+    else:
+        depth = 0
+        while offset < len(text):
+            char = text[offset]
+            if char == "\\" and offset + 1 < len(text):
+                offset += 2
+                continue
+            if char.isspace() and depth == 0:
+                break
+            if char == "(":
+                depth += 1
+            elif char == ")":
+                if depth == 0:
+                    return offset
+                depth -= 1
+            offset += 1
+
+    while offset < len(text) and text[offset].isspace():
+        offset += 1
+    if offset < len(text) and text[offset] == ")":
+        return offset
+
+    title_closer = {'"': '"', "'": "'", "(": ")"}.get(text[offset]) if offset < len(text) else None
+    if title_closer is not None:
+        offset += 1
+        while offset < len(text) and (text[offset] != title_closer or _is_escaped(text, offset)):
+            offset += 1
+        if offset < len(text):
+            offset += 1
+            while offset < len(text) and text[offset].isspace():
+                offset += 1
+            if offset < len(text) and text[offset] == ")":
+                return offset
+
+    # Preserve the prior behavior for malformed inline links: returning their
+    # next balanced delimiter lets the caller inspect nested shortcut links.
+    depth = 0
     while offset < len(text):
-        if text[offset] == "\\":
+        if text[offset] == "\\" and offset + 1 < len(text):
             offset += 2
             continue
-        if quote:
-            if text[offset] == quote:
-                quote = None
-        elif text[offset] in "\"'":
-            quote = text[offset]
-        elif text[offset] == "(":
+        if text[offset] == "(":
             depth += 1
         elif text[offset] == ")":
-            depth -= 1
             if depth == 0:
                 return offset
+            depth -= 1
         offset += 1
     return None
 
@@ -526,7 +596,7 @@ def _is_valid_inline_link(text: str, opening: int, closing: int) -> bool:
         destination_start = offset
         depth = 0
         while offset < closing and (not text[offset].isspace() or depth):
-            if text[offset] == "\\":
+            if text[offset] == "\\" and offset + 1 < closing and _ESCAPABLE_PUNCTUATION_RE.fullmatch(text[offset + 1]):
                 offset += 2
                 continue
             if text[offset] in "<>":

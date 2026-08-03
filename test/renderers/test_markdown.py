@@ -184,3 +184,53 @@ def b():
     assert "[pydoc-escaped_html.a-x]: https://a.example" in result
     assert "&lt;div&gt;\n[x][pydoc-escaped_html.b-x]\n&lt;/div&gt;" in result
     assert "[pydoc-escaped_html.b-x]: https://b.example" in result
+
+
+def test_markdown_renderer_validates_reference_syntax_boundaries() -> None:
+    module = load_string_as_module(
+        Path("reference_syntax.py"),
+        r'''def a():
+    r"""A quote in a bare destination stays intact: [link](foo'bar[bare]).
+
+    [quote]: https://quote-a.example
+    > "A different-container usage [quote]"
+
+    Invalid inline HTML exposes its [html] shortcut: <tag [html]>.
+
+    An [invalid] definition remains plain text.
+
+    [bare]: https://bare-a.example
+    [html]: https://html-a.example
+    [invalid]: foo\ bar
+    """
+
+def b():
+    r"""A quote in a bare destination stays intact: [link](foo'bar[bare]).
+
+    [quote]: https://quote-b.example
+    > "A different-container usage [quote]"
+
+    Invalid inline HTML exposes its [html] shortcut: <tag [html]>.
+
+    An [invalid] definition remains plain text.
+
+    [bare]: https://bare-b.example
+    [html]: https://html-b.example
+    [invalid]: foo\ bar
+    """
+''',
+    )
+    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
+    renderer.init(Context("."))
+
+    result = renderer.render_to_string([module])
+
+    assert result.count("[link](foo'bar[bare])") == 2
+    assert "[bare]: https://bare-a.example" in result
+    assert "[bare]: https://bare-b.example" in result
+    assert '> "A different-container usage [quote][pydoc-reference_syntax.a-quote]"' in result
+    assert "[pydoc-reference_syntax.a-quote]: https://quote-a.example" in result
+    assert "<tag [html][pydoc-reference_syntax.a-html]>" in result
+    assert "[pydoc-reference_syntax.a-html]: https://html-a.example" in result
+    assert "An [invalid] definition remains plain text." in result
+    assert "[invalid]: foo\\ bar" in result
