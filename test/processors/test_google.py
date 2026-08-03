@@ -203,3 +203,19 @@ def test_google_processor_preserves_nested_example_fence_indentation():
         ("Examples:\n    - With code:\n        ```python\n        if True:\n            print('yes')\n        ```"),
         ("**Examples**:\n\n  - With code:\n    ```python\n    if True:\n        print('yes')\n    ```"),
     )
+
+
+def test_google_processor_uses_minimum_section_indentation():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Notes:\n        Extra-indented first line.\n    Section baseline.",
+        "**Notes**:\n\n      Extra-indented first line.\n  Section baseline.",
+    )
+
+
+def test_google_processor_rebases_fences_outside_examples():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Notes:\n    ```python\n    print('yes')\n    ```",
+        "**Notes**:\n\n```python\nprint('yes')\n```",
+    )

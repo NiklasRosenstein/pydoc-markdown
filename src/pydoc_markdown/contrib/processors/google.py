@@ -72,9 +72,9 @@ class GoogleProcessor(Processor):
         * For module TODOs
         * You have to also use ``sphinx.ext.todo`` extension
 
-    Relative indentation in section bodies is preserved. In `Example:` and `Examples:` sections, a four-space
-    indented body without a fenced code block remains a Markdown literal block. In these sections, the structural
-    Google-style indentation is removed from fenced code blocks so that their fences render correctly.
+    Relative indentation in section bodies is preserved. In `Example:` and `Examples:` sections, an indented body
+    without a fenced code block remains a Markdown literal block. Structural Google-style indentation is removed
+    from fenced code blocks so that their fences render correctly.
 
     @doc:fmt:google
     """
@@ -134,7 +134,7 @@ class GoogleProcessor(Processor):
         return leading_whitespace[min(len(leading_whitespace), indentation) :] + line[leading_length:]
 
     def _format_section(self, keyword: str, raw_lines: t.List[str]) -> t.List[str]:
-        section_indent = next((self._get_indentation(line) for line in raw_lines if line.strip()), 0)
+        section_indent = min((self._get_indentation(line) for line in raw_lines if line.strip()), default=0)
         has_codeblock = any(line.lstrip().startswith("```") for line in raw_lines)
         is_example = keyword in ("Example", "Examples")
 
@@ -154,7 +154,7 @@ class GoogleProcessor(Processor):
 
             if line.startswith("```"):
                 if not in_codeblock:
-                    codeblock_indent = min(section_indent, self._get_indentation(raw_line)) if is_example else 0
+                    codeblock_indent = min(section_indent, self._get_indentation(raw_line))
                 in_codeblock = not in_codeblock
                 result.append(self._remove_indentation(raw_line, codeblock_indent).rstrip())
                 continue
