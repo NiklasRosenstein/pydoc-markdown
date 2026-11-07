@@ -1265,17 +1265,17 @@
 permalinks properly. If you are building on Read the Docs, chances are that you will have
 multiple versions of the documentation, which all require a different <code>baseURL</code>.</p>
 <p>Pydoc-Markdown configuration files are pre-processed with a <a href="https://get-ytt.io/">YTT</a>-like templating language.</p>
-<div class="highlight"><pre><span></span><code>#@ def base_url():
-#@    if env.READTHEDOCS:
-#@      return &quot;https://pydoc-markdown.readthedocs.io/en/&quot; + env.READTHEDOCS_VERSION + &quot;/&quot;
-#@    else:
-#@      return None
-#@ end
+<div class="highlight"><pre><span></span><code><span class="c1">#@ def base_url():</span>
+<span class="c1">#@    if env.READTHEDOCS:</span>
+<span class="c1">#@      return "https://pydoc-markdown.readthedocs.io/en/" + env.READTHEDOCS_VERSION + "/"</span>
+<span class="c1">#@    else:</span>
+<span class="c1">#@      return None</span>
+<span class="c1">#@ end</span>
 
-renderer:
-  type: hugo
-  config:
-    baseURL: #@ base_url()
+<span class="nt">renderer</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hugo</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">baseURL</span><span class="p">:</span><span class="w"> </span><span class="c1">#@ base_url()</span>
 </code></pre></div>
 
 

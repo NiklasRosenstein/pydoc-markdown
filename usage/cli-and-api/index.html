@@ -1257,15 +1257,15 @@ Markdown renderer) and write the generated Markdown to stdout.</p>
 </code></pre></div>
 <p>You can also supply a YAML configuration as a positional argument that will be treated the same way as if it
 was loaded from a <code>pydoc-markdown.yml</code> file.</p>
-<div class="highlight"><pre><span></span><code>pydoc-markdown<span class="w"> </span>-m<span class="w"> </span>my_module<span class="w"> </span><span class="s1">&#39;{</span>
+<div class="highlight"><pre><span></span><code>pydoc-markdown<span class="w"> </span>-m<span class="w"> </span>my_module<span class="w"> </span><span class="s1">'{</span>
 <span class="s1">    renderer: {</span>
 <span class="s1">      type: markdown,</span>
 <span class="s1">      descriptive_class_title: false,</span>
 <span class="s1">      render_page_title: true,</span>
-<span class="s1">      page_title: &quot;API Documentation&quot;,</span>
+<span class="s1">      page_title: "API Documentation",</span>
 <span class="s1">      render_toc: true</span>
 <span class="s1">    }</span>
-<span class="s1">  }&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>my_module.md
+<span class="s1">  }'</span><span class="w"> </span>&gt;<span class="w"> </span>my_module.md
 </code></pre></div>
 <h2 id="api-example">API Example</h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Example 1</label><label for="__tabbed_1_2">Example 2</label></div>
@@ -1275,8 +1275,8 @@ was loaded from a <code>pydoc-markdown.yml</code> file.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydoc_markdown.contrib.loaders.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonLoader</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydoc_markdown.contrib.renderers.markdown</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownRenderer</span>
 
-<span class="n">context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">loader</span> <span class="o">=</span> <span class="n">PythonLoader</span><span class="p">(</span><span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">])</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">Context</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="s1">'.'</span><span class="p">)</span>
+<span class="n">loader</span> <span class="o">=</span> <span class="n">PythonLoader</span><span class="p">(</span><span class="n">search_path</span><span class="o">=</span><span class="p">[</span><span class="s1">'src'</span><span class="p">])</span>
 <span class="n">renderer</span> <span class="o">=</span> <span class="n">MarkdownRenderer</span><span class="p">(</span><span class="n">render_module_header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">loader</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
@@ -1298,7 +1298,7 @@ was loaded from a <code>pydoc-markdown.yml</code> file.</p>
 <span class="n">session</span> <span class="o">=</span> <span class="n">PydocMarkdown</span><span class="p">()</span>  <span class="c1"># Preconfigured with a PythonLoader, FilterProcessor, CrossRefProcess, SmartProcessor and MarkdownRenderer</span>
 
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">loaders</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">PythonLoader</span><span class="p">)</span>
-<span class="n">session</span><span class="o">.</span><span class="n">loaders</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">search_path</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+<span class="n">session</span><span class="o">.</span><span class="n">loaders</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">search_path</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"src"</span><span class="p">]</span>
 
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span> <span class="n">MarkdownRenderer</span><span class="p">)</span>
 <span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_to_string</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">load_modules</span><span class="p">()))</span>

@@ -1417,17 +1417,17 @@ language (see <a href="#yaml-preprocessing">YAML Preprocessing</a>).</p>
 </code></pre></div>
 <h3 id="pyproject-example">PyProject Example</h3>
 <div class="highlight"><pre><span></span><code><span class="k">[[tool.pydoc-markdown.loaders]]</span>
-<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;python&quot;</span>
-<span class="n">search_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;../src&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"python"</span>
+<span class="n">search_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"../src"</span><span class="w"> </span><span class="p">]</span>
 
 <span class="k">[tool.pydoc-markdown.renderer]</span>
-<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mkdocs&quot;</span>
+<span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"mkdocs"</span>
 
 <span class="k">[[tool.pydoc-markdown.renderer.pages]]</span>
-<span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;API Documentation&quot;</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;index&quot;</span>
-<span class="n">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;school.*&quot;</span><span class="w"> </span><span class="p">]</span>
-<span class="n">exclude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;school.admin&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"API Documentation"</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"index"</span>
+<span class="n">contents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"school.*"</span><span class="w"> </span><span class="p">]</span>
+<span class="n">exclude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"school.admin"</span><span class="w"> </span><span class="p">]</span>
 </code></pre></div>
 <p>The <code>contents</code> and <code>exclude</code> options are lists of glob patterns matched against the absolute names of API objects.
 Exclusions are applied after <code>contents</code> and take precedence, so excluding a module or class also removes all of its

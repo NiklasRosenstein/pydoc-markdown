@@ -1828,7 +1828,7 @@
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoPage"></a></p>
 <h2 id="class-hugopage">Class HugoPage</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">HugoPage</span><span class="p">(</span><span class="n">GenericPage</span><span class="p">[</span><span class="s2">&quot;HugoPage&quot;</span><span class="p">])</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HugoPage</span><span class="p">(</span><span class="n">GenericPage</span><span class="p">[</span><span class="s2">"HugoPage"</span><span class="p">])</span>
 </code></pre></div>
 <p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/hugo.py#L62">[view_source]</a></p>
 <p>A subclass of {@link pydoc:pydoc_markdown.util.pages.Page} which adds Hugo-specific overrides.</p>
@@ -1860,9 +1860,9 @@ content directory). Defaults to <code>null</code>.</p>
 <h4 id="theme">theme</h4>
 <p>The theme of the site. This is a mandatory field. It must be a string, a <code>HugoThemePath</code>
 or a <code>HugoThemeGitUrl</code> object. Examples:</p>
-<div class="highlight"><pre><span></span><code>theme: antarctica
-theme: {clone_url: &quot;https://github.com/alex-shpak/hugo-book.git&quot;}
-theme: docs/hugo-theme/
+<div class="highlight"><pre><span></span><code><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">antarctica</span>
+<span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">clone_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://github.com/alex-shpak/hugo-book.git"</span><span class="p p-Indicator">}</span>
+<span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docs/hugo-theme/</span>
 </code></pre></div>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoConfig.baseURL"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoConfig.baseURL"></a></p>
@@ -1901,8 +1901,8 @@ option can be used to create a Pydoc-Markdown configuration file with the Hugo t
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hugo</span>
 <span class="w">  </span><span class="nt">config</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">My Project</span>
-<span class="w">    </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">clone_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/alex-shpak/hugo-book.git&quot;</span><span class="p p-Indicator">}</span>
-<span class="w">  </span><span class="c1"># The &quot;book&quot; theme only renders pages in &quot;content/docs&quot; into the nav.</span>
+<span class="w">    </span><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">clone_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://github.com/alex-shpak/hugo-book.git"</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="c1"># The "book" theme only renders pages in "content/docs" into the nav.</span>
 <span class="w">  </span><span class="nt">content_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">content/docs</span>
 <span class="w">  </span><span class="nt">default_preamble</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">menu</span><span class="p">:</span><span class="w"> </span><span class="nv">main</span><span class="p p-Indicator">}</span>
 <span class="w">  </span><span class="nt">pages</span><span class="p">:</span>
@@ -1911,7 +1911,7 @@ option can be used to create a Pydoc-Markdown configuration file with the Hugo t
 <span class="w">      </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">README.md</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">API Documentation</span>
 <span class="w">      </span><span class="nt">contents</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*&#39;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">'*'</span>
 </code></pre></div>
 <h3 id="options_2">Options</h3>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.build_directory"></a></p>
@@ -1936,8 +1936,8 @@ render pass. Defaults to <code>True</code>.</p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer.default_preamble"></a></p>
 <h4 id="default_preamble">default_preamble</h4>
 <p>The default Hugo preamble that is applied to every page. Example:</p>
-<div class="highlight"><pre><span></span><code>default_preamble:
-  menu: main
+<div class="highlight"><pre><span></span><code><span class="nt">default_preamble</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">menu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
 </code></pre></div>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.HugoRenderer.markdown"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer.markdown"></a></p>
@@ -1954,10 +1954,10 @@ into a <a href="#pydoc:pydoc_markdown.contrib.renderers.hugo.HugoConfig">HugoCon
 <h4 id="get_hugo">get_hugo</h4>
 <p>Options for when the Hugo binary is not present and should be downloaded
 automatically. Example:</p>
-<div class="highlight"><pre><span></span><code>get_hugo:
-  enabled: true
-  version: &#39;0.71&#39;
-  extended: true
+<div class="highlight"><pre><span></span><code><span class="nt">get_hugo</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">'0.71'</span>
+<span class="w">  </span><span class="nt">extended</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <p><a id="pydoc_markdown.contrib.renderers.hugo.install_hugo"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.hugo.install_hugo"></a></p>
