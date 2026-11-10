@@ -106,3 +106,21 @@ def test__GenericPage__filtered_modules__can_exclude_a_module_and_its_members() 
     )
 
     assert page.filtered_modules([module]) == []
+
+
+def test__GenericPage__render__bare_filename_has_no_parent_directory(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Rendering to a bare filename must not crash creating its parent directory."""
+
+    class _StubRenderer:
+        def render_single_page(self, fp, modules, page_title=None):
+            fp.write("# " + (page_title or "") + "\n")
+
+    monkeypatch.chdir(tmp_path)
+    page = Page("Hello")
+
+    page.render("output.md", [], _StubRenderer(), str(tmp_path))  # type: ignore[arg-type]
+
+    assert (tmp_path / "output.md").read_text() == "# Hello\n"

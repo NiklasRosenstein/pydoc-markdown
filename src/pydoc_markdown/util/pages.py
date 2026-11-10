@@ -186,7 +186,9 @@ class GenericPage(t.Generic[T_Page]):
         Note that the *renderer* should be pre-configured to output to *filename*.
         """
 
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        parent_dir = os.path.dirname(filename)
+        if parent_dir:
+            os.makedirs(parent_dir, exist_ok=True)
         with open(filename, "w") as fp:
             if write_prefix:
                 write_prefix(fp)
