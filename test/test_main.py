@@ -210,3 +210,16 @@ def test_quick_cli_options_safely_handle_unreadable_pyproject(monkeypatch: pytes
         "ignoring 'pyproject.toml'. Pass the configuration filename explicitly "
         "to apply CLI overrides to it.\n"
     )
+
+
+def test_malformed_pyproject_reports_parse_error() -> None:
+    runner = CliRunner()
+
+    with runner.isolated_filesystem():
+        Path("pyproject.toml").write_text("[tool.pydoc-markdown\n")
+
+        result = runner.invoke(cli, [])
+
+        assert result.exit_code != 0
+        assert "config file not found" not in result.output
+        assert type(result.exception).__name__ == "TOMLDecodeError"

@@ -55,14 +55,19 @@ default_config_notice = "Using this option will disable loading the default conf
 logger = logging.getLogger(__name__)
 
 
-def _pyproject_has_pydoc_markdown_config(filename: str = "pyproject.toml") -> bool:
+def _pyproject_has_pydoc_markdown_config(filename: str = "pyproject.toml", invalid_result: bool = False) -> bool:
+    """
+    Check if *filename* contains a `[tool.pydoc-markdown]` section. If the file is not valid TOML,
+    *invalid_result* is returned instead.
+    """
+
     if not os.path.isfile(filename):
         return False
     try:
         with open(filename, "rb") as fp:
             data = tomli.load(fp)
     except tomli.TOMLDecodeError:
-        return False
+        return invalid_result
     except OSError as exc:
         logger.warning("could not inspect %r: %s; treating it as configured", filename, exc)
         return True
@@ -74,7 +79,8 @@ def _find_implicit_config() -> t.Optional[str]:
     yaml_config = next((x for x in yaml_config_filenames if os.path.exists(x)), None)
     if yaml_config is not None:
         return yaml_config
-    if _pyproject_has_pydoc_markdown_config():
+    # Treat an unparseable pyproject.toml as a candidate so that loading it reports the actual parse error.
+    if _pyproject_has_pydoc_markdown_config(invalid_result=True):
         return "pyproject.toml"
     return None
 
