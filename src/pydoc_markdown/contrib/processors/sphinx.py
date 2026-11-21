@@ -182,10 +182,6 @@ class SphinxProcessor(Processor):
                 qualifiers.append("`{}`".format(param.type_name))
             if param.is_optional:
                 qualifiers.append("optional")
-            # docstring_parser may extract the default from a "Default is ..." sentence in the description. Don't
-            # repeat it in that case.
-            if param.default is not None and param.default not in (param.description or ""):
-                qualifiers.append("default: `{}`".format(param.default))
             details = " ({})".format(", ".join(qualifiers)) if qualifiers else ""
             converted.append(
                 _markdown_list_item(

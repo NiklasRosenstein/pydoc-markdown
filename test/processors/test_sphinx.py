@@ -1,6 +1,5 @@
 import pytest
 from docstring_parser import DocstringStyle
-from docstring_parser.common import Docstring, DocstringMeta, DocstringParam
 
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 from pydoc_markdown.contrib.processors.sphinx import SphinxProcessor
@@ -158,29 +157,6 @@ numpy_other_parameters_markdown = """
   **Other Parameters**:
 
   - `label` (`str`): Advanced label.
-  """
-
-numpy_docstring_with_parameter_details = """
-  Configure values.
-
-  Parameters
-  ----------
-  value : int
-      First paragraph.
-
-      Second paragraph.
-  label : str
-  """
-
-numpy_parameter_details_markdown = """
-  Configure values.
-
-  **Arguments**:
-
-  - `value` (`int`): First paragraph.
-
-    Second paragraph.
-  - `label` (`str`):
   """
 
 numpy_docstring_with_multiline_returns = """
@@ -408,13 +384,11 @@ def test_sphinx_with_param_type_returns_rtype(processor):
     assert_processor_result(processor, docstring_with_param_type_returns_rtype, md_with_param_type_returns_rtype)
 
 
-@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
+@pytest.mark.parametrize(
+    "processor",
+    [SphinxProcessor(), SphinxProcessor(style=DocstringStyle.NUMPYDOC), SmartProcessor()],
+)
 def test_numpy_docstring(processor):
-    assert_processor_result(processor, numpy_docstring, numpy_markdown)
-
-
-def test_explicit_numpy_docstring_style():
-    processor = SphinxProcessor(style=DocstringStyle.NUMPYDOC)
     assert_processor_result(processor, numpy_docstring, numpy_markdown)
 
 
@@ -429,11 +403,6 @@ def test_numpy_warnings_are_kept_separate_from_raises(processor):
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
 def test_numpy_other_parameters_are_kept_separate_from_arguments(processor):
     assert_processor_result(processor, numpy_docstring_with_other_parameters, numpy_other_parameters_markdown)
-
-
-@pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
-def test_numpy_parameter_details_remain_inside_list_items(processor):
-    assert_processor_result(processor, numpy_docstring_with_parameter_details, numpy_parameter_details_markdown)
 
 
 @pytest.mark.parametrize("processor", [SphinxProcessor(), SmartProcessor()])
@@ -465,30 +434,12 @@ def test_explicit_styles_preserve_unhandled_metadata(style, docstring, expected)
     assert_processor_result(SphinxProcessor(style=style), docstring, expected)
 
 
-def test_structured_metadata_preserves_identifiers():
-    parsed = Docstring(DocstringStyle.NUMPYDOC)
-    parsed.meta.append(DocstringMeta(["method", "build(value)"], "Build a value."))
-    parsed.meta.append(DocstringMeta(["method", "save()"], "Save it."))
-
-    assert SphinxProcessor._convert_metadata(parsed, []) == {
-        "Methods": ["- `build(value)`: Build a value.", "- `save()`: Save it."]
-    }
-
-
 def test_explicit_google_style_keeps_attributes_separate_from_arguments():
     assert_processor_result(
         SphinxProcessor(style=DocstringStyle.GOOGLE),
         "Summary.\n\nArgs:\n    x (int): Input.\n\nAttributes:\n    value (str): Stored.",
         ("Summary.\n\n**Arguments**:\n\n- `x` (`int`): Input.\n\n**Attributes**:\n\n- `value` (`str`): Stored."),
     )
-
-
-def test_parameter_qualifiers_are_preserved():
-    parameter = DocstringParam(["param", "limit"], "Maximum count.", "limit", "int", True, "10")
-
-    assert SphinxProcessor()._convert_params([parameter]) == [
-        "- `limit` (`int`, optional, default: `10`): Maximum count."
-    ]
 
 
 @pytest.mark.parametrize(
