@@ -339,3 +339,11 @@ def test_google_processor_preserves_admonition_fence_nesting():
         "Examples:\n    !!! note\n        ```python\n        print('nested')\n        ```",
         "**Examples**:\n\n  !!! note\n      ```python\n      print('nested')\n      ```",
     )
+
+
+def test_google_processor_renders_example_prose_before_nested_literal_block():
+    assert_processor_result(
+        GoogleProcessor(),
+        "Example:\n    Call it like so:\n\n        >>> foo()\n        42",
+        "**Example**:\n\n  Call it like so:\n  \n      >>> foo()\n      42",
+    )

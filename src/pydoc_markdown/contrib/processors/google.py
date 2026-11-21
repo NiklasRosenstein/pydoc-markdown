@@ -110,8 +110,9 @@ class GoogleProcessor(Processor):
         * You have to also use ``sphinx.ext.todo`` extension
 
     Relative indentation in section bodies is preserved. In `Example:` and `Examples:` sections, an indented body
-    without a fenced code block remains a Markdown literal block. Structural Google-style indentation is removed
-    from fenced code blocks so that their fences render correctly.
+    without a fenced code block remains a Markdown literal block, unless it starts with prose followed by a more
+    deeply indented block, in which case only the nested block is rendered as a literal block. Structural
+    Google-style indentation is removed from fenced code blocks so that their fences render correctly.
 
     @doc:fmt:google
     """
@@ -170,13 +171,40 @@ class GoogleProcessor(Processor):
         leading_whitespace = line[:leading_length].expandtabs(4)
         return leading_whitespace[min(len(leading_whitespace), indentation) :] + line[leading_length:]
 
+    @classmethod
+    def _has_nested_literal_block(cls, raw_lines: t.List[str], section_indent: int) -> bool:
+        """
+        Check if a line at *section_indent* is followed, after a blank line, by a more deeply indented line.
+        """
+
+        seen_section_line = False
+        previous_blank = False
+        for raw_line in raw_lines:
+            if not raw_line.strip():
+                previous_blank = True
+                continue
+            indent = cls._get_indentation(raw_line)
+            if indent <= section_indent:
+                seen_section_line = True
+            elif seen_section_line and previous_blank:
+                return True
+            previous_blank = False
+        return False
+
     def _format_section(self, keyword: str, raw_lines: t.List[str]) -> t.List[str]:
         section_indent = min((self._get_indentation(line) for line in raw_lines if line.strip()), default=0)
         has_codeblock = any(_get_markdown_fence(line) is not None for line in raw_lines)
         is_example = keyword in ("Example", "Examples")
 
-        # An indented, unfenced Examples section is a Markdown literal block. Keep its indentation intact.
         if is_example and not has_codeblock:
+            # Prose at the section indent followed by a more deeply indented block: render the prose as text and
+            # the nested block as a literal block, like in any other section.
+            if self._has_nested_literal_block(raw_lines, section_indent):
+                return [
+                    "  " + self._remove_indentation(line, section_indent).rstrip() if line.strip() else "  "
+                    for line in raw_lines
+                ]
+            # Otherwise the indented, unfenced Examples section is a Markdown literal block. Keep its indentation.
             return [line if line else "  " for line in raw_lines]
 
         result: t.List[str] = []
