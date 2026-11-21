@@ -1,3 +1,5 @@
+import pytest
+
 from pydoc_markdown.contrib.processors.google import GoogleProcessor
 
 from . import assert_processor_result
@@ -173,177 +175,60 @@ def test_google_processor(processor=None):
     )
 
 
-def test_google_processor_preserves_tab_indented_nested_lists():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Args:\n\titems: A nested list.\n\t\t- Test\n\t\t\t- nested",
-        "**Arguments**:\n\n- `items` - A nested list.\n  - Test\n      - nested",
-    )
-
-
-def test_google_processor_rebases_mixed_indentation_by_markdown_columns():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Args:\n    items: A nested list.\n\t\t- Test\n\t    \t- nested",
-        "**Arguments**:\n\n- `items` - A nested list.\n  - Test\n      - nested",
-    )
-
-
-def test_google_processor_rebases_mixed_indentation_in_example_fences():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Examples:\n\tHow to use:\n    ```python\n\tif True:\n    \tprint('yes')\n\t```",
-        "**Examples**:\n\n  How to use:\n```python\nif True:\n    print('yes')\n```",
-    )
-
-
-def test_google_processor_preserves_nested_example_fence_indentation():
-    assert_processor_result(
-        GoogleProcessor(),
-        ("Examples:\n    - With code:\n        ```python\n        if True:\n            print('yes')\n        ```"),
-        ("**Examples**:\n\n  - With code:\n    ```python\n    if True:\n        print('yes')\n    ```"),
-    )
-
-
-def test_google_processor_uses_minimum_section_indentation():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Notes:\n        Extra-indented first line.\n    Section baseline.",
-        "**Notes**:\n\n      Extra-indented first line.\n  Section baseline.",
-    )
-
-
-def test_google_processor_rebases_fences_outside_examples():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Notes:\n    ```python\n    print('yes')\n    ```",
-        "**Notes**:\n\n```python\nprint('yes')\n```",
-    )
-
-
-def test_google_processor_rebases_tilde_fences_in_examples():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Examples:\n    ~~~python\n    print('yes')\n    ~~~",
-        "**Examples**:\n\n~~~python\nprint('yes')\n~~~",
-    )
-
-
-def test_google_processor_preserves_two_space_list_fence_nesting():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Examples:\n    - With code:\n      ```python\n      print('yes')\n      ```",
-        "**Examples**:\n\n  - With code:\n    ```python\n    print('yes')\n    ```",
-    )
-
-
-def test_google_processor_tracks_list_nesting_across_prose():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Examples:\n    - With code:\n      Description.\n      ```python\n      print('yes')\n      ```",
-        "**Examples**:\n\n  - With code:\n    Description.\n    ```python\n    print('yes')\n    ```",
-    )
-
-
-def test_google_processor_preserves_preamble_order_around_tilde_fences():
-    assert_processor_result(
-        GoogleProcessor(),
-        "~~~python\nprint('before')\n~~~\nAfter the fence.\nArgs:\n    value: A value.",
-        "~~~python\nprint('before')\n~~~\nAfter the fence.\n\n**Arguments**:\n\n- `value` - A value.",
-    )
-
-
-def test_google_processor_indents_fences_to_ordered_list_content():
-    assert_processor_result(
-        GoogleProcessor(),
-        (
-            "Examples:\n"
-            "    1. One digit:\n"
-            "       ```python\n"
-            "       print('one')\n"
-            "       ```\n"
-            "    10. Two digits:\n"
-            "        ```python\n"
-            "        print('ten')\n"
-            "        ```"
+@pytest.mark.parametrize(
+    ("docstring", "expected"),
+    [
+        pytest.param(
+            "Args:\n    items: A nested list.\n\t\t- Test\n\t    \t- nested",
+            "**Arguments**:\n\n- `items` - A nested list.\n  - Test\n      - nested",
+            id="mixed-tab-and-space-indentation",
         ),
-        (
-            "**Examples**:\n\n"
-            "  1. One digit:\n"
-            "     ```python\n"
-            "     print('one')\n"
-            "     ```\n"
-            "  10. Two digits:\n"
-            "      ```python\n"
-            "      print('ten')\n"
-            "      ```"
+        pytest.param(
+            "Notes:\n        Extra-indented first line.\n    Section baseline.",
+            "**Notes**:\n\n      Extra-indented first line.\n  Section baseline.",
+            id="relative-indentation-from-minimum-section-indent",
         ),
-    )
-
-
-def test_google_processor_rebases_blockquoted_example_fences():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Examples:\n    > ```python\n    > print('quoted')\n    > ```",
-        "**Examples**:\n\n  > ```python\n  > print('quoted')\n  > ```",
-    )
-
-
-def test_google_processor_accounts_for_empty_list_marker_separator():
-    assert_processor_result(
-        GoogleProcessor(),
-        (
-            "Examples:\n"
-            "    -\n"
-            "      ```python\n"
-            "      print('bullet')\n"
-            "      ```\n"
-            "    1.\n"
-            "       ```python\n"
-            "       print('ordered')\n"
-            "       ```"
+        pytest.param(
+            "Notes:\n    ```python\n    print('yes')\n    ```",
+            "**Notes**:\n\n```python\nprint('yes')\n```",
+            id="fence-outside-examples",
         ),
-        (
-            "**Examples**:\n\n"
-            "  -\n"
-            "    ```python\n"
-            "    print('bullet')\n"
-            "    ```\n"
-            "  1.\n"
-            "     ```python\n"
-            "     print('ordered')\n"
-            "     ```"
+        pytest.param(
+            "Examples:\n    ~~~python\n    print('yes')\n    ~~~",
+            "**Examples**:\n\n~~~python\nprint('yes')\n~~~",
+            id="tilde-fence",
         ),
-    )
-
-
-def test_google_processor_does_not_close_top_level_fence_with_quoted_delimiter():
-    assert_processor_result(
-        GoogleProcessor(),
-        ("Examples:\n    ```text\n    > ```\n    still fenced\n    ```\nReturns:\n    str: Done."),
-        ("**Examples**:\n\n```text\n> ```\nstill fenced\n```\n\n**Returns**:\n\n- `str` - Done."),
-    )
-
-
-def test_google_processor_keeps_blockquoted_fence_sibling_to_list():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Examples:\n    - Plain item\n    > ```python\n    > print('quoted')\n    > ```",
-        "**Examples**:\n\n  - Plain item\n  > ```python\n  > print('quoted')\n  > ```",
-    )
-
-
-def test_google_processor_preserves_admonition_fence_nesting():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Examples:\n    !!! note\n        ```python\n        print('nested')\n        ```",
-        "**Examples**:\n\n  !!! note\n      ```python\n      print('nested')\n      ```",
-    )
-
-
-def test_google_processor_renders_example_prose_before_nested_literal_block():
-    assert_processor_result(
-        GoogleProcessor(),
-        "Example:\n    Call it like so:\n\n        >>> foo()\n        42",
-        "**Example**:\n\n  Call it like so:\n  \n      >>> foo()\n      42",
-    )
+        pytest.param(
+            "Examples:\n    - With code:\n        ```python\n        if True:\n            print('yes')\n        ```",
+            "**Examples**:\n\n  - With code:\n    ```python\n    if True:\n        print('yes')\n    ```",
+            id="fence-nested-in-list-item",
+        ),
+        pytest.param(
+            "Examples:\n    10. Two digits:\n        ```python\n        print('ten')\n        ```",
+            "**Examples**:\n\n  10. Two digits:\n      ```python\n      print('ten')\n      ```",
+            id="fence-nested-in-ordered-list-item",
+        ),
+        pytest.param(
+            "Examples:\n    !!! note\n        ```python\n        print('nested')\n        ```",
+            "**Examples**:\n\n  !!! note\n      ```python\n      print('nested')\n      ```",
+            id="fence-nested-in-admonition",
+        ),
+        pytest.param(
+            "Examples:\n    ```text\n    > ```\n    still fenced\n    ```\nReturns:\n    str: Done.",
+            "**Examples**:\n\n```text\n> ```\nstill fenced\n```\n\n**Returns**:\n\n- `str` - Done.",
+            id="quoted-delimiter-does-not-close-fence",
+        ),
+        pytest.param(
+            "Summary.\n\n~~~text\nArgs:\n    x: not a parameter\n~~~\nArgs:\n    value: A value.",
+            "Summary.\n\n~~~text\nArgs:\n    x: not a parameter\n~~~\n\n**Arguments**:\n\n- `value` - A value.",
+            id="section-keyword-inside-fence-is-literal",
+        ),
+        pytest.param(
+            "Example:\n    Call it like so:\n\n        >>> foo()\n        42",
+            "**Example**:\n\n  Call it like so:\n  \n      >>> foo()\n      42",
+            id="example-prose-before-nested-literal-block",
+        ),
+    ],
+)
+def test_google_processor_indentation(docstring: str, expected: str) -> None:
+    assert_processor_result(GoogleProcessor(), docstring, expected)
