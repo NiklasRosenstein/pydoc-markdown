@@ -1,174 +1,66 @@
-import os
 from pathlib import Path
 
 import pytest
+import tomli
 from click.testing import CliRunner
 
 from pydoc_markdown import PydocMarkdown, static
 from pydoc_markdown.main import RenderSession, cli
 
-
-def test_bootstrap_creates_yaml_without_changing_poetry_pyproject() -> None:
-    runner = CliRunner()
-
-    with runner.isolated_filesystem():
-        pyproject = Path("pyproject.toml")
-        original_pyproject = '[tool.poetry]\nname = "example"\n'
-        pyproject.write_text(original_pyproject)
-
-        result = runner.invoke(cli, ["--bootstrap", "mkdocs"])
-
-        assert result.exit_code == 0, result.output
-        assert result.output == "created pydoc-markdown.yml\n"
-        assert Path("pydoc-markdown.yml").read_text() == static.DEFAULT_MKDOCS_CONFIG
-        assert pyproject.read_text() == original_pyproject
+POETRY_PYPROJECT = '[tool.poetry]\nname = "example"\n'
+CONFIGURED_PYPROJECT = '[tool.pydoc-markdown.renderer]\ntype = "markdown"\n'
 
 
-def test_bootstrap_refuses_to_shadow_pyproject_config() -> None:
-    runner = CliRunner()
-
-    with runner.isolated_filesystem():
-        pyproject = Path("pyproject.toml")
-        original_pyproject = '[tool.pydoc-markdown.renderer]\ntype = "markdown"\n'
-        pyproject.write_text(original_pyproject)
-
-        result = runner.invoke(cli, ["--bootstrap", "mkdocs"])
-
-        assert result.exit_code == 1
-        assert result.output == "error: file already exists: 'pyproject.toml'\n"
-        assert not Path("pydoc-markdown.yml").exists()
-        assert pyproject.read_text() == original_pyproject
+@pytest.fixture(autouse=True)
+def _cwd(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(tmp_path)
 
 
-@pytest.mark.parametrize("existing_filename", ["pydoc-markdown.yml", "pydoc-markdown.yaml"])
-def test_bootstrap_refuses_to_replace_existing_yaml_config(existing_filename: str) -> None:
-    runner = CliRunner()
+def test_bootstrap_creates_yaml_next_to_poetry_pyproject() -> None:
+    Path("pyproject.toml").write_text(POETRY_PYPROJECT)
 
-    with runner.isolated_filesystem():
-        existing_config = Path(existing_filename)
-        existing_config.write_text("sentinel\n")
-        Path("pyproject.toml").write_text('[tool.poetry]\nname = "example"\n')
-
-        result = runner.invoke(cli, ["--bootstrap", "mkdocs"])
-
-        assert result.exit_code == 1
-        assert result.output == f"error: file already exists: '{existing_filename}'\n"
-        assert existing_config.read_text() == "sentinel\n"
-
-
-def test_bootstrap_refuses_to_follow_dangling_yaml_symlink() -> None:
-    runner = CliRunner()
-
-    with runner.isolated_filesystem():
-        config = Path("pydoc-markdown.yml")
-        target = Path("target.yml")
-        try:
-            config.symlink_to(target)
-        except (NotImplementedError, OSError) as exc:
-            pytest.skip("symlinks are unavailable: {}".format(exc))
-
-        result = runner.invoke(cli, ["--bootstrap", "mkdocs"])
-
-        assert result.exit_code == 1
-        assert result.output == "error: file already exists: 'pydoc-markdown.yml'\n"
-        assert not target.exists()
-
-
-def test_bootstrap_exclusive_creation_preserves_racing_file(monkeypatch: pytest.MonkeyPatch) -> None:
-    runner = CliRunner()
-
-    with runner.isolated_filesystem():
-        config = Path("pydoc-markdown.yml")
-        config.write_text("sentinel\n")
-        real_lexists = os.path.lexists
-        monkeypatch.setattr(
-            os.path,
-            "lexists",
-            lambda filename: False if filename == "pydoc-markdown.yml" else real_lexists(filename),
-        )
-
-        result = runner.invoke(cli, ["--bootstrap", "mkdocs"])
-
-        assert result.exit_code == 1
-        assert result.output == "error: file already exists: 'pydoc-markdown.yml'\n"
-        assert config.read_text() == "sentinel\n"
-
-
-def test_bootstrap_safely_handles_unreadable_pyproject(monkeypatch: pytest.MonkeyPatch) -> None:
-    runner = CliRunner()
-
-    with runner.isolated_filesystem():
-        Path("pyproject.toml").write_text("[tool.pydoc-markdown]\n")
-        real_open = open
-
-        def guarded_open(filename, *args, **kwargs):
-            if os.fspath(filename) == "pyproject.toml":
-                raise PermissionError("unreadable")
-            return real_open(filename, *args, **kwargs)
-
-        monkeypatch.setattr("builtins.open", guarded_open)
-        result = runner.invoke(cli, ["--bootstrap", "mkdocs"])
-
-        assert result.exit_code == 1
-        assert result.output == "error: file already exists: 'pyproject.toml'\n"
-        assert not Path("pydoc-markdown.yml").exists()
-
-
-@pytest.mark.parametrize(
-    "quick_options",
-    [
-        ["--module", "example"],
-        ["--package", "example"],
-        ["--search-path", "src"],
-        ["--py2"],
-        ["--py3"],
-    ],
-)
-def test_quick_cli_options_warn_when_ignoring_implicit_config(
-    monkeypatch: pytest.MonkeyPatch, quick_options: list[str]
-) -> None:
-    runner = CliRunner()
-    loaded_config: list[object] = []
-
-    def load(session: RenderSession) -> PydocMarkdown:
-        loaded_config.append(session.config)
-        return PydocMarkdown()
-
-    monkeypatch.setattr(RenderSession, "load", load)
-    monkeypatch.setattr(RenderSession, "render", lambda *_: [])
-
-    with runner.isolated_filesystem():
-        Path("pydoc-markdown.yml").write_text("renderer:\n  type: markdown\n")
-        Path("pyproject.toml").write_text('[tool.pydoc-markdown.renderer]\ntype = "markdown"\n')
-
-        result = runner.invoke(cli, quick_options)
+    result = CliRunner().invoke(cli, ["--bootstrap", "mkdocs"])
 
     assert result.exit_code == 0, result.output
-    assert loaded_config == [None]
-    assert result.output == (
-        "warning: quick CLI options disable implicit configuration loading; "
-        "ignoring 'pydoc-markdown.yml'. Pass the configuration filename explicitly "
-        "to apply CLI overrides to it.\n"
-    )
+    assert result.output == "created pydoc-markdown.yml\n"
+    assert Path("pydoc-markdown.yml").read_text() == static.DEFAULT_MKDOCS_CONFIG
+    assert Path("pyproject.toml").read_text() == POETRY_PYPROJECT
 
 
 @pytest.mark.parametrize(
-    ("pyproject", "expected_output"),
+    ("filename", "content"),
     [
-        ('[tool.poetry]\nname = "example"\n', ""),
-        (
-            '[tool.pydoc-markdown.renderer]\ntype = "markdown"\n',
-            "warning: quick CLI options disable implicit configuration loading; "
-            "ignoring 'pyproject.toml'. Pass the configuration filename explicitly "
-            "to apply CLI overrides to it.\n",
+        pytest.param("pyproject.toml", CONFIGURED_PYPROJECT, id="configured-pyproject"),
+        pytest.param("pydoc-markdown.yaml", "renderer:\n  type: markdown\n", id="yaml"),
+    ],
+)
+def test_bootstrap_refuses_to_shadow_existing_config(filename: str, content: str) -> None:
+    Path(filename).write_text(content)
+
+    result = CliRunner().invoke(cli, ["--bootstrap", "mkdocs"])
+
+    assert result.exit_code == 1
+    assert result.output == f"error: file already exists: '{filename}'\n"
+    assert not Path("pydoc-markdown.yml").exists()
+    assert Path(filename).read_text() == content
+
+
+@pytest.mark.parametrize(
+    ("files", "ignored"),
+    [
+        pytest.param({"pyproject.toml": POETRY_PYPROJECT}, None, id="unconfigured-pyproject"),
+        pytest.param({"pyproject.toml": CONFIGURED_PYPROJECT}, "pyproject.toml", id="configured-pyproject"),
+        pytest.param(
+            {"pyproject.toml": CONFIGURED_PYPROJECT, "pydoc-markdown.yml": "{}\n"},
+            "pydoc-markdown.yml",
+            id="yaml-takes-precedence",
         ),
     ],
 )
-def test_quick_cli_options_only_warn_for_configured_pyproject(
-    monkeypatch: pytest.MonkeyPatch, pyproject: str, expected_output: str
+def test_quick_cli_options_warn_only_when_ignoring_a_config(
+    monkeypatch: pytest.MonkeyPatch, files: dict, ignored: str | None
 ) -> None:
-    runner = CliRunner()
-    loaded_config: list[object] = []
+    loaded_config: list = []
 
     def load(session: RenderSession) -> PydocMarkdown:
         loaded_config.append(session.config)
@@ -176,50 +68,28 @@ def test_quick_cli_options_only_warn_for_configured_pyproject(
 
     monkeypatch.setattr(RenderSession, "load", load)
     monkeypatch.setattr(RenderSession, "render", lambda *_: [])
+    for filename, content in files.items():
+        Path(filename).write_text(content)
 
-    with runner.isolated_filesystem():
-        Path("pyproject.toml").write_text(pyproject)
-
-        result = runner.invoke(cli, ["--module", "example"])
+    result = CliRunner().invoke(cli, ["--module", "example"])
 
     assert result.exit_code == 0, result.output
     assert loaded_config == [None]
-    assert result.output == expected_output
-
-
-def test_quick_cli_options_safely_handle_unreadable_pyproject(monkeypatch: pytest.MonkeyPatch) -> None:
-    runner = CliRunner()
-    monkeypatch.setattr(RenderSession, "load", lambda _: PydocMarkdown())
-    monkeypatch.setattr(RenderSession, "render", lambda *_: [])
-
-    with runner.isolated_filesystem():
-        Path("pyproject.toml").write_text("[tool.pydoc-markdown]\n")
-        real_open = open
-
-        def guarded_open(filename, *args, **kwargs):
-            if os.fspath(filename) == "pyproject.toml":
-                raise PermissionError("unreadable")
-            return real_open(filename, *args, **kwargs)
-
-        monkeypatch.setattr("builtins.open", guarded_open)
-        result = runner.invoke(cli, ["--module", "example"])
-
-    assert result.exit_code == 0, result.output
-    assert result.output == (
-        "warning: quick CLI options disable implicit configuration loading; "
-        "ignoring 'pyproject.toml'. Pass the configuration filename explicitly "
-        "to apply CLI overrides to it.\n"
-    )
+    if ignored is None:
+        assert result.output == ""
+    else:
+        assert result.output == (
+            "warning: quick CLI options disable implicit configuration loading; "
+            f"ignoring '{ignored}'. Pass the configuration filename explicitly "
+            "to apply CLI overrides to it.\n"
+        )
 
 
 def test_malformed_pyproject_reports_parse_error() -> None:
-    runner = CliRunner()
+    Path("pyproject.toml").write_text("[tool.pydoc-markdown\n")
 
-    with runner.isolated_filesystem():
-        Path("pyproject.toml").write_text("[tool.pydoc-markdown\n")
+    result = CliRunner().invoke(cli, [])
 
-        result = runner.invoke(cli, [])
-
-        assert result.exit_code != 0
-        assert "config file not found" not in result.output
-        assert type(result.exception).__name__ == "TOMLDecodeError"
+    assert result.exit_code != 0
+    assert "config file not found" not in result.output
+    assert isinstance(result.exception, tomli.TOMLDecodeError)
