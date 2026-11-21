@@ -53,6 +53,10 @@ def generate_sections_markdown(lines, sections):
             lines.extend(section)
 
 
+_NUMPY_UNDERLINE_RE = re.compile(r"^\s*-{3,}\s*$")
+_NUMPY_TYPED_ENTRY_RE = re.compile(r"^\s*\S.*?\s:(?:\s|$)")
+
+
 def _markdown_list_item(value: str) -> str:
     """Format multiline content as a Markdown list item."""
 
@@ -112,11 +116,46 @@ class SphinxProcessor(Processor):
         if self.style not in (docstring_parser.DocstringStyle.AUTO, docstring_parser.DocstringStyle.NUMPYDOC):
             return False
 
+        # A Markdown heading underlined with dashes looks like a NumPy section header, so also require at least
+        # one NumPy-style entry before treating the docstring as NumPy.
+        if not self._has_numpydoc_entries(docstring):
+            return False
+
         try:
             parsed = docstring_parser.parse(docstring, docstring_parser.DocstringStyle.AUTO)
         except docstring_parser.ParseError:
             return False
         return parsed.style == docstring_parser.DocstringStyle.NUMPYDOC
+
+    @staticmethod
+    def _has_numpydoc_entries(docstring: str) -> bool:
+        """
+        Check if a section underlined with dashes contains a NumPy-style entry: either a `name : type` line or an
+        entry line followed by a more deeply indented description.
+        """
+
+        def indent(line: str) -> int:
+            return len(line) - len(line.lstrip())
+
+        def is_underline(index: int) -> bool:
+            return index < len(lines) and _NUMPY_UNDERLINE_RE.match(lines[index]) is not None
+
+        lines = docstring.expandtabs(4).split("\n")
+        for header_index, header in enumerate(lines):
+            if not header.strip() or not is_underline(header_index + 1):
+                continue
+            base_indent = indent(header)
+            index = header_index + 2
+            while index < len(lines) and not is_underline(index + 1):
+                line = lines[index]
+                if line.strip() and indent(line) == base_indent:
+                    if _NUMPY_TYPED_ENTRY_RE.match(line):
+                        return True
+                    following = lines[index + 1] if index + 1 < len(lines) else ""
+                    if following.strip() and indent(following) > base_indent:
+                        return True
+                index += 1
+        return False
 
     def process(self, modules: t.List[docspec.Module], resolver: t.Optional[Resolver]) -> None:
         docspec.visit(modules, self._process)
@@ -143,7 +182,9 @@ class SphinxProcessor(Processor):
                 qualifiers.append("`{}`".format(param.type_name))
             if param.is_optional:
                 qualifiers.append("optional")
-            if param.default is not None:
+            # docstring_parser may extract the default from a "Default is ..." sentence in the description. Don't
+            # repeat it in that case.
+            if param.default is not None and param.default not in (param.description or ""):
                 qualifiers.append("default: `{}`".format(param.default))
             details = " ({})".format(", ".join(qualifiers)) if qualifiers else ""
             converted.append(

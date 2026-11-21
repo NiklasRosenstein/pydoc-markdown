@@ -499,3 +499,23 @@ def test_four_space_indented_code_block(processor):
     """Regression test for the exact report in #259."""
 
     assert_processor_result(processor, four_space_indented_code_block, four_space_indented_code_block_markdown)
+
+
+def test_smart_processor_leaves_markdown_heading_named_like_numpy_section_alone():
+    docstring = "Summary.\n\nReturns\n-------\nThe value, always positive."
+    assert not SphinxProcessor().check_docstring_format(docstring)
+    assert_processor_result(SmartProcessor(), docstring, docstring)
+
+
+def test_numpy_returns_type_entry_is_detected():
+    docstring = "Summary.\n\nReturns\n-------\nint\n    The value."
+    assert SphinxProcessor().check_docstring_format(docstring)
+    assert_processor_result(SmartProcessor(), docstring, "Summary.\n\n**Returns**:\n\n`int`: The value.")
+
+
+def test_numpy_default_from_description_is_not_repeated():
+    assert_processor_result(
+        SphinxProcessor(),
+        "Summary.\n\nParameters\n----------\nx : int, optional\n    The x. Default is 3.",
+        "Summary.\n\n**Arguments**:\n\n- `x` (`int`, optional): The x. Default is 3.",
+    )
