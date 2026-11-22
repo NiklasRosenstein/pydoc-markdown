@@ -1520,6 +1520,16 @@ that order). Many processors do not have any additional options.</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smart</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crossref</span>
 </code></pre></div>
+<p>The <code>sphinx</code> processor uses <a href="https://pypi.org/project/docstring-parser/"><code>docstring-parser</code></a> and supports ReST/Sphinx,
+Google, NumPy and Epydoc docstrings. Its <code>style</code> option accepts <code>AUTO</code> (the default), <code>REST</code>, <code>GOOGLE</code>, <code>NUMPYDOC</code> or
+<code>EPYDOC</code>. For example, to require NumPy-style docstrings instead of auto-detecting the format:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">processors</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">filter</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sphinx</span>
+<span class="w">  </span><span class="nt">style</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NUMPYDOC</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">crossref</span>
+</code></pre></div>
+<p>The default <code>smart</code> processor also detects NumPy-style docstrings automatically.</p>
 <h2 id="renderer">Renderer</h2>
 <p>The <code>$.renderer</code> defines the renderer to use when running <code>pydoc-markdown</code> without arguments.
 Some renderers support the <code>--server</code> option, which allows a live-preview of the documentation.

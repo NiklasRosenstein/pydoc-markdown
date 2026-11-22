@@ -1733,25 +1733,29 @@ guessing which is appropriate from the syntax it finds in the docstring.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SphinxProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/processors/sphinx.py#L55">[view_source]</a></p>
-<p>This processor parses ReST/Sphinx-style function documentation and converts it into</p>
-<p>Markdown syntax.</p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/processors/sphinx.py#L67">[view_source]</a></p>
+<p>This processor parses ReST/Sphinx, Google, NumPy and Epydoc-style function documentation</p>
+<p>and converts it into Markdown syntax. Set <code>style</code> to select a specific format, or leave it
+as <code>docstring_parser.DocstringStyle.AUTO</code> to detect the format automatically.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code>**Arguments**:
-
-- `arg1`: This is the first argument.
-- `arg1`: This is the first argument.
-
-**Raises**:
-
-- `ValueError`: If *arg1* is a bad value.
-- `ValueError`: If *arg1* is a bad value.
-
-**Returns**:
-
-An `int` that represents an interesting value.
-</code></pre></div>
-<p>Renders as:</p>
+<p>```</p>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>arg1</code>: This is the first argument.</li>
+<li><code>arg1</code>: This is the first argument.</li>
+</ul>
+<p><strong>Raises</strong>:</p>
+<ul>
+<li><code>ValueError</code>: If <em>arg1</em> is a bad value.</li>
+<li><code>ValueError</code>: If <em>arg1</em> is a bad value.</li>
+</ul>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li>An <code>int</code> that represents an interesting value.
+  ```</li>
+</ul>
+<p>Renders as:
+- An <code>int</code> that represents an interesting value.</p>
 
 
 
