@@ -405,6 +405,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bootstrapping-a-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrapping a configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bootstrapping a configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#yaml-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -414,8 +426,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#pyproject-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -423,6 +435,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1271,6 +1288,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bootstrapping-a-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrapping a configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bootstrapping a configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#yaml-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1280,8 +1309,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#pyproject-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1289,6 +1318,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1385,8 +1419,19 @@ called <code>pydoc-markdown.yaml</code> (or <code>.yml</code>) in the current wo
 is not read from file when using the <code>-m,--module</code>, <code>-p,--package</code> and other options that are intended
 for invoking Pydoc-Markdown without a configuration file).</p>
 <blockquote>
-<p><strong>Tip</strong>: The <code>--bootstrap</code> and <code>--bootstrap-mkdocs</code> options can be used to write a template configuration file.</p>
+<p><strong>Tip</strong>: The <code>--bootstrap</code> option can be used to write a template configuration file.</p>
 </blockquote>
+<h2 id="bootstrapping-a-configuration">Bootstrapping a configuration</h2>
+<p>Run <code>pydoc-markdown --bootstrap &lt;template&gt;</code> from the root of your Python project, where <code>&lt;template&gt;</code> is one of
+<code>base</code>, <code>mkdocs</code>, <code>hugo</code>, <code>readthedocs</code> or <code>docusaurus</code>. Except for the multi-file <code>readthedocs</code> template, this creates
+<code>pydoc-markdown.yml</code> in the current directory. Bootstrapping stops instead of shadowing an existing
+<code>[tool.pydoc-markdown]</code> table or replacing an existing <code>pydoc-markdown.yml</code> or <code>pydoc-markdown.yaml</code> path.</p>
+<p>By default, the CLI loads <code>pydoc-markdown.yml</code>, <code>pydoc-markdown.yaml</code> or the <code>[tool.pydoc-markdown]</code> table in
+<code>pyproject.toml</code>, in that order. The quick CLI options <code>-m</code>, <code>-p</code>, <code>-I</code> and <code>--py2</code> construct a configuration directly
+from command-line arguments, which bypasses these project configuration files. The CLI warns when a local
+configuration file is ignored for this reason. To combine quick options with a project configuration, pass its
+filename explicitly; for example, <code>pydoc-markdown pydoc-markdown.yml -I src</code> loads the file and applies <code>-I src</code> as
+an override.</p>
 <p>If you use the YAML configuration, the configuration file is pre-processed with a <a href="https://get-ytt.io/">YTT</a>-like templating
 language (see <a href="#yaml-preprocessing">YAML Preprocessing</a>).</p>
 <p>The configuration contains of four main sections:</p>
