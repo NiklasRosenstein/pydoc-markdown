@@ -214,12 +214,16 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     escape_html_in_docstring: bool = False
 
     #: Markdown resolves a reference-style link (`[text][label]`) against the first `[label]: url` definition on the
-    #: page, so equal labels in different docstrings on the same page point to the same target. Enable this to rename
-    #: such labels per docstring (to `<dotted.name>--<label>`). A label is only renamed in a docstring that both
-    #: defines and uses it, and never if another docstring on the page uses the label without defining it. When
-    #: rendering individual objects (e.g. with Novella), the renderer cannot see the rest of the page, so every such
-    #: label is renamed, not only the ones that are defined more than once.
-    namespace_reference_links: bool = False
+    #: page, so when two docstrings on the same page define the same label, the second one's links point to the first
+    #: one's target. This option renames such labels per docstring (to `<dotted.name>--<label>`) when rendering a whole
+    #: page. A label is only renamed in a docstring that both defines and uses it, and never if another docstring on
+    #: the page uses the label without defining it.
+    namespace_reference_links: bool = True
+
+    #: Like #namespace_reference_links, but for objects that are rendered individually (e.g. with Novella). The
+    #: renderer cannot see the rest of the page in that case, so every label that a docstring both defines and uses is
+    #: renamed, which breaks links in other objects on the page that rely on that definition.
+    namespace_reference_links_in_objects: bool = False
 
     #: Render Novella `@anchor` tags before headings.
     render_novella_anchors: bool = False
@@ -409,13 +413,6 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         for member in getattr(obj, "members", []):
             self._render_recursive(fp, level, member, docstrings)
 
-    def _namespaced_docstrings(
-        self, objects: t.Sequence[docspec.ApiObject], rename_unique: bool
-    ) -> t.Optional[t.Dict[int, str]]:
-        if not self.namespace_reference_links:
-            return None
-        return namespace_reference_links(objects, dotted_name, rename_unique)
-
     def _get_title(self, obj: docspec.ApiObject) -> str:
         title = obj.name
         if (self.add_method_class_prefix and self._is_method(obj)) or (
@@ -498,14 +495,17 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             for m in modules:
                 self._render_toc(fp, 0, m)
             fp.write("\n")
-        docstrings = self._namespaced_docstrings(modules, rename_unique=False)
+        docstrings = namespace_reference_links(modules, dotted_name) if self.namespace_reference_links else None
         for m in modules:
             self._render_recursive(fp, 1, m, docstrings)
 
     # SingleObjectRenderer
 
     def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None:
-        self._render_recursive(fp, 0, obj, self._namespaced_docstrings([obj], rename_unique=True))
+        docstrings = None
+        if self.namespace_reference_links_in_objects:
+            docstrings = namespace_reference_links([obj], dotted_name, rename_unique=True)
+        self._render_recursive(fp, 0, obj, docstrings)
 
     # Renderer
 

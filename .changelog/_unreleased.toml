@@ -118,7 +118,7 @@ issues = [
 
 [[entries]]
 id = "eb94b1fa-1a25-4b01-9402-901c5a05b06b"
-type = "feature"
-description = "Add the `namespace_reference_links` Markdown renderer option to stop reference-style links in separate API docstrings on the same page from redefining each other."
+type = "fix"
+description = "When rendering a page, rename reference-style link labels that more than one docstring defines, so their links no longer point to the first definition. Set `namespace_reference_links: false` to disable, or `namespace_reference_links_in_objects: true` to also rename labels in individually rendered objects (e.g. Novella)."
 author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/364"
