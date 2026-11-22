@@ -28,7 +28,7 @@ class Args(t.Dict[str, t.Any]):
             try:
                 args["module"] = next((m for m in modules if m.name == args["module"]))
             except StopIteration:
-                raise ValueError(f'module {args["module"]} not found')
+                raise ValueError(f"module {args['module']} not found")
         if "modules" in args:
             args["modules"] = [
                 m
@@ -98,7 +98,7 @@ def _indent_filter(
     if not text:
         return ""
     lines = text.splitlines()
-    return "\n".join(lines[:1] + list("    " * level + l for l in lines[1:]))
+    return "\n".join(lines[:1] + list("    " * level + line for line in lines[1:]))
 
 
 def _blockquote_filter(text: t.Optional[str]) -> str:

@@ -102,6 +102,11 @@ class GenericPage(t.Generic[T_Page]):
     #: objects to include for rendering in the page.
     contents: t.Optional[t.List[str]] = None
 
+    #: A list of glob patterns that match the absolute unique names of API
+    #: objects to exclude from #contents. Exclusions take precedence over
+    #: inclusions.
+    exclude: t.Optional[t.List[str]] = dataclasses.field(default=None, kw_only=True)
+
     #: A list of pages that are children of this page.
     children: t.List["T_Page"] = dataclasses.field(default_factory=list)
 
@@ -111,6 +116,15 @@ class GenericPage(t.Generic[T_Page]):
 
     def has_content(self) -> bool:
         return bool(self.source or self.contents)
+
+    def resolve_source_path(self, context_directory: str) -> t.Optional[str]:
+        """Resolve #source relative to the plugin context directory."""
+
+        if not self.source:
+            return None
+        if os.path.isabs(self.source):
+            return self.source
+        return os.path.normpath(os.path.join(context_directory, self.source))
 
     def iter_hierarchy(self, parent_chain: t.List[GenericPage] | None = None) -> t.Iterable[IterHierarchyItem]:
         if parent_chain is None:
@@ -122,19 +136,24 @@ class GenericPage(t.Generic[T_Page]):
     def filtered_modules(self, modules: t.List[docspec.Module]) -> t.List[docspec.Module]:
         """
         Creates a copy of the module graph where only the API objects selected
-        via #Page.contents are visible.
+        via #Page.contents and not matched by #Page.exclude are visible.
         """
 
         modules = copy.deepcopy(modules)
         matched_contents = set()
 
         def _match(obj: docspec.ApiObject) -> bool:
+            path = ".".join(x.name for x in obj.path)
+            matches_contents = False
             if self.contents:
-                path = ".".join(x.name for x in obj.path)
                 for x in self.contents:
                     if fnmatch.fnmatch(path, x):
                         matched_contents.add(x)
-                        return True
+                        matches_contents = True
+            if self.exclude and any(fnmatch.fnmatch(path, x) for x in self.exclude):
+                return False
+            if matches_contents:
+                return True
             if getattr(obj, "members", []):
                 return True
             return False
@@ -172,7 +191,8 @@ class GenericPage(t.Generic[T_Page]):
             if write_prefix:
                 write_prefix(fp)
             if self.source:
-                src_path = os.path.join(context_directory, self.source)
+                src_path = self.resolve_source_path(context_directory)
+                assert src_path is not None
                 logger.info('Writing "%s" (source: "%s")', filename, src_path)
                 with open(src_path, "rb") as src:
                     shutil.copyfileobj(src, fp.buffer)  # type: ignore[misc]  # Fixed in https://github.com/python/mypy/pull/14975  # noqa: E501

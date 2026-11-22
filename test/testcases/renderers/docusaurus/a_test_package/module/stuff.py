@@ -2,7 +2,6 @@
 This is a module about stuff.
 """
 
-
 #: this is a constant about stuff
 CONSTANT = "stuff"
 

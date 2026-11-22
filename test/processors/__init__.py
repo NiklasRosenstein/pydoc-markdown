@@ -1,7 +1,8 @@
 import textwrap
-from test.utils import assert_text_equals
 
 import docspec
+
+from test.utils import assert_text_equals
 
 
 def assert_processor_result(processor, docstring, expected_output):

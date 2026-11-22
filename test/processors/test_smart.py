@@ -1,6 +1,6 @@
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
 
-from . import test_google, test_pydocmd, test_sphinx
+from . import test_google, test_pydocmd
 
 # Testing the SmartProcessor with sphinx docstrings has moved to the test_sphinx.py module
 

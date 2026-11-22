@@ -7,12 +7,12 @@
 > docstrings for your Python project with MkDocs, consider [mkdocstrings](https://mkdocstrings.github.io/) instead.
 
 Pydoc-Markdown is a tool to create Python API documentation in Markdown format. Instead of executing your Python
-code like so many other documentation tools, it parses it using [docspec][] instead.
+code like so many other documentation tools, it parses it using [docspec](https://niklasrosenstein.github.io/python-docspec/) instead.
 
 [→ Go to the Documentation 📘][Documentation]
 
   [contrib]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md
-  [docspec]: https://niklasrosenstein.github.io/docspec/
+  [docspec]: https://niklasrosenstein.github.io/python-docspec/
   [Documentation]: https://niklasrosenstein.github.io/pydoc-markdown/
   [MkDocs]: https://www.mkdocs.org/
   [Novella]: https://niklasrosenstein.github.io/novella/
@@ -40,14 +40,14 @@ If you plan on using the [Novella][] integration, you may want to install it as:
     $ pipx install novella
     $ pipx inject novella pydoc-markdown[novella]
 
-You need at least Python 3.7 to run Pydoc-Markdown. The Python version compatibility of the package you are looking to
+You need at least Python 3.10 to run Pydoc-Markdown. The Python version compatibility of the package you are looking to
 generate documentation for is irrelevant.
 
 ### Features 🌟
 
 * Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly
   formatted Markdown
-* Can parse docstrings for variables thanks to [docspec][] (`#:` block before or string literal after the statement)
+* Can parse docstrings for variables thanks to [docspec](https://niklasrosenstein.github.io/python-docspec/) (`#:` block before or string literal after the statement)
 * Generates links to other API objects per the documentation syntax (e.g. `#OtherClass` for the Pydoc-Markdown style)
 * Configure the output using a YAML file or `pyProject.toml`, then you're only one command away to generate the
   documentation in Markdown format

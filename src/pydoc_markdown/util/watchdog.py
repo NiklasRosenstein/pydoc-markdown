@@ -19,7 +19,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-""" Utils for Pydoc-Markdown using the Watchdog library. """
+"""Utils for Pydoc-Markdown using the Watchdog library."""
 
 import logging
 import os
@@ -39,7 +39,8 @@ class _CallbackEventHandler(FileSystemEventHandler):
         self._filter_paths = filter_paths
 
     def on_any_event(self, event):
-        if self._filter_paths and event.src_path not in self._filter_paths:
+        event_paths = (event.src_path, getattr(event, "dest_path", None))
+        if self._filter_paths and not any(path in self._filter_paths for path in event_paths if path):
             return
         self._callback(event)
 
@@ -57,7 +58,7 @@ def watch_paths(paths: List[str], recursive: bool = False) -> Tuple[BaseObserver
     observer = Observer()
 
     for directory in directories:
-        observer.schedule(event_handler, directory, recursive)
+        observer.schedule(event_handler, directory, recursive=recursive)
     observer.start()
 
     return observer, event

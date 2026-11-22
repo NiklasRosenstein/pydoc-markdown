@@ -37,6 +37,7 @@ import webbrowser
 from pathlib import Path
 
 import click
+import tomli
 import yaml
 from databind.core import convert_dataclass_to_schema
 from docspec import dump_module
@@ -48,9 +49,40 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
 
-config_filenames = ["pydoc-markdown.yml", "pydoc-markdown.yaml", "pyproject.toml"]
+yaml_config_filenames = ["pydoc-markdown.yml", "pydoc-markdown.yaml"]
+config_filenames = [*yaml_config_filenames, "pyproject.toml"]
 default_config_notice = "Using this option will disable loading the default configuration file."
 logger = logging.getLogger(__name__)
+
+
+def _pyproject_has_pydoc_markdown_config(filename: str = "pyproject.toml", invalid_result: bool = False) -> bool:
+    """
+    Check if *filename* contains a `[tool.pydoc-markdown]` section. If the file is not valid TOML,
+    *invalid_result* is returned instead.
+    """
+
+    if not os.path.isfile(filename):
+        return False
+    try:
+        with open(filename, "rb") as fp:
+            data = tomli.load(fp)
+    except tomli.TOMLDecodeError:
+        return invalid_result
+    except OSError as exc:
+        logger.warning("could not inspect %r: %s; treating it as configured", filename, exc)
+        return True
+    tool_config = data.get("tool")
+    return isinstance(tool_config, dict) and "pydoc-markdown" in tool_config
+
+
+def _find_implicit_config() -> t.Optional[str]:
+    yaml_config = next((x for x in yaml_config_filenames if os.path.exists(x)), None)
+    if yaml_config is not None:
+        return yaml_config
+    # Treat an unparseable pyproject.toml as a candidate so that loading it reports the actual parse error.
+    if _pyproject_has_pydoc_markdown_config(invalid_result=True):
+        return "pyproject.toml"
+    return None
 
 
 class RenderSession:
@@ -82,7 +114,7 @@ class RenderSession:
 
         # Update configuration per command-line options.
         if self.modules or self.packages or self.search_path or self.py2 is not None:
-            loader = next((l for l in config.loaders if isinstance(l, PythonLoader)), None)
+            loader = next((item for item in config.loaders if isinstance(item, PythonLoader)), None)
             if not loader:
                 error("no python loader found")
             if self.modules:
@@ -135,6 +167,7 @@ class RenderSession:
         config.render(modules)
 
         watch_files = set(m.location.filename for m in modules)
+        watch_files.update(config.renderer.get_watch_files())
         if isinstance(self.config, str):
             watch_files.add(self.config)
 
@@ -149,8 +182,7 @@ class RenderSession:
         serves an HTML page from the renderer output on the fly.
         """
 
-        if not isinstance(config.renderer, Server):
-            error("renderer {!r} cannot be used with --server".format(type(config.renderer).__name__))
+        renderer = _get_server_renderer(config)
 
         observer, event, process = None, None, None
         watch_files = []
@@ -161,21 +193,22 @@ class RenderSession:
                 if not event or event.is_set():
                     if event:
                         config = self.load()
+                        renderer = _get_server_renderer(config)
                     logger.info("Rendering.")
                     watch_files = self.render(config)
                     if observer:
                         observer.stop()
                     observer, event = watch_paths(watch_files)
                     if process:
-                        process = config.renderer.reload_server(process)
+                        process = renderer.reload_server(process)
 
                 # If the process doesn't exist, start it.
                 if process is None:
                     logger.info("Starting MkDocs serve.")
-                    process = config.renderer.start_server()
+                    process = renderer.start_server()
                     if open_browser:
                         open_browser = False
-                        webbrowser.open(config.renderer.get_server_url())
+                        webbrowser.open(renderer.get_server_url())
 
                 event.wait(0.5)
         finally:
@@ -183,6 +216,13 @@ class RenderSession:
                 observer.stop()
             if process:
                 process.terminate()
+
+
+def _get_server_renderer(config: PydocMarkdown) -> Server:
+    renderer = config.renderer
+    if not isinstance(renderer, Server):
+        error("renderer {!r} cannot be used with --server".format(type(renderer).__name__))
+    return renderer
 
 
 def error(*args) -> t.NoReturn:
@@ -321,18 +361,23 @@ def cli(
                 print("created", filename)
 
         else:
-            existing_file = next((x for x in config_filenames if os.path.isfile(x)), None)
+            existing_file = next((x for x in yaml_config_filenames if os.path.lexists(x)), None)
+            if existing_file is None and _pyproject_has_pydoc_markdown_config():
+                existing_file = "pyproject.toml"
             if existing_file:
                 error("file already exists: {!r}".format(existing_file))
-            filename = config_filenames[0]
+            filename = yaml_config_filenames[0]
             source = {
                 "base": static.DEFAULT_CONFIG,
                 "mkdocs": static.DEFAULT_MKDOCS_CONFIG,
                 "hugo": static.DEFAULT_HUGO_CONFIG,
                 "docusaurus": static.DEFAULT_DOCUSAURUS_CONFIG,
             }
-            with open(filename, "w") as fp:
-                fp.write(source[bootstrap])
+            try:
+                with open(filename, "x") as fp:
+                    fp.write(source[bootstrap])
+            except FileExistsError:
+                error("file already exists: {!r}".format(filename))
             print("created", filename)
 
         return
@@ -358,11 +403,20 @@ def cli(
     # Load the configuration.
     if config and (config.lstrip().startswith("{") or "\n" in config):
         config = yaml.safe_load(config)
-    if config is None and load_implicit_config:
-        try:
-            config = next((x for x in config_filenames if os.path.exists(x)))
-        except StopIteration:
-            error("config file not found.")
+    if config is None:
+        implicit_config = _find_implicit_config()
+        if load_implicit_config:
+            if implicit_config is None:
+                error("config file not found.")
+            config = implicit_config
+        elif implicit_config is not None:
+            print(
+                "warning: quick CLI options disable implicit configuration loading; "
+                "ignoring {!r}. Pass the configuration filename explicitly to apply CLI overrides to it.".format(
+                    implicit_config
+                ),
+                file=sys.stderr,
+            )
 
     session = RenderSession(
         config=config, render_toc=render_toc, search_path=search_path, modules=modules, packages=packages, py2=py2

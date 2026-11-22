@@ -225,6 +225,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     #: a file relative to the context directory (usually the working directory).
     format_code_style: str = "pep8"
 
+    #: The title of the page when one is not supplied by a parent renderer and
+    #: #render_page_title is enabled.
+    page_title: t.Optional[str] = None
+
     def __post_init__(self) -> None:
         self._resolver = MarkdownReferenceResolver()
 
@@ -279,7 +283,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         else:
             header_template = level * "#" + " {title}"
         if self.render_novella_anchors:
-            fp.write(f"@anchor pydoc:" + ".".join(x.name for x in obj.path) + "\n")
+            fp.write("@anchor pydoc:" + ".".join(x.name for x in obj.path) + "\n")
         fp.write(header_template.format(title=self._get_title(obj)))
         fp.write("\n\n")
 
@@ -315,7 +319,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         result = self._yapf_code(result + ": pass").rpartition(":")[0].strip()
 
         if add_method_bar and self._is_method(func):
-            result = "\n".join(" | " + l for l in result.split("\n"))
+            result = "\n".join(" | " + line for line in result.split("\n"))
         return result
 
     def _format_classdef_signature(self, cls: docspec.Class) -> str:
@@ -452,7 +456,14 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     def render_single_page(
         self, fp: t.TextIO, modules: t.List[docspec.Module], page_title: t.Optional[str] = None
     ) -> None:
+        if page_title is None:
+            page_title = self.page_title
+
         if self.render_page_title:
+            if page_title is None:
+                raise ValueError(
+                    "page_title is required when render_page_title is enabled (set MarkdownRenderer.page_title or pass page_title)."
+                )
             fp.write("# {}\n\n".format(page_title))
 
         if self.render_toc:

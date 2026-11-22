@@ -46,7 +46,7 @@ from nr.util.fs import chmod
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Builder, Context, Renderer, Resolver, Server
 from pydoc_markdown.util.knownfiles import KnownFiles
-from pydoc_markdown.util.pages import GenericPage, Page, Pages
+from pydoc_markdown.util.pages import GenericPage, Pages
 
 logger = logging.getLogger(__name__)
 
@@ -78,12 +78,10 @@ class HugoPage(GenericPage["HugoPage"]):
 
 class HugoTheme(abc.ABC):
     @abc.abstractproperty
-    def name(self) -> str:
-        ...
+    def name(self) -> str: ...
 
     @abc.abstractmethod
-    def install(self, theme_dir: str) -> None:
-        ...
+    def install(self, theme_dir: str) -> None: ...
 
 
 @dataclasses.dataclass
@@ -293,7 +291,7 @@ class HugoRenderer(Renderer, Server, Builder):
             for file_ in known_files.load():
                 try:
                     os.remove(file_.name)
-                except FileNotFoundError as exc:
+                except FileNotFoundError:
                     pass
 
         # Render the pages.
@@ -307,7 +305,7 @@ class HugoRenderer(Renderer, Server, Builder):
                 filename = item.filename(page_content_dir, ".md", index_name="_index", skip_empty_pages=False)
                 if not filename:
                     continue
-                self._render_page(item.page.filtered_modules(modules), item.page, filename)
+                self._render_page(modules, item.page, filename)
                 known_files.append(filename)
 
             # Render the config file.
@@ -323,6 +321,15 @@ class HugoRenderer(Renderer, Server, Builder):
         # TODO (@NiklasRosenstein): The resolver returned by the Markdown
         #   renderer does not implement linking across multiple pages.
         return self.markdown.get_resolver(modules)
+
+    def get_watch_files(self) -> t.Iterable[str]:
+        context = getattr(self, "_context", None)
+        if context is None:
+            raise RuntimeError("HugoRenderer must be initialized before retrieving watch files")
+        for item in self.pages.iter_hierarchy():
+            source_path = item.page.resolve_source_path(context.directory)
+            if source_path is not None:
+                yield source_path
 
     # Server
 
