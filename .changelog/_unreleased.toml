@@ -83,6 +83,20 @@ author = "rosensteinniklas@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/359"
 
 [[entries]]
+id = "1e0d013a-bc74-4b95-a684-80cae0f10601"
+type = "fix"
+description = "Allow bootstrapping YAML configuration in Poetry projects and warn when quick CLI options ignore local configuration."
+author = "rosensteinniklas@gmail.com"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/361"
+
+[[entries]]
+id = "98f2a0a7-eedb-4baf-ae39-28d8eeff37c7"
+type = "fix"
+description = "Preserve relative indentation in Google-style docstring sections and render example code blocks correctly."
+author = "rosensteinniklas@gmail.com"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/363"
+
+[[entries]]
 id = "2e13eb74-d3cb-4c7d-a8b6-6371ac0be803"
 type = "feature"
 description = "Support NumPy-style docstrings and explicit docstring style selection in the Sphinx processor."
