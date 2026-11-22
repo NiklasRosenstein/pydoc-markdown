@@ -1637,7 +1637,7 @@ Default: <code>true</code></p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GoogleProcessor</span><span class="p">(</span><span class="n">Processor</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/processors/google.py#L33">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/processors/google.py#L70">[view_source]</a></p>
 <p>This class implements the preprocessor for Google and PEP 257 docstrings. It converts
 docstrings formatted in the Google docstyle to Markdown syntax.</p>
 <p><strong>References</strong>:</p>
@@ -1670,10 +1670,13 @@ Todo:
   one convention to document module level variables and be consistent
   with it.</p>
 <p><strong>Todo</strong>:</p>
-<ul>
-<li>For module TODOs</li>
-<li>You have to also use <code>sphinx.ext.todo</code> extension</li>
-</ul>
+<div class="highlight"><pre><span></span><code>  * For module TODOs
+  * You have to also use ``sphinx.ext.todo`` extension
+</code></pre></div>
+<p>Relative indentation in section bodies is preserved. In <code>Example:</code> and <code>Examples:</code> sections, an indented body
+  without a fenced code block remains a Markdown literal block, unless it starts with prose followed by a more
+  deeply indented block, in which case only the nested block is rendered as a literal block. Structural
+  Google-style indentation is removed from fenced code blocks so that their fences render correctly.</p>
 <hr />
 <p>Module: <code>pydoc_markdown.contrib.processors.pydocmd</code></p>
 <p><a id="pydoc_markdown.contrib.processors.pydocmd.PydocmdProcessor"></a></p>
