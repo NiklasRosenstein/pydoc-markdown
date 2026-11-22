@@ -12,7 +12,7 @@ from docspec_python import ParserOptions, parse_python_module
 from pydoc_markdown import PydocMarkdown
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
-from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer, _find_closing_bracket, _list_content_indent
+from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.interfaces import Context, Processor
 
 from ..utils import assert_text_equals, get_testcases_for, load_testcase
@@ -98,320 +98,77 @@ def test_markdown_renderer_explicit_page_title_takes_precedence() -> None:
     assert fp.getvalue() == "# Specific Page\n\n"
 
 
-def test_markdown_renderer_preserves_unique_reference_labels() -> None:
-    module = load_string_as_module(
-        Path("unique_reference.py"),
-        '''def func():
-    """Links to [example][0].
+REFERENCE_LINKS_MODULE = '''
+"""Module docstring. See the [spec].
 
-    [0]: https://example.com
-    """
-''',
-    )
-    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
-    renderer.init(Context("."))
+[spec]: https://spec.example
+"""
 
-    assert renderer.render_to_string([module]) == (
-        "#### func\n\nLinks to [example][0].\n\n[0]: https://example.com\n\n"
-    )
+def a():
+    """A uses [docs][ref], [ref][] and [ref], plus [spec] from the module.
 
-
-def test_markdown_renderer_namespaces_separately_rendered_objects() -> None:
-    module = load_string_as_module(
-        Path("separate_objects.py"),
-        '''def a():
-    """Links to [A][0].
-
-    [0]: https://a.example
+    [ref]: https://a.example
     """
 
 def b():
-    """Links to [B][0].
+    """B uses [ref], an inline [link](https://inline.example), `[ref]` and:
 
-    [0]: https://b.example
-    """
-''',
-    )
-    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
-    renderer.init(Context("."))
-    fp = io.StringIO()
+    ```
+    [ref]
+    ```
 
-    renderer.render_object(fp, module.members[0], {})
-    renderer.render_object(fp, module.members[1], {})
-
-    assert "[A][pydoc-separate_objects.a-0]" in fp.getvalue()
-    assert "[pydoc-separate_objects.a-0]: https://a.example" in fp.getvalue()
-    assert "[B][pydoc-separate_objects.b-0]" in fp.getvalue()
-    assert "[pydoc-separate_objects.b-0]: https://b.example" in fp.getvalue()
-
-
-def test_markdown_list_content_indentation_uses_visual_columns() -> None:
-    assert _list_content_indent("-\tcontent") == 4
-    assert _list_content_indent("1.\tcontent") == 4
-
-
-def test_markdown_renderer_analyzes_escaped_docstrings() -> None:
-    module = load_string_as_module(
-        Path("escaped_html.py"),
-        '''def a():
-    """<div>
-    [x]
-    </div>
-
-    [x]: https://a.example
+    [ref]: https://b.example
     """
 
-def b():
-    """<div>
-    [x]
-    </div>
+def c():
+    """C defines a [unique] label.
 
-    [x]: https://b.example
+    [unique]: https://c.example
     """
-''',
-    )
+'''
+
+
+def _render_reference_links_module(**options: t.Any) -> str:
+    module = load_string_as_module(Path("refs.py"), REFERENCE_LINKS_MODULE)
     renderer = MarkdownRenderer(
-        insert_header_anchors=False,
-        render_module_header=False,
-        signature_code_block=False,
-        escape_html_in_docstring=True,
+        insert_header_anchors=False, render_module_header=False, signature_code_block=False, **options
     )
     renderer.init(Context("."))
-
-    result = renderer.render_to_string([module])
-
-    assert "&lt;div&gt;\n[x][pydoc-escaped_html.a-x]\n&lt;/div&gt;" in result
-    assert "[pydoc-escaped_html.a-x]: https://a.example" in result
-    assert "&lt;div&gt;\n[x][pydoc-escaped_html.b-x]\n&lt;/div&gt;" in result
-    assert "[pydoc-escaped_html.b-x]: https://b.example" in result
+    return renderer.render_to_string([module])
 
 
-def test_markdown_renderer_validates_reference_syntax_boundaries() -> None:
-    module = load_string_as_module(
-        Path("reference_syntax.py"),
-        r'''def a():
-    r"""A quote in a bare destination stays intact: [link](foo'bar[bare]).
-
-    [quote]: https://quote-a.example
-    > "A different-container usage [quote]"
-
-    Invalid inline HTML exposes its [html] shortcut: <tag [html]>.
-
-    An [invalid] definition remains plain text.
-
-    [bare]: https://bare-a.example
-    [html]: https://html-a.example
-    [invalid]: foo\ bar
-    """
-
-def b():
-    r"""A quote in a bare destination stays intact: [link](foo'bar[bare]).
-
-    [quote]: https://quote-b.example
-    > "A different-container usage [quote]"
-
-    Invalid inline HTML exposes its [html] shortcut: <tag [html]>.
-
-    An [invalid] definition remains plain text.
-
-    [bare]: https://bare-b.example
-    [html]: https://html-b.example
-    [invalid]: foo\ bar
-    """
-''',
-    )
-    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
-    renderer.init(Context("."))
-
-    result = renderer.render_to_string([module])
-
-    assert result.count("[link](foo'bar[bare])") == 2
-    assert "[bare]: https://bare-a.example" in result
-    assert "[bare]: https://bare-b.example" in result
-    assert '> "A different-container usage [quote][pydoc-reference_syntax.a-quote]"' in result
-    assert "[pydoc-reference_syntax.a-quote]: https://quote-a.example" in result
-    assert "<tag [html][pydoc-reference_syntax.a-html]>" in result
-    assert "[pydoc-reference_syntax.a-html]: https://html-a.example" in result
-    assert "An [invalid] definition remains plain text." in result
-    assert "[invalid]: foo\\ bar" in result
+def test_markdown_renderer_leaves_reference_links_alone_by_default() -> None:
+    assert "[ref]: https://b.example" in _render_reference_links_module()
 
 
-def test_markdown_renderer_tracks_reference_container_state() -> None:
-    module = load_string_as_module(
-        Path("reference_containers.py"),
-        '''def a():
-    """An invalid inline link still contains an [outer](a b) shortcut.
+def test_markdown_renderer_namespaces_duplicate_reference_links() -> None:
+    result = _render_reference_links_module(namespace_reference_links=True)
 
-    - A list-relative [listed] reference.
-
-        [listed]: https://listed-a.example
-
-    A continuation-only footnote [^note].
-
-    [^note]:
-        Footnote A.
-
-    A URI autolink stays intact: <https://host.example/[autolink]>.
-    Inline raw HTML stays intact: Text <!-- [comment] -->.
-    Other raw HTML stays intact: <?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>.
-
-    <tag [type-seven]>
-    A reference after the invalid type-7 tag is [type-seven].
-
-    An [padding] shortcut has only an indented-code pseudo-definition.
-    -     [padding]: https://padding-a.example
-
-    - A list item
-      ```markdown
-      [ignored][list-fence]
-    A reference after the unclosed list fence is [list-fence].
-
-    > <div>
-    A reference after the quoted HTML block is [html-block].
-
-    [outer]: https://outer-a.example
-    [autolink]: https://autolink-a.example
-    [comment]: https://comment-a.example
-    [list-fence]: https://fence-a.example
-    [type-seven]: https://type-seven-a.example
-    [html-block]: https://html-a.example
-    """
-
-def b():
-    """An invalid inline link still contains an [outer](a b) shortcut.
-
-    - A list-relative [listed] reference.
-
-        [listed]: https://listed-b.example
-
-    A continuation-only footnote [^note].
-
-    [^note]:
-        Footnote B.
-
-    A URI autolink stays intact: <https://host.example/[autolink]>.
-    Inline raw HTML stays intact: Text <!-- [comment] -->.
-    Other raw HTML stays intact: <?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>.
-
-    <tag [type-seven]>
-    A reference after the invalid type-7 tag is [type-seven].
-
-    An [padding] shortcut has only an indented-code pseudo-definition.
-    -     [padding]: https://padding-b.example
-
-    - A list item
-      ```markdown
-      [ignored][list-fence]
-    A reference after the unclosed list fence is [list-fence].
-
-    > <div>
-    A reference after the quoted HTML block is [html-block].
-
-    [outer]: https://outer-b.example
-    [autolink]: https://autolink-b.example
-    [comment]: https://comment-b.example
-    [list-fence]: https://fence-b.example
-    [type-seven]: https://type-seven-b.example
-    [html-block]: https://html-b.example
-    """
-''',
-    )
-    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
-    renderer.init(Context("."))
-
-    result = renderer.render_to_string([module])
-
-    assert "[outer][pydoc-reference_containers.a-outer](a b)" in result
-    assert "[pydoc-reference_containers.a-outer]: https://outer-a.example" in result
-    assert "[listed][pydoc-reference_containers.a-listed]" in result
-    assert "[pydoc-reference_containers.a-listed]: https://listed-a.example" in result
-    assert "[^pydoc-reference_containers.a-note]" in result
-    assert "[^pydoc-reference_containers.a-note]:\n    Footnote A." in result
-    assert result.count("<https://host.example/[autolink]>") == 2
-    assert "[autolink]: https://autolink-a.example" in result
-    assert "[autolink]: https://autolink-b.example" in result
-    assert result.count("Text <!-- [comment] -->") == 2
-    assert result.count("<?pi [comment]?> <!DECL [comment]> <![CDATA[[comment]]]>") == 2
-    assert "[comment]: https://comment-a.example" in result
-    assert "[comment]: https://comment-b.example" in result
-    assert "[ignored][list-fence]" in result
-    assert "[list-fence][pydoc-reference_containers.a-list-fence]" in result
-    assert "[pydoc-reference_containers.a-list-fence]: https://fence-a.example" in result
-    assert "<tag [type-seven][pydoc-reference_containers.a-type-seven]>" in result
-    assert "[type-seven][pydoc-reference_containers.a-type-seven]" in result
-    assert "[pydoc-reference_containers.a-type-seven]: https://type-seven-a.example" in result
-    assert "An [padding] shortcut has only an indented-code pseudo-definition." in result
-    assert "-     [padding]: https://padding-a.example" in result
-    assert "[html-block][pydoc-reference_containers.a-html-block]" in result
-    assert "[pydoc-reference_containers.a-html-block]: https://html-a.example" in result
+    # Both definitions of `ref` are renamed, and so are all reference forms that use them.
+    assert "A uses [docs][refs.a--ref], [ref][refs.a--ref] and [ref][refs.a--ref]" in result
+    assert "[refs.a--ref]: https://a.example" in result
+    assert "B uses [ref][refs.b--ref], an inline [link](https://inline.example), `[ref]` and:" in result
+    assert "```\n[ref]\n```" in result
+    assert "[refs.b--ref]: https://b.example" in result
+    # `spec` is used by `a` without being defined there, so renaming it would break that link.
+    assert "plus [spec] from the module" in result
+    assert "[spec]: https://spec.example" in result
+    # A label that is defined only once on the page doesn't need to be renamed.
+    assert "C defines a [unique] label.\n\n[unique]: https://c.example" in result
 
 
-def test_markdown_renderer_namespaces_unused_definitions_for_separate_objects() -> None:
-    first = load_string_as_module(
-        Path("first.py"),
-        '''def a():
-    """An unused generated-looking definition.
-
-    [pydoc-m.a-x]: https://wrong.example
-    """
-''',
-        module_name="m",
-    )
-    second = load_string_as_module(
-        Path("second.py"),
-        '''def a():
-    """A used [x] definition.
-
-    [x]: https://right.example
-    """
-''',
-        module_name="m",
-    )
-    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
+def test_markdown_renderer_namespaces_reference_links_of_individually_rendered_objects() -> None:
+    module = load_string_as_module(Path("refs.py"), REFERENCE_LINKS_MODULE)
+    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, namespace_reference_links=True)
     renderer.init(Context("."))
     fp = io.StringIO()
 
-    renderer.render_object(fp, first.members[0], {})
-    renderer.render_object(fp, second.members[0], {})
-
+    renderer.render_object(fp, module.members[2], {})
+    renderer.render_object(fp, module, {})
     result = fp.getvalue()
-    assert "[pydoc-m.a-pydoc-m.a-x]: https://wrong.example" in result
-    assert "[x][pydoc-m.a-x]" in result
-    assert "[pydoc-m.a-x]: https://right.example" in result
 
-
-def test_markdown_renderer_encodes_unicode_object_namespaces() -> None:
-    module = load_string_as_module(
-        Path("unicode_names.py"),
-        '''def é():
-    """A used [x] definition.
-
-    [x]: https://e-acute.example
-    """
-
-def ß():
-    """Another used [x] definition.
-
-    [x]: https://eszett.example
-    """
-''',
-        module_name="m",
-    )
-    renderer = MarkdownRenderer(insert_header_anchors=False, render_module_header=False, signature_code_block=False)
-    renderer.init(Context("."))
-    fp = io.StringIO()
-
-    renderer.render_object(fp, module.members[0], {})
-    renderer.render_object(fp, module.members[1], {})
-
-    result = fp.getvalue()
-    assert "[x][pydoc-m.%C3%A9-x]" in result
-    assert "[pydoc-m.%C3%A9-x]: https://e-acute.example" in result
-    assert "[x][pydoc-m.%C3%9F-x]" in result
-    assert "[pydoc-m.%C3%9F-x]: https://eszett.example" in result
-
-
-def test_markdown_reference_label_scan_is_bounded() -> None:
-    assert _find_closing_bracket("[" + "a" * 999 + "]", 0) == 1000
-    assert _find_closing_bracket("[" + "a" * 1000 + "]", 0) is None
-    assert _find_closing_bracket("[" * 10_000 + "]", 0, nested=True) is None
+    # The rest of the page is unknown, so even a label that is unique within the rendered object is renamed.
+    assert "C defines a [unique][refs.c--unique] label.\n\n[refs.c--unique]: https://c.example" in result
+    # A definition that a member relies on is still left alone.
+    assert "plus [spec] from the module" in result
+    assert "[spec]: https://spec.example" in result
