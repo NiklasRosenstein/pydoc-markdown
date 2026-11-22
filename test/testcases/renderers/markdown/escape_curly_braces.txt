@@ -1,0 +1,25 @@
+----
+renderer:
+  insert_header_anchors: false
+  render_module_header: false
+  escape_curly_braces_in_docstring: true
+----
+def a(v: dict) -> None:
+    """Pass a mapping like {"key": "value"}; see `{}` and:
+
+    ```py
+    a({"key": "value"})
+    ```
+    """
+----
+#### a
+
+```python
+def a(v: dict) -> None
+```
+
+Pass a mapping like \{"key": "value"\}; see `{}` and:
+
+```py
+a({"key": "value"})
+```

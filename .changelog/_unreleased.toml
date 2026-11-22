@@ -119,7 +119,7 @@ issues = [
 [[entries]]
 id = "f3ee1a25-3e4d-4917-b3b9-7ace18f6f9f0"
 type = "improvement"
-description = "Add option to escape { in markdown for compatibility with MDX >= 2"
+description = "Add the `escape_curly_braces_in_docstring` Markdown renderer option to escape `{` and `}` for MDX v2+ (e.g. Docusaurus v3)."
 author = "qsteenhuis@gmail.com"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/326"
 issues = [

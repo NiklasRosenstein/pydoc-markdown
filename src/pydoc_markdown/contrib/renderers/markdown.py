@@ -41,7 +41,7 @@ from pydoc_markdown.interfaces import (
     SourceLinker,
 )
 from pydoc_markdown.util.docspec import ApiSuite, format_function_signature, is_method
-from pydoc_markdown.util.misc import escape_except_blockquotes, escape_curly_brackets
+from pydoc_markdown.util.misc import escape_curly_brackets, escape_except_blockquotes
 
 
 def dotted_name(obj: docspec.ApiObject) -> str:
@@ -212,7 +212,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     #: Escape html in docstring. Default to False.
     escape_html_in_docstring: bool = False
 
-    #: Escape { and } in docstring. Default to False.
+    #: Escape `{` and `}` in docstrings, except inside code blocks and inline code. Enable this when the output is
+    #: compiled as MDX v2 or later (e.g. Docusaurus v3), which otherwise parses braces as JavaScript expressions.
     escape_curly_braces_in_docstring: bool = False
 
     #: Render Novella `@anchor` tags before headings.
