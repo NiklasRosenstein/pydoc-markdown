@@ -1,7 +1,7 @@
 import pytest
 from databind.json import load
 
-from pydoc_markdown.contrib.renderers.hugo import HugoPage, HugoRenderer
+from pydoc_markdown.contrib.renderers.hugo import HugoPage, HugoRenderer, HugoThemeGitUrl
 from pydoc_markdown.interfaces import Context
 from pydoc_markdown.util.pages import Pages
 
@@ -86,3 +86,17 @@ def test_hugo_renderer_watches_nested_page_sources(tmp_path) -> None:
 def test_hugo_renderer_watch_files_requires_initialization() -> None:
     with pytest.raises(RuntimeError, match="initialized"):
         list(HugoRenderer().get_watch_files())
+
+
+@pytest.mark.parametrize(
+    "clone_url, name",
+    [
+        ("https://github.com/alex-shpak/hugo-book.git", "book"),
+        ("https://github.com/thegeeklab/hugo-geekdoc.git", "geekdoc"),
+        ("https://github.com/digitalcraftsman/hugo-material-docs", "material-docs"),
+        ("https://github.com/acme/hugo-theme-git.git", "theme-git"),
+        ("https://github.com/acme/audit.git", "audit"),
+    ],
+)
+def test_hugo_theme_git_url_name(clone_url: str, name: str) -> None:
+    assert HugoThemeGitUrl(clone_url).name == name
