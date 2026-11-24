@@ -1,94 +1,48 @@
-# Pydoc-Markdown 📃
+# Pydoc-Markdown
 
-![Python versions](https://img.shields.io/pypi/pyversions/pydoc-markdown?style=for-the-badge)
-[![Pypi version](https://img.shields.io/pypi/v/pydoc-markdown?style=for-the-badge)](https://pypi.org/project/pydoc-markdown/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pydoc-markdown?style=flat-square)](https://pypi.org/project/pydoc-markdown/)
+[![PyPI version](https://img.shields.io/pypi/v/pydoc-markdown?style=flat-square)](https://pypi.org/project/pydoc-markdown/)
 
-> __Disclaimer__: I don't find enough time to properly maintain and develop this project. If you want to generate
-> docstrings for your Python project with MkDocs, consider [mkdocstrings](https://mkdocstrings.github.io/) instead.
+Generate Markdown API documentation for Python code — without importing it. Pydoc-Markdown parses your source with
+[docspec][], converts Google, Sphinx, NumPy and Markdown-style docstrings to Markdown, and writes plain Markdown files
+or pages for MkDocs, Hugo and Docusaurus.
 
-Pydoc-Markdown is a tool to create Python API documentation in Markdown format. Instead of executing your Python
-code like so many other documentation tools, it parses it using [docspec](https://niklasrosenstein.github.io/python-docspec/) instead.
+> [!NOTE]
+> This project is maintained on a best-effort basis. If you are building a site with MkDocs, also consider
+> [mkdocstrings](https://mkdocstrings.github.io/).
 
-[→ Go to the Documentation 📘][Documentation]
+## Quickstart
 
-  [contrib]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md
-  [docspec]: https://niklasrosenstein.github.io/python-docspec/
-  [Documentation]: https://niklasrosenstein.github.io/pydoc-markdown/
-  [MkDocs]: https://www.mkdocs.org/
-  [Novella]: https://niklasrosenstein.github.io/novella/
-  [Novella build backend]: https://niklasrosenstein.github.io/pydoc-markdown/usage/novella/
+```sh
+pipx install pydoc-markdown
+pydoc-markdown -I src -p my_package --render-toc > api.md
+```
 
-__Table of Contents__
+For anything beyond a one-off, put the configuration in a file:
 
-* [Installation 📦](#installation-)
-* [Features 🌟](#features-)
-* [News 📢](#news-)
-  * [4.7.0 (Undeprecating YAML configuration)](#470-undeprecating-yaml-configuration)
-  * [4.6.0 (Novella integration)](#460-novella-integration)
-* [Contributing to Pydoc-Markdown 🤝](#contributing-to-pydoc-markdown-)
-* [Questions / Need help? 🤔](#questions--need-help-)
-* [Projects using Pydoc-Markdown 📚](#projects-using-pydoc-markdown-)
+```sh
+pydoc-markdown --bootstrap base   # writes pydoc-markdown.yml
+pydoc-markdown                    # renders it
+```
 
-### Installation 📦
+Pydoc-Markdown needs Python 3.10+ to run; the code you document can target any Python version.
 
-You can install Pydoc-Markdown using Pipx:
+## Documentation
 
-    $ pipx install pydoc-markdown
+**[niklasrosenstein.github.io/pydoc-markdown][docs]** — getting started, configuration, docstring styles, static site
+generators, the [Novella][] integration, and the full plugin reference.
 
-If you plan on using the [Novella][] integration, you may want to install it as:
+## Contributing
 
-    $ pipx install novella
-    $ pipx inject novella pydoc-markdown[novella]
+Contributions are welcome — see the [contribution guidelines][contrib]. Questions go to
+[GitHub Discussions](https://github.com/NiklasRosenstein/pydoc-markdown/discussions).
 
-You need at least Python 3.10 to run Pydoc-Markdown. The Python version compatibility of the package you are looking to
-generate documentation for is irrelevant.
+**Used by** [CosmPy](https://docs.fetch.ai/CosmPy/),
+[Haystack](https://docs.haystack.deepset.ai/reference/agent-api),
+[envd](https://envd.tensorchord.ai/api/starlark/v0/config.html), [tqdm](https://tqdm.github.io/) and others — open a
+pull request to add your project.
 
-### Features 🌟
-
-* Understands multiple documentation styles (Sphinx, Google, Pydoc-Markdown specific) and converts them to properly
-  formatted Markdown
-* Can parse docstrings for variables thanks to [docspec](https://niklasrosenstein.github.io/python-docspec/) (`#:` block before or string literal after the statement)
-* Generates links to other API objects per the documentation syntax (e.g. `#OtherClass` for the Pydoc-Markdown style)
-* Configure the output using a YAML file or `pyProject.toml`, then you're only one command away to generate the
-  documentation in Markdown format
-* Or use [Novella][] to tightly integrate with static site generators like MkDocs and Hugo with with additional
-  features such as Markdown pre-processing
-
-### News 📢
-
-#### 4.7.0 (Undeprecating YAML configuration)
-
-Many users prefer the YAML configuration over the using [Novella][], which is why starting with __4.7.0__, the YAML
-style configuration is officially un-deprecated and will continue to be supported.
-
-#### 4.6.0 (Novella integration)
-
-Starting with __4.6.0__, development focuses on integrating with [Novella][] and use it as a replacement for
-tool-specific renderers thus far provided directly by Pydoc-Markdown (i.e. integrations with MkDocs, Hugo and
-Docusuraus). Such integrations are/will be provided by Novella instead.
-
-With the Novella integration, you can now place generated API content in Markdown format inline with your
-existing Markdown documentation source files using `@pydoc` tags. Check out the [Documentation][] for more
-information on how to use Pydoc-Markdown with Novella.
-
-The old style of using Pydoc-Markdown with a YAML or PyProject configuration to generate files and kick off the
-build is now deprecated but will be maintained for the foreseeable future (at least until the next major version
-bump). It is strongly recommended to migrate your existing projects to using the Novella build backend.
-
-### Contributing to Pydoc-Markdown 🤝
-
-All contributions are welcome! Check out the [Contribution Guidelines][contrib].
-
-### Questions / Need help? 🤔
-
-Feel free to open a topic on [GitHub Discussions](https://github.com/NiklasRosenstein/pydoc-markdown/discussions)!
-
-### Projects using Pydoc-Markdown 📚
-
-An incomplete list of projects that use Pydoc-Markdown to generate their API documentation. Feel free to open a
-pull request to add your project to this list!
-
-* [CosmPy](https://docs.fetch.ai/CosmPy/)
-* [haystack by deepset](https://docs.haystack.deepset.ai/reference/agent-api)
-* [tensorchord/envd](https://envd.tensorchord.ai/api/starlark/v0/config.html)
-* [tqdm](https://tqdm.github.io/)
+[contrib]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md
+[docs]: https://niklasrosenstein.github.io/pydoc-markdown/
+[docspec]: https://niklasrosenstein.github.io/python-docspec/
+[Novella]: https://niklasrosenstein.github.io/novella/

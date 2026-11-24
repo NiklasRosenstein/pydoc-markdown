@@ -1,4 +1,7 @@
-# pydoc_markdown.contrib.processors
+# Processors
+
+Processors are listed under `processors` in the configuration and run in order. See
+[Docstrings and processors](../guides/docstrings.md) for how to choose them.
 
 Module: `pydoc_markdown.contrib.processors.crossref`
 

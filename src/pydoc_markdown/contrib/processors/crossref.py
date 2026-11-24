@@ -45,14 +45,14 @@ class CrossrefProcessor(Processor):
 
     ```
     This is a ref to another class: #PydocmdProcessor
-    You can rename a ref like #this~PydocmdProcessor
+    This is a ref to a method: #PydocmdProcessor.process()
     And you can append to the ref name like this: #PydocmdProcessor#s
     ```
 
     Renders as
 
     > This is a ref to another class: #PydocmdProcessor
-    > You can rename a ref like #this~PydocmdProcessor
+    > This is a ref to a method: #PydocmdProcessor.process()
     > And you can append to the ref name like this: #PydocmdProcessor#s
 
     Example configuration:
