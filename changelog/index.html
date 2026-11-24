@@ -1180,6 +1180,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#hygiene" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1258,7 +1269,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tests" class="md-nav__link">
+  <a href="#tests_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Tests
@@ -1681,7 +1692,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tests_1" class="md-nav__link">
+  <a href="#tests_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Tests
@@ -3101,6 +3112,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#hygiene" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3179,7 +3201,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tests" class="md-nav__link">
+  <a href="#tests_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Tests
@@ -3602,7 +3624,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tests_1" class="md-nav__link">
+  <a href="#tests_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Tests
@@ -4938,6 +4960,10 @@
 <ul>
 <li>Fix links to docspec (@rafalkrupinski) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/337">#337</a>)</li>
 </ul>
+<h3 id="tests">Tests</h3>
+<ul>
+<li>Make the watchdog event handler test pass on every supported watchdog version. The file watcher works with watchdog 0.10 and newer, so no lower bound is added and Novella's <code>watchdog&lt;3</code> requirement can still be satisfied. (@NiklasRosenstein) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/379">#379</a>)</li>
+</ul>
 <h3 id="hygiene">Hygiene</h3>
 <ul>
 <li>Replace the Slap and Poetry development workflow with uv, mise tasks and towncrier changelog fragments. (@NiklasRosenstein) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/378">#378</a>)</li>
@@ -4957,7 +4983,7 @@
 <li>Upgrade to Databind <code>^4.4.0</code> which fixes the "<code>ForwardRef</code> cannot be parameterized" error. (issue <a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/292">#292</a>, @NiklasRosenstein) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/294">#294</a>)</li>
 <li>Fix <code>NoMatchingConverter</code> for <code>TypeHint(typing.List[~T_Page])</code> by making the <code>Page</code> type a concrete subclass of the old <code>Page</code> class now called <code>GenericPage</code>. This is needed to correctly define a recursive type that Databind can de/serialize. The <code>Page</code> type stays backwards compatible at runtime for cases when it is used as a generic (e.g. <code>class MyPage(Page[MyPage]):</code>) to not break existing code. (issue <a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/291">#291</a>, @NiklasRosenstein) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/294">#294</a>)</li>
 </ul>
-<h3 id="tests">Tests</h3>
+<h3 id="tests_1">Tests</h3>
 <ul>
 <li>Add unit tests to deserialize Mkdocs and Hugo example configuration. (@NiklasRosenstein) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/294">#294</a>)</li>
 </ul>
@@ -5078,7 +5104,7 @@
 <li>Fix configuration generated with <code>--bootstrap mkdocs</code> (issue <a href="https://github.com/NiklasRosenstein/pydoc-markdown/issues/230">#230</a>, @gethvi)</li>
 <li>MarkdownRenderer: no longer escape markdown in headers when <code>html_headers</code> is enabled (used to result in additional backslashes when interpreted by most Markdown to HTML renderers) (@NiklasRosenstein)</li>
 </ul>
-<h3 id="tests_1">Tests</h3>
+<h3 id="tests_2">Tests</h3>
 <ul>
 <li>Refactor sphinx processor tests and add new test for param keyword only. Fixes minor issue with argument only docstring. @gmarks2149 (@NiklasRosenstein)</li>
 </ul>
