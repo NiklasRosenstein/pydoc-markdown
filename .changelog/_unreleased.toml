@@ -122,3 +122,9 @@ type = "fix"
 description = "Derive the Hugo theme name from a Git URL by removing only the `.git` suffix and the `hugo-` prefix."
 author = "@bardrop"
 pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/377"
+
+[[entries]]
+id = "b1b74e02-0640-46b3-a844-b1c21eebdc32"
+type = "tests"
+description = "Make the watchdog event handler test independent of the installed watchdog version; the file watcher works with watchdog 0.10 and newer, so no lower bound is added and Novella's `watchdog<3` requirement stays satisfiable."
+author = "@NiklasRosenstein"
