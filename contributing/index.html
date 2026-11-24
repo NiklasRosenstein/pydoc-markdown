@@ -1318,7 +1318,8 @@ your GitHub handle, for example:</p>
 <p>If you don't know the pull request number yet, name the fragment <code>+&lt;some-slug&gt;.&lt;type&gt;.md</code> and rename it once the pull
 request exists. A link to the pull request is added automatically when the changelog is compiled. Preview the result
 with <code>mise run changelog:preview</code>.</p>
-<p>Trivial changes may skip the changelog by adding the <code>no changelog</code> label to the pull request.</p>
+<p>Trivial changes may skip the changelog by adding the <code>no changelog</code> label to the pull request. Dependency update pull
+requests opened by Renovate get this label automatically.</p>
 <h2 id="releasing">Releasing</h2>
 <p>Maintainers create a release from an up-to-date <code>develop</code> branch with:</p>
 <div class="highlight"><pre><span></span><code>$ mise run release &lt;major|minor|patch&gt;
