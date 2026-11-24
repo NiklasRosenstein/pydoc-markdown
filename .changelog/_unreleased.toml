@@ -115,3 +115,10 @@ pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/360"
 issues = [
     "https://github.com/NiklasRosenstein/pydoc-markdown/issues/259",
 ]
+
+[[entries]]
+id = "86a30595-018b-47d8-a140-ce7b80420bed"
+type = "fix"
+description = "Derive the Hugo theme name from a Git URL by removing only the `.git` suffix and the `hugo-` prefix."
+author = "@bardrop"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/377"
