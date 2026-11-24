@@ -41,7 +41,7 @@ from pydoc_markdown.interfaces import (
     SourceLinker,
 )
 from pydoc_markdown.util.docspec import ApiSuite, format_function_signature, is_method
-from pydoc_markdown.util.misc import escape_except_blockquotes
+from pydoc_markdown.util.misc import escape_curly_brackets, escape_except_blockquotes
 from pydoc_markdown.util.reference_links import namespace_reference_links
 
 
@@ -212,6 +212,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
 
     #: Escape html in docstring. Default to False.
     escape_html_in_docstring: bool = False
+
+    #: Escape `{` and `}` in docstrings, except inside code blocks and inline code. Enable this when the output is
+    #: compiled as MDX v2 or later (e.g. Docusaurus v3), which otherwise parses braces as JavaScript expressions.
+    escape_curly_braces_in_docstring: bool = False
 
     #: Markdown resolves a reference-style link (`[text][label]`) against the first `[label]: url` definition on the
     #: page, so when two docstrings on the same page define the same label, the second one's links point to the first
@@ -395,6 +399,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             docstring = (docstrings or {}).get(id(obj), obj.docstring.content)
             if self.escape_html_in_docstring:
                 docstring = escape_except_blockquotes(docstring)
+            if self.escape_curly_braces_in_docstring:
+                docstring = escape_curly_brackets(docstring)
             lines = docstring.split("\n")
             if self.docstrings_as_blockquote:
                 lines = ["> " + x for x in lines]
