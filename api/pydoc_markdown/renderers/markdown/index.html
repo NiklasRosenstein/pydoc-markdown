@@ -1407,6 +1407,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#namespace_reference_links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        namespace_reference_links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace_reference_links_in_objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        namespace_reference_links_in_objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#render_novella_anchors" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2136,6 +2158,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#namespace_reference_links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        namespace_reference_links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace_reference_links_in_objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        namespace_reference_links_in_objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#render_novella_anchors" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2256,7 +2300,7 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MarkdownRenderer</span><span class="p">(</span><span class="n">Renderer</span><span class="p">,</span> <span class="n">SinglePageRenderer</span><span class="p">,</span> <span class="n">SingleObjectRenderer</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L52">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L53">[view_source]</a></p>
 <p>Produces Markdown files. This renderer is often used by other renderers, such as
 <a href="/pydoc-markdown/api/pydoc_markdown/renderers/mkdocs#pydoc:pydoc_markdown.contrib.renderers.mkdocs.MkdocsRenderer">MkdocsRenderer</a> and <a href="/pydoc-markdown/api/pydoc_markdown/renderers/hugo#pydoc:pydoc_markdown.contrib.renderers.hugo.HugoRenderer">HugoRenderer</a>. It provides a wide variety of options to customize
 the generated Markdown files.</p>
@@ -2439,6 +2483,20 @@ file if a <a href="#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRend
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.escape_html_in_docstring"></a></p>
 <h4 id="escape_html_in_docstring">escape_html_in_docstring</h4>
 <p>Escape html in docstring. Default to False.</p>
+<p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.namespace_reference_links"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.namespace_reference_links"></a></p>
+<h4 id="namespace_reference_links">namespace_reference_links</h4>
+<p>Markdown resolves a reference-style link (<code>[text][label]</code>) against the first <code>[label]: url</code> definition on the
+page, so when two docstrings on the same page define the same label, the second one's links point to the first
+one's target. This option renames such labels per docstring (to <code>&lt;dotted.name&gt;--&lt;label&gt;</code>) when rendering a whole
+page. A label is only renamed in a docstring that both defines and uses it, and never if another docstring on
+the page uses the label without defining it.</p>
+<p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.namespace_reference_links_in_objects"></a></p>
+<p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.namespace_reference_links_in_objects"></a></p>
+<h4 id="namespace_reference_links_in_objects">namespace_reference_links_in_objects</h4>
+<p>Like <a href="#pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.namespace_reference_links">namespace_reference_links</a>, but for objects that are rendered individually (e.g. with Novella). The
+renderer cannot see the rest of the page in that case, so every label that a docstring both defines and uses is
+renamed, which breaks links in other objects on the page that rely on that definition.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.render_novella_anchors"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownRenderer.render_novella_anchors"></a></p>
 <h4 id="render_novella_anchors">render_novella_anchors</h4>
@@ -2462,7 +2520,7 @@ a file relative to the context directory (usually the working directory).</p>
 <h4 id="get_resolver">get_resolver</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_resolver</span><span class="p">(</span><span class="n">modules</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">Module</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Resolver</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L485">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L512">[view_source]</a></p>
 <p>Returns a simple <a href="/pydoc-markdown/api/pydoc_markdown/interfaces#pydoc:pydoc_markdown.interfaces.Resolver">Resolver</a> implementation. Finds cross-references in the same file.</p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver"></a></p>
@@ -2470,14 +2528,14 @@ a file relative to the context directory (usually the working directory).</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MarkdownReferenceResolver</span><span class="p">(</span><span class="n">Resolver</span><span class="p">,</span> <span class="n">ResolverV2</span><span class="p">)</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L508">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L535">[view_source]</a></p>
 <p><a id="pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver.resolve_reference"></a></p>
 <p><a id="pydoc:pydoc_markdown.contrib.renderers.markdown.MarkdownReferenceResolver.resolve_reference"></a></p>
 <h4 id="resolve_reference">resolve_reference</h4>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_reference</span><span class="p">(</span><span class="n">suite</span><span class="p">:</span> <span class="n">ApiSuite</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">docspec</span><span class="o">.</span><span class="n">ApiObject</span><span class="p">,</span>
                       <span class="n">ref</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">docspec</span><span class="o">.</span><span class="n">ApiObject</span><span class="p">]</span>
 </code></pre></div>
-<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L547">[view_source]</a></p>
+<p><a href="https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/docs/../src/pydoc_markdown/contrib/renderers/markdown.py#L574">[view_source]</a></p>
 <p>Resolves the reference by searching in the members of <em>scope</em> or any of its parents.</p>
 
 
