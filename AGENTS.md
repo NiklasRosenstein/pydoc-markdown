@@ -19,14 +19,17 @@ Important locations:
 - `docs/`: Novella/MkDocs documentation source.
 - `examples/`: example integrations; do not treat them as the primary package.
 - `pyproject.toml`: authoritative dependency, entry-point, and tool configuration.
+- `uv.lock`: locked development dependencies; update it with `uv lock` when dependencies change.
+- `mise.toml`: pinned toolchain (uv, towncrier) and project tasks.
+- `CHANGELOG.md` and `changelog.d/`: compiled changelog and unreleased towncrier fragments.
 
 ## Working guidelines
 
 - Keep changes narrowly scoped and preserve existing public behavior unless the
   task explicitly requires a compatibility break.
 - Inspect the relevant interface and nearby implementation before changing a
-  plugin. When adding a built-in plugin, keep the Poetry entry-point tables in
-  `pyproject.toml` in sync.
+  plugin. When adding a built-in plugin, keep the `[project.entry-points]` tables
+  in `pyproject.toml` in sync.
 - Maintain Python 3.10 compatibility. Avoid syntax introduced in later Python
   versions unless the compatibility floor is intentionally raised.
 - Follow the existing typing style, including `typing` imported as `t` where
@@ -59,7 +62,7 @@ pytest test/renderers/test_markdown.py -vv
 Before handing off a code change, run the canonical project checks:
 
 ```sh
-slap test
+mise run test
 ```
 
 The configured suite runs pytest with coverage, mypy, Ruff lint checks, and Ruff
@@ -69,29 +72,31 @@ plus the affected static checks and report what was not run.
 Useful project commands:
 
 ```sh
-slap install --no-venv-check
-slap run fmt
-slap run docs:build
-ruff check src test
-ruff format --check src test
+mise run install       # uv sync
+mise run fmt
+mise run docs:build
+uv run ruff check src test
+uv run ruff format --check src test
 ```
 
-Documentation builds require the docs extras, matching CI:
-
-```sh
-slap install --extras docs --no-venv-check
-```
+If mise is unavailable, run the commands from the task definitions in `mise.toml`
+directly with `uv run`. Documentation builds use the `docs` dependency group in a
+separate `.venv-docs` environment because it conflicts with the `dev` group;
+`mise run docs:build` takes care of that.
 
 ## Changelog
 
-Non-trivial changes should include a Slam changelog entry. Create one with:
+Non-trivial changes should include a towncrier changelog fragment in
+`changelog.d/`. Create one with:
 
 ```sh
-slap changelog add -t <type> -d <description>
+mise run changelog:add <pr-number>.<type>.md --content "<description> (@author)"
 ```
 
-Use a concise user-facing description and an appropriate existing type. Do not
-manually add a pull-request URL; CI fills it in after the pull request exists.
+Types are `breaking`, `feature`, `improvement`, `fix`, `docs`, `tests`, and
+`hygiene`. Use a concise user-facing description. If the pull request number is
+not known yet, name the fragment `+<slug>.<type>.md` and rename it once the pull
+request exists; the pull-request link is generated from the file name.
 Trivial changes may omit an entry when they would use the repository's
 `no changelog` exception.
 
@@ -101,5 +106,5 @@ Before completing work:
 
 1. Review the diff for accidental or generated-file changes.
 2. Confirm new code remains compatible with Python 3.10.
-3. Run focused tests and, when practical, `slap test`.
+3. Run focused tests and, when practical, `mise run test`.
 4. Ensure documentation and changelog coverage match the user-visible impact.
