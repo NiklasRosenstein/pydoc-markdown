@@ -106,7 +106,7 @@ class HugoThemeGitUrl(HugoTheme):
 
     @property
     def name(self):
-        return posixpath.basename(self.clone_url).rstrip(".git").lstrip("hugo-")
+        return posixpath.basename(self.clone_url).removesuffix(".git").removeprefix("hugo-")
 
     def install(self, theme_dir: str):
         dst = os.path.join(theme_dir, self.name)

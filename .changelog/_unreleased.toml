@@ -117,6 +117,13 @@ issues = [
 ]
 
 [[entries]]
+id = "86a30595-018b-47d8-a140-ce7b80420bed"
+type = "fix"
+description = "Derive the Hugo theme name from a Git URL by removing only the `.git` suffix and the `hugo-` prefix."
+author = "@bardrop"
+pr = "https://github.com/NiklasRosenstein/pydoc-markdown/pull/377"
+
+[[entries]]
 id = "eb94b1fa-1a25-4b01-9402-901c5a05b06b"
 type = "fix"
 description = "When rendering a page, rename reference-style link labels that more than one docstring defines, so their links no longer point to the first definition. Set `namespace_reference_links: false` to disable, or `namespace_reference_links_in_objects: true` to also rename labels in individually rendered objects (e.g. Novella)."
