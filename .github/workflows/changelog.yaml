@@ -1,28 +1,20 @@
-# This workflow will run on every pull request to the develop branch to do the following:
-#
-# - Insert the Pull Request URL into new changelog entries.
-# - Assert that a new changelog entry has been added in the PR unless a "no changelog" label is added to the PR.
+# Assert that a pull request to the develop branch adds at least one towncrier changelog fragment to
+# `changelog.d/`, unless the pull request has the "no changelog" label.
 
 name: "Changelog"
 
 on:
-  pull_request_target: { branches: [ "develop" ] }
+  pull_request:
+    branches: [ "develop" ]
+    types: [ opened, synchronize, reopened, labeled, unlabeled ]
 
 jobs:
-  changelog-update:
-    name: "Insert Pull Request URL into new changelog entries"
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request_target'
-    steps:
-      - uses: actions/checkout@v6
-      - uses: NiklasRosenstein/slap@gha/changelog/update/v2
-        with: { pr-id: '${{ github.event.pull_request.number }}' }
-
   assert-new-changelog-entries:
     name: "At least one new changelog entry must be added"
     runs-on: ubuntu-latest
-    if: github.base_ref != '' && !contains(github.event.pull_request.labels.*.name, 'no changelog')
+    if: "!contains(github.event.pull_request.labels.*.name, 'no changelog')"
     steps:
       - uses: actions/checkout@v6
-      - uses: NiklasRosenstein/slap@gha/changelog/assert-added/v2
-        with: { pr-id: '${{ github.event.pull_request.number }}' }
+        with: { fetch-depth: 0 }
+      - uses: jdx/mise-action@v3
+      - run: towncrier check --compare-with "origin/${{ github.base_ref }}"
