@@ -19,14 +19,17 @@ jobs:
         python-version: [ "3.10", "3.11", "3.12", "3.13", "3.14", "3.x" ]
     steps:
     - uses: actions/checkout@v6
-    - uses: NiklasRosenstein/slap@gha/install/v1
     - name: Set up Python ${{ matrix.python-version }}
+      id: python
       uses: actions/setup-python@v6
       with: { python-version: "${{ matrix.python-version }}" }
+    - name: Use Python ${{ matrix.python-version }} for uv
+      run: echo "UV_PYTHON=${{ steps.python.outputs.python-path }}" >> "$GITHUB_ENV"
+    - uses: jdx/mise-action@v3
     - name: Install
-      run: slap install --no-venv-check
+      run: mise run install
     - name: Test
-      run: slap test
+      run: mise run test
 
   compatibility:
     name: Runtime config (Python ${{ matrix.python-version }}, Databind ${{ matrix.databind-version }})
@@ -64,11 +67,9 @@ jobs:
     - name: Checkout branch if PR
       if: github.event_name == 'pull_request'
       run: git checkout -b $GITHUB_HEAD_REF
-    - uses: NiklasRosenstein/slap@gha/install/v1
-    - name: Install
-      run: slap install --extras docs --no-venv-check
+    - uses: jdx/mise-action@v3
     - name: Build documentation
-      run: cd docs && novella --base-url pydoc-markdown/
+      run: mise run docs:build
     - uses: JamesIves/github-pages-deploy-action@v4.8.0
       if: github.ref == 'refs/heads/develop'
       with: { branch: gh-pages, folder: docs/_site, ssh-key: "${{ secrets.DEPLOY_KEY }}" }

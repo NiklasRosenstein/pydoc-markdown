@@ -1,81 +1,60 @@
-[tool.poetry]
+[project]
 name = "pydoc-markdown"
 version = "4.8.2"
 description = "Create Python API documentation in Markdown format."
-authors = ["Niklas Rosenstein <rosensteinniklas@gmail.com>"]
+authors = [{ name = "Niklas Rosenstein", email = "rosensteinniklas@gmail.com" }]
 license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
-packages = [{ include = "pydoc_markdown", from = "src" }]
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
     "Topic :: Software Development :: Code Generators",
     "Topic :: Utilities",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
 ]
 keywords = ["documentation", "docs", "generator", "markdown", "pydoc"]
+dependencies = [
+    "click>=7.1,<9.0",
+    "databind>=4.5.0,<5.0.0",
+    # docspec still requires these proxy distributions. Exclude their broken 4.5.2
+    # release until it migrates to the consolidated Databind package.
+    "databind-core>=4.5.0,<5.0.0,!=4.5.2",
+    "databind-json>=4.5.0,<5.0.0,!=4.5.2",
+    "docspec>=2.2.1,<3.0.0",
+    "docspec-python>=2.2.1,<3.0.0",
+    "docstring-parser>=0.18.0,<0.19.0",
+    "nr.util>=0.7.5,<1.0.0",
+    "jinja2>=3.0.0,<4.0.0",
+    "requests>=2.23.0,<3.0.0",
+    "PyYAML>=5.0,<7.0",
+    "tomli>=2.0.0,<3.0.0",
+    "tomli_w>=1.0.0,<2.0.0",
+    "typeapi>=2.3.0,<3.0.0",
+    "yapf>=0.30.0",
+    "watchdog",
+]
 
-[tool.poetry.urls]
+[project.urls]
 Homepage = "https://github.com/NiklasRosenstein/pydoc-markdown"
+Documentation = "https://niklasrosenstein.github.io/pydoc-markdown/"
+Changelog = "https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/CHANGELOG.md"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-click = ">=7.1,<9.0"
-databind = ">=4.5.0,<5.0.0"
-# docspec still requires these proxy distributions. Exclude their broken 4.5.2
-# release until it migrates to the consolidated Databind package.
-databind-core = ">=4.5.0,<5.0.0,!=4.5.2"
-databind-json = ">=4.5.0,<5.0.0,!=4.5.2"
-docspec = "^2.2.1"
-docspec-python = "^2.2.1"
-docstring-parser = "^0.18.0"
-"nr.util" = ">=0.7.5,<1.0.0"
-jinja2 = "^3.0.0"
-requests = "^2.23.0"
-PyYAML = ">=5.0,<7.0"
-tomli = "^2.0.0"
-tomli_w = "^1.0.0"
-typeapi = ">=2.3.0,<3.0.0"
-yapf = ">=0.30.0"
-watchdog = "*"
-
-[tool.poetry.dev-dependencies]
-pytest = "==9.2.0"
-pytest-cov = "==7.1.0"
-mypy = "==2.4.1"
-types-deprecated = "==1.3.1.20260928"
-types-requests = "==2.33.0.20261030"
-types-PyYAML = "==6.0.12.20261113"
-ruff = "==0.17.6"
-
-[tool.poetry.group.novella]
-optional = true
-
-[tool.poetry.group.novella.dependencies]
-novella = { version = " >=0.1.10,<0.3.0" }
-
-[tool.poetry.group.docs]
-optional = true
-
-[tool.poetry.group.docs.dependencies]
-novella = { version = " >=0.1.10,<0.3.0" }
-mkdocs = "*"
-mkdocs-material = "*"
-
-[tool.poetry.scripts]
+[project.scripts]
 pydoc-markdown = "pydoc_markdown.main:cli"
 
-[tool.poetry.plugins."pydoc_markdown.interfaces.Loader"]
+[project.entry-points."pydoc_markdown.interfaces.Loader"]
 python = "pydoc_markdown.contrib.loaders.python:PythonLoader"
 
-[tool.poetry.plugins."pydoc_markdown.interfaces.Processor"]
+[project.entry-points."pydoc_markdown.interfaces.Processor"]
 crossref = "pydoc_markdown.contrib.processors.crossref:CrossrefProcessor"
 filter = "pydoc_markdown.contrib.processors.filter:FilterProcessor"
 google = "pydoc_markdown.contrib.processors.google:GoogleProcessor"
@@ -83,46 +62,103 @@ pydocmd = "pydoc_markdown.contrib.processors.pydocmd:PydocmdProcessor"
 smart = "pydoc_markdown.contrib.processors.smart:SmartProcessor"
 sphinx = "pydoc_markdown.contrib.processors.sphinx:SphinxProcessor"
 
-[tool.poetry.plugins."pydoc_markdown.interfaces.Renderer"]
+[project.entry-points."pydoc_markdown.interfaces.Renderer"]
 hugo = "pydoc_markdown.contrib.renderers.hugo:HugoRenderer"
 markdown = "pydoc_markdown.contrib.renderers.markdown:MarkdownRenderer"
 mkdocs = "pydoc_markdown.contrib.renderers.mkdocs:MkdocsRenderer"
 docusaurus = "pydoc_markdown.contrib.renderers.docusaurus:DocusaurusRenderer"
 jinja2 = "pydoc_markdown.contrib.renderers.jinja2:Jinja2Renderer"
 
-[tool.poetry.plugins."pydoc_markdown.interfaces.SourceLinker"]
+[project.entry-points."pydoc_markdown.interfaces.SourceLinker"]
 git = "pydoc_markdown.contrib.source_linkers.git:GitSourceLinker"
 github = "pydoc_markdown.contrib.source_linkers.git:GithubSourceLinker"
 gitlab = "pydoc_markdown.contrib.source_linkers.git:GitlabSourceLinker"
 gitea = "pydoc_markdown.contrib.source_linkers.git:GiteaSourceLinker"
 bitbucket = "pydoc_markdown.contrib.source_linkers.git:BitbucketSourceLinker"
 
-[tool.poetry.plugins."novella.markdown.preprocessors"]
+[project.entry-points."novella.markdown.preprocessors"]
 pydoc = "pydoc_markdown.novella.preprocessor:PydocTagPreprocessor"
 
+[dependency-groups]
+dev = [
+    "pytest==9.2.0",
+    "pytest-cov==7.1.0",
+    "mypy==2.4.1",
+    "types-deprecated==1.3.1.20260928",
+    "types-requests==2.33.0.20261030",
+    "types-PyYAML==6.0.12.20261113",
+    "ruff==0.17.6",
+    # Test against current watchdog releases; the docs group is resolved separately (see `tool.uv.conflicts`).
+    "watchdog>=6.0.0",
+]
+docs = [
+    "novella>=0.1.10,<0.3.0",
+    "mkdocs",
+    "mkdocs-material",
+    # Novella's plugin loading imports `pkg_resources`, which setuptools 81 removed.
+    "setuptools<81",
+]
+
+[tool.uv]
+# Novella caps watchdog below 3.0. Resolve the docs toolchain separately so the
+# development environment can still use current dependency versions.
+conflicts = [[{ group = "dev" }, { group = "docs" }]]
+
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.11.0,<0.12.0"]
+build-backend = "uv_build"
 
-[tool.slap]
-typed = true
+[tool.towncrier]
+directory = "changelog.d"
+filename = "CHANGELOG.md"
+start_string = "<!-- towncrier release notes start -->\n"
+title_format = "## {version} ({project_date})"
+issue_format = "[#{issue}](https://github.com/NiklasRosenstein/pydoc-markdown/pull/{issue})"
+orphan_prefix = "+"
+underlines = ["", "", ""]
 
-[tool.slap.release]
-tag-format = "v{version}"
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "Breaking changes"
+showcontent = true
 
-[tool.slap.install]
-dev-extras = []
+[[tool.towncrier.type]]
+directory = "feature"
+name = "Features"
+showcontent = true
 
-[tool.slap.test]
-pytest = "pytest src/ test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov -vv"
-mypy = "mypy src/ --check-untyped-defs --namespace-packages --exclude src/pydoc_markdown/novella"
-ruff-check = "ruff check src test"
-ruff-format = "ruff format --check src test"
+[[tool.towncrier.type]]
+directory = "improvement"
+name = "Improvements"
+showcontent = true
 
-[tool.slap.run]
-"docs:build" = "cd docs && novella --base-url pydoc-markdown/"
-"docs:dev" = "cd docs && novella --serve"
-"fmt" = "ruff check --fix src test && ruff format src test"
+[[tool.towncrier.type]]
+directory = "fix"
+name = "Fixes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "docs"
+name = "Documentation"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "tests"
+name = "Tests"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "hygiene"
+name = "Hygiene"
+showcontent = true
+
+[tool.pytest.ini_options]
+testpaths = ["src", "test"]
+
+[tool.mypy]
+check_untyped_defs = true
+namespace_packages = true
+exclude = ["^src/pydoc_markdown/novella/"]
 
 [tool.ruff]
 line-length = 120
