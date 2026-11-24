@@ -42,7 +42,8 @@ If you don't know the pull request number yet, name the fragment `+<some-slug>.<
 request exists. A link to the pull request is added automatically when the changelog is compiled. Preview the result
 with `mise run changelog:preview`.
 
-Trivial changes may skip the changelog by adding the `no changelog` label to the pull request.
+Trivial changes may skip the changelog by adding the `no changelog` label to the pull request. Dependency update pull
+requests opened by Renovate skip the check automatically.
 
 ## Releasing
 

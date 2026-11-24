@@ -1,5 +1,5 @@
 # Assert that a pull request to the develop branch adds at least one towncrier changelog fragment to
-# `changelog.d/`, unless the pull request has the "no changelog" label.
+# `changelog.d/`, unless the pull request has the "no changelog" label or was opened by Renovate.
 
 name: "Changelog"
 
@@ -12,7 +12,9 @@ jobs:
   assert-new-changelog-entries:
     name: "At least one new changelog entry must be added"
     runs-on: ubuntu-latest
-    if: "!contains(github.event.pull_request.labels.*.name, 'no changelog')"
+    if: >-
+      !contains(github.event.pull_request.labels.*.name, 'no changelog')
+      && !contains(fromJSON('["renovate[bot]", "renovate-rosenstein-app[bot]"]'), github.event.pull_request.user.login)
     steps:
       - uses: actions/checkout@v6
         with: { fetch-depth: 0 }
