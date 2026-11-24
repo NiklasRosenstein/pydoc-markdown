@@ -42,6 +42,7 @@ from pydoc_markdown.interfaces import (
 )
 from pydoc_markdown.util.docspec import ApiSuite, format_function_signature, is_method
 from pydoc_markdown.util.misc import escape_curly_brackets, escape_except_blockquotes
+from pydoc_markdown.util.reference_links import namespace_reference_links
 
 
 def dotted_name(obj: docspec.ApiObject) -> str:
@@ -216,6 +217,18 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     #: compiled as MDX v2 or later (e.g. Docusaurus v3), which otherwise parses braces as JavaScript expressions.
     escape_curly_braces_in_docstring: bool = False
 
+    #: Markdown resolves a reference-style link (`[text][label]`) against the first `[label]: url` definition on the
+    #: page, so when two docstrings on the same page define the same label, the second one's links point to the first
+    #: one's target. This option renames such labels per docstring (to `<dotted.name>--<label>`) when rendering a whole
+    #: page. A label is only renamed in a docstring that both defines and uses it, and never if another docstring on
+    #: the page uses the label without defining it.
+    namespace_reference_links: bool = True
+
+    #: Like #namespace_reference_links, but for objects that are rendered individually (e.g. with Novella). The
+    #: renderer cannot see the rest of the page in that case, so every label that a docstring both defines and uses is
+    #: renamed, which breaks links in other objects on the page that rely on that definition.
+    namespace_reference_links_in_objects: bool = False
+
     #: Render Novella `@anchor` tags before headings.
     render_novella_anchors: bool = False
 
@@ -358,7 +371,13 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         fp.write(code)
         fp.write("\n```\n\n")
 
-    def _render_object(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
+    def _render_object(
+        self,
+        fp: t.TextIO,
+        level: int,
+        obj: docspec.ApiObject,
+        docstrings: t.Optional[t.Dict[int, str]] = None,
+    ):
         if not isinstance(obj, docspec.Module) or self.render_module_header:
             self._render_header(fp, level, obj)
 
@@ -377,11 +396,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
                 fp.write(source_string + "\n\n")
 
         if obj.docstring:
-            docstring = (
-                escape_except_blockquotes(obj.docstring.content)
-                if self.escape_html_in_docstring
-                else obj.docstring.content
-            )
+            docstring = (docstrings or {}).get(id(obj), obj.docstring.content)
+            if self.escape_html_in_docstring:
+                docstring = escape_except_blockquotes(docstring)
             if self.escape_curly_braces_in_docstring:
                 docstring = escape_curly_brackets(docstring)
             lines = docstring.split("\n")
@@ -390,11 +407,17 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             fp.write("\n".join(lines))
             fp.write("\n\n")
 
-    def _render_recursive(self, fp: t.TextIO, level: int, obj: docspec.ApiObject):
-        self._render_object(fp, level, obj)
+    def _render_recursive(
+        self,
+        fp: t.TextIO,
+        level: int,
+        obj: docspec.ApiObject,
+        docstrings: t.Optional[t.Dict[int, str]] = None,
+    ):
+        self._render_object(fp, level, obj, docstrings)
         level += 1
         for member in getattr(obj, "members", []):
-            self._render_recursive(fp, level, member)
+            self._render_recursive(fp, level, member, docstrings)
 
     def _get_title(self, obj: docspec.ApiObject) -> str:
         title = obj.name
@@ -478,13 +501,17 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
             for m in modules:
                 self._render_toc(fp, 0, m)
             fp.write("\n")
+        docstrings = namespace_reference_links(modules, dotted_name) if self.namespace_reference_links else None
         for m in modules:
-            self._render_recursive(fp, 1, m)
+            self._render_recursive(fp, 1, m, docstrings)
 
     # SingleObjectRenderer
 
     def render_object(self, fp: t.TextIO, obj: docspec.ApiObject, options: t.Dict[str, t.Any]) -> None:
-        self._render_recursive(fp, 0, obj)
+        docstrings = None
+        if self.namespace_reference_links_in_objects:
+            docstrings = namespace_reference_links([obj], dotted_name, rename_unique=True)
+        self._render_recursive(fp, 0, obj, docstrings)
 
     # Renderer
 
