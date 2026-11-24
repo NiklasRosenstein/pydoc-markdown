@@ -43,7 +43,7 @@ request exists. A link to the pull request is added automatically when the chang
 with `mise run changelog:preview`.
 
 Trivial changes may skip the changelog by adding the `no changelog` label to the pull request. Dependency update pull
-requests opened by Renovate skip the check automatically.
+requests opened by Renovate get this label automatically.
 
 ## Releasing
 
