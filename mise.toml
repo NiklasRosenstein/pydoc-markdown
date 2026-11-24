@@ -1,0 +1,89 @@
+# Development toolchain and task runner. See https://mise.jdx.dev/.
+#
+# uv manages Python interpreters, the virtual environment, and the lock file. Run `mise install` once,
+# then use `mise run <task>` (or `mise tasks` to list them).
+
+[tools]
+uv = "0.11.32"
+"pipx:towncrier" = "26.9.0"
+
+[tasks.install]
+description = "Create or update the development virtual environment"
+run = "uv sync"
+
+[tasks.test]
+description = "Run all checks: pytest, mypy, Ruff lint and Ruff format"
+depends = ["test:pytest", "test:mypy", "test:ruff-check", "test:ruff-format"]
+
+[tasks."test:pytest"]
+description = "Run the test suite with coverage (extra arguments are passed to pytest)"
+run = "uv run pytest src/ test/ --cov=./src/pydoc_markdown --cov-report html:htmlcov -vv"
+
+[tasks."test:mypy"]
+description = "Type-check the package"
+run = "uv run mypy src/"
+
+[tasks."test:ruff-check"]
+description = "Lint with Ruff"
+run = "uv run ruff check src test"
+
+[tasks."test:ruff-format"]
+description = "Check formatting with Ruff"
+run = "uv run ruff format --check src test"
+
+[tasks.fmt]
+description = "Apply Ruff fixes and formatting"
+run = ["uv run ruff check --fix src test", "uv run ruff format src test"]
+
+[tasks."docs:build"]
+description = "Build the documentation into docs/_site"
+dir = "docs"
+# Novella pins an older watchdog, so the docs toolchain gets its own environment (see `tool.uv.conflicts`).
+env = { UV_PROJECT_ENVIRONMENT = "{{config_root}}/.venv-docs" }
+run = "uv run --no-default-groups --group docs novella --base-url pydoc-markdown/"
+
+[tasks."docs:dev"]
+description = "Serve the documentation with live reload"
+dir = "docs"
+env = { UV_PROJECT_ENVIRONMENT = "{{config_root}}/.venv-docs" }
+run = "uv run --no-default-groups --group docs novella --serve"
+
+[tasks."changelog:add"]
+description = "Create a changelog fragment, e.g. `mise run changelog:add 123.fix.md --content 'Fix ...'`"
+run = "towncrier create"
+
+[tasks."changelog:check"]
+description = "Check that the current branch adds a changelog fragment"
+run = "towncrier check --compare-with origin/develop"
+
+[tasks."changelog:preview"]
+description = "Print the changelog section for the unreleased fragments"
+run = "towncrier build --draft --version Unreleased"
+
+[tasks.build]
+description = "Build the sdist and wheel into dist/"
+run = "uv build"
+
+[tasks.release]
+description = "Bump the version, compile the changelog, then commit and tag the release"
+usage = 'arg "<bump>" help="Version component to bump, passed to `uv version --bump` (major, minor, patch, ...)"'
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "error: the working tree has uncommitted changes" >&2
+  exit 1
+fi
+
+uv version --bump "$usage_bump"
+version="$(uv version --short)"
+sed -i.bak -E "s/^__version__ = \".*\"$/__version__ = \"$version\"/" src/pydoc_markdown/__init__.py
+rm src/pydoc_markdown/__init__.py.bak
+towncrier build --yes --version "$version"
+
+git add -A pyproject.toml uv.lock src/pydoc_markdown/__init__.py CHANGELOG.md changelog.d
+git commit -m "release $version"
+git tag -a "v$version" -m "v$version"
+echo "Tagged v$version. Push with: git push --follow-tags"
+'''
