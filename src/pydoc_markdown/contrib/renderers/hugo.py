@@ -33,6 +33,7 @@ import sys
 import tarfile
 import tempfile
 import typing as t
+import zipfile
 from urllib.parse import urljoin, urlparse
 
 import docspec
@@ -275,6 +276,8 @@ class HugoRenderer(Renderer, Server, Builder):
         hugo_bin = shutil.which("hugo")
         if not hugo_bin and self.get_hugo.enabled:
             hugo_bin = os.path.abspath(os.path.join(self.build_directory, ".bin", "hugo"))
+            if sys.platform.startswith("win32"):
+                hugo_bin += ".exe"
             if not os.path.isfile(hugo_bin):
                 install_hugo(hugo_bin, self.get_hugo.version, self.get_hugo.extended)
         if not hugo_bin:
@@ -366,7 +369,7 @@ class HugoRenderer(Renderer, Server, Builder):
 
 def install_hugo(to: str, version: str | None = None, extended: bool = True) -> None:
     """
-    Downloads the latest release of *Hugo* from [Github](https://github.com/gohugoio/hugo/releases)
+    Downloads a release of *Hugo* from [Github](https://github.com/gohugoio/hugo/releases)
     and places it at the path specified by *to*. This will install the extended version if it is
     available and *extended* is set to `True`.
 
@@ -375,58 +378,106 @@ def install_hugo(to: str, version: str | None = None, extended: bool = True) -> 
     :param extended: Whether to download the "Hugo extended" version. Defaults to True.
     """
 
-    # TODO (@NiklasRosenstein): Support BSD platforms.
-
-    if sys.platform.startswith("linux"):
-        platform = "Linux"
-    elif sys.platform.startswith("win32"):
-        platform = "Windows"
-    elif sys.platform.startswith("darwin"):
-        platform = "macOS"
-    else:
-        raise EnvironmentError("unsure how to get a Hugo binary for platform {!r}".format(sys.platform))
-
-    machine = _platform.machine().lower()
-    if machine in ("x86_64", "amd64", "arm64"):
-        arch = "64bit"
-    elif machine in ("i386",):
-        arch = "32bit"
-    else:
-        raise EnvironmentError("unsure whether to interpret {!r} as 32- or 64-bit.".format(machine))
-
-    releases = get_github_releases("gohugoio/hugo")
     if version:
         version = version.lstrip("v")
-        for release in releases:
-            if release["tag_name"].lstrip("v") == version:
-                break
-        else:
+        response = requests.get(f"{_HUGO_RELEASES_API}/tags/v{version}")
+        if response.status_code == 404:
             raise ValueError("no Hugo release for version {!r} found".format(version))
     else:
-        release = next(releases)
-        version = release["tag_name"].lstrip("v")
+        response = requests.get(f"{_HUGO_RELEASES_API}/latest")
+    response.raise_for_status()
+    release = response.json()
+    version = release["tag_name"].lstrip("v")
 
     files = {asset["name"]: asset["browser_download_url"] for asset in release["assets"]}
-
-    hugo_archive = "hugo_{}_{}-{}.tar.gz".format(version, platform, arch)
-    hugo_extended_archive = "hugo_extended_{}_{}-{}.tar.gz".format(version, platform, arch)
-    if extended and hugo_extended_archive in files:
-        filename = hugo_extended_archive
-    else:
-        filename = hugo_archive
+    filename = select_hugo_asset(files, version, sys.platform, _platform.machine(), extended)
+    if filename is None:
+        raise EnvironmentError(
+            "Hugo v{} has no downloadable archive for platform {!r} and machine {!r}; install Hugo yourself and "
+            "make sure it is on your PATH.".format(version, sys.platform, _platform.machine())
+        )
 
     logger.info('Downloading Hugo v%s from "%s"', version, files[filename])
     os.makedirs(os.path.dirname(to), exist_ok=True)
     with tempfile.TemporaryDirectory() as tempdir:
         path = os.path.join(tempdir, filename)
-        with open(path, "wb") as fp:
-            shutil.copyfileobj(requests.get(files[filename], stream=True).raw, fp)
-        with tarfile.open(path) as archive:
-            with open(to, "wb") as fp:
-                shutil.copyfileobj(t.cast(t.IO[bytes], archive.extractfile("hugo")), t.cast(t.IO[bytes], fp))  # type: ignore[misc]  # See https://github.com/python/mypy/issues/15031  # noqa: E501
+        with requests.get(files[filename], stream=True) as download:
+            download.raise_for_status()
+            with open(path, "wb") as fp:
+                for chunk in download.iter_content(chunk_size=1 << 16):
+                    fp.write(chunk)
+        _extract_hugo_binary(path, to)
 
     chmod.update(to, "+x")
     logger.info('Hugo v%s installed to "%s"', version, to)
+
+
+_HUGO_RELEASES_API = "https://api.github.com/repos/gohugoio/hugo/releases"
+
+#: Names that Hugo release assets use for each platform, in order of preference. Hugo switched from names like
+#: `Linux-64bit` to `linux-amd64` in v0.103.0.
+_HUGO_PLATFORM_NAMES = {
+    "linux": ["linux", "Linux"],
+    "darwin": ["darwin", "macOS"],
+    "win32": ["windows", "Windows"],
+    "freebsd": ["freebsd", "FreeBSD"],
+    "openbsd": ["openbsd", "OpenBSD"],
+    "netbsd": ["netbsd", "NetBSD"],
+}
+
+_HUGO_ARCH_NAMES = {
+    "x86_64": ["amd64", "64bit"],
+    "amd64": ["amd64", "64bit"],
+    "arm64": ["arm64", "ARM64"],
+    "aarch64": ["arm64", "ARM64"],
+    "i386": ["386", "32bit"],
+    "i686": ["386", "32bit"],
+    "x86": ["386", "32bit"],
+}
+
+
+def select_hugo_asset(
+    assets: t.Collection[str], version: str, platform: str, machine: str, extended: bool = True
+) -> t.Optional[str]:
+    """
+    Returns the name of the Hugo release asset to download for the given *platform* (as in #sys.platform) and
+    *machine* (as in #platform.machine()), or `None` if the release has no suitable archive.
+    """
+
+    platform_key = next((key for key in _HUGO_PLATFORM_NAMES if platform.startswith(key)), None)
+    if platform_key is None:
+        return None
+    platforms = _HUGO_PLATFORM_NAMES[platform_key]
+    archs = list(_HUGO_ARCH_NAMES.get(machine.lower(), []))
+    if platform_key == "darwin":
+        archs.insert(0, "universal")
+
+    prefixes = ["hugo_extended_", "hugo_"] if extended else ["hugo_"]
+    for prefix in prefixes:
+        for platform_name in platforms:
+            for arch in archs:
+                for suffix in (".tar.gz", ".zip"):
+                    candidate = "{}{}_{}-{}{}".format(prefix, version, platform_name, arch, suffix)
+                    if candidate in assets:
+                        return candidate
+    return None
+
+
+def _extract_hugo_binary(archive_path: str, to: str) -> None:
+    if archive_path.endswith(".zip"):
+        with zipfile.ZipFile(archive_path) as zip_archive:
+            member = next((name for name in ("hugo.exe", "hugo") if name in zip_archive.namelist()), None)
+            if member is None:
+                raise RuntimeError("no Hugo binary found in {!r}".format(archive_path))
+            with zip_archive.open(member) as src, open(to, "wb") as dst:
+                shutil.copyfileobj(src, dst)
+    else:
+        with tarfile.open(archive_path) as tar_archive:
+            src_fp = tar_archive.extractfile("hugo")
+            if src_fp is None:
+                raise RuntimeError("no Hugo binary found in {!r}".format(archive_path))
+            with src_fp, open(to, "wb") as dst:
+                shutil.copyfileobj(src_fp, dst)
 
 
 def get_github_releases(repo: str) -> t.Generator[dict, None, None]:
@@ -437,10 +488,9 @@ def get_github_releases(repo: str) -> t.Generator[dict, None, None]:
     url: t.Optional[str] = "https://api.github.com/repos/{}/releases".format(repo)
     while url:
         response = requests.get(url)
+        response.raise_for_status()
         link = response.headers.get("Link")
-        assert link
-        links = parse_links_header(link)
-        url = links.get("next")
+        url = parse_links_header(link).get("next") if link else None
         yield from response.json()
 
 
