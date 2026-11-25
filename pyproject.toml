@@ -95,7 +95,7 @@ docs = [
     "mkdocs",
     "mkdocs-material",
     # Novella's plugin loading imports `pkg_resources`, which setuptools 81 removed.
-    "setuptools<81",
+    "setuptools<85",
 ]
 
 [tool.uv]
