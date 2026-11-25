@@ -8,8 +8,8 @@ nav:
     - Docstrings and processors: guides/docstrings.md
     - Static site generators: guides/static-site-generators.md
     - Source links: guides/source-links.md
-    - Novella integration: guides/novella.md
     - Python API: guides/python-api.md
+    - Novella integration (deprecated): guides/novella.md
   - Recipes:
     - Read the Docs: recipes/readthedocs.md
     - Hugo baseURL per version: recipes/hugo-base-url.md
@@ -24,7 +24,7 @@ nav:
       - Docusaurus: reference/renderers/docusaurus.md
       - Jinja2: reference/renderers/jinja2.md
     - Source linkers: reference/source-linkers.md
-    - Novella plugin: reference/novella.md
+    - Novella plugin (deprecated): reference/novella.md
     - PydocMarkdown: reference/pydoc-markdown.md
     - Plugin interfaces: reference/interfaces.md
   - Project:

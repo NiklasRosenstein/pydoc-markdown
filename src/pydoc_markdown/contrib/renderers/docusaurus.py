@@ -34,13 +34,13 @@ class CustomizedMarkdownRenderer(MarkdownRenderer):
 @dataclasses.dataclass
 class DocusaurusRenderer(Renderer):
     """
-    Produces Markdown files and a `sidebar.json` file for use in a [Docusaurus v2][1] websites.
+    Produces Markdown files and a `sidebar.json` file for use in a [Docusaurus][1] website.
     It creates files in a fixed layout that reflects the structure of the documented packages.
     The files will be rendered into the directory specified with the #docs_base_path option.
 
     Check out the complete [Docusaurus example on GitHub][2].
 
-    [1]: https://v2.docusaurus.io/
+    [1]: https://docusaurus.io/
     [2]: https://github.com/NiklasRosenstein/pydoc-markdown/tree/develop/examples/docusaurus
 
     ### Options
@@ -113,7 +113,7 @@ class DocusaurusRenderer(Renderer):
         """
         Render sidebar configuration in a JSON file. See Docusaurus sidebar structure:
 
-        https://v2.docusaurus.io/docs/docs-introduction/#sidebar
+        https://docusaurus.io/docs/sidebar
         """
         sidebar: t.Dict[str, t.Any] = {
             "type": "category",
@@ -139,7 +139,7 @@ class DocusaurusRenderer(Renderer):
         """
         Recursively build the sidebar tree, it follows Docusaurus sidebar structure:
 
-        https://v2.docusaurus.io/docs/docs-introduction/#sidebar
+        https://docusaurus.io/docs/sidebar
         """
         sidebar["items"] = module_tree.get("edges", [])
         if os.name == "nt":

@@ -3,14 +3,19 @@
 
   [Novella]: https://niklasrosenstein.github.io/novella/
 
+!!! warning "Deprecated"
+
+    The Novella integration is deprecated and will be removed in a future major release. It emits a `FutureWarning`
+    when used. For new projects, use a [configuration file](configuration.md) with the `mkdocs` or `hugo` renderer;
+    hand-written pages can be included with a page's `source:` option.
+
 [Novella][] is a Markdown pre-processor for static site generators. Pydoc-Markdown ships a Novella plugin that adds
 two tags to your Markdown pages:
 
 * `@pydoc <name>` inserts the generated API documentation for a module, class or function.
 * `\{@pylink <name>}` links to an API object documented elsewhere on the site.
 
-Use this when you want to write your documentation as ordinary Markdown files and embed API docs where they belong. This
-documentation site is built that way.
+It let you write your documentation as ordinary Markdown files and embed API docs where they belong.
 
 ## Installation
 
@@ -86,16 +91,9 @@ novella --serve    # live preview
 @shell novella --help
 ```
 
-## Compared to a configuration file
+## Generating pages with Novella
 
-With a [configuration file](configuration.md), all pages and their API contents are declared in one place and generated.
-With Novella, every page is a real Markdown file:
-
-* **Easier to follow**: the source tree mirrors the site.
-* **Edit links work**: MkDocs' "edit this page" points at a real file.
-* **Mixed content**: prose and generated API docs live on the same page.
-
-If you want generated pages with Novella anyway (see [discussion #254](https://github.com/NiklasRosenstein/pydoc-markdown/discussions/254)),
+To generate pages with Novella (see [discussion #254](https://github.com/NiklasRosenstein/pydoc-markdown/discussions/254)),
 the build script is code, so you can write them before the pre-processor runs:
 
 ```py title="docs/build.novella"

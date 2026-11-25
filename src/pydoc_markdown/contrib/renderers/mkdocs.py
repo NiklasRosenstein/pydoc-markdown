@@ -212,8 +212,11 @@ class MkdocsRenderer(Renderer, Server, Builder):
 
     # Builder
 
-    def build(self, site_dir: str) -> None:
-        command = ["mkdocs", "build", "--clean", "--site-dir", site_dir]
+    def build(self, site_dir: t.Optional[str]) -> None:
+        command = ["mkdocs", "build", "--clean"]
+        if site_dir is not None:
+            # MkDocs runs in the output directory, so make a relative site directory absolute first.
+            command += ["--site-dir", os.path.abspath(site_dir)]
         subprocess.check_call(command, cwd=self.output_directory)
 
     # PluginBase

@@ -203,10 +203,10 @@ class Builder(abc.ABC):
     """
 
     @abc.abstractmethod
-    def build(self, site_dir: str) -> None:
+    def build(self, site_dir: t.Optional[str]) -> None:
         """
         Invoke the build. The *site_dir* is the directory in which the output files should be
-        placed. Otherwise, the directory may be determined by the builder.
+        placed. If it is `None`, the builder uses its default output directory.
         """
 
 

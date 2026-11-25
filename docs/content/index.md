@@ -16,15 +16,16 @@ be installed or importable, and the code may target any Python version.
 
 ## Pick a workflow
 
-There are three ways to use Pydoc-Markdown. They share the same loaders, processors and Markdown renderer.
+Pydoc-Markdown can be driven from a configuration file or from Python. Both share the same loaders, processors and
+renderers.
 
 | Workflow | Use it when | Start here |
 | --- | --- | --- |
 | **Configuration file** (`pydoc-markdown.yml` or `pyproject.toml`) | You want one command that writes Markdown, or a whole MkDocs/Hugo/Docusaurus site, from a list of pages. | [Quickstart](getting-started/quickstart.md), then [Configuration](guides/configuration.md) |
-| **Novella** (`@pydoc` tags) | You write your docs as Markdown files and want to embed API docs between your own prose. | [Novella integration](guides/novella.md) |
 | **Python API** | You call Pydoc-Markdown from your own build script. | [Python API](guides/python-api.md) |
 
-If you are unsure, start with the configuration file. Both it and Novella are supported going forward.
+If you are unsure, start with the configuration file. The [Novella integration](guides/novella.md) (`@pydoc` tags)
+is deprecated; see [Deprecations](deprecations.md).
 
 ## Where to go next
 

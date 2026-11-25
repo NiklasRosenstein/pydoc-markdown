@@ -351,9 +351,10 @@ class HugoRenderer(Renderer, Server, Builder):
 
     # Builder
 
-    def build(self, site_dir: str) -> None:
+    def build(self, site_dir: t.Optional[str]) -> None:
         command = [self._get_hugo_bin()]
-        command += ["--destination", os.path.abspath(site_dir)]
+        if site_dir is not None:
+            command += ["--destination", os.path.abspath(site_dir)]
         subprocess.check_call(command, cwd=self.build_directory)
 
     # PluginBase

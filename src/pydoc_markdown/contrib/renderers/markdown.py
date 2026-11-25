@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import dataclasses
 import io
+import os
 import sys
 import typing as t
 from pathlib import Path
@@ -59,8 +60,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     ### Options
     """
 
-    #: The name of the file to render to. If no file is specified, it will
-    #: render to stdout.
+    #: The name of the file to render to. Missing parent directories are created. If no file is
+    #: specified, it will render to stdout.
     filename: t.Optional[str] = None
 
     #: The encoding of the output file. This is ignored when rendering to
@@ -524,6 +525,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         if self.filename is None:
             self._render_to_stream(modules, sys.stdout)
         else:
+            directory = os.path.dirname(self.filename)
+            if directory:
+                os.makedirs(directory, exist_ok=True)
             with io.open(self.filename, "w", encoding=self.encoding) as fp:
                 self._render_to_stream(modules, t.cast(t.TextIO, fp))
 

@@ -1,0 +1,1 @@
+`--bootstrap readthedocs` now writes a single `.readthedocs.yaml` that uses `build.commands`, replacing the setup based on `readthedocs-custom-steps` and the removed `python.version` setting. (@NiklasRosenstein)

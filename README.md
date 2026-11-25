@@ -30,7 +30,7 @@ Pydoc-Markdown needs Python 3.10+ to run; the code you document can target any P
 ## Documentation
 
 **[niklasrosenstein.github.io/pydoc-markdown][docs]** — getting started, configuration, docstring styles, static site
-generators, the [Novella][] integration, and the full plugin reference.
+generators, source links and the full plugin reference.
 
 ## Contributing
 
@@ -45,4 +45,3 @@ pull request to add your project.
 [contrib]: https://github.com/NiklasRosenstein/pydoc-markdown/blob/develop/.github/CONTRIBUTING.md
 [docs]: https://niklasrosenstein.github.io/pydoc-markdown/
 [docspec]: https://niklasrosenstein.github.io/python-docspec/
-[Novella]: https://niklasrosenstein.github.io/novella/

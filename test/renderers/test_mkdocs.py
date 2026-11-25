@@ -1,3 +1,5 @@
+import subprocess
+
 import pytest
 from databind.json import load
 
@@ -67,3 +69,22 @@ def test_mkdocs_renderer_watches_nested_page_sources(tmp_path) -> None:
 def test_mkdocs_renderer_watch_files_requires_initialization() -> None:
     with pytest.raises(RuntimeError, match="initialized"):
         list(MkdocsRenderer().get_watch_files())
+
+
+@pytest.mark.parametrize(
+    ("site_dir", "expected_args"),
+    [
+        pytest.param(None, [], id="default-site-dir"),
+        pytest.param("public", ["--site-dir", "{cwd}/public"], id="relative-site-dir"),
+    ],
+)
+def test_mkdocs_renderer_build_site_dir(site_dir, expected_args, tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = []
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(subprocess, "check_call", lambda command, cwd: calls.append((command, cwd)))
+    renderer = MkdocsRenderer()
+
+    renderer.build(site_dir)
+
+    expected = [arg.format(cwd=tmp_path) for arg in expected_args]
+    assert calls == [(["mkdocs", "build", "--clean", *expected], renderer.output_directory)]

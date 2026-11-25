@@ -10,10 +10,10 @@ layout the generator expects.
 | [`hugo`](../reference/renderers/hugo.md) | Hugo `config.toml` and pages in `build/docs/` | ✓ | ✓ | `--bootstrap hugo` |
 | [`docusaurus`](../reference/renderers/docusaurus.md) | Pages and `sidebar.json` inside your Docusaurus project | — | — | `--bootstrap docusaurus` |
 
-!!! tip "Writing your docs as Markdown files instead?"
+!!! tip "Hand-written pages"
 
-    These renderers generate *every* page from the configuration file. If you'd rather keep hand-written Markdown pages
-    and drop API docs into them, use the [Novella integration](novella.md) with MkDocs instead.
+    Pages don't have to be generated: a page with `source:` copies an existing Markdown file, so you can keep guides
+    and tutorials next to your API reference.
 
 ## Common workflow
 

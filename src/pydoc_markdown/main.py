@@ -46,7 +46,7 @@ from typeapi import ClassTypeHint
 from pydoc_markdown import PydocMarkdown, __version__, static
 from pydoc_markdown.contrib.loaders.python import PythonLoader
 from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
-from pydoc_markdown.interfaces import Context, Server
+from pydoc_markdown.interfaces import Builder, Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
 
 yaml_config_filenames = ["pydoc-markdown.yml", "pydoc-markdown.yaml"]
@@ -173,7 +173,7 @@ class RenderSession:
 
         return list(watch_files)
 
-    def build(self, config: PydocMarkdown, site_dir: str) -> None:
+    def build(self, config: PydocMarkdown, site_dir: t.Optional[str]) -> None:
         config.build(site_dir)
 
     def run_server(self, config: PydocMarkdown, open_browser: bool = False):
@@ -204,7 +204,7 @@ class RenderSession:
 
                 # If the process doesn't exist, start it.
                 if process is None:
-                    logger.info("Starting MkDocs serve.")
+                    logger.info("Starting %s server.", type(renderer).__name__)
                     process = renderer.start_server()
                     if open_browser:
                         open_browser = False
@@ -270,10 +270,7 @@ def error(*args) -> t.NoReturn:
     "--py2/--py3",
     "py2",
     default=None,
-    help="Switch between parsing Python 2 and Python 3 code. The default "
-    "is Python 3. Using --py2 will enable parsing code that uses the "
-    '"print" statement. This is equivalent of setting the print_function '
-    'option of the "python" loader to False. ' + default_config_notice,
+    help="Deprecated and has no effect: the parser always reads Python 3 syntax. " + default_config_notice,
 )
 @click.option(
     "--render-toc/--no-render-toc",
@@ -351,8 +348,8 @@ def cli(
             error("--bootstrap must be used as a sole argument")
 
         if bootstrap == "readthedocs":
-            for filename in static.READTHEDOCS_FILES:
-                if os.path.isfile(filename):
+            for filename in [*static.READTHEDOCS_FILES, ".readthedocs.yml"]:
+                if os.path.lexists(filename):
                     error("file already exists: {!r}".format(filename))
             for filename, content in static.READTHEDOCS_FILES.items():
                 Path(filename).parent.mkdir(exist_ok=True, parents=True)
@@ -382,7 +379,13 @@ def cli(
 
         return
 
-    load_implicit_config = not any((modules, packages, search_path, py2 is not None))
+    if py2 is not None:
+        print(
+            "warning: --py2/--py3 is deprecated and has no effect; the parser always reads Python 3 syntax.",
+            file=sys.stderr,
+        )
+
+    load_implicit_config = not any((modules, packages, search_path))
 
     # Initialize logging.
     verbosity = verbose - quiet
@@ -431,6 +434,9 @@ def cli(
         for module in modules:
             dump_module(module, sys.stdout)
         sys.exit(0)
+
+    if build and not isinstance(pydocmd.renderer, Builder):
+        error("renderer {!r} cannot be used with --build".format(type(pydocmd.renderer).__name__))
 
     if server:
         session.run_server(pydocmd, open_browser)

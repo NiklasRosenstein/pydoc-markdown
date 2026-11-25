@@ -27,26 +27,6 @@ If your docs are built from your project's development environment, add Pydoc-Ma
 pip install pydoc-markdown
 ```
 
-## With Novella
-
-The [Novella integration](../guides/novella.md) is a plugin that Novella discovers automatically. Install
-Pydoc-Markdown into the same environment as Novella:
-
-=== "pipx"
-
-    ```sh
-    pipx install novella
-    pipx inject novella pydoc-markdown
-    ```
-
-=== "pip"
-
-    ```sh
-    pip install novella pydoc-markdown
-    ```
-
-Pydoc-Markdown is tested with Novella `>=0.1.10,<0.3.0`.
-
 ## Static site generators
 
 Pydoc-Markdown writes Markdown; it does not bundle a site generator. If you use the `mkdocs` renderer with `--server`

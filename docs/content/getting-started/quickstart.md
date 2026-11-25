@@ -59,7 +59,8 @@ pydoc-markdown
   for its many formatting options.
 * **A documentation site** — bootstrap with `--bootstrap mkdocs`, `hugo` or `docusaurus` and read
   [Static site generators](../guides/static-site-generators.md).
-* **API docs embedded in hand-written pages** — use the [Novella integration](../guides/novella.md).
+* **Hand-written pages next to API docs** — add them to the `pages` of the `mkdocs` or `hugo` renderer with
+  `source:`; see [Configuration → Pages](../guides/configuration.md#pages).
 
 ## Inspect what was loaded
 

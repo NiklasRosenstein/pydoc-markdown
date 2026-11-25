@@ -1,0 +1,1 @@
+`--build` without `--site-dir` now uses the default output directory of MkDocs or Hugo instead of crashing, and fails with a clear error for renderers that cannot build. A relative `--site-dir` is now resolved from the current directory for the `mkdocs` renderer, as it already was for `hugo`. (@NiklasRosenstein)
