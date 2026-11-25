@@ -1661,7 +1661,7 @@ expression that receives <code>name</code>, <code>obj</code> and <code>default</
 <tr>
 <th>Style</th>
 <th>Example section</th>
-<th>Processor</th>
+<th>Processor (all detected by <code>smart</code>)</th>
 </tr>
 </thead>
 <tbody>
@@ -1693,8 +1693,14 @@ expression that receives <code>name</code>, <code>obj</code> and <code>default</
 </tbody>
 </table>
 <h3 id="smart-detect-the-style-per-docstring-default"><code>smart</code> — detect the style per docstring (default)</h3>
-<p>The <code>smart</code> processor inspects each docstring and hands it to the <code>sphinx</code>, <code>google</code> or <code>pydocmd</code> processor. This
-works well for most projects, including ones that mix styles. If detection picks the wrong style for a particular
+<p>The <code>smart</code> processor inspects each docstring and picks a processor for it:</p>
+<ol>
+<li>reST/Sphinx (<code>:param x:</code>) and NumPy docstrings go to <code>sphinx</code>,</li>
+<li>Google docstrings (<code>Args:</code>, <code>Returns:</code>, …) go to <code>google</code>,</li>
+<li>everything else goes to <code>pydocmd</code>.</li>
+</ol>
+<p>So NumPy and Google docstrings work out of the box, and you only need to configure <code>sphinx</code> yourself to force one
+style for the whole project. This works well for most projects, including ones that mix styles. If detection picks the wrong style for a particular
 docstring, force it by adding a marker anywhere in that docstring; the marker is removed from the output:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">frobnicate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Frobnicate *x*.</span>
@@ -1740,7 +1746,7 @@ assignment or a string literal right after it:</p>
 </code></pre></div>
 <h2 id="cross-references">Cross-references</h2>
 <p>The <code>crossref</code> processor turns <code>#Name</code> references in docstrings into links, if the renderer can resolve the target
-(the <code>markdown</code>, <code>mkdocs</code> and <code>hugo</code> renderers can):</p>
+(the <code>markdown</code>, <code>mkdocs</code>, <code>hugo</code> and <code>jinja2</code> renderers can; <code>docusaurus</code> can't):</p>
 <div class="highlight"><pre><span></span><code>Returns a #Connection.            -&gt; link to Connection
 See #Connection.close().          -&gt; link to a member
 Returns many #Connection#s.       -&gt; link to Connection with the text "Connections"

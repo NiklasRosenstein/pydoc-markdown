@@ -1544,8 +1544,24 @@ preconfigured with a <code>python</code> loader, the <code>filter</code>, <code>
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span> <span class="n">MarkdownRenderer</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_to_string</span><span class="p">(</span><span class="n">modules</span><span class="p">))</span>
 </code></pre></div>
-<p>To start from a configuration file or dictionary instead, call <code>session.load_config("pydoc-markdown.yaml")</code> before
-loading modules, then <code>session.render(modules)</code> to run the configured renderer.</p>
+<p>To start from a configuration file instead, load it and initialize the session with the file's directory as the
+context, so relative paths in it resolve the same way as on the command line:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydoc_markdown</span><span class="w"> </span><span class="kn">import</span> <span class="n">PydocMarkdown</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydoc_markdown.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">Context</span>
+
+<span class="n">config_file</span> <span class="o">=</span> <span class="s2">"docs/pydoc-markdown.yaml"</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">PydocMarkdown</span><span class="p">()</span>
+<span class="n">session</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">Context</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">config_file</span><span class="p">))))</span>
+
+<span class="n">modules</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">load_modules</span><span class="p">()</span>
+<span class="n">session</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+</code></pre></div>
+<p><code>load_config()</code> also accepts a dictionary. Without the <code>init()</code> call, relative paths resolve from the current
+directory.</p>
 <h2 id="individual-plugins">Individual plugins</h2>
 <p>Plugins can also be used on their own. Each one must be initialized with a
 <a href="/pydoc-markdown/reference/interfaces#pydoc:pydoc_markdown.interfaces.Context">Class Context</a> first:</p>

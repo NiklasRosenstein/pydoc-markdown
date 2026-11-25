@@ -1649,7 +1649,9 @@
 pydoc-markdown<span class="w"> </span>-m<span class="w"> </span>my_module<span class="w"> </span><span class="s1">'{renderer: {type: markdown, render_toc: true}}'</span>
 </code></pre></div>
 <p>To start from a template, run <code>pydoc-markdown --bootstrap &lt;template&gt;</code> with <code>base</code>, <code>mkdocs</code>, <code>hugo</code> or <code>docusaurus</code>.
-It writes <code>pydoc-markdown.yaml</code> and refuses to overwrite an existing configuration.</p>
+It writes <code>pydoc-markdown.yaml</code> and refuses to overwrite an existing configuration. The <code>readthedocs</code> template is
+different: it writes a <code>.readthedocs.yaml</code> for building an MkDocs site on Read the Docs (see the
+<a href="../../recipes/readthedocs/">Read the Docs recipe</a>).</p>
 <div class="admonition note">
 <p class="admonition-title">Quick options bypass the configuration file</p>
 <p><code>-m</code>, <code>-p</code> and <code>-I</code> build a configuration from the command line, so the configuration file is ignored
@@ -1736,10 +1738,16 @@ and applies <code>-I src</code> on top.</p>
 </div>
 </div>
 </div>
-<p>Relative paths are resolved from the directory that contains the configuration file.</p>
+<p>Relative <strong>input</strong> paths are resolved from the directory that contains the configuration file: the loader's
+<code>search_path</code>, a page's <code>source</code>, a source linker's <code>root</code>, and the working directory of hooks. Relative <strong>output</strong>
+paths are resolved from the directory you run <code>pydoc-markdown</code> in: the Markdown renderer's <code>filename</code>, the MkDocs
+renderer's <code>output_directory</code>, the Hugo renderer's <code>build_directory</code> and the Docusaurus renderer's <code>docs_base_path</code>.
+Run Pydoc-Markdown from your project root, or use absolute paths, if the configuration lives in a subdirectory.</p>
 <h2 id="loaders">Loaders</h2>
 <p>The <a href="../../reference/loaders/"><code>python</code> loader</a> is the only built-in loader. Without <code>modules</code> or <code>packages</code>, it
-discovers every module and package in its <code>search_path</code> (skipping <code>test</code>, <code>tests</code> and <code>setup</code> by default):</p>
+discovers every module and package in its <code>search_path</code> (skipping <code>test</code>, <code>tests</code> and <code>setup</code> by default).
+If <code>search_path</code> is not set, it defaults to <code>.</code> and <code>src</code> next to the configuration file, or to Python's <code>sys.path</code> when
+only <code>modules</code> are given. Put <code>"*"</code> into <code>search_path</code> to add <code>sys.path</code> to your own entries.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">loaders</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
 <span class="w">    </span><span class="nt">search_path</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">src</span><span class="p p-Indicator">]</span>
@@ -1772,7 +1780,7 @@ renderers produce a site tree; see <a href="../static-site-generators/">Static s
 </tr>
 <tr>
 <td><code>exclude</code></td>
-<td>Glob patterns removed from <code>contents</code>. Excluding a module or class also removes its members.</td>
+<td>Glob patterns of API objects to leave out. Applied after <code>contents</code> and takes precedence over it, so excluding a module or class also removes all of its members, even ones that <code>contents</code> matches. Parents of objects that remain on the page are kept.</td>
 </tr>
 <tr>
 <td><code>source</code></td>
@@ -1823,14 +1831,14 @@ they are parsed. Lines starting with <code>#@</code> contain Python code:</p>
 <h2 id="debugging-a-configuration">Debugging a configuration</h2>
 <p><code>--dump</code> prints the API objects after processing in docspec JSON format. Pipe it into <code>docspec</code> to get a tree:</p>
 <div class="highlight"><pre><span></span><code>$ pydoc-markdown --dump | docspec -m --dump-tree
-module school._class
-| class Class
-| | data topic
-| | data teacher
+module school
+module school._pupil
+| class Pupil
+| | variable classes
 module school._person
 | class Person
-| | data name
-| | data age
+| | variable name
+| | variable age
 [ ... ]
 </code></pre></div>
 <p>Add <code>--without-processors</code> to see what the loader found before filtering.</p>

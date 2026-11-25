@@ -614,6 +614,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#custom-templates-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom templates (experimental)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1549,6 +1560,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#custom-templates-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom templates (experimental)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1684,6 +1706,34 @@ To set <code>baseURL</code> per environment, see the <a href="../../recipes/hugo
 <span class="w">  </span><span class="nt">sidebar_top_level_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Reference</span>
 </code></pre></div>
 <p>A complete example lives in <a href="https://github.com/NiklasRosenstein/pydoc-markdown/tree/develop/examples/docusaurus"><code>examples/docusaurus</code></a>.</p>
+<h2 id="custom-templates-experimental">Custom templates (experimental)</h2>
+<p>If none of the layouts above fit, the <a href="../../reference/renderers/jinja2/"><code>jinja2</code> renderer</a> writes Markdown files from
+your own <a href="https://jinja.palletsprojects.com/">Jinja2</a> templates. Each entry under <code>produces</code> names an output file
+(without <code>.md</code>) and the template variables; <code>module</code> and <code>modules</code> are replaced by the matching loaded modules:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">renderer</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jinja2</span>
+<span class="w">  </span><span class="nt">build_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build/docs</span>
+<span class="w">  </span><span class="nt">renders</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">templates/module.md.jinja2</span>
+<span class="w">      </span><span class="nt">produces</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">api</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="nv">my_package</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">templates/module.md.jinja2</span><pre><span></span><code><span class="x"># </span><span class="cp">{{</span> <span class="nv">module.name</span> <span class="cp">}}</span>
+
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">cls</span> <span class="k">in</span> <span class="o">[</span><span class="nv">module</span><span class="o">]</span> <span class="o">|</span> <span class="nf">classes</span> <span class="cp">%}</span>
+<span class="x">## </span><span class="cp">{{</span> <span class="nv">cls.name</span> <span class="cp">}}</span>
+
+<span class="cp">{{</span> <span class="nv">cls.docstring.content</span> <span class="k">if</span> <span class="nv">cls.docstring</span> <span class="k">else</span> <span class="s2">""</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</code></pre></div>
+<p>Templates are looked up relative to the current directory. Besides Jinja2's built-ins, templates can use the
+<code>classes</code>, <code>functions</code>, <code>attrs</code>, <code>uid</code>, <code>indent</code>, <code>blockquote</code>, <code>first_line</code>, <code>format_arglist</code>,
+<code>format_function_signature</code> and <code>describe</code> filters.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code>jinja2</code> renderer is experimental: its options and the variables and filters available to templates may change
+in any release.</p>
+</div>
 
 
 
