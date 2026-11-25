@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import dataclasses
 import io
+import os
 import sys
 import typing as t
 from pathlib import Path
@@ -59,8 +60,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     ### Options
     """
 
-    #: The name of the file to render to. If no file is specified, it will
-    #: render to stdout.
+    #: The name of the file to render to. Missing parent directories are created. If no file is
+    #: specified, it will render to stdout.
     filename: t.Optional[str] = None
 
     #: The encoding of the output file. This is ignored when rendering to
@@ -76,7 +77,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     html_headers: bool = False
 
     #: Render names in headers as code (using backticks or `<code>` tags,
-    #: depending on #html_headers). This is enabled by default.
+    #: depending on #html_headers). Disabled by default.
     code_headers: bool = False
 
     #: Generate descriptive class titles by adding the word "Objects" if set to `True`. Otherwise,
@@ -84,8 +85,8 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     #: the class name. This is enabled by default.
     descriptive_class_title: t.Union[bool, str] = True
 
-    #: Generate descriptivie module titles by adding the word "Module" before
-    #: the module name. This is enabled by default.
+    #: Generate descriptive module titles by adding the word "Module" before
+    #: the module name. Disabled by default.
     descriptive_module_title: bool = False
 
     #: Add the module name as a prefix to class & method names. This module name is
@@ -94,12 +95,10 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     add_module_prefix: bool = True
 
     #: Add the class name as a prefix to method names. This class name is
-    #: also rendered as code if #code_headers is enabled. This is enabled
-    #: by default.
+    #: also rendered as code if #code_headers is enabled. Disabled by default.
     add_method_class_prefix: bool = False
 
-    #: Add the class name as a prefix to member names. This is enabled by
-    #: default.
+    #: Add the class name as a prefix to member names. Disabled by default.
     add_member_class_prefix: bool = False
 
     #: Add the full module name as a prefix to the title of the header.
@@ -138,7 +137,7 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
     #: Render the function signature in the header. This is disabled by default.
     signature_in_header: bool = False
 
-    #: Render the vertical bar '|' before function signature. This is enabled by default.
+    #: Render the vertical bar '|' before function signature. Disabled by default.
     signature_with_vertical_bar: bool = False
 
     #: Include the "def" keyword in the function signature. This is enabled
@@ -526,6 +525,9 @@ class MarkdownRenderer(Renderer, SinglePageRenderer, SingleObjectRenderer):
         if self.filename is None:
             self._render_to_stream(modules, sys.stdout)
         else:
+            directory = os.path.dirname(self.filename)
+            if directory:
+                os.makedirs(directory, exist_ok=True)
             with io.open(self.filename, "w", encoding=self.encoding) as fp:
                 self._render_to_stream(modules, t.cast(t.TextIO, fp))
 

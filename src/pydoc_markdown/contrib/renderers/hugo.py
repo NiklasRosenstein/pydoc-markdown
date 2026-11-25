@@ -151,7 +151,7 @@ class HugoConfig:
     languageCode: t.Optional[str] = "en-us"
 
     #: This field collects all remaining options that do not match any of the above
-    #: and will be forwarded directly into the Hugo `config.yaml` when it is rendered
+    #: and will be forwarded directly into the Hugo `config.toml` when it is rendered
     #: into the build directory.
     # TODO(@NiklasRosenstein): Test if this still works as expected.
     additional_options: te.Annotated[t.Dict[str, t.Any], Remainder()] = dataclasses.field(default_factory=dict)
@@ -187,7 +187,7 @@ class HugoRenderer(Renderer, Server, Builder):
 
     * Adds a YAML preamble to every generated Markdown file.
     * Produces files in a layout suitable for Hugo (e.g. `_index.md` files).
-    * Produces a `config.yaml` if #config is not set to `null`.
+    * Produces a `config.toml` if #config is not set to `null`.
     * Can be used with the Pydoc-Markdown `--server` option to live-preview the generated docs.
     * Downloads a suitable Hugo binary from Github if Hugo is not already installed (see #get_hugo).
 
@@ -351,9 +351,10 @@ class HugoRenderer(Renderer, Server, Builder):
 
     # Builder
 
-    def build(self, site_dir: str) -> None:
+    def build(self, site_dir: t.Optional[str]) -> None:
         command = [self._get_hugo_bin()]
-        command += ["--destination", os.path.abspath(site_dir)]
+        if site_dir is not None:
+            command += ["--destination", os.path.abspath(site_dir)]
         subprocess.check_call(command, cwd=self.build_directory)
 
     # PluginBase

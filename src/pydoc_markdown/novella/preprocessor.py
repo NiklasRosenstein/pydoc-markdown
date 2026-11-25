@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import re
 import typing as t
+import warnings
 from pathlib import Path
 
 from novella.markdown.preprocessor import MarkdownFile, MarkdownFiles, MarkdownPreprocessor
@@ -45,6 +46,10 @@ def autodetect_source_linker() -> t.Optional[SourceLinker]:
 class PydocTagPreprocessor(MarkdownPreprocessor):
     """Implements the `@pydoc` and `@pylink` tag when using Novella for Markdown preprocessing
 
+    !!! warning "Deprecated"
+
+        The Novella integration is deprecated and will be removed in a future major release.
+
     This preprocessor precedes the Novella built-in "anchor" preprocessor as it generates `@anchor` and `{@link}` tags.
     """
 
@@ -54,6 +59,13 @@ class PydocTagPreprocessor(MarkdownPreprocessor):
     _suite: ApiSuite | None = None
 
     def __post_init__(self) -> None:
+        warnings.warn(
+            "The Pydoc-Markdown Novella integration is deprecated and will be removed in a future major release. "
+            "Use a Pydoc-Markdown configuration file instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+
         # Heuristic to provide a sensible default configuration of the plugin.
         if Path.cwd().name.lower() in ("docs", "documentation"):
             search_path = ["../src", ".."]

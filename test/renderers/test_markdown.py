@@ -272,3 +272,13 @@ def test_markdown_renderer_namespaces_individually_rendered_objects_only_when_en
     # A definition that a member relies on is still left alone.
     assert "plus [spec] from the module" in result
     assert "[spec]: https://spec.example" in result
+
+
+def test_markdown_renderer_creates_missing_output_directories(tmp_path) -> None:
+    filename = tmp_path / "docs" / "api" / "module.md"
+    renderer = MarkdownRenderer(filename=str(filename))
+    renderer.init(Context("."))
+
+    renderer.render([load_string_as_module(Path("module.py"), '"""Module docstring."""\n')])
+
+    assert "Module docstring." in filename.read_text()

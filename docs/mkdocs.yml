@@ -1,25 +1,33 @@
 nav:
-  - index.md
-  - Usage:
-    - usage/cli-and-api.md
-    - YAML Configuration: usage/yaml.md
-    - usage/novella.md
-  - Examples:
-    - examples/hugo.md
-    - examples/readthedocs.md
-  - API Documentation:
-    - api/cli.md
-    - pydoc_markdown:
-      - api/pydoc_markdown/index.md
-      - interfaces: api/pydoc_markdown/interfaces.md
-      - contrib.loaders: api/pydoc_markdown/loaders.md
-      - contrib.processors: api/pydoc_markdown/processors.md
-      - contrib.renderers:
-        - docusaurus: api/pydoc_markdown/renderers/docusaurus.md
-        - hugo: api/pydoc_markdown/renderers/hugo.md
-        - jinja2: api/pydoc_markdown/renderers/jinja2.md
-        - markdown: api/pydoc_markdown/renderers/markdown.md
-        - mkdocs: api/pydoc_markdown/renderers/mkdocs.md
-  - Other:
-    - changelog.md
-    - contributing.md
+  - Home: index.md
+  - Getting started:
+    - Installation: getting-started/installation.md
+    - Quickstart: getting-started/quickstart.md
+  - Guides:
+    - Configuration: guides/configuration.md
+    - Docstrings and processors: guides/docstrings.md
+    - Static site generators: guides/static-site-generators.md
+    - Source links: guides/source-links.md
+    - Python API: guides/python-api.md
+    - Novella integration (deprecated): guides/novella.md
+  - Recipes:
+    - Read the Docs: recipes/readthedocs.md
+    - Hugo baseURL per version: recipes/hugo-base-url.md
+  - Reference:
+    - Command line: reference/cli.md
+    - Loaders: reference/loaders.md
+    - Processors: reference/processors.md
+    - Renderers:
+      - Markdown: reference/renderers/markdown.md
+      - MkDocs: reference/renderers/mkdocs.md
+      - Hugo: reference/renderers/hugo.md
+      - Docusaurus: reference/renderers/docusaurus.md
+      - Jinja2: reference/renderers/jinja2.md
+    - Source linkers: reference/source-linkers.md
+    - Novella plugin (deprecated): reference/novella.md
+    - PydocMarkdown: reference/pydoc-markdown.md
+    - Plugin interfaces: reference/interfaces.md
+  - Project:
+    - Deprecations: deprecations.md
+    - Changelog: changelog.md
+    - Contributing: contributing.md

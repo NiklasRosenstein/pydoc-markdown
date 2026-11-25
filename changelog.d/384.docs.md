@@ -1,0 +1,1 @@
+Restructure the documentation into getting started, guides, recipes and reference sections, shorten the README, document source linkers, and add a page listing deprecated and experimental features. (@NiklasRosenstein)

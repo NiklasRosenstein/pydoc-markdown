@@ -93,3 +93,32 @@ def test_malformed_pyproject_reports_parse_error() -> None:
     assert result.exit_code != 0
     assert "config file not found" not in result.output
     assert isinstance(result.exception, tomli.TOMLDecodeError)
+
+
+def test_py2_flag_is_deprecated_and_keeps_implicit_config() -> None:
+    Path("pydoc-markdown.yml").write_text("renderer:\n  type: markdown\n  filename: out.md\n")
+
+    result = CliRunner().invoke(cli, ["--py3"])
+
+    assert result.exit_code == 0, result.output
+    assert "--py2/--py3 is deprecated and has no effect" in result.output
+    assert Path("out.md").exists()
+
+
+def test_build_rejects_renderer_without_builder_support() -> None:
+    Path("pydoc-markdown.yml").write_text("renderer:\n  type: markdown\n")
+
+    result = CliRunner().invoke(cli, ["--build"])
+
+    assert result.exit_code == 1
+    assert result.output == "error: renderer 'MarkdownRenderer' cannot be used with --build\n"
+
+
+def test_bootstrap_readthedocs_refuses_to_replace_legacy_config_name() -> None:
+    Path(".readthedocs.yml").write_text("version: 2\n")
+
+    result = CliRunner().invoke(cli, ["--bootstrap", "readthedocs"])
+
+    assert result.exit_code == 1
+    assert result.output == "error: file already exists: '.readthedocs.yml'\n"
+    assert not Path(".readthedocs.yaml").exists()

@@ -1410,7 +1410,6 @@ dev = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
-    { name = "types-deprecated" },
     { name = "types-pyyaml" },
     { name = "types-requests" },
     { name = "watchdog", version = "6.0.0", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.11' and extra == 'group-14-pydoc-markdown-dev') or (extra == 'group-14-pydoc-markdown-dev' and extra == 'group-14-pydoc-markdown-docs')" },
@@ -1450,7 +1449,6 @@ dev = [
     { name = "pytest", specifier = "==9.2.0" },
     { name = "pytest-cov", specifier = "==7.1.0" },
     { name = "ruff", specifier = "==0.17.6" },
-    { name = "types-deprecated", specifier = "==1.3.1.20260928" },
     { name = "types-pyyaml", specifier = "==6.0.12.20261122" },
     { name = "types-requests", specifier = "==2.33.0.20261030" },
     { name = "watchdog", specifier = ">=6.0.0" },
@@ -1819,15 +1817,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/d5/92/5a23ad34aa877edf00906166e339bfdc571543ea183ea7ab727bb01516c7/typeapi-2.3.0.tar.gz", hash = "sha256:a60d11f72c5ec27338cfd1c807f035b0b16ed2e3b798fb1c1d34fc5589f544be", size = 122687, upload-time = "2025-10-23T13:44:11.26Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d4/84/021bbeb7edb990dd6875cb6ab08d32faaa49fec63453d863730260a01f9e/typeapi-2.3.0-py3-none-any.whl", hash = "sha256:576b7dcb94412e91c5cae107a393674f8f99c10a24beb8be2302e3fed21d5cc2", size = 26858, upload-time = "2025-10-23T13:44:09.833Z" },
-]
-
-[[package]]
-name = "types-deprecated"
-version = "1.3.1.20260928"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/7f/9e/1450b10d9e033183aacc1e137108fc51931d243833e5918cc4c9d7367128/types_deprecated-1.3.1.20260928.tar.gz", hash = "sha256:baa950d1a8125c015e4614eedc16fb5401a6d418075a81aea8330cc26b3d4ff6", size = 9060, upload-time = "2026-09-28T07:50:51.287Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e3/50/8c0b1e3a953669f9b9782b4b948136a3e719d70d8e0e16e6c128b0da1e45/types_deprecated-1.3.1.20260928-py3-none-any.whl", hash = "sha256:97d6816bbe822bb7b52c9a1ad035ed10ff916e7dfe8652c4c406f950d8f72694", size = 9253, upload-time = "2026-09-28T07:50:50.502Z" },
 ]
 
 [[package]]

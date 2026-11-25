@@ -193,7 +193,7 @@ class PydocMarkdown:
         if run_hooks:
             self.run_hooks("post-render")
 
-    def build(self, site_dir: str) -> None:
+    def build(self, site_dir: t.Optional[str]) -> None:
         if not isinstance(self.renderer, Builder):
             name = type(self.renderer).__name__
             raise NotImplementedError('Renderer "{}" does not support building'.format(name))
