@@ -22,8 +22,8 @@ def test_bootstrap_creates_yaml_next_to_poetry_pyproject() -> None:
     result = CliRunner().invoke(cli, ["--bootstrap", "mkdocs"])
 
     assert result.exit_code == 0, result.output
-    assert result.output == "created pydoc-markdown.yml\n"
-    assert Path("pydoc-markdown.yml").read_text() == static.DEFAULT_MKDOCS_CONFIG
+    assert result.output == "created pydoc-markdown.yaml\n"
+    assert Path("pydoc-markdown.yaml").read_text() == static.DEFAULT_MKDOCS_CONFIG
     assert Path("pyproject.toml").read_text() == POETRY_PYPROJECT
 
 
@@ -32,6 +32,7 @@ def test_bootstrap_creates_yaml_next_to_poetry_pyproject() -> None:
     [
         pytest.param("pyproject.toml", CONFIGURED_PYPROJECT, id="configured-pyproject"),
         pytest.param("pydoc-markdown.yaml", "renderer:\n  type: markdown\n", id="yaml"),
+        pytest.param("pydoc-markdown.yml", "renderer:\n  type: markdown\n", id="yml"),
     ],
 )
 def test_bootstrap_refuses_to_shadow_existing_config(filename: str, content: str) -> None:
@@ -41,7 +42,7 @@ def test_bootstrap_refuses_to_shadow_existing_config(filename: str, content: str
 
     assert result.exit_code == 1
     assert result.output == f"error: file already exists: '{filename}'\n"
-    assert not Path("pydoc-markdown.yml").exists()
+    assert [path.name for path in Path().iterdir()] == [filename]
     assert Path(filename).read_text() == content
 
 

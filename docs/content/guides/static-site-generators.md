@@ -18,7 +18,7 @@ layout the generator expects.
 ## Common workflow
 
 ```sh
-pydoc-markdown --bootstrap mkdocs   # once: writes pydoc-markdown.yml
+pydoc-markdown --bootstrap mkdocs   # once: writes pydoc-markdown.yaml
 pydoc-markdown --server --open      # live preview, re-renders when your code or source pages change
 pydoc-markdown --build                     # render, then build the static site
 pydoc-markdown --build --site-dir public   # ... into public/

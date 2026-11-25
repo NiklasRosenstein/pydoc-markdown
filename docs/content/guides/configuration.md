@@ -11,17 +11,17 @@ A configuration file describes the whole pipeline: which code to **load**, how t
 You can also pass a file name, or an inline YAML object, as the first argument:
 
 ```sh
-pydoc-markdown docs/pydoc-markdown.yml
+pydoc-markdown docs/pydoc-markdown.yaml
 pydoc-markdown -m my_module '{renderer: {type: markdown, render_toc: true}}'
 ```
 
 To start from a template, run `pydoc-markdown --bootstrap <template>` with `base`, `mkdocs`, `hugo` or `docusaurus`.
-It writes `pydoc-markdown.yml` and refuses to overwrite an existing configuration.
+It writes `pydoc-markdown.yaml` and refuses to overwrite an existing configuration.
 
 !!! note "Quick options bypass the configuration file"
 
     `-m`, `-p` and `-I` build a configuration from the command line, so the configuration file is ignored
-    (with a warning). To use both, name the file explicitly: `pydoc-markdown pydoc-markdown.yml -I src` loads the file
+    (with a warning). To use both, name the file explicitly: `pydoc-markdown pydoc-markdown.yaml -I src` loads the file
     and applies `-I src` on top.
 
 ## Structure
@@ -38,7 +38,7 @@ The configuration has four top-level keys. All of them are optional.
 Every plugin is selected with `type`; all other keys are that plugin's options, listed in the
 [reference](../reference/loaders.md).
 
-=== "pydoc-markdown.yml"
+=== "pydoc-markdown.yaml"
 
     ```yaml
     loaders:
