@@ -20,10 +20,12 @@ layout the generator expects.
 ```sh
 pydoc-markdown --bootstrap mkdocs   # once: writes pydoc-markdown.yml
 pydoc-markdown --server --open      # live preview, re-renders when your code or source pages change
-pydoc-markdown --build --site-dir public   # render, then build the static site into public/
+pydoc-markdown --build                     # render, then build the static site
+pydoc-markdown --build --site-dir public   # ... into public/
 ```
 
-Always pass `--site-dir` with `--build`; there is no default output directory. `--server` and `--build` call the generator's own CLI, so `mkdocs` must be installed (with the theme you use). For
+Without `--site-dir`, the site goes to the generator's default (`site/` for MkDocs, `public/` for Hugo) inside the
+renderer's output directory. `--server` and `--build` call the generator's own CLI, so `mkdocs` must be installed (with the theme you use). For
 Hugo, a binary is downloaded from GitHub if `hugo` isn't on your `PATH`; configure this with the renderer's `get_hugo`
 option.
 
