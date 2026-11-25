@@ -16,7 +16,9 @@ pydoc-markdown -m my_module '{renderer: {type: markdown, render_toc: true}}'
 ```
 
 To start from a template, run `pydoc-markdown --bootstrap <template>` with `base`, `mkdocs`, `hugo` or `docusaurus`.
-It writes `pydoc-markdown.yaml` and refuses to overwrite an existing configuration.
+It writes `pydoc-markdown.yaml` and refuses to overwrite an existing configuration. The `readthedocs` template is
+different: it writes a `.readthedocs.yaml` for building an MkDocs site on Read the Docs (see the
+[Read the Docs recipe](../recipes/readthedocs.md)).
 
 !!! note "Quick options bypass the configuration file"
 
@@ -83,12 +85,18 @@ Every plugin is selected with `type`; all other keys are that plugin's options, 
     exclude = ["school.admin"]
     ```
 
-Relative paths are resolved from the directory that contains the configuration file.
+Relative **input** paths are resolved from the directory that contains the configuration file: the loader's
+`search_path`, a page's `source`, a source linker's `root`, and the working directory of hooks. Relative **output**
+paths are resolved from the directory you run `pydoc-markdown` in: the Markdown renderer's `filename`, the MkDocs
+renderer's `output_directory`, the Hugo renderer's `build_directory` and the Docusaurus renderer's `docs_base_path`.
+Run Pydoc-Markdown from your project root, or use absolute paths, if the configuration lives in a subdirectory.
 
 ## Loaders
 
 The [`python` loader](../reference/loaders.md) is the only built-in loader. Without `modules` or `packages`, it
-discovers every module and package in its `search_path` (skipping `test`, `tests` and `setup` by default):
+discovers every module and package in its `search_path` (skipping `test`, `tests` and `setup` by default).
+If `search_path` is not set, it defaults to `.` and `src` next to the configuration file, or to Python's `sys.path` when
+only `modules` are given. Put `"*"` into `search_path` to add `sys.path` to your own entries.
 
 ```yaml
 loaders:
@@ -116,7 +124,7 @@ The `mkdocs` and `hugo` renderers take a `pages` list. Each page has a `title` a
 | --- | --- |
 | `name` | File name without extension. Defaults to a slug of `title`; use `index` for the landing page. |
 | `contents` | Glob patterns of API objects to render on this page, e.g. `[my_pkg, my_pkg.*]`. |
-| `exclude` | Glob patterns removed from `contents`. Excluding a module or class also removes its members. |
+| `exclude` | Glob patterns of API objects to leave out. Applied after `contents` and takes precedence over it, so excluding a module or class also removes all of its members, even ones that `contents` matches. Parents of objects that remain on the page are kept. |
 | `source` | A file to copy as the page content, e.g. `README.md`. Relative to the configuration file. |
 | `href` | Don't generate a file; link to this URL in the navigation instead. |
 | `children` | Nested pages. |
@@ -168,14 +176,14 @@ Templating applies to YAML files only, not to `pyproject.toml`.
 
 ```
 $ pydoc-markdown --dump | docspec -m --dump-tree
-module school._class
-| class Class
-| | data topic
-| | data teacher
+module school
+module school._pupil
+| class Pupil
+| | variable classes
 module school._person
 | class Person
-| | data name
-| | data age
+| | variable name
+| | variable age
 [ ... ]
 ```
 

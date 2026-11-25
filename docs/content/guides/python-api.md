@@ -23,8 +23,27 @@ assert isinstance(session.renderer, MarkdownRenderer)
 print(session.renderer.render_to_string(modules))
 ```
 
-To start from a configuration file or dictionary instead, call `session.load_config("pydoc-markdown.yaml")` before
-loading modules, then `session.render(modules)` to run the configured renderer.
+To start from a configuration file instead, load it and initialize the session with the file's directory as the
+context, so relative paths in it resolve the same way as on the command line:
+
+```py
+import os
+
+from pydoc_markdown import PydocMarkdown
+from pydoc_markdown.interfaces import Context
+
+config_file = "docs/pydoc-markdown.yaml"
+session = PydocMarkdown()
+session.load_config(config_file)
+session.init(Context(directory=os.path.dirname(os.path.abspath(config_file))))
+
+modules = session.load_modules()
+session.process(modules)
+session.render(modules)
+```
+
+`load_config()` also accepts a dictionary. Without the `init()` call, relative paths resolve from the current
+directory.
 
 ## Individual plugins
 

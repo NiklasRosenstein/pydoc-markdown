@@ -1,0 +1,1 @@
+Clarify how relative paths in the configuration are resolved, document NumPy detection in the `smart` processor, the default loader search path, page `exclude` precedence and the `jinja2` renderer, and fix the Python API example for loading a configuration file. (@NiklasRosenstein)
