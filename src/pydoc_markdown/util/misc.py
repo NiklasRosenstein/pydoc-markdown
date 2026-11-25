@@ -26,3 +26,30 @@ def escape_except_blockquotes(string: str) -> str:
         escaped_string = escaped_string.replace(f"BLOCKQUOTE_TOKEN_{i}_END", match)
 
     return escaped_string
+
+
+#: Matches fenced code blocks (backtick or tilde fences) and inline code spans (any number of backticks).
+_MARKDOWN_CODE_RE = re.compile(
+    r"^[ \t]*(?P<fence>`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*(?P=fence)[ \t]*$"
+    r"|(?P<ticks>`+)[\s\S]*?(?<!`)(?P=ticks)(?!`)",
+    re.MULTILINE,
+)
+
+#: Matches a curly brace that is not already escaped with a backslash.
+_UNESCAPED_CURLY_BRACE_RE = re.compile(r"(?<!\\)([{}])")
+
+
+def escape_curly_brackets(string: str) -> str:
+    """
+    Escape `{` and `}` with a backslash, except inside fenced code blocks and inline code, and except where they are
+    already escaped. MDX (v2 and later) otherwise parses them as JavaScript expressions.
+    """
+
+    parts = []
+    position = 0
+    for match in _MARKDOWN_CODE_RE.finditer(string):
+        parts.append(_UNESCAPED_CURLY_BRACE_RE.sub(r"\\\1", string[position : match.start()]))
+        parts.append(match.group())
+        position = match.end()
+    parts.append(_UNESCAPED_CURLY_BRACE_RE.sub(r"\\\1", string[position:]))
+    return "".join(parts)
