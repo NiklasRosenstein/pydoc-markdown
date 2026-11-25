@@ -21,7 +21,7 @@ renderers.
 
 | Workflow | Use it when | Start here |
 | --- | --- | --- |
-| **Configuration file** (`pydoc-markdown.yml` or `pyproject.toml`) | You want one command that writes Markdown, or a whole MkDocs/Hugo/Docusaurus site, from a list of pages. | [Quickstart](getting-started/quickstart.md), then [Configuration](guides/configuration.md) |
+| **Configuration file** (`pydoc-markdown.yaml` or `pyproject.toml`) | You want one command that writes Markdown, or a whole MkDocs/Hugo/Docusaurus site, from a list of pages. | [Quickstart](getting-started/quickstart.md), then [Configuration](guides/configuration.md) |
 | **Python API** | You call Pydoc-Markdown from your own build script. | [Python API](guides/python-api.md) |
 
 If you are unsure, start with the configuration file. The [Novella integration](guides/novella.md) (`@pydoc` tags)

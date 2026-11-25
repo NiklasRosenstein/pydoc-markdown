@@ -21,7 +21,7 @@ pydoc-markdown -I src -p my_package --render-toc > api.md
 For anything beyond a one-off, put the configuration in a file:
 
 ```sh
-pydoc-markdown --bootstrap base   # writes pydoc-markdown.yml
+pydoc-markdown --bootstrap base   # writes pydoc-markdown.yaml
 pydoc-markdown                    # renders it
 ```
 

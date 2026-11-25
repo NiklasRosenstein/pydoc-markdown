@@ -24,9 +24,9 @@ Command-line flags are fine for a one-off; a configuration file lets you tune ev
 pydoc-markdown --bootstrap base
 ```
 
-This writes `pydoc-markdown.yml` containing the default pipeline. Point the loader at your code:
+This writes `pydoc-markdown.yaml` containing the default pipeline. Point the loader at your code:
 
-```yaml title="pydoc-markdown.yml"
+```yaml title="pydoc-markdown.yaml"
 loaders:
   - type: python
     search_path: [src]
@@ -51,7 +51,7 @@ pydoc-markdown
 !!! note
 
     `-m`, `-p` and `-I` build a configuration from the command line and **ignore** the configuration file
-    (you will see a warning). To combine both, pass the file explicitly: `pydoc-markdown pydoc-markdown.yml -I src`.
+    (you will see a warning). To combine both, pass the file explicitly: `pydoc-markdown pydoc-markdown.yaml -I src`.
 
 ## 3. Choose where the output goes
 

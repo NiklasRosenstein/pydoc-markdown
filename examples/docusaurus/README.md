@@ -19,7 +19,7 @@ npm start
    npx create-docusaurus@3 docusaurus-example classic --javascript
    ```
 
-2. Bootstrap a Pydoc-Markdown configuration for Docusaurus and adjust it (see [`pydoc-markdown.yml`](pydoc-markdown.yml)):
+2. Bootstrap a Pydoc-Markdown configuration for Docusaurus and adjust it (see [`pydoc-markdown.yaml`](pydoc-markdown.yaml)):
 
    ```sh
    pydoc-markdown --bootstrap docusaurus

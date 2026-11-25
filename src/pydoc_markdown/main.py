@@ -50,6 +50,8 @@ from pydoc_markdown.interfaces import Builder, Context, Server
 from pydoc_markdown.util.watchdog import watch_paths
 
 yaml_config_filenames = ["pydoc-markdown.yml", "pydoc-markdown.yaml"]
+#: The file that `--bootstrap` writes.
+bootstrap_config_filename = "pydoc-markdown.yaml"
 config_filenames = [*yaml_config_filenames, "pyproject.toml"]
 default_config_notice = "Using this option will disable loading the default configuration file."
 logger = logging.getLogger(__name__)
@@ -363,7 +365,7 @@ def cli(
                 existing_file = "pyproject.toml"
             if existing_file:
                 error("file already exists: {!r}".format(existing_file))
-            filename = yaml_config_filenames[0]
+            filename = bootstrap_config_filename
             source = {
                 "base": static.DEFAULT_CONFIG,
                 "mkdocs": static.DEFAULT_MKDOCS_CONFIG,

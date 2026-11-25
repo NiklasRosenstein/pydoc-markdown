@@ -23,7 +23,7 @@ assert isinstance(session.renderer, MarkdownRenderer)
 print(session.renderer.render_to_string(modules))
 ```
 
-To start from a configuration file or dictionary instead, call `session.load_config("pydoc-markdown.yml")` before
+To start from a configuration file or dictionary instead, call `session.load_config("pydoc-markdown.yaml")` before
 loading modules, then `session.render(modules)` to run the configured renderer.
 
 ## Individual plugins

@@ -4,7 +4,7 @@ Hugo needs `baseURL` to generate permalinks. If you publish several versions of 
 Docs), each one needs a different `baseURL`. Use [configuration templating](../guides/configuration.md#templating) to
 compute it from the environment:
 
-```yaml title="pydoc-markdown.yml"
+```yaml title="pydoc-markdown.yaml"
 #@ def base_url():
 #@    if env.READTHEDOCS:
 #@      return "https://my-project.readthedocs.io/en/" + env.READTHEDOCS_VERSION + "/"
