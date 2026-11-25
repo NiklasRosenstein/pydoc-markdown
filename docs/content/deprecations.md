@@ -17,7 +17,7 @@ These features are actively maintained. Earlier announcements suggested otherwis
 
 | Feature | Status | Use instead |
 | --- | --- | --- |
-| [Novella integration](guides/novella.md) (`@pydoc` / `{@pylink}` tags) | **Deprecated; emits a `FutureWarning`.** Will be removed in a future major release. | A [configuration file](guides/configuration.md) with the `mkdocs` or `hugo` renderer. Include hand-written pages with `source:`. |
+| [Novella integration](guides/novella.md) (`@pydoc` / `\{@pylink}` tags) | **Deprecated; emits a `FutureWarning`.** Will be removed in a future major release. | A [configuration file](guides/configuration.md) with the `mkdocs` or `hugo` renderer. Include hand-written pages with `source:`. |
 | `--py2` / `--py3` CLI flags | **Deprecated; has no effect and prints a warning.** They set the `python` loader's `parser.print_function` option, which docspec-python no longer reads, so Python 2 syntax such as the `print` statement can't be parsed. | Remove the flag. |
 | `parser.print_function` option of the `python` loader | **Obsolete; has no effect.** See above. | Remove the option. |
 | `pydoc-markdown[novella]` extra | **Doesn't exist.** Older docs told you to install it, and pip only prints a warning when it isn't found. | `pip install novella pydoc-markdown` (but see Novella above) |
