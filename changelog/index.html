@@ -5219,6 +5219,7 @@
 <li><code>--build</code> without <code>--site-dir</code> now uses the default output directory of MkDocs or Hugo instead of crashing, and fails with a clear error for renderers that cannot build. A relative <code>--site-dir</code> is now resolved from the current directory for the <code>mkdocs</code> renderer, as it already was for <code>hugo</code>. (@NiklasRosenstein)
   The Markdown renderer creates missing parent directories of <code>filename</code>. (@NiklasRosenstein)
   <code>--bootstrap readthedocs</code> now writes a single <code>.readthedocs.yaml</code> that uses <code>build.commands</code>, replacing the setup based on <code>readthedocs-custom-steps</code> and the removed <code>python.version</code> setting. (@NiklasRosenstein) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/384">#384</a>)</li>
+<li>Fix the automatic Hugo download for current Hugo releases: pick the right archive on ARM64, Windows (<code>.zip</code>) and BSD, fail with a clear message when a release has no archive for the platform (such as recent macOS releases), and fetch only the requested release instead of paging through all of them. (@NiklasRosenstein) (<a href="https://github.com/NiklasRosenstein/pydoc-markdown/pull/385">#385</a>)</li>
 </ul>
 <h3 id="documentation">Documentation</h3>
 <ul>
