@@ -2,6 +2,61 @@
 
 <!-- towncrier release notes start -->
 
+## 4.9.0 (2026-11-25)
+
+### Breaking changes
+
+- Drop Python 3.7 compatibility (@NiklasRosenstein) ([#304](https://github.com/NiklasRosenstein/pydoc-markdown/pull/304))
+- Raise the minimum supported Python version to 3.10. (@NiklasRosenstein) ([#355](https://github.com/NiklasRosenstein/pydoc-markdown/pull/355))
+
+### Features
+
+- Add a pre-commit hook for pydoc-markdown. (@RomainTT) ([#298](https://github.com/NiklasRosenstein/pydoc-markdown/pull/298))
+- Add the `escape_curly_braces_in_docstring` Markdown renderer option to escape `{` and `}` for MDX v2+ (e.g. Docusaurus v3). (issue [#325](https://github.com/NiklasRosenstein/pydoc-markdown/issues/325), @nonprofittechy) ([#326](https://github.com/NiklasRosenstein/pydoc-markdown/pull/326))
+- Allow setting a fallback page title for standalone Markdown rendering. (@NiklasRosenstein) ([#356](https://github.com/NiklasRosenstein/pydoc-markdown/pull/356))
+- Allow renderer pages to exclude API objects with glob patterns. (@NiklasRosenstein) ([#358](https://github.com/NiklasRosenstein/pydoc-markdown/pull/358))
+- Support NumPy-style docstrings and explicit docstring style selection in the Sphinx processor. (issue [#251](https://github.com/NiklasRosenstein/pydoc-markdown/issues/251), @NiklasRosenstein) ([#360](https://github.com/NiklasRosenstein/pydoc-markdown/pull/360))
+
+### Improvements
+
+- Bump minimum version of `databind.core` and `databind.json` to `^4.4.2` to ensure Python 3.12 support (@NiklasRosenstein) ([#304](https://github.com/NiklasRosenstein/pydoc-markdown/pull/304))
+- Replace Black and isort development checks with Ruff and restore mypy compatibility across the supported Python matrix. (@NiklasRosenstein) ([#354](https://github.com/NiklasRosenstein/pydoc-markdown/pull/354))
+- Make automatically discovered module ordering deterministic. (@NiklasRosenstein) ([#356](https://github.com/NiklasRosenstein/pydoc-markdown/pull/356))
+- Deprecate the Novella integration; it now emits a `FutureWarning` and will be removed in a future major release. (@NiklasRosenstein)
+  Deprecate the `--py2`/`--py3` flags, which have no effect with the current parser; they now print a warning and no longer disable loading the configuration file. (@NiklasRosenstein) ([#384](https://github.com/NiklasRosenstein/pydoc-markdown/pull/384))
+- `--bootstrap` now writes `pydoc-markdown.yaml` instead of `pydoc-markdown.yml`. Both names are still loaded. (@NiklasRosenstein) ([#386](https://github.com/NiklasRosenstein/pydoc-markdown/pull/386))
+
+### Fixes
+
+- Fix `escape_except_blockquotes` option for greater than 9 blockquotes in a docstring (@jackgerrits) ([#317](https://github.com/NiklasRosenstein/pydoc-markdown/pull/317))
+- Use consolidated Databind, exclude the broken 4.5.2 proxy packages, and require TypeAPI 2.3.0 to keep configuration loading compatible across supported Python versions. (@NiklasRosenstein) ([#355](https://github.com/NiklasRosenstein/pydoc-markdown/pull/355))
+- Watch configured page source files when serving MkDocs and Hugo output. (@NiklasRosenstein) ([#359](https://github.com/NiklasRosenstein/pydoc-markdown/pull/359))
+- Preserve the first line's indentation in space-indented ReST code blocks. (issue [#259](https://github.com/NiklasRosenstein/pydoc-markdown/issues/259), @NiklasRosenstein) ([#360](https://github.com/NiklasRosenstein/pydoc-markdown/pull/360))
+- Allow bootstrapping YAML configuration in Poetry projects and warn when quick CLI options ignore local configuration. (@NiklasRosenstein) ([#361](https://github.com/NiklasRosenstein/pydoc-markdown/pull/361))
+- Preserve relative indentation in Google-style docstring sections and render example code blocks correctly. (@NiklasRosenstein) ([#363](https://github.com/NiklasRosenstein/pydoc-markdown/pull/363))
+- When rendering a page, rename reference-style link labels that more than one docstring defines, so their links no longer point to the first definition. Set `namespace_reference_links: false` to disable, or `namespace_reference_links_in_objects: true` to also rename labels in individually rendered objects (e.g. Novella). (issue [#125](https://github.com/NiklasRosenstein/pydoc-markdown/issues/125), @NiklasRosenstein) ([#364](https://github.com/NiklasRosenstein/pydoc-markdown/pull/364))
+- Derive the Hugo theme name from a Git URL by removing only the `.git` suffix and the `hugo-` prefix. (@bardrop) ([#377](https://github.com/NiklasRosenstein/pydoc-markdown/pull/377))
+- `--build` without `--site-dir` now uses the default output directory of MkDocs or Hugo instead of crashing, and fails with a clear error for renderers that cannot build. A relative `--site-dir` is now resolved from the current directory for the `mkdocs` renderer, as it already was for `hugo`. (@NiklasRosenstein)
+  The Markdown renderer creates missing parent directories of `filename`. (@NiklasRosenstein)
+  `--bootstrap readthedocs` now writes a single `.readthedocs.yaml` that uses `build.commands`, replacing the setup based on `readthedocs-custom-steps` and the removed `python.version` setting. (@NiklasRosenstein) ([#384](https://github.com/NiklasRosenstein/pydoc-markdown/pull/384))
+- Fix the automatic Hugo download for current Hugo releases: pick the right archive on ARM64, Windows (`.zip`) and BSD, fail with a clear message when a release has no archive for the platform (such as recent macOS releases), and fetch only the requested release instead of paging through all of them. (@NiklasRosenstein) ([#385](https://github.com/NiklasRosenstein/pydoc-markdown/pull/385))
+
+### Documentation
+
+- Fix links to docspec (@rafalkrupinski) ([#337](https://github.com/NiklasRosenstein/pydoc-markdown/pull/337))
+- Restructure the documentation into getting started, guides, recipes and reference sections, shorten the README, document source linkers, and add a page listing deprecated and experimental features. (@NiklasRosenstein) ([#384](https://github.com/NiklasRosenstein/pydoc-markdown/pull/384))
+- Clarify how relative paths in the configuration are resolved, document NumPy detection in the `smart` processor, the default loader search path, page `exclude` precedence and the `jinja2` renderer, and fix the Python API example for loading a configuration file. (@NiklasRosenstein) ([#387](https://github.com/NiklasRosenstein/pydoc-markdown/pull/387))
+
+### Tests
+
+- Make the watchdog event handler test pass on every supported watchdog version. The file watcher works with watchdog 0.10 and newer, so no lower bound is added and Novella's `watchdog<3` requirement can still be satisfied. (@NiklasRosenstein) ([#379](https://github.com/NiklasRosenstein/pydoc-markdown/pull/379))
+
+### Hygiene
+
+- Replace the Slap and Poetry development workflow with uv, mise tasks and towncrier changelog fragments. (@NiklasRosenstein) ([#378](https://github.com/NiklasRosenstein/pydoc-markdown/pull/378))
+- Update the Docusaurus example to Docusaurus 3 and drop the unused `types-deprecated` development dependency. (@NiklasRosenstein) ([#384](https://github.com/NiklasRosenstein/pydoc-markdown/pull/384))
+
+
 ## 4.8.2 (2023-06-26)
 
 ### Fixes

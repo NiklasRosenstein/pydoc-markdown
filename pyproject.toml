@@ -1,6 +1,6 @@
 [project]
 name = "pydoc-markdown"
-version = "4.8.2"
+version = "4.9.0"
 description = "Create Python API documentation in Markdown format."
 authors = [{ name = "Niklas Rosenstein", email = "rosensteinniklas@gmail.com" }]
 license = "MIT"

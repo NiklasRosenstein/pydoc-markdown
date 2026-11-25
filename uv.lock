@@ -1381,7 +1381,7 @@ wheels = [
 
 [[package]]
 name = "pydoc-markdown"
-version = "4.8.2"
+version = "4.9.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
