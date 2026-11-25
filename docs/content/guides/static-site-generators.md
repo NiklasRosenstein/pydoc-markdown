@@ -107,3 +107,38 @@ renderer:
 ```
 
 A complete example lives in [`examples/docusaurus`](https://github.com/NiklasRosenstein/pydoc-markdown/tree/develop/examples/docusaurus).
+
+## Custom templates (experimental)
+
+If none of the layouts above fit, the [`jinja2` renderer](../reference/renderers/jinja2.md) writes Markdown files from
+your own [Jinja2](https://jinja.palletsprojects.com/) templates. Each entry under `produces` names an output file
+(without `.md`) and the template variables; `module` and `modules` are replaced by the matching loaded modules:
+
+```yaml
+renderer:
+  type: jinja2
+  build_directory: build/docs
+  renders:
+    - template: templates/module.md.jinja2
+      produces:
+        api: {module: my_package}
+```
+
+```jinja title="templates/module.md.jinja2"
+# {{ module.name }}
+
+{% for cls in [module] | classes %}
+## {{ cls.name }}
+
+{{ cls.docstring.content if cls.docstring else "" }}
+{% endfor %}
+```
+
+Templates are looked up relative to the current directory. Besides Jinja2's built-ins, templates can use the
+`classes`, `functions`, `attrs`, `uid`, `indent`, `blockquote`, `first_line`, `format_arglist`,
+`format_function_signature` and `describe` filters.
+
+!!! warning
+
+    The `jinja2` renderer is experimental: its options and the variables and filters available to templates may change
+    in any release.

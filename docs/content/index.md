@@ -11,7 +11,8 @@ be installed or importable, and the code may target any Python version.
 * Converts Google, Sphinx/reST, NumPy, Epydoc and Pydoc-Markdown-style docstrings to Markdown.
 * Picks up docstrings for variables (a `#:` comment block before, or a string literal after, the assignment).
 * Turns references such as `#OtherClass` into links.
-* Writes a single Markdown file, or a page tree for MkDocs, Hugo or Docusaurus.
+* Writes a single Markdown file, a page tree for MkDocs, Hugo or Docusaurus, or files from your own Jinja2
+  templates (experimental).
 * Adds "view source" links for GitHub, GitLab, Gitea, Bitbucket or any custom Git host.
 
 ## Pick a workflow

@@ -41,7 +41,7 @@ To include or exclude objects on a single page only, use the page's `contents` a
 
 ## Docstring styles
 
-| Style | Example section | Processor |
+| Style | Example section | Processor (all detected by `smart`) |
 | --- | --- | --- |
 | Google | `Args:` / `Returns:` | `google`, or `sphinx` with `style: GOOGLE` |
 | Sphinx / reST | `:param x:` / `:return:` | `sphinx` |
@@ -51,8 +51,14 @@ To include or exclude objects on a single page only, use the page's `contents` a
 
 ### `smart` — detect the style per docstring (default)
 
-The `smart` processor inspects each docstring and hands it to the `sphinx`, `google` or `pydocmd` processor. This
-works well for most projects, including ones that mix styles. If detection picks the wrong style for a particular
+The `smart` processor inspects each docstring and picks a processor for it:
+
+1. reST/Sphinx (`:param x:`) and NumPy docstrings go to `sphinx`,
+2. Google docstrings (`Args:`, `Returns:`, …) go to `google`,
+3. everything else goes to `pydocmd`.
+
+So NumPy and Google docstrings work out of the box, and you only need to configure `sphinx` yourself to force one
+style for the whole project. This works well for most projects, including ones that mix styles. If detection picks the wrong style for a particular
 docstring, force it by adding a marker anywhere in that docstring; the marker is removed from the output:
 
 ```python
@@ -116,7 +122,7 @@ RETRIES = 3
 ## Cross-references
 
 The `crossref` processor turns `#Name` references in docstrings into links, if the renderer can resolve the target
-(the `markdown`, `mkdocs` and `hugo` renderers can):
+(the `markdown`, `mkdocs`, `hugo` and `jinja2` renderers can; `docusaurus` can't):
 
 ```text
 Returns a #Connection.            -> link to Connection
