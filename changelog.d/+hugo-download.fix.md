@@ -1,0 +1,1 @@
+Fix the automatic Hugo download for current Hugo releases: pick the right archive on ARM64, Windows (`.zip`) and BSD, fail with a clear message when a release has no archive for the platform (such as recent macOS releases), and fetch only the requested release instead of paging through all of them. (@NiklasRosenstein)
