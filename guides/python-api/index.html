@@ -1544,7 +1544,7 @@ preconfigured with a <code>python</code> loader, the <code>filter</code>, <code>
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="p">,</span> <span class="n">MarkdownRenderer</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_to_string</span><span class="p">(</span><span class="n">modules</span><span class="p">))</span>
 </code></pre></div>
-<p>To start from a configuration file or dictionary instead, call <code>session.load_config("pydoc-markdown.yml")</code> before
+<p>To start from a configuration file or dictionary instead, call <code>session.load_config("pydoc-markdown.yaml")</code> before
 loading modules, then <code>session.render(modules)</code> to run the configured renderer.</p>
 <h2 id="individual-plugins">Individual plugins</h2>
 <p>Plugins can also be used on their own. Each one must be initialized with a

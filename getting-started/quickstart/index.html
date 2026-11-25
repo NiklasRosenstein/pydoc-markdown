@@ -1564,8 +1564,8 @@ converted to Markdown with the <a href="../../guides/docstrings/"><code>smart</c
 <p>Command-line flags are fine for a one-off; a configuration file lets you tune every option. Create one with:</p>
 <div class="highlight"><pre><span></span><code>pydoc-markdown<span class="w"> </span>--bootstrap<span class="w"> </span>base
 </code></pre></div>
-<p>This writes <code>pydoc-markdown.yml</code> containing the default pipeline. Point the loader at your code:</p>
-<div class="highlight"><span class="filename">pydoc-markdown.yml</span><pre><span></span><code><span class="nt">loaders</span><span class="p">:</span>
+<p>This writes <code>pydoc-markdown.yaml</code> containing the default pipeline. Point the loader at your code:</p>
+<div class="highlight"><span class="filename">pydoc-markdown.yaml</span><pre><span></span><code><span class="nt">loaders</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
 <span class="w">    </span><span class="nt">search_path</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">src</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">packages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">my_package</span><span class="p p-Indicator">]</span>
@@ -1585,7 +1585,7 @@ converted to Markdown with the <a href="../../guides/docstrings/"><code>smart</c
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code>-m</code>, <code>-p</code> and <code>-I</code> build a configuration from the command line and <strong>ignore</strong> the configuration file
-(you will see a warning). To combine both, pass the file explicitly: <code>pydoc-markdown pydoc-markdown.yml -I src</code>.</p>
+(you will see a warning). To combine both, pass the file explicitly: <code>pydoc-markdown pydoc-markdown.yaml -I src</code>.</p>
 </div>
 <h2 id="3-choose-where-the-output-goes">3. Choose where the output goes</h2>
 <ul>

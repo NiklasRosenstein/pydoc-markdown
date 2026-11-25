@@ -1645,15 +1645,15 @@
 <li>a <code>[tool.pydoc-markdown]</code> table in <code>pyproject.toml</code></li>
 </ol>
 <p>You can also pass a file name, or an inline YAML object, as the first argument:</p>
-<div class="highlight"><pre><span></span><code>pydoc-markdown<span class="w"> </span>docs/pydoc-markdown.yml
+<div class="highlight"><pre><span></span><code>pydoc-markdown<span class="w"> </span>docs/pydoc-markdown.yaml
 pydoc-markdown<span class="w"> </span>-m<span class="w"> </span>my_module<span class="w"> </span><span class="s1">'{renderer: {type: markdown, render_toc: true}}'</span>
 </code></pre></div>
 <p>To start from a template, run <code>pydoc-markdown --bootstrap &lt;template&gt;</code> with <code>base</code>, <code>mkdocs</code>, <code>hugo</code> or <code>docusaurus</code>.
-It writes <code>pydoc-markdown.yml</code> and refuses to overwrite an existing configuration.</p>
+It writes <code>pydoc-markdown.yaml</code> and refuses to overwrite an existing configuration.</p>
 <div class="admonition note">
 <p class="admonition-title">Quick options bypass the configuration file</p>
 <p><code>-m</code>, <code>-p</code> and <code>-I</code> build a configuration from the command line, so the configuration file is ignored
-(with a warning). To use both, name the file explicitly: <code>pydoc-markdown pydoc-markdown.yml -I src</code> loads the file
+(with a warning). To use both, name the file explicitly: <code>pydoc-markdown pydoc-markdown.yaml -I src</code> loads the file
 and applies <code>-I src</code> on top.</p>
 </div>
 <h2 id="structure">Structure</h2>
@@ -1691,7 +1691,7 @@ and applies <code>-I src</code> on top.</p>
 </table>
 <p>Every plugin is selected with <code>type</code>; all other keys are that plugin's options, listed in the
 <a href="../../reference/loaders/">reference</a>.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pydoc-markdown.yml</label><label for="__tabbed_1_2">pyproject.toml</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pydoc-markdown.yaml</label><label for="__tabbed_1_2">pyproject.toml</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="nt">loaders</span><span class="p">:</span>
