@@ -4,7 +4,7 @@
 # then use `mise run <task>` (or `mise tasks` to list them).
 
 [tools]
-uv = "0.11.32"
+uv = "0.13.10"
 "pipx:towncrier" = "26.9.0"
 
 [tasks.install]
